@@ -2,7 +2,7 @@
 # in the same project.
 
 # The name of this app. Must be unique within a project.
-name: mymagento
+name: eggfree-cake-box
 
 # The toolstack used to build the application.
 type: php:8.1
@@ -11,12 +11,14 @@ build:
 
 dependencies:
     php:
-        composer/composer: '2.2.4'
+        composer/composer: '2.2.18'
 
 # Enable extensions required by Magento 2
 runtime:
     extensions:
+        - redis
         - xsl
+        - blackfire
         - newrelic
         - sodium
 
@@ -27,7 +29,7 @@ runtime:
 relationships:
     database: "mysql:mysql"
     redis: "redis:redis"
-    opensearch: "opensearch:opensearch"
+    elasticsearch: "elasticsearch:elasticsearch"
 
 # The configuration of app when it is exposed to the web.
 web:
@@ -64,7 +66,7 @@ web:
                     passthru: "/static/$resource"
 
 # The size of the persistent disk of the application (in MB).
-disk: 5120
+disk: 25120
 
 # The mounts that will be performed when the package is deployed.
 mounts:

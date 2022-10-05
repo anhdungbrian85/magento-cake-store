@@ -4,8 +4,8 @@
 
 "http://{default}/":
     type: upstream
-    upstream: "mymagento:http"
+    upstream: "eggfree-cake-box:http"
 
 "http://{all}/":
     type: upstream
-    upstream: "mymagento:http"
+    upstream: "eggfree-cake-box:http"
