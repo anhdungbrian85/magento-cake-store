@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2306a11e835fabc1ea6547340e94655",
+    "content-hash": "2f33e14805d22231e7fa882de2157471",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -24152,6 +24152,46 @@
                 "source": "https://github.com/Seldaek/phar-utils/tree/1.2.1"
             },
             "time": "2022-08-31T10:31:18+00:00"
+        },
+        {
+            "name": "smsglobal/module-sms",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smsglobal/magento-m2-sms-integration.git",
+                "reference": "165e6827e75062a52b04013883a0b5f370dfe64e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smsglobal/magento-m2-sms-integration/zipball/165e6827e75062a52b04013883a0b5f370dfe64e",
+                "reference": "165e6827e75062a52b04013883a0b5f370dfe64e",
+                "shasum": ""
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Smsglobal\\Sms\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "SMSGlobal Tech Team",
+                    "email": "support@smsglobal.com"
+                }
+            ],
+            "description": "SMSGlobal SMS Integration with Magento developed by SMSGlobal Team",
+            "support": {
+                "issues": "https://github.com/smsglobal/magento-m2-sms-integration/issues",
+                "source": "https://github.com/smsglobal/magento-m2-sms-integration/tree/1.2.1"
+            },
+            "time": "2021-09-17T00:39:51+00:00"
         },
         {
             "name": "spomky-labs/aes-key-wrap",
