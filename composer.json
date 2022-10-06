@@ -22,7 +22,9 @@
     "require": {
         "magento/composer-root-update-plugin": "^2.0.2",
         "magento/magento-cloud-metapackage": "2.4.5",
-        "magento/product-enterprise-edition": "2.4.5-p1"
+        "magento/product-enterprise-edition": "2.4.5-p1",
+        "mageplaza/magento-2-social-login": "^4.1",
+        "mageplaza/module-smtp": "^4.7"
     },
     "suggest": {
         "ext-pcntl": "Need for run processes in parallel mode"
