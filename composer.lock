@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d974b5cce7a234da9cbcb5d19968516",
+    "content-hash": "a2306a11e835fabc1ea6547340e94655",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -2534,6 +2534,46 @@
                 "source": "https://github.com/laravel/framework"
             },
             "time": "2021-11-16T13:57:03+00:00"
+        },
+        {
+            "name": "iwd/opc",
+            "version": "5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hi-iwd/dominate-open-source.git",
+                "reference": "e3a3e4e958f7453d96e66e6daa33aa917db68450"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hi-iwd/dominate-open-source/zipball/e3a3e4e958f7453d96e66e6daa33aa917db68450",
+                "reference": "e3a3e4e958f7453d96e66e6daa33aa917db68450",
+                "shasum": ""
+            },
+            "require": {
+                "magento/module-checkout": "100.*|101.*|102.*|103.*",
+                "magento/module-payment": "100.*|101.*|102.*|103.*",
+                "magento/module-quote": "100.*|101.*|102.*|103.*",
+                "magento/module-sales": "100.*|101.*|102.*|103.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "IWD\\Opc\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "description": "IWD One Step Checkout",
+            "support": {
+                "issues": "https://github.com/hi-iwd/dominate-open-source/issues",
+                "source": "https://github.com/hi-iwd/dominate-open-source/tree/5.0.0"
+            },
+            "time": "2022-06-16T08:04:44+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -22013,6 +22053,240 @@
                 "source": "https://github.com/mageplaza/magento-2-smtp/tree/v4.7.3"
             },
             "time": "2022-08-16T01:23:58+00:00"
+        },
+        {
+            "name": "mollie/magento2",
+            "version": "2.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mollie/magento2.git",
+                "reference": "0ef2e569a8afae8846b6f78d0582995f9cfe3beb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mollie/magento2/zipball/0ef2e569a8afae8846b6f78d0582995f9cfe3beb",
+                "reference": "0ef2e569a8afae8846b6f78d0582995f9cfe3beb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "magento/framework": ">=102.0.3",
+                "magento/module-backend": ">=100.3.3",
+                "magento/module-catalog": ">=100.3.3",
+                "magento/module-checkout": ">=100.3.3",
+                "magento/module-config": ">=100.3.3",
+                "magento/module-customer": ">=100.3.3",
+                "magento/module-eav": ">=100.3.3",
+                "magento/module-payment": ">=100.3.3",
+                "magento/module-quote": ">=100.3.3",
+                "magento/module-sales": ">=100.3.3",
+                "magento/module-sales-rule": ">=100.3.3",
+                "magento/module-store": ">=100.3.3",
+                "magento/module-tax": ">=100.3.3",
+                "magento/module-ui": ">=100.3.3",
+                "magento/module-vault": ">=100.3.3",
+                "mollie/mollie-api-php": "^2.1",
+                "php": ">=7.2"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php",
+                    "GraphQL/Replaces/AdditionalDataProviderInterface.php",
+                    "Service/InstantPurchase/AvailabilityCheckerInterface.php"
+                ],
+                "psr-4": {
+                    "Mollie\\Payment\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "Mollie Payment Module for Magento 2",
+            "keywords": [
+                "Apple Pay",
+                "CBC",
+                "Przelewy24",
+                "api",
+                "bancontact",
+                "banktransfer",
+                "belfius",
+                "belfius direct net",
+                "charges",
+                "creditcard",
+                "direct debit",
+                "directdebit",
+                "fashioncheque",
+                "gateway",
+                "gift cards",
+                "ideal",
+                "intersolve",
+                "kbc",
+                "klarna",
+                "magento 2",
+                "magento2",
+                "mistercash",
+                "mollie",
+                "mybank",
+                "paylater",
+                "payment",
+                "payments",
+                "paypal",
+                "paysafecard",
+                "podiumcadeaukaart",
+                "recurring",
+                "refunds",
+                "sepa",
+                "service",
+                "sliceit",
+                "sofort",
+                "sofortbanking",
+                "subscriptions",
+                "voucher"
+            ],
+            "support": {
+                "issues": "https://github.com/mollie/magento2/issues",
+                "source": "https://github.com/mollie/magento2/tree/v2.17.0"
+            },
+            "time": "2022-10-03T13:03:13+00:00"
+        },
+        {
+            "name": "mollie/magento2-subscriptions",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mollie/magento2-subscriptions.git",
+                "reference": "aee34ca692f744bcdea231f1d38c96aba3c6e700"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mollie/magento2-subscriptions/zipball/aee34ca692f744bcdea231f1d38c96aba3c6e700",
+                "reference": "aee34ca692f744bcdea231f1d38c96aba3c6e700",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "*",
+                "ext-json": "*",
+                "magento/framework": ">=102.0.0",
+                "mollie/magento2": ">=1.20.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Mollie\\Subscriptions\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "Mollie subscriptions extension for Magento 2",
+            "support": {
+                "issues": "https://github.com/mollie/magento2-subscriptions/issues",
+                "source": "https://github.com/mollie/magento2-subscriptions/tree/v1.4.0"
+            },
+            "time": "2022-09-13T13:55:53+00:00"
+        },
+        {
+            "name": "mollie/mollie-api-php",
+            "version": "v2.46.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mollie/mollie-api-php.git",
+                "reference": "343e55d65cfe07ac1e68e141682a971a10b3bae4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/343e55d65cfe07ac1e68e141682a971a10b3bae4",
+                "reference": "343e55d65cfe07ac1e68e141682a971a10b3bae4",
+                "shasum": ""
+            },
+            "require": {
+                "composer/ca-bundle": "^1.2",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "php": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "eloquent/liberator": "^2.0||^3.0",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "guzzlehttp/guzzle": "^6.3 || ^7.0",
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^6.5 || ^7.1 || ^8.5 || ^9.5"
+            },
+            "suggest": {
+                "mollie/oauth2-mollie-php": "Use OAuth to authenticate with the Mollie API. This is needed for some endpoints. Visit https://docs.mollie.com/ for more information."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mollie\\Api\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Mollie B.V.",
+                    "email": "info@mollie.com"
+                }
+            ],
+            "description": "Mollie API client library for PHP. Mollie is a European Payment Service provider and offers international payment methods such as Mastercard, VISA, American Express and PayPal, and local payment methods such as iDEAL, Bancontact, SOFORT Banking, SEPA direct debit, Belfius Direct Net, KBC Payment Button and various gift cards such as Podiumcadeaukaart and fashioncheque.",
+            "homepage": "https://www.mollie.com/en/developers",
+            "keywords": [
+                "Apple Pay",
+                "CBC",
+                "Przelewy24",
+                "api",
+                "bancontact",
+                "banktransfer",
+                "belfius",
+                "belfius direct net",
+                "charges",
+                "creditcard",
+                "direct debit",
+                "fashioncheque",
+                "gateway",
+                "gift cards",
+                "ideal",
+                "inghomepay",
+                "intersolve",
+                "kbc",
+                "klarna",
+                "mistercash",
+                "mollie",
+                "paylater",
+                "payment",
+                "payments",
+                "paypal",
+                "paysafecard",
+                "podiumcadeaukaart",
+                "recurring",
+                "refunds",
+                "sepa",
+                "service",
+                "sliceit",
+                "sofort",
+                "sofortbanking",
+                "subscriptions"
+            ],
+            "support": {
+                "issues": "https://github.com/mollie/mollie-api-php/issues",
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.46.0"
+            },
+            "time": "2022-09-01T10:45:39+00:00"
         },
         {
             "name": "monolog/monolog",
