@@ -443,8 +443,15 @@ return [
         'Magento_WishlistGiftCardGraphQl' => 1,
         'Magento_GiftCardGraphQl' => 1,
         'Fastly_Cdn' => 1,
+        'IWD_Opc' => 1,
+        'Mageplaza_Core' => 1,
+        'Mageplaza_Smtp' => 1,
+        'Mageplaza_SocialLogin' => 1,
+        'Mollie_Payment' => 1,
+        'Mollie_Subscriptions' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
+        'Smsglobal_Sms' => 1,
         'Temando_ShippingRemover' => 1
     ]
 ];
