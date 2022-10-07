@@ -21,6 +21,8 @@
     },
     "require": {
         "iwd/opc": "^5.0",
+        "klevu/module-msi": "^1.0",
+        "klevu/module-search": "^3.0",
         "magento/composer-root-update-plugin": "^2.0.2",
         "magento/magento-cloud-metapackage": "2.4.5",
         "magento/product-enterprise-edition": "2.4.5-p1",
@@ -105,5 +107,8 @@
         "post-update-cmd": [
             "@generate-schema"
         ]
+    },
+    "replace": {
+        "klevu/module-mysqlcompat": "*"
     }
 }
