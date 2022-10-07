@@ -29,7 +29,8 @@
         "mailchimp/mc-magento2": "^103.4",
         "mollie/magento2": "^2.17",
         "mollie/magento2-subscriptions": "^1.4",
-        "smsglobal/module-sms": "^1.2"
+        "smsglobal/module-sms": "^1.2",
+        "trustpilot/module-reviews": "^2.6"
     },
     "suggest": {
         "ext-pcntl": "Need for run processes in parallel mode"
