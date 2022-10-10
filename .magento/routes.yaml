@@ -5,6 +5,11 @@
 "http://{default}/":
     type: upstream
     upstream: "mymagento:http"
+    
+"http://{all}/":
+    type: upstream
+    upstream: "mymagento:http"
+
 "http://ipad.{default}/":
     type: upstream
     upstream: "mymagento:http"

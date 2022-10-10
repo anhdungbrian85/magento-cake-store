@@ -17,10 +17,27 @@
  * @param string $host
  * @return bool
  */
-function isHttpHost(string $host)
+// function isHttpHost(string $host)
+// {
+//     if (!isset($_SERVER['HTTP_HOST'])) {
+//         return false;
+//     }
+//     return $_SERVER['HTTP_HOST'] === $host;
+// }
+
+
+function isHttpHost($host)
 {
     if (!isset($_SERVER['HTTP_HOST'])) {
         return false;
     }
-    return $_SERVER['HTTP_HOST'] === $host;
+    return $_SERVER['HTTP_HOST'] ===  $host;
+}
+
+if (isHttpHost("ipad.integration-5ojmyuq-wwwfpgtvdjwlm.eu-3.magentosite.cloud")) {
+    $_SERVER["MAGE_RUN_CODE"] = "ipad";
+    $_SERVER["MAGE_RUN_TYPE"] = "website";
+} elseif (isHttpHost("integration-5ojmyuq-wwwfpgtvdjwlm.eu-3.magentosite.cloud")) {
+    $_SERVER["MAGE_RUN_CODE"] = "base";
+    $_SERVER["MAGE_RUN_TYPE"] = "website";
 }
