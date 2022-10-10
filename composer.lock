@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cab0d9a5dddd2644c7eb5fa66dcef3a",
+    "content-hash": "fbf6a2131fd0f0459fac5be33c6a2e87",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -50,6 +50,141 @@
                 "source": "https://github.com/2tvenom/CBOREncode/tree/1.0.2"
             },
             "time": "2020-10-27T07:22:41+00:00"
+        },
+        {
+            "name": "amasty/base",
+            "version": "1.13.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/base-1.13.6.zip"
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\Base\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Amasty Base"
+        },
+        {
+            "name": "amasty/geoip",
+            "version": "1.5.7",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/geoip-1.5.7-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.2",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\Geoip\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Amasty Geoip Data"
+        },
+        {
+            "name": "amasty/module-store-locator",
+            "version": "2.5.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-store-locator-2.5.6.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.4",
+                "amasty/geoip": "*",
+                "php": ">=7.3"
+            },
+            "suggest": {
+                "amasty/module-mixin-rewrite-patch": "Install mixin rewrite patch if you have a problem with extension on Magento 2.4.2+ version on Checkout"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\Storelocator\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Store Locator by Amasty"
+        },
+        {
+            "name": "amasty/module-store-locator-indexer",
+            "version": "1.0.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-store-locator-indexer-1.0.4-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.3",
+                "amasty/module-store-locator": ">=2.5.4",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\StorelocatorIndexer\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Store Locator Indexer by Amasty"
+        },
+        {
+            "name": "amasty/module-store-pickup-with-locator",
+            "version": "2.5.7",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-store-pickup-with-locator-2.5.7.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/geoip": "*",
+                "amasty/module-store-locator": ">=2.5.0",
+                "amasty/module-store-locator-indexer": "*",
+                "php": ">=7.3"
+            },
+            "suggest": {
+                "amasty/module-store-pickup-with-locator-msi": "To use the functionality of the module-store-pickup-with-locator to the max, please install the module-store-pickup-with-locator-msi to version 1.0.3 or above. You will experience all benefits provided by MSI including advanced functionality of Store Pickup Option feature."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\StorePickupWithLocator\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Store Pickup with Locator by Amasty"
         },
         {
             "name": "astock/stock-api-libphp",

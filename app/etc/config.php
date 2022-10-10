@@ -442,8 +442,23 @@ return [
         'Magento_WishlistGiftCard' => 1,
         'Magento_WishlistGiftCardGraphQl' => 1,
         'Magento_GiftCardGraphQl' => 1,
+        'Amasty_Base' => 1,
+        'Amasty_Geoip' => 1,
+        'Amasty_Storelocator' => 1,
+        'Amasty_StorePickupWithLocator' => 1,
+        'Amasty_StorelocatorIndexer' => 1,
+        'Ebizmarts_MailChimp' => 1,
         'Fastly_Cdn' => 1,
         'IWD_Opc' => 1,
+        'Klevu_Logger' => 1,
+        'Klevu_Registry' => 1,
+        'Klevu_Metadata' => 1,
+        'Klevu_Search' => 1,
+        'Klevu_Content' => 1,
+        'Klevu_Msi' => 1,
+        'Klevu_FrontendJs' => 1,
+        'Klevu_Addtocart' => 1,
+        'Klevu_Troubleshoot' => 1,
         'Mageplaza_Core' => 1,
         'Mageplaza_Smtp' => 1,
         'Mageplaza_SocialLogin' => 1,
@@ -452,6 +467,7 @@ return [
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'Smsglobal_Sms' => 1,
-        'Temando_ShippingRemover' => 1
+        'Temando_ShippingRemover' => 1,
+        'Trustpilot_Reviews' => 1
     ]
 ];

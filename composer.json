@@ -14,12 +14,17 @@
         }
     },
     "repositories": {
+        "amasty": {
+            "type": "composer",
+            "url": "https://composer.amasty.com/enterprise/"
+        },
         "repo": {
             "type": "composer",
             "url": "https://repo.magento.com"
         }
     },
     "require": {
+        "amasty/module-store-pickup-with-locator": "^2.5",
         "iwd/opc": "^5.0",
         "klevu/module-msi": "^1.0",
         "klevu/module-search": "^3.0",
