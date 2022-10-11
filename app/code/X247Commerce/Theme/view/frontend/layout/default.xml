@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="3columns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- <head>
+        <script src="Magento_Theme::js/custom-menu-mobile.js" />
+        <css src="Magento_Checkout::css/source/owl/_owl.carousel.css"/>
+        <css src="Magento_Checkout::css/source/owl/_owl.theme.css"/>
+    </head> -->
+    <body>
+        <referenceContainer name="header.container">
+            <container name="custom.menu.mobile" label="Categories" htmlTag="div" htmlClass="custom-topmenu-mobile" after="-">
+                <block class="X247Commerce\Theme\Block\Html\Topmenu" name="catalog.topnav.mobile" template="X247Commerce_Theme::html/topmenu.phtml" ttl="3600" before="-"/>
+            </container>
+        </referenceContainer>
+    </body>
+</page>
