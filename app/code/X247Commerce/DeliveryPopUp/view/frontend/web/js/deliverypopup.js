@@ -10,7 +10,7 @@ define([
                 type: 'popup',
                 responsive: true,
                 innerScroll: true,
-                modalClass: 'custom-popup-modal',
+                modalClass: 'custom-delivery-popup-modal',
                 buttons: [{
                     text: $.mage.__('Close'),
                     class: '',
@@ -19,9 +19,9 @@ define([
                     }
                 }]
             };
-            var popup = modal(options, $('#custom-popup-modal'));
+            var popup = modal(options, $('#custom-delivery-popup-modal'));
             $( document ).ready(function() {
-                $('#custom-popup-modal').modal('openModal');
+                $('#custom-delivery-popup-modal').modal('openModal');
             });     
         },
     });
