@@ -4,7 +4,7 @@
 			max-width: 740px;
 			background-color: #211F22;
 			opacity: 75%;
-
+			/*background: url() no-repeat;*/
 			.delivery.popup.title {
 				padding-top: 30px;
 				display: flex;
@@ -39,10 +39,11 @@
 
 			.delivery.popup.postcode {
 				display: flex;
-			    flex-wrap: wrap;
+			    flex-wrap: nowrap;
 			    justify-content: center;
+			    padding: 0 50px;
 			    input {
-			    	max-width: 577px;
+			    	max-width: 100%;
 				    min-height: 85.68px;
 				    font-size: 24px;
 				    color: #9C9AAA;
@@ -52,12 +53,13 @@
 
 			.selects.collection {
 				display: flex;
-				flex-wrap: wrap;
+				flex-wrap: nowrap;
 			    justify-content: center;
 			    min-height: 76.92px;
 			    margin-bottom: 40px;
+			    padding: 0 50px;
 			    button {
-			    	width: 192.47px;
+			    	
 			    	height: 100%;
 			    	background-color: #992E80;
 			    	border:unset;
@@ -68,6 +70,9 @@
 			    	line-height: 26px;
 			    	font-weight: 400;
 			    }
+			    .collection {
+				    width: 33.33%;
+				}
 				.premium.delivery {
 					button {
 						background-color: #AF3B99;
@@ -136,6 +141,7 @@
 			}
 
 			.delivery.popup.postcode {
+				padding: unset;
 				input {
 					max-width: 351px;
 					font-size: 16px;
@@ -150,6 +156,7 @@
 			.selects.collection {
 				min-height: 31px;
 				max-width: 100%;
+				padding:unset;
 				flex-wrap: nowrap;
 				button {
 					width: unset;
