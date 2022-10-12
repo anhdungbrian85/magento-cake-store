@@ -1,0 +1,36 @@
+<div id="custom-popup-modal" class="custom-popup-modal">
+    <div class="delivery popup title">
+        <span><?= __("FIND YOUR LOCAL CAKE BOX")?></span>
+    </div>
+    <div class="delivery popup content">
+        <div class="delivery popup text"><span><?= __("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque")?></span>
+        </div>
+        <div class="delivery popup postcode">
+            <input class="input postcode" type="text" name="postcode" placeholder = "Enter Postcode">
+        </div>
+        <div class="selects collection">
+            <div class="free collection">
+                <button><?= __("Free Collection")?></button>
+            </div>
+            <div class="premium delivery">
+                <button><?= __("Premium Delivery")?></button>
+            </div>
+            <div class="express one hour collection">
+                <button><?= __("Express 1 Hour Collection")?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+<script type="text/x-magento-init">
+    {
+    ".custom-popup-modal":
+        {
+            "X247Commerce_DeliveryPopUp/js/deliverypopup": {
+            }
+        }
+    }
+</script>
