@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbf6a2131fd0f0459fac5be33c6a2e87",
+    "content-hash": "3328f9bd14ca366240818f686dbd193b",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -101,6 +101,33 @@
             "description": "Amasty Geoip Data"
         },
         {
+            "name": "amasty/module-social-login-lite",
+            "version": "1.10.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-social-login-lite-1.10.5.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.5",
+                "amasty/social-login": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\SocialLoginLite\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Social Login Lite by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
             "name": "amasty/module-store-locator",
             "version": "2.5.6",
             "dist": {
@@ -185,6 +212,38 @@
                 "Commercial"
             ],
             "description": "Store Pickup with Locator by Amasty"
+        },
+        {
+            "name": "amasty/social-login",
+            "version": "1.10.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/social-login-1.10.5.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.5",
+                "hybridauth/hybridauth": "~3.8.0",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/aminvisiblecaptcha": "*",
+                "amasty/module-social-login-recaptcha": "Install amasty/module-social-login-recaptcha module to activate Google ReCaptcha and Social Login integration.",
+                "amasty/module-social-to-builder": "Install Amasty_SocialToBuilder module to activate the integration with Custom Reports Builder extension and create valuable reports about your Social Networks.",
+                "amasty/social-login-graphql": "Install amasty/social-login-graphql module to activate Graphql and Social Login integration."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\SocialLogin\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Social Login by Amasty"
         },
         {
             "name": "astock/stock-api-libphp",
@@ -22556,74 +22615,6 @@
                 "source": "https://github.com/magento/zf1/tree/1.15.1"
             },
             "time": "2022-06-21T01:22:39+00:00"
-        },
-        {
-            "name": "mageplaza/magento-2-social-login",
-            "version": "4.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mageplaza/magento-2-social-login.git",
-                "reference": "72a0dd25284d8f107b85f9c37b7b86f2f7570000"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mageplaza/magento-2-social-login/zipball/72a0dd25284d8f107b85f9c37b7b86f2f7570000",
-                "reference": "72a0dd25284d8f107b85f9c37b7b86f2f7570000",
-                "shasum": ""
-            },
-            "require": {
-                "hybridauth/hybridauth": "^3.8.2",
-                "mageplaza/module-core": "^1.4.12"
-            },
-            "require-dev": {
-                "roave/security-advisories": "dev-master"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Mageplaza\\SocialLogin\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Mageplaza",
-                    "email": "support@mageplaza.com",
-                    "homepage": "https://www.mageplaza.com",
-                    "role": "Technical Support"
-                }
-            ],
-            "description": "Magento 2 Social Login extension is designed for quick login to your Magento 2 store without procesing complex register steps",
-            "keywords": [
-                "Amazon Login",
-                "Facebook login",
-                "FourSquare Login",
-                "Google login",
-                "LinkedIn Login",
-                "Microsoft Live Login",
-                "Social Login",
-                "Twitter login",
-                "Yahoo Login",
-                "facebook",
-                "google",
-                "login",
-                "magento 2",
-                "magento 2 social login",
-                "mageplaza",
-                "social proof",
-                "twitter"
-            ],
-            "support": {
-                "issues": "https://github.com/mageplaza/magento-2-social-login/issues",
-                "source": "https://github.com/mageplaza/magento-2-social-login/tree/v4.1.6"
-            },
-            "time": "2022-09-30T08:22:37+00:00"
         },
         {
             "name": "mageplaza/module-core",

@@ -24,6 +24,7 @@
         }
     },
     "require": {
+        "amasty/module-social-login-lite": "^1.10",
         "amasty/module-store-pickup-with-locator": "^2.5",
         "iwd/opc": "^5.0",
         "klevu/module-msi": "^1.0",
@@ -31,7 +32,6 @@
         "magento/composer-root-update-plugin": "^2.0.2",
         "magento/magento-cloud-metapackage": "2.4.5",
         "magento/product-enterprise-edition": "2.4.5-p1",
-        "mageplaza/magento-2-social-login": "^4.1",
         "mageplaza/module-smtp": "^4.7",
         "mailchimp/mc-magento2": "^103.4",
         "mollie/magento2": "^2.17",
