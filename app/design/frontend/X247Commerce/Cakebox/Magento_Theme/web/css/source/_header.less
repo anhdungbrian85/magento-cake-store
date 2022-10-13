@@ -34,7 +34,13 @@
 			.ui-widget-content {
 
 				display: flex;
-    			flex-wrap: wrap;
+    			flex-wrap: nowrap;
+				overflow: scroll;
+
+				&::-webkit-scrollbar {
+
+					display: none;
+				}
 
     			.level {
     				
@@ -60,6 +66,13 @@
     					.image-category {
     						margin-right: 5px;
     					}
+
+						span {
+
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
     				}
 
     				&.active {
