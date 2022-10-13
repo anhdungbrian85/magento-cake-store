@@ -1,6 +1,6 @@
 <?php
 
-namespace X247Commerce\DeliveryPopUp\Block\PopUp;
+namespace X247Commerce\DeliveryPopUp\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Backend\Block\Template\Context;
