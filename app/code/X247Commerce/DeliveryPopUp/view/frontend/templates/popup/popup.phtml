@@ -5,20 +5,20 @@
     <div class="delivery popup content">
         <div class="delivery popup text"><span><?= __("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque")?></span>
         </div>
-        <div class="delivery popup postcode">
+        <form class="delivery popup postcode" action="<?php echo $block->escapeUrl($block->postCode()) ?>" formKey ="<?php echo $block->getFormKey();?>" method="POST" >
             <input class="input postcode" type="text" name="postcode" placeholder = "Enter Postcode">
-        </div>
-        <div class="selects collection">
-            <div class="free collection">
-                <button><?= __("Free Collection")?></button>
+            <div class="selects collection">
+                <div class="free collection" type="submit" >
+                    <button><?= __("Free Collection")?></button>
+                </div>
+                <div class="premium delivery">
+                    <button><?= __("Premium Delivery")?></button>
+                </div>
+                <div class="express one hour collection">
+                    <button><?= __("Express 1 Hour Collection")?></button>
+                </div>
             </div>
-            <div class="premium delivery">
-                <button><?= __("Premium Delivery")?></button>
-            </div>
-            <div class="express one hour collection">
-                <button><?= __("Express 1 Hour Collection")?></button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
