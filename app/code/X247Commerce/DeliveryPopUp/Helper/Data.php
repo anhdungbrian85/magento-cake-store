@@ -8,19 +8,30 @@ use Magento\Store\Model\ScopeInterface;
 class Data extends AbstractHelper
 {
 
-	const XML_PATH_DeliveryPopUp = 'deliverypopup/';
+	const XML_PATH_DELIVERY_POPUP_ENABLE = 'deliverypopup/general/enable';
+	const XML_PATH_DELIVERY_POPUP_SEARCH_RADIUS = 'deliverypopup/general/search_radius';
+	const XML_PATH_DELIVERY_POPUP_RESULT_RECORDS = 'deliverypopup/general/total_records';
 
-	public function getConfigValue($field, $storeId = null)
+
+	public function isEnabledPopup() 
 	{
 		return $this->scopeConfig->getValue(
-			$field, ScopeInterface::SCOPE_STORE, $storeId
+			self::XML_PATH_DELIVERY_POPUP_ENABLE , ScopeInterface::SCOPE_STORE
 		);
 	}
 
-	public function getGeneralConfig($code, $storeId = null)
+	public function getPopupSearchRadius() 
 	{
-
-		return $this->getConfigValue(self::XML_PATH_DeliveryPopUp .'general/'. $code, $storeId);
+		return $this->scopeConfig->getValue(
+			self::XML_PATH_DELIVERY_POPUP_SEARCH_RADIUS , ScopeInterface::SCOPE_STORE
+		);
 	}
 
-}
+	public function getPopupTotalStoresResult() 
+	{
+		return $this->scopeConfig->getValue(
+			self::XML_PATH_DELIVERY_POPUP_RESULT_RECORDS , ScopeInterface::SCOPE_STORE
+		);
+	}
+
+}	
