@@ -1,0 +1,58 @@
+& when (@media-common = true) {
+	.size_servings {
+		.swatch-attribute-options {
+			display: flex;
+		}
+
+		.swatch-option.text {
+			padding: 6px;
+			background: #fff;
+			float: unset;
+			height: unset;
+			border: 1px solid #B2B2B2;
+			display: block;
+			text-align: center;
+			transition: all .3s;
+			margin-right: 5px;
+			border-radius: 5px;
+			min-width: 86px;
+
+			&:last-child {
+				margin-right: 0;
+			}
+
+			&:hover {
+				background: #992E80;
+
+				.option-label,
+				.shape-label {
+					color: rgba(255, 255, 255, 0.76);
+					transition: all .3s;
+				}
+
+				.number-highline {
+					color: #ffffff;
+				}
+			}
+		}
+
+		.number-highline {
+			font-size: 20px;
+			display: block;
+			color: #363A40;
+			transition: all .3s;
+		}
+
+		.option-label,
+		.shape-label {
+			font-size: 11px;
+			color: rgba(54, 58, 64, 0.76);
+			transition: all .3s;
+			display: block;
+		}
+
+		.option-label {
+			margin-bottom: 3px;
+		}
+	}
+}
