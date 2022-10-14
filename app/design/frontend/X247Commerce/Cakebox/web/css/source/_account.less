@@ -1,87 +1,89 @@
-.customer-account-login,
-.form-create-account {
-    input[type="text"],
-    input[type="password"],
-    input[type="url"],
-    input[type="tel"],
-    input[type="search"],
-    input[type="number"],
-    input[type*="date"],
-    input[type="email"] {
-        height: 54px;
-        border-radius: 5px;
-        background: #f6f6f6 !important;
-        border: 1px solid #f6f6f6 !important;
+& when (@media-common = true) {
+    .customer-account-login,
+    .form-create-account {
+        input[type="text"],
+        input[type="password"],
+        input[type="url"],
+        input[type="tel"],
+        input[type="search"],
+        input[type="number"],
+        input[type*="date"],
+        input[type="email"] {
+            height: 54px;
+            border-radius: 5px;
+            background: #f6f6f6;
+            border: 1px solid #f6f6f6;
+        }
     }
-}
 
-.block.block-customer-login,
-.block.block-new-customer,
-.form.create.account.form-create-account {
-    width: 460px !important;
-}
+    .block.block-customer-login,
+    .block.block-new-customer,
+    .form.create.account.form-create-account {
+        width: 460px;
+    }
 
-.form.create.account.form-create-account {
-    margin: 0 auto;
-}
+    .form.create.account.form-create-account {
+        margin: 0 auto;
+    }
 
-.login-container .block .block-title {
-    font-size: 30px;
-}
+    .login-container .block .block-title {
+        font-size: 30px;
+    }
 
-.login-container .fieldset>.field>.control {
-    width: 100% !important;
-}
+    .login-container .fieldset>.field>.control {
+        width: 100%;
+    }
 
-.password a.action.remind {
-    color:#3F3F44 !important;
-    position:absolute;
-    right: 0;
-}
+    .password a.action.remind {
+        color:#3F3F44;
+        position:absolute;
+        right: 0;
+    }
 
-.password a.action.remind:hover {
-    color: #992E80 !important;
-    text-decoration: none;
-}
+    .password a.action.remind:hover {
+        color: #992E80;
+        text-decoration: none;
+    }
 
-.field.password.required {
-    position: relative;
-}
+    .field.password.required {
+        position: relative;
+    }
 
-.block.block-customer-login .fieldset>.field {
-    margin-bottom: 30px;
-}
+    .block.block-customer-login .fieldset>.field {
+        margin-bottom: 30px;
+    }
 
-input#show-password {
-    width: 16px;
-    height: 16px;
-}
+    input#show-password {
+        width: 16px;
+        height: 16px;
+    }
 
-.login-container {
-    display: flex;
-    justify-content: center;
-}
+    .login-container {
+        display: flex;
+        justify-content: center;
+    }
 
-.login-container .block.block-customer-login {
-    margin-right: 20px;
-}
+    .login-container .block.block-customer-login {
+        margin-right: 20px;
+    }
 
-.block.block-new-customer {
-    margin-left: 20px;
-}
+    .block.block-new-customer {
+        margin-left: 20px;
+    }
 
-.actions-toolbar button.action.login.primary,
-.actions-toolbar a.action.create.primary,
-.form-create-account button.action.submit.primary {
-    width: 100%;
-    height: 56px;
-    line-height: 40px;    
-}
+    .actions-toolbar button.action.login.primary,
+    .actions-toolbar a.action.create.primary,
+    .form-create-account button.action.submit.primary {
+        width: 100%;
+        height: 56px;
+        line-height: 40px;    
+    }
 
-.block.block-new-customer .actions-toolbar,
-.login-container .actions-toolbar,
-.login-container .actions-toolbar .primary,
-.block.block-new-customer .actions-toolbar .primary,
-.form-create-account .primary {
-    width: 100% !important;
+    .block.block-new-customer .actions-toolbar,
+    .login-container .actions-toolbar,
+    .login-container .actions-toolbar .primary,
+    .block.block-new-customer .actions-toolbar .primary,
+    .form-create-account .primary {
+        width: 100%;
+    }
 }
