@@ -1,7 +1,7 @@
 <?php 
 /** @var $block \X247Commerce\DeliveryPopUp\Block\Location $block */ 
 ?>
-
+<?php if ($block->shouldShowPopup()): ?>
 <div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal">
     <div class="amlocator-map-container" id="map-container-delivery-popup">
         <div class="delivery popup title">
@@ -51,7 +51,7 @@
                     value="<?= $block->escapeHtml($block->getDistanceConfig()) == 'km' ? 'km' : 'mi' ?>">
         </div>
         <div class="amlocator-block -storelist amlocator-store-list">
-            <?= $block->getLeftBlockHtml(); ?>
+            
         </div>
         <div class="amlocator-block -separator"><hr class="hr"/></div>
         <div class="amlocator-block -map" style="display: none;">
@@ -130,3 +130,4 @@
         }
     }
 </script>
+<?php endif ?>
