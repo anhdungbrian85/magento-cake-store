@@ -19,12 +19,17 @@
 			min-width: 86px;
 			box-sizing: border-box;
 
+			&:focus {
+				outline: none;
+				box-shadow: none;
+			}
+
 			&:last-child {
 				margin-right: 0;
 			}
 
 			&:hover,
-			.selected {
+			&.selected {
 				background: #992E80;
 				border: 1px solid #B2B2B2;
 				outline: none;
@@ -79,9 +84,6 @@
 	.product-options-wrapper {
 		.field {
 			&.textarea {
-				.control {
-					width: 100%;
-				}
 
 				textarea {
 					border: 1px solid #CECECE;
@@ -90,6 +92,91 @@
 					padding: 10px 20px;
 				}
 			}
+		}
+	}
+
+	.upload-file-label {
+		border: 1px dashed rgba(140, 56, 125, 1);
+		background: rgba(140, 56, 125, 0.12);
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px;
+		cursor: pointer;
+		position: relative;
+
+		& ~ input[type="file"] {
+			opacity: 0;
+			position: absolute;
+		}
+
+		span {
+			color: #282828;
+			font-weight: 300;
+		}
+
+		.file-label,
+		.file-uploaded {
+			display: flex;
+			align-items: center;
+		}
+
+		svg,
+		.image-preview {
+			margin-right: 20px;
+			height: 46px;
+			width: 46px;
+			border-radius: 50%;
+		}
+
+		.icon-delete-file {
+			position: absolute;
+			position: absolute;
+			right: 30px;
+			top: ~'calc( (100% - 14px )/2 )';
+
+			svg {
+				width: 14px;
+				height: 14px;
+				margin: 0;
+			}
+		}
+	}
+
+	.product-add-form .product-options-wrapper .fieldset .field .control {
+		width: 100%;
+	}
+
+
+	.box-tocart {
+		.control {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+		}
+
+		.fieldset > .field > .label {
+			display: none;
+		}
+
+		.input-text.qty {
+			border: none;
+			font-size: 14px;
+			color: #181818;
+
+			&:focus {
+				box-shadow: unset;
+				outline: none;
+			}
+		}
+
+		.qty-control {
+			font-size: 24px;
+			line-height: 1;
+			cursor: pointer;
+			width: 15px;
 		}
 	}
 }

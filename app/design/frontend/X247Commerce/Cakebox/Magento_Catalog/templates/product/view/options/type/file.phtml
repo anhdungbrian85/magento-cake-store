@@ -1,0 +1,106 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* @var $block \Magento\Catalog\Block\Product\View\Options\Type\File */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+<?php $_option = $block->getOption(); ?>
+<?php $_fileInfo = $block->getFileInfo(); ?>
+<?php $_fileExists = $_fileInfo->hasData(); ?>
+<?php $_fileName = 'options_' . $block->escapeHtmlAttr($_option->getId()) . '_file'; ?>
+<?php $_fieldNameAction = $_fileName . '_action'; ?>
+<?php $_fieldValueAction = $_fileExists ? 'save_old' : 'save_new'; ?>
+<?php $_fileNamed = $_fileName . '_name'; ?>
+<?php $class = ($_option->getIsRequire()) ? ' required' : ''; ?>
+
+<div class="field file<?= /* @noEscape */ $class ?>">
+    <label class="label" for="<?= /* @noEscape */ $_fileName ?>" id="<?= /* @noEscape */ $_fileName ?>-label">
+        <span><?= $block->escapeHtml($_option->getTitle()) ?></span>
+        <?= /* @noEscape */ $block->getFormattedPrice() ?>
+    </label>
+    <?php if ($_fileExists):?>
+    <div class="control">
+        <span class="<?= /* @noEscape */ $_fileNamed ?>"><?= $block->escapeHtml($_fileInfo->getTitle()) ?></span>
+        <a href="#" class="label" id="change-<?= /* @noEscape */ $_fileName ?>" >
+            <?= $block->escapeHtml(__('Change')) ?>
+        </a>
+        <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+            'onclick',
+            'event.preventDefault()',
+            'a#change-' ./* @noEscape */ $_fileName
+        ) ?>
+        <?php if (!$_option->getIsRequire()):?>
+            <input type="checkbox" id="delete-<?= /* @noEscape */ $_fileName ?>" />
+            <span class="label"><?= $block->escapeHtml(__('Delete')) ?></span>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    <div class="control" id="input-box-<?= /* @noEscape */ $_fileName ?>"
+             data-mage-init='{"priceOptionFile":{
+                "fileName":"<?= /* @noEscape */ $_fileName ?>",
+                "fileNamed":"<?= /* @noEscape */ $_fileNamed ?>",
+                "fieldNameAction":"<?= /* @noEscape */ $_fieldNameAction ?>",
+                "changeFileSelector":"#change-<?= /* @noEscape */ $_fileName ?>",
+                "deleteFileSelector":"#delete-<?= /* @noEscape */ $_fileName ?>"}
+             }'>
+
+            <label for="<?= /* @noEscape */ $_fileName ?>" class="upload-file-label">
+                <span class="upload-file-wrapper">
+                        <span class="file-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 46 46">
+                              <g id="Group_98" data-name="Group 98" transform="translate(0 0.002)">
+                                <path id="Ellipse_40" data-name="Ellipse 40" d="M0,23A23,23,0,1,1,23,46,23,23,0,0,1,0,23Z" fill="#fff"/>
+                                <g id="Frame" transform="translate(11 11.299)">
+                                  <path id="Vector" d="M0,0H24V24H0Z" fill="none"/>
+                                  <path id="Vector-2" data-name="Vector" d="M19,20H17V17H14V15h3V12h2v3h3v2H19v3Zm-7-2H.992A.994.994,0,0,1,0,17.007V.993a1.006,1.006,0,0,1,.292-.7A.99.99,0,0,1,.992,0H19.008A.993.993,0,0,1,20,.993V10H18V2H2V16L12,6l3,3v2.829l-3-3L4.827,16H12v2ZM6,8a1.988,1.988,0,0,1-1.415-.586A2.017,2.017,0,0,1,4,6,2,2,0,0,1,6,4a2.017,2.017,0,0,1,1.414.586A2,2,0,0,1,6,8Z" transform="translate(2 3)" fill="#992e80"/>
+                                </g>
+                              </g>
+                            </svg>
+                            <?php echo __('Drop your file here or browse') ?>
+                        </span>
+                        <span class="file-uploaded">
+                        </span>
+                </span>
+            </label>
+        <input type="file"
+                           name="<?= /* @noEscape */ $_fileName ?>"
+                           id="<?= /* @noEscape */ $_fileName ?>"
+                           class="product-custom-option<?= $_option->getIsRequire() ? ' required' : '' ?>"
+                        <?= $_fileExists ? 'disabled="disabled"' : '' ?> />
+        <input type="hidden" class="product-custom-option" name="<?= /* @noEscape */ $_fieldNameAction ?>"
+               value="<?= /* @noEscape */ $_fieldValueAction ?>" />
+        <?php if ($_option->getFileExtension()):?>
+            <p class="note">
+                <?= $block->escapeHtml(__('Compatible file extensions to upload')) ?>:
+                <strong><?= $block->escapeHtml($_option->getFileExtension()) ?></strong>
+            </p>
+        <?php endif; ?>
+        <?php if ($_option->getImageSizeX() > 0):?>
+            <p class="note">
+                <?= $block->escapeHtml(__('Maximum image width')) ?>: <strong><?= (int)$_option->getImageSizeX()
+                ?> <?= $block->escapeHtml(__('px.')) ?></strong>
+            </p>
+        <?php endif; ?>
+        <?php if ($_option->getImageSizeY() > 0):?>
+            <p class="note">
+                <?= $block->escapeHtml(__('Maximum image height')) ?>: <strong><?= (int)$_option->getImageSizeY()
+                ?> <?= $block->escapeHtml(__('px.')) ?></strong>
+            </p>
+        <?php endif; ?>
+    </div>
+    <?= $_fileExists ?
+        /* @noEscape */ $secureRenderer->renderStyleAsTag(
+            'display:none',
+            '#input-box-' . /* @noEscape */ $_fileName
+        ) : '' ?>
+</div>
+<script type="text/x-magento-init">
+    {
+        ".file": {
+            "Magento_Catalog/js/upload-image": {}
+        }
+    }
+</script>
