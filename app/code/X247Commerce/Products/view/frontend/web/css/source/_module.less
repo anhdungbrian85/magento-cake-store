@@ -2,6 +2,7 @@
 	.size_servings {
 		.swatch-attribute-options {
 			display: flex;
+			flex-wrap: wrap;
 		}
 
 		.swatch-option.text {
@@ -13,16 +14,20 @@
 			display: block;
 			text-align: center;
 			transition: all .3s;
-			margin-right: 5px;
+			margin: 0 5px 5px 0;
 			border-radius: 5px;
 			min-width: 86px;
+			box-sizing: border-box;
 
 			&:last-child {
 				margin-right: 0;
 			}
 
-			&:hover {
+			&:hover,
+			.selected {
 				background: #992E80;
+				border: 1px solid #B2B2B2;
+				outline: none;
 
 				.option-label,
 				.shape-label {
@@ -33,7 +38,15 @@
 				.number-highline {
 					color: #ffffff;
 				}
+
+				img {
+					filter: brightness(0) invert(1);
+				}
 			}
+		}
+
+		img {
+			transition: all .3s;
 		}
 
 		.number-highline {
@@ -53,6 +66,30 @@
 
 		.option-label {
 			margin-bottom: 3px;
+		}
+	}
+
+	.swatch-opt .swatch-attribute-label {
+		font-size: 18px;
+		font-weight: 500;
+		color: #282828;
+	}
+
+
+	.product-options-wrapper {
+		.field {
+			&.textarea {
+				.control {
+					width: 100%;
+				}
+
+				textarea {
+					border: 1px solid #CECECE;
+					height: 78px;
+					color: rgba(40, 40, 40, 0.61);
+					padding: 10px 20px;
+				}
+			}
 		}
 	}
 }
