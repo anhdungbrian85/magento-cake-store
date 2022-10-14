@@ -1,0 +1,33 @@
+& when (@media-common = true) {
+    a,
+    button {
+        transition: all 0.5s;
+    }
+
+    button {
+        border: 0;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+
+    .action.primary, .action-primary {
+        background: #992E80;
+        border-color: #992E80;
+        color: #fff;
+        font-weight: 500;
+        font-size: 1.6rem !important;
+    }
+
+    .action.primary:hover,
+    .action-primary:hover {
+        background: #c14eaa;
+        border-color: #c14eaa;
+    }
+
+    button,
+    a.action.primary {
+        border-radius: 5px !important;
+    }
+}

@@ -1,0 +1,109 @@
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .page-footer {
+        padding-bottom: 0;
+    }
+}
+
+& when (@media-common = true) {
+    .footer.content {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .page-footer a {
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .page-footer ul {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 15px 0 !important;
+        justify-content: center;
+    }
+
+    .page-footer ul li {
+        padding: 0 10px;
+    }
+
+    .page-footer p {
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .page-footer .social-link li a {
+        display: block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #992E80;
+        background: #fff;
+        line-height: 32px;
+        font-size: 20px;   
+        border: 1px solid transparent;  
+        transition: all 0.5s;   
+    }
+
+    .page-footer .social-link li a:hover {
+        background: #992E80;
+        color: #fff;
+        border-color: #fff;
+    }
+
+    .footer-copyright p span {
+        display: inline-block;
+        padding: 0 10px;
+        position: relative;
+    }
+
+    .footer-copyright {
+        position: relative;
+    }
+
+    .footer-copyright:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: -80px;
+        width: 100%;
+        height: 1px;
+        background: rgba(256,256,256,0.1);
+    }
+}
+
+@media (max-width: 1050px) {
+    .page-footer ul li {
+        padding-bottom: 10px;
+    }
+
+    .page-footer ul.social-link li {
+        padding-bottom: 0;
+    }
+}
+
+@media (max-width: 980px) {
+    .page-header .header.content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .sections.nav-sections {
+        margin: 0 15px;
+    }
+
+    .link.authorization-link a {
+        padding-left: 0;
+        width: 20px;
+        display: block;
+        font-size: 0;
+        height: 25px;
+    }
+
+    .minicart-wrapper a.action.showcart span.text {
+        display: none;
+    }
+
+    .minicart-wrapper .action.showcart {
+        margin-top: 2px;
+    }
+}
