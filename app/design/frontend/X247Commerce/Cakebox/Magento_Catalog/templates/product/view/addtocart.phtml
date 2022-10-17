@@ -29,14 +29,18 @@
             </div>
         </div>
         <?php endif; ?>
-        <div class="actions">
-            <button type="submit"
-                    title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
-                    class="action primary tocart"
-                    id="product-addtocart-button" disabled>
-                <span><?= $block->escapeHtml($buttonTitle) ?></span>
-            </button>
-            <?= $block->getChildHtml('', true) ?>
+        <div class="action-bottom">
+            <?= $block->getChildHtml('product.info.price-sticky') ?>
+            <?= $block->getChildHtml('product.info.price-sticky.additional') ?>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                        class="action primary tocart"
+                        id="product-addtocart-button" disabled>
+                    <span><?= $block->escapeHtml($buttonTitle) ?></span>
+                </button>
+                <?= $block->getChildHtml('', true) ?>
+            </div>
         </div>
     </div>
 </div>
