@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-event-list-link" cacheable="false">
+                <arguments>
+                    <argument name="path" xsi:type="string">x247commerce_customer/account_eventlist</argument>
+                    <argument name="label" xsi:type="string">My Event List</argument>
+                </arguments>
+            </block>
+            <referenceBlock name="customer-account-navigation-account-link">
+                <arguments>
+                    <argument name="label" xsi:type="string">Account Dashboard</argument>
+                </arguments>
+            </referenceBlock>
+            <referenceBlock name="customer-account-navigation-orders-link">
+                <arguments>
+                    <argument name="sortOrder" xsi:type="number">45</argument>
+                </arguments>
+            </referenceBlock>
+            <referenceBlock name="customer-account-navigation-orders-link">
+            </referenceBlock>
+            <referenceBlock name="customer-account-navigation-downloadable-products-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-wish-list-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-mollie-subscriptions-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-product-reviews-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-magento-invitation-link-container" remove="true" />
+            <referenceBlock name="customer-account-navigation-customer-balance-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-giftregistry-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-gift-card-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-reward-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-customer-balance-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-my-credit-cards-link" remove="true" />
+            <referenceBlock name="customer-account-navigation-checkout-sku-link" remove="true" />
+        </referenceBlock>
+    </body>
+</page>
