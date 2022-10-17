@@ -1,0 +1,212 @@
+& when (@media-common = true) {
+	.x247commerce_customer-account_eventlist-index {
+
+		a[type="button"],
+		a {
+
+			cursor: pointer;
+			text-decoration: none;
+			color: #000;
+		}
+
+		.columns .column.main {
+
+			padding: 0;
+
+			.page-title-wrapper {
+
+				display: block !important;
+			}
+		}
+
+		#event-list-container {
+
+			.event-list-content {
+
+				border-bottom: 1px solid rgba(38, 38, 38, 0.3);
+			}
+		}
+		
+		#button-add {
+			
+			display: block;
+			padding: 15px 25px;
+			background: #F48222;
+			color: #fff;
+			border-radius: 30px;
+			text-transform: uppercase;
+			font-weight: 700;
+			width: fit-content;
+			margin-top: 35px;			
+		}
+
+		#edit-container {
+
+			position: fixed;
+		    top: 0;
+		    left: 0;
+		    background: rgba(15, 15, 15, 0.75);
+		    width: 100%;
+		    height: 100%;
+		    transition: all 0.25s ease-out;
+
+		    &.active {
+
+		    	z-index: 99 !important;
+		    	opacity: 1 !important;
+		    }
+
+		    .edit-container-main {
+		    	
+		    	margin: 4% auto;
+			    width: 72%;
+			    background: #fff;
+
+			    .edit-container-header {
+
+			    	display: flex;
+    				justify-content: space-between;
+    				background: #992E80;
+
+    				h1 {
+
+    					margin-bottom: 0;
+					    padding: 30px;
+					    text-transform: uppercase;
+					    font-weight: 700;
+					    font-size: 27px;
+					    letter-spacing: -0.5px;
+					    color: #fff;
+    				}
+
+    				#close {
+
+    					border: 0;
+    					background: #992E80;
+    					font-size: 20px;
+    					padding: 14px 18px;
+    				}
+			    }
+
+			    .edit-container-content {
+
+					margin: auto;
+    				width: 32%;
+
+					.edit-container-content-title {
+
+						text-align: center;
+						color: #9E1E85;
+						margin-top: 15px;
+					}
+
+					.form-edit {
+
+						.label {
+							
+							text-align: center;
+							font-weight: 600;
+    						font-size: 13px;
+							margin-bottom: 4px;
+							width: 100%;
+						}
+
+						#name,
+						#occasion,
+						#day,
+						#month,
+						#year {
+
+							width: 100%;
+							box-sizing: border-box;
+							border: 1px solid #c2c2c2;
+							border-radius: 0;
+							padding: 9px 25px 9px 10px;
+							font-size: 14px;
+							margin-bottom: 15px;
+							height: 36px;
+						}
+
+						.date-area {
+
+							display: flex;
+							flex-wrap: wrap;
+							justify-content: space-between;
+
+							#day,
+							#month,
+							#year {
+
+								width: 30%;
+							}
+						}
+
+						.alert-event {
+							
+							margin-top: 20px;
+							color: #F58223;
+    						font-weight: 200;
+						}
+
+						.create-another-reminder {
+
+							text-align: center;
+							margin-top: 25px;
+
+							span {
+
+								font-weight: 100;
+								font-size: 14px;
+							}
+
+							button {
+
+								border-radius: 50% !important;
+								height: 45px;
+								width: 45px;
+								color: #fff;
+								background: #000;
+								font-size: 25px;
+								font-weight: 200;
+								margin-right: 20px;
+
+								&:hover {
+
+									border: none;
+								}
+							}
+						}
+
+						#button-save {
+
+							color: #fff;
+							border-radius: 21px !important;
+							padding: 14px 29px;
+							font-size: 16px;
+							text-transform: uppercase;
+							background: #666666;
+							margin: 17px;
+
+							&:hover {
+
+								border: none;
+							}
+						}
+					}
+			    }
+		    }
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) { 
+	.x247commerce_customer-account_eventlist-index #edit-container.edit-container .edit-container-main {
+
+		width: 85%;
+
+		.edit-container-content{
+			width: 90%;
+		}
+	}
+	
+}

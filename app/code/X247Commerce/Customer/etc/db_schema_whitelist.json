@@ -1,0 +1,14 @@
+{
+    "x247commerce_customer_event": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "occasion": true,
+            "date": true,
+            "their_name": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

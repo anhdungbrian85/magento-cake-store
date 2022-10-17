@@ -1,0 +1,82 @@
+<?php $listEvent = $block->getEventListCustomer();
+      $yearPresent = $block->getYearPresent();
+?>
+
+<div class="event-list-container" id="event-list-container">
+    <?php if(count($listEvent) > 0) :?>
+        <table class="event-list-content">
+            <tr class="tb-head">
+                <th class="tb-head-value"><?= __('Their Name')?></th>
+                <th class="tb-head-value"><?= __('Occassion')?></th>
+                <th class="tb-head-value"><?= __('Day')?></th>
+                <th class="tb-head-value"><?= __('Month')?></th>
+                <th class="tb-head-value"><?= __('Year')?></th>
+                <th class="tb-head-value"><?= __('Delete')?></th>
+                <th class="tb-head-value"><?= __('Edit')?></th>
+            </tr>
+            <?php foreach($listEvent as $item): ?>
+                <tr class="tb-item">
+                    <td class="tb-item-value"><span class="name-value"><?= $item->getTheirName()?></span></td>
+                    <td class="tb-item-value"><span class="occasion-value"><?= $item->getOccasion()?></span></td>
+                    <td class="tb-item-value"><span class="day-value"><?= $block->separateDate($item->getDate())[2]?></span></td>
+                    <td class="tb-item-value"><span class="month-value" data-value="<?= $block->separateDate($item->getDate())[1]?>"><?= $block->getMonthLabel($block->separateDate($item->getDate())[1])?></span></td>
+                    <td class="tb-item-value"><span class="year-value"><?= $block->separateDate($item->getDate())[0]?></span></td>
+                    <td class="tb-item-value-button-delete"><a href="<?= $block->getUrl('*/*/delete', ['_secure' => true, '_current' => true,'_use_rewrite' => true, 'id' => $item->getId()])?>"><span style="color:#000">X</span></a></td>
+                    <td class="tb-item-value-button-edit"><a type="button" class="button-edit" data-value="<?= $item->getId()?>"><span><?= __('Edit')?></span></a></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else :?>
+        <div class="event-empty"><span><?= __("You don't have any event reminders setup")?></span></div>
+    <?php endif; ?>
+    <a type="button" id="button-add"><span><?= __('create a new reminder')?></span></a>
+</div>
+
+<div id="edit-container" class="edit-container" style="opacity: 0; z-index: -1;">
+    <div class="edit-container-main">
+        <div class="edit-container-header">
+            <h1 class="new"><?= __('Add a new reminder')?></h1>
+            <h1 class="edit"><?= __('Edit reminder')?></h1>
+            <div class="action-container"><button id="close">x</button></div>
+        </div>
+        <div class="edit-container-content">
+            <div class="edit-container-content-title">
+                <h2><?= __('Set up a free email alert reminder, its quick & free')?></h2>
+            </div>
+            <form class="form-edit" action="<?= $block->getUrl('*/*/edit') ?>" method="post">
+                <div class="their-name-area">
+                    <div class="label name"><span><?= __('Their name')?></span></div>
+                    <input name="name" id="name" placeholder="<?= __('Name')?>"/>
+                </div>
+                <div class="date-area">
+                    <div class="label date"><span><?= __('Date')?></span></div>
+                    <select name="month" id="month">
+                        <option value="">Select Month</option>
+                    </select>
+                    <select name="day" id="day">
+                        <option value="">Select Day</option>
+                    </select>
+                    <input type="number" name="year" id="year" min="<?= $yearPresent ?>" max="<?= ((int)$yearPresent + 50) ?>"/>
+                </div>
+                <div class="occassion-area">
+                    <div class="label occassion"><span><?= __('Occassion')?></span></div>
+                    <input name="occasion" id="occasion"/>
+                </div>
+                <input type="hidden" name="id" value="" id="edit-id-value"/>
+                <input type="hidden" name="customer_id" value="<?= $block->getCustomerId()?>"/>
+
+                <div class="alert-event"><span><?= __("You'll recieve an email alert from us 30 days before the events")?></span></div>
+                <div class="create-another-reminder"><button type="button">+</button><span><?= __('Create another reminder')?></span></div>
+                <div class="action-form"><button type="submit" id="button-save"><span><?= __('Save')?></span></button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#event-list-container": {
+            "X247Commerce_Customer/js/popup-event": {}
+        }
+    }
+</script>
