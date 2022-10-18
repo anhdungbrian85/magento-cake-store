@@ -119,17 +119,21 @@ define([
             var self = this,
                 sortByDistance = sortByDistance || 1;
                 params = this.collectParams(sortByDistance, isReset);
-            console.log(params);    
+                
             $.ajax({
                 url: self.ajaxCallUrl,
                 type: 'POST',
                 data: params,
                 showLoader: true
             }).done($.proxy(function (response) {
-                response = JSON.parse(response);
-                self.options.jsonLocations = response;console.log(response);
-                self.getIdentifiers();
-                self.Amastyload();
+                if (response.store_location_id) {
+                    window.location.reload();
+                }   else {
+                    response = JSON.parse(response);
+                    self.options.jsonLocations = response;
+                    self.getIdentifiers();
+                    self.Amastyload();
+                }
             }));
         },
 
