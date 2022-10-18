@@ -84,7 +84,9 @@ define([
                 'product': this.options.productId,
                 'category': this.options.categoryId,
                 'attributes': this.mapContainer.find(this.selectors.attributeForm).serializeArray(),
-                'sortByDistance': sortByDistance
+                'sortByDistance': sortByDistance,
+                'delivery-type': $('[name="delivery-type"]:checked').val()
+
             };
         },
 
@@ -115,8 +117,9 @@ define([
 
         makeAjaxCall: function (sortByDistance, isReset) {
             var self = this,
+                sortByDistance = sortByDistance || 1;
                 params = this.collectParams(sortByDistance, isReset);
-
+            console.log(params);    
             $.ajax({
                 url: self.ajaxCallUrl,
                 type: 'POST',
@@ -124,7 +127,7 @@ define([
                 showLoader: true
             }).done($.proxy(function (response) {
                 response = JSON.parse(response);
-                self.options.jsonLocations = response;
+                self.options.jsonLocations = response;console.log(response);
                 self.getIdentifiers();
                 self.Amastyload();
             }));
