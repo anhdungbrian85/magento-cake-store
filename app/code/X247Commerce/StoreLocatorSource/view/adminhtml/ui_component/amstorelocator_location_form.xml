@@ -1,0 +1,18 @@
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+<fieldset name="general">
+	<field name="amlocator_source" sortOrder="10">
+        <argument name="data" xsi:type="array">
+            <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorSource</item>
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Locator Store</item>
+                <item name="formElement" xsi:type="string">select</item>
+                <item name="visible" xsi:type="boolean">true</item>
+                <item name="dataType" xsi:type="string">select</item>
+                <item name="validation" xsi:type="array">
+                    <item name="required-entry" xsi:type="boolean">true</item>
+                </item>
+            </item>
+        </argument>
+    </field>
+</fieldset>
+</form>

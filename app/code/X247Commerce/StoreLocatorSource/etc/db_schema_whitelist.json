@@ -1,0 +1,18 @@
+{
+    "inventory_source": {
+        "column": {
+            "amlocator_store": true
+        },
+        "index": {
+            "INVENTORY_SOURCE_AMLOCATOR_STORE": true
+        }
+    },
+    "amasty_amlocator_location": {
+        "column": {
+            "amlocator_source": true
+        },
+        "index": {
+            "AMASTY_AMLOCATOR_LOCATION_AMLOCATOR_SOURCE": true
+        }
+    }
+}
