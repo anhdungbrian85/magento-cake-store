@@ -5,7 +5,8 @@ define([
     'use strict';
     $.widget('x247.popupeventcustomer', {
         options : {
-            yearPresent : $('#year').val()
+            yearPresent : $('#year').val(),
+            n : 0
         },
 
         _create: function() {
@@ -100,7 +101,7 @@ define([
                     }
                 }
             }
-            if (n != 0) {
+            if (n != 0 && $widget.options.n != n) {
                 $('#day').empty();
                 for (let i = 1; i < n+1; i++) {
                     $('#day')
@@ -109,6 +110,8 @@ define([
                     .text(i));
                 }
             }
+
+            $widget.options.n = n;
 
         }
     });
