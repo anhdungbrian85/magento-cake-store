@@ -98,6 +98,9 @@
                 ajaxCallUrl: "<?= $block->escapeHtml(
                     $block->getUrl('deliverypopup/index/ajax') . $block->getQueryString()
                 ); ?>",
+                ajaxSelectUrl: "<?= $block->escapeHtml(
+                    $block->getUrl('deliverypopup/index/selectLocation')
+                ); ?>",
                 useBrowserLocation: "<?= (bool)$block->getUseBrowserLocation()?>",
                 jsonLocations: <?= /* @noEscape */ $block->getJsonLocations() ?>,
                 imageLocations: "<?= $block->escapeHtml($block->getViewFileUrl('Amasty_Storelocator::images/')); ?>",

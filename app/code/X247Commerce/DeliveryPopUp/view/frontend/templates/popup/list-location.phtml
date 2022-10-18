@@ -39,6 +39,9 @@ $locations = $block->getLocationCollection();
                     ->setData('location', $location)
                     ->toHtml();
                 ?>
+                <button class="select-location" data-location-id="<?= $location->getId() ?>">
+                    <?= __('Select') ?>
+                </button>
             </div>
         <?php endforeach; ?>
     </div>

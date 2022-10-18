@@ -16,6 +16,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     protected CollectionFactory $locationCollectionFactory;
     protected JsonFactory $resultJsonFactory;
     protected StoreLocationContextInterface $storeLocationContextInterface;
+    
     public function __construct(
         CustomerSession $customerSession,
         CollectionFactory $locationCollectionFactory,
