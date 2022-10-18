@@ -25,7 +25,7 @@ class StoreLocationContext implements StoreLocationContextInterface
      */
     public function setStoreLocationId($storeLocationId) 
     {
-        $this->httpContext->setValue(StoreLocationContextInterface::STORE_LOCATION_ID, $storeLocationId);
+        $this->httpContext->setValue(StoreLocationContextInterface::STORE_LOCATION_ID, $storeLocationId, 0);
     }
 
     /**
