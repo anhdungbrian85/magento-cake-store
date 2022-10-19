@@ -27,8 +27,11 @@ class Location extends \Amasty\Storelocator\Block\Location
 {	
 
 	protected $formKey;
-	
+
+	protected $locationModel;
+
 	public function __construct(
+        LocationModel $locationModel,
 		FormKey $formKey,
 		Context $context,
         Registry $coreRegistry,
@@ -46,6 +49,7 @@ class Location extends \Amasty\Storelocator\Block\Location
         \Amasty\Storelocator\Api\ReviewRepositoryInterface  $reviewRepository,
         array $data = []
 	) {
+        $this->locationModel = $locationModel;
 		$this->formKey = $formKey;
 		parent::__construct(
 			$context, 
@@ -76,12 +80,13 @@ class Location extends \Amasty\Storelocator\Block\Location
         return $this->getUrl('deliverypopup/index/selectlocation');
     }
 
-    /**
-     * @return string
-     */
     public function getLeftBlockHtml()
     {
         $html = $this->setTemplate('X247Commerce_DeliveryPopUp::popup/list-location.phtml')->toHtml();
         return $html;
+    }
+
+    public function getOpenTime() {
+        return $this->LocationModel->getWorkingTimeToday()
     }
 }
