@@ -39,6 +39,7 @@ define([
 
         _create: function () {
             this.ajaxCallUrl = this.options.ajaxCallUrl;
+            this.ajaxSelectUrl = this.options.ajaxSelectUrl;
             this.useGeo = this.options.useGeo;
             this.imageLocations = this.options.imageLocations;
             this.mapContainer = $('#map-container-delivery-popup');
@@ -46,6 +47,22 @@ define([
             this.initializeMap();
             this.initializeFilter();
             this.Amastyload();
+            this.bindSelectLocation();
+        },
+
+        bindSelectLocation: function() {
+            var self = this;
+            $(document).on('click', '.select-location', function() {
+                var location_id = $(this).data('location-id');
+                $.ajax({
+                url: self.ajaxSelectUrl,
+                    type: 'POST',
+                    data: {'location_id': location_id},
+                    showLoader: true
+                }).done($.proxy(function (response) {
+                    window.location.reload();
+                }));
+            })
         },
 
         navigateMe: function () {
@@ -119,17 +136,21 @@ define([
             var self = this,
                 sortByDistance = sortByDistance || 1;
                 params = this.collectParams(sortByDistance, isReset);
-            console.log(params);    
+                
             $.ajax({
                 url: self.ajaxCallUrl,
                 type: 'POST',
                 data: params,
                 showLoader: true
             }).done($.proxy(function (response) {
-                response = JSON.parse(response);
-                self.options.jsonLocations = response;console.log(response);
-                self.getIdentifiers();
-                self.Amastyload();
+                if (response.store_location_id) {
+                    window.location.reload();
+                }   else {
+                    response = JSON.parse(response);
+                    self.options.jsonLocations = response;
+                    self.getIdentifiers();
+                    self.Amastyload();
+                }
             }));
         },
 

@@ -24,16 +24,21 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Widget\Block\BlockInterface;
 use Amasty\Storelocator\Api\ReviewRepositoryInterface;
 use X247Commerce\DeliveryPopUp\Helper\Data as PopUpHelper;
-
+use X247Commerce\Checkout\Api\StoreLocationContextInterface;
+use Magento\Framework\App\Http\Context as HttpContext;
 
 class PopUp extends \Amasty\Storelocator\Block\Location
 {
  	protected FormKey       $formKey;
     protected PopUpHelper   $popupHelper;
+    protected StoreLocationContextInterface $storeLocationContextInterface;
+    protected HttpContext $httpContext;
 
  	public function __construct(
         FormKey $formKey,
         PopUpHelper $popupHelper,
+        StoreLocationContextInterface $storeLocationContextInterface,
+        HttpContext $httpContext,
         Context $context,
         Registry $coreRegistry,
         EncoderInterface $jsonEncoder,
@@ -53,6 +58,8 @@ class PopUp extends \Amasty\Storelocator\Block\Location
  	) {
  		$this->formKey = $formKey;
         $this->popupHelper = $popupHelper;
+        $this->storeLocationContextInterface = $storeLocationContextInterface;
+        $this->httpContext = $httpContext;
  		parent::__construct(
             $context, 
             $coreRegistry, 
@@ -74,7 +81,9 @@ class PopUp extends \Amasty\Storelocator\Block\Location
 
     public function shouldShowPopup()
     {
-        return $this->popupHelper->isEnabledPopup();
+        // var_dump($this->httpContext->getValue('store_location_id'));
+
+        return !$this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID) && $this->popupHelper->isEnabledPopup();
     }
 
  	public function postCode()

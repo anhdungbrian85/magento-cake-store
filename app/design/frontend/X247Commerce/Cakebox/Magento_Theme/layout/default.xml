@@ -21,24 +21,5 @@
                 </block> 
             <!-- </container> -->
         </referenceContainer>
-        <move element="navigation.sections" destination="header.container" />
-        <referenceContainer name="footer_links" remove="true"/>
-        <referenceContainer name="copyright" remove="true"/>
-        <referenceBlock name="form.subscribe" remove="true" />
-        <referenceBlock name="header.panel.wrapper" remove="true" />
-        <!-- <move element="register-link" destination="header-wrapper" after="minicart"/> -->
-        <move element="authorization-link" destination = "header-wrapper" after="minicart" />
-        <referenceContainer name="footer">
-          <block class="Magento\Cms\Block\Block" name="footer_links_block">
-            <arguments>
-              <argument name="block_id" xsi:type="string">footer_links_block</argument>
-            </arguments>
-          </block>
-          <block class="Magento\Cms\Block\Block" name="footer_copyright_block">
-            <arguments>
-              <argument name="block_id" xsi:type="string">footer_copyright_block</argument>
-            </arguments>
-          </block>
-        </referenceContainer>
     </body>
 </page>
