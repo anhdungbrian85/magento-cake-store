@@ -27,7 +27,7 @@ $locations = $block->getLocationCollection();
                                      url('<?= $block->escapeUrl($baseImage) ?>')">
                         </div>
                     <?php endif;?>
-                    <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>
+                    <div class="amlocator-store-information"><?= $location->getOpenTime() ?>
                         <div style="display: none;" class="amasty_distance"
                              id="amasty_distance_<?= (int)$location['id'] ?>"><?= $block->escapeHtml(__('Distance:')) ?>
                             <span class="amasty_distance_number"></span>
