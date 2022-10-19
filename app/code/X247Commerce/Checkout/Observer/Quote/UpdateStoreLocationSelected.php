@@ -23,11 +23,6 @@ class UpdateStoreLocationSelected implements ObserverInterface
 
     public function execute(EventObserver $observer)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/store_location.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info('UpdateStoreLocationSelected::getStoreLocationId' , $this->storeLocationContext->getStoreLocationId());
-
         if ($this->storeLocationContext->getStoreLocationId()) {
             $quote = $this->checkoutSession->getQuote()->setData('store_location_id', $this->storeLocationContext->getStoreLocationId())->save();
         }

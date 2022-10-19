@@ -19,6 +19,7 @@ $locations = $block->getLocationCollection();
             <div class="amlocator-store-desc" name="leftLocation"
                  data-mapid="<?= $block->escapeHtml($block->getMapId()); ?>"
                  data-amid="<?= (int)$location['id']; ?>">
+
                 <div class="amlocator-block">
                     <?php if ($baseImage = $block->getLocationImage($location)):?>
                         <div class="amlocator-image"

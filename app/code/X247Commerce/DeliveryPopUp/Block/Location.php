@@ -87,6 +87,6 @@ class Location extends \Amasty\Storelocator\Block\Location
     }
 
     public function getOpenTime() {
-        return $this->LocationModel->getWorkingTimeToday()
+        return $this->locationModel->getWorkingTimeToday();
     }
 }
