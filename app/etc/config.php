@@ -444,6 +444,8 @@ return [
         'Magento_GiftCardGraphQl' => 1,
         'Amasty_Base' => 1,
         'Amasty_Geoip' => 1,
+        'Amasty_SocialLogin' => 1,
+        'Amasty_SocialLoginLite' => 1,
         'Amasty_Storelocator' => 1,
         'Amasty_StorePickupWithLocator' => 1,
         'Amasty_StorelocatorIndexer' => 1,
@@ -461,13 +463,20 @@ return [
         'Klevu_Troubleshoot' => 1,
         'Mageplaza_Core' => 1,
         'Mageplaza_Smtp' => 1,
-        'Mageplaza_SocialLogin' => 1,
         'Mollie_Payment' => 1,
         'Mollie_Subscriptions' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'Smsglobal_Sms' => 1,
         'Temando_ShippingRemover' => 1,
-        'Trustpilot_Reviews' => 1
+        'Trustpilot_Reviews' => 1,
+        'X247Commerce_Catalog' => 1,
+        'X247Commerce_Checkout' => 1,
+        'X247Commerce_Customer' => 1,
+        'X247Commerce_DeliveryPopUp' => 1,
+        'X247Commerce_Products' => 1,
+        'X247Commerce_StoreLocatorSource' => 1,
+        'X247Commerce_Theme' => 1,
+        'Zendesk_Zendesk' => 1
     ]
 ];
