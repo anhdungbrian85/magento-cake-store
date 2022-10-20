@@ -11,6 +11,7 @@
 				padding: 0 0 10px;
 				font-family: 'GoldneyAlt-Regular';
 				color: #992E80;
+				font-weight: normal;
 			}
 
 			h2 {
@@ -29,12 +30,34 @@
 				max-width: 959px;
 				margin: auto;
 			}
+			a.pagebuilder-button-primary:hover,
+			a.pagebuilder-button-primary{
+				background: #992E80;
+                border: 1px solid #992E80;
+				font-weight: 300;
+				letter-spacing: -0.76pt;
+				font-size: 19px;
+				padding: 8px 16px;
+			}
 		}
-
+       
 		.columns {
 			.column.main {
 				padding-bottom: 0;
 			}
 		}
 	}
+}
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+	.footer-top-section {
+		display: none!important;
+	}
+	.mobile-home-promosion {
+		h2{
+			font-size:22px;
+			font-family: 'TiemposHeadline-Black';
+			max-width:50%;
+			letter-spacing :-0.22pt;
+		}
+    }
 }
