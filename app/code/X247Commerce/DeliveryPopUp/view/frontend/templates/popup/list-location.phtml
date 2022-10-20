@@ -27,11 +27,15 @@ $locations = $block->getLocationCollection();
                                      url('<?= $block->escapeUrl($baseImage) ?>')">
                         </div>
                     <?php endif;?>
-                    <div class="amlocator-store-information"><?= $location->getOpenTime() ?>
-                        <div style="display: none;" class="amasty_distance"
-                             id="amasty_distance_<?= (int)$location['id'] ?>"><?= $block->escapeHtml(__('Distance:')) ?>
-                            <span class="amasty_distance_number"></span>
+                    <div  class="amasty_distance"
+                         id="amasty_distance_<?= (int)$location['id'] ?>">
+                        <img src="<?php echo $this->getViewFileUrl('X247Commerce_DeliveryPopUp::images/temporary_for_store_image.jpg'); ?>">
+                        <div class="distance store location">
+                            <i class="fa-thin fa-location-dot"></i>  
+                            <span class="amasty_distance_number"><?= $block->escapeHtml(__('2km')) ?></span>
                         </div>
+                    </div>
+                    <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>
                     </div>
                 </div>
                 <?=
