@@ -18,6 +18,7 @@
             </container>
         </referenceContainer>
         <move element="register-link" destination="header-wrapper" after="minicart"/>
+        <move element="breadcrumbs" destination="main.content" before="-"/>
         <referenceContainer name="footer_links" remove="true"/>
         <referenceContainer name="copyright" remove="true"/>
         <referenceBlock name="header.panel.wrapper" remove="true" />
