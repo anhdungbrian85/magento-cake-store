@@ -256,7 +256,43 @@
 				}
 			}
 		}
+		
 	}
-
 }
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+	.modal-inner-wrap {
+		margin: auto;
+	}
+	.custom-delivery-popup-modal {
+		.amlocator-block {
+			margin: 15px 15px 15px 5px;
+		}
+		.delivery-popup {
+			.amasty_distance {
+				width: 48%;
 
+				img {
+					height: 72px;
+	    			width: 72px;
+				}
+			}
+			.distance.store.location .amasty_distance_number {
+				height: 72px;
+	    		width: 72px;
+	    		font-size: 12px;
+			}
+			.distance.store.location {
+				height: 72px;
+	    		width: 72px;
+			}
+		}
+		.amlocator-store-information {
+			.amlocator-title {
+				a {
+					font-size: 18px;
+				    font-weight: 400;
+				}
+			}
+		}
+	}
+}
