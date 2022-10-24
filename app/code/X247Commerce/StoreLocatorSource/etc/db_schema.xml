@@ -13,4 +13,15 @@
             <column name="amlocator_source"/>
         </index>
     </table>
+    <table name="admin_user_source_link" resource="default" engine="innodb" comment="Admin User Source Link">
+        <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
+        <column name="user_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Admin User Id" />
+        <column name="source_code" xsi:type="varchar" nullable="false" comment="Source Code" />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="admin_user_source_link_user_id" table="admin_user_source_link" column="user_id" referenceTable="admin_user" referenceColumn="user_id" onDelete="CASCADE"/>
+
+        <constraint xsi:type="foreign" referenceId="admin_user_source_link_source_code" table="admin_user_source_link" column="source_code" referenceTable="inventory_source" referenceColumn="source_code" onDelete="CASCADE"/>
+    </table>
 </schema>
