@@ -144,15 +144,18 @@
 			    position: relative;
 			    top: -5px;
 				.delivery {
-				    -ms-flex: 0 0 33.333333%;
-				    flex: 0 0 33.333333%;
-				    max-width: 33.333333%;
+				    -ms-flex: 0 0 33%;
+				    flex: 0 0 33%;
+				    max-width: 33%;
 				    text-align: center;
-				    & + .delivery {
-				    	.label {
-				    		border-left:1px solid #fff;
-				    	}
-				    }
+				    
+
+				}
+				.premium.delivery {
+					border-left:1px solid #fff;
+				}
+				.express.delivery {
+					border-left:1px solid #fff;
 				}
 				input[type="radio"] {
 					visibility: hidden;
@@ -264,13 +267,10 @@
 		margin: auto;
 	}
 	.custom-delivery-popup-modal {
-		.amlocator-block {
-			margin: 15px 15px 15px 5px;
-		}
 		.delivery-popup {
 			.select-collection {
 				.label {
-					font-size: 12px;
+					font-size: 14px;
 				}
 			}
 			.amasty_distance {
@@ -303,13 +303,17 @@
 }
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__xs) {
 	.custom-delivery-popup-modal {
-		.amlocator-block {
-			margin: 15px 10px 10px 5px;
-		}
 		.delivery-popup {
 			.select-collection {
+				align-items: stretch;
 				.label {
-					font-size: 9px;
+					font-size: 12px;
+				}
+				.free.delivery {
+					background-color: #af3b99;
+				}
+				.premium.delivery {
+					background-color: #992E80;
 				}
 			}
 			.amasty_distance {
@@ -350,6 +354,7 @@
 				.select-location {
 					width: 100%;
 					font-size: 11px;
+
 				}
 			}
 		}
