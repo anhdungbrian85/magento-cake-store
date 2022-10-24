@@ -144,15 +144,18 @@
 			    position: relative;
 			    top: -5px;
 				.delivery {
-				    -ms-flex: 0 0 33.333333%;
-				    flex: 0 0 33.333333%;
-				    max-width: 33.333333%;
+				    -ms-flex: 0 0 33%;
+				    flex: 0 0 33%;
+				    max-width: 33%;
 				    text-align: center;
-				    & + .delivery {
-				    	.label {
-				    		border-left:1px solid #fff;
-				    	}
-				    }
+				    
+
+				}
+				.premium.delivery {
+					border-left:1px solid #fff;
+				}
+				.express.delivery {
+					border-left:1px solid #fff;
 				}
 				input[type="radio"] {
 					visibility: hidden;
@@ -256,7 +259,111 @@
 				}
 			}
 		}
+		
 	}
-
 }
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+	.modal-inner-wrap {
+		margin: auto;
+	}
+	.custom-delivery-popup-modal {
+		.delivery-popup {
+			.select-collection {
+				.label {
+					font-size: 14px;
+				}
+			}
+			.amasty_distance {
+				width: 53%;
 
+				img {
+					height: 72px;
+	    			width: 72px;
+				}
+			}
+			.distance.store.location .amasty_distance_number {
+				height: 72px;
+	    		width: 72px;
+	    		font-size: 12px;
+			}
+			.distance.store.location {
+				height: 72px;
+	    		width: 72px;
+			}
+		}
+		.amlocator-store-information {
+			.amlocator-title {
+				a {
+					font-size: 18px;
+				    font-weight: 400;
+				}
+			}
+		}
+	}
+}
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__xs) {
+	.custom-delivery-popup-modal {
+		.delivery-popup {
+			.select-collection {
+				align-items: stretch;
+				.label {
+					font-size: 12px;
+				}
+				.free.delivery {
+					background-color: #af3b99;
+				}
+				.premium.delivery {
+					background-color: #992E80;
+				}
+			}
+			.amasty_distance {
+				width: 65%;
+
+				img {
+					height: 56px;
+	    			width: 56px;
+				}
+			}
+			.distance.store.location .amasty_distance_number {
+				height: 56px;
+	    		width: 56px;
+	    		font-size: 11px;
+			}
+			.distance.store.location {
+				height: 56px;
+	    		width: 56px;
+			}
+			.opening-time {
+				font-size: 12px;
+			}
+			.open-time-store {
+				font-size: 12px;
+			}
+			.amlocator-store-desc {
+				padding-right: 5px;
+
+				.select.store.lacation {
+					width: 23%;
+					margin-right: 3px;
+
+					button {
+						height: 32px;
+    					font-size: 9px;
+					}
+				}
+				.select-location {
+					width: 100%;
+					font-size: 11px;
+
+				}
+			}
+		}
+		.amlocator-store-information {
+			.amlocator-title {
+				a {
+					font-size: 12px;
+				}
+			}
+		}
+	}
+}
