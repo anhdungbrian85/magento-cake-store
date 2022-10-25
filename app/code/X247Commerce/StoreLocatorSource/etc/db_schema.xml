@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="inventory_source" resource="default">
-        <column xsi:type="int" name="amlocator_store"/>
-        <index referenceId="CUSTOM_INVENTORY_SOURCE_AM" indexType="btree">
+    
+    <table name="inventory_source">
+        <column xsi:type="int" name="amlocator_store" unsigned="true" nullable="true"
+                comment="amlocator store id" />
+        <index referenceId="INVENTORY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="amlocator_store"/>
-        </index>
+        </index>        
     </table>
-        <table name="amasty_amlocator_location" resource="default">
-        <column xsi:type="text" name="amlocator_source"/>
-        <index referenceId="CUSTOM_AMASTY_INVENTORY_SOURCE_AM" indexType="btree">
-            <column name="amlocator_source"/>
-        </index>
-    </table>
+        
     <table name="admin_user_source_link" resource="default" engine="innodb" comment="Admin User Source Link">
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
         <column name="user_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Admin User Id" />

@@ -3,4 +3,7 @@
     <type name="Amasty\Storelocator\Controller\Adminhtml\Location\Save">
       	<plugin name="plugin_source_save" type="X247Commerce\StoreLocatorSource\Plugin\StoreSave"/>
     </type>
+    <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
+        <plugin name="assign_amstore_locator_id" type="X247Commerce\StoreLocatorSource\Plugin\AssignAmStoreLocatorData"/>
+    </type>
 </config>
