@@ -15,7 +15,7 @@
 				font-size: 14px;
 			}
 			.amasty_distance {
-				width: 33%;
+				width: 33.33%;
 				margin-right: 10px;
 				position: relative;
 			    display: flex;
@@ -132,7 +132,7 @@
 			    min-height: 85.68px;
 			    font-size: 16px;
 			    color: #9C9AAA;
-			    border-radius: 10px;
+			    border-radius: 5px;
 			    
 			}
 			
@@ -144,12 +144,14 @@
 			    position: relative;
 			    top: -5px;
 				.delivery {
-				    -ms-flex: 0 0 33%;
-				    flex: 0 0 33%;
-				    max-width: 33%;
+				    -ms-flex: 0 0 calc(~"(100% - 2px)/3");
+				    flex: 0 0 calc(~"(100% - 2px)/3");
+				    max-width: calc(~"(100% - 2px)/3");
 				    text-align: center;
-				    
-
+				    display: -ms-flexbox;
+				    display: flex;
+				    align-items: center;
+				    justify-content: center;
 				}
 				.premium.delivery {
 					border-left:1px solid #fff;
@@ -170,7 +172,11 @@
 					letter-spacing: -0.56px;
 					color: #fff;
 					padding: 20px 8px 15px;
-					display: block;
+				    display: flex;
+				    width: 100%;
+				    height: -webkit-fill-available;
+				    justify-content: center;
+				    align-items: center;
 				}
 				input[type="radio"]:checked + .label {
 					background-color: #af3b99;
@@ -257,10 +263,14 @@
 					font-size: 22px;
 					padding: 20px 15px 15px;
 				}
+				.delivery {
+					display: block;
+				}
 			}
 		}
 		
 	}
+
 }
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
 	.modal-inner-wrap {

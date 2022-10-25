@@ -2,17 +2,18 @@
     "inventory_source": {
         "column": {
             "amlocator_store": true
-        },
-        "index": {
-            "INVENTORY_SOURCE_AMLOCATOR_STORE": true
         }
     },
-    "amasty_amlocator_location": {
+    "admin_user_source_link": {
         "column": {
-            "amlocator_source": true
+            "entity_id": true,
+            "user_id": true,
+            "source_code": true
         },
-        "index": {
-            "AMASTY_AMLOCATOR_LOCATION_AMLOCATOR_SOURCE": true
+        "constraint": {
+            "PRIMARY": true,
+            "ADMIN_USER_SOURCE_LINK_USER_ID_ADMIN_USER_USER_ID": true,
+            "ADMIN_USER_SOURCE_LINK_SOURCE_CODE_INVENTORY_SOURCE_SOURCE_CODE": true
         }
     }
 }

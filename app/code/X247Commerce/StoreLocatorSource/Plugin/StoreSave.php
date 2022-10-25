@@ -1,4 +1,5 @@
 <?php
+
 namespace X247Commerce\StoreLocatorSource\Plugin;
 
 class StoreSave
@@ -27,7 +28,10 @@ class StoreSave
 		
 		$data = $subject->getRequest()->getPostValue();
 		$id = (int)$subject->getRequest()->getParam('id');
+
 		$nameSource = $data["amlocator_source"];
+		$soure = $this->sourceRepository->get($nameSource);
+		$idSource = $soure->getId();
 		$collection = $this->sourceFactory->create()->getCollection();
 		$storeCollection = $this->locationFactory->create()->getCollection();
 		foreach ($collection as $value) {
@@ -38,13 +42,12 @@ class StoreSave
 			}
 		}	
 		foreach ($storeCollection as $value) {
-			if ($value->getAmlocatorSource()==$id) {
+			if ($value->getAmlocatorSource()==$idSource) {
 				$value->setData("amlocator_source",'NULL')->save();
 
 			}
 		}
 
-		$soure = $this->sourceRepository->get($nameSource);
 		$soure->setData("amlocator_store",$id)->save();
 		$modelStore = $this->locationFactory->create();
 		$store = $this->locationResource->load($modelStore,$id);

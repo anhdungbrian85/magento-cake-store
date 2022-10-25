@@ -1,0 +1,5 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_inventory_populate_source_with_data">
+        <observer name="x247Commerce_storelocatorsource_source_save" instance="X247Commerce\StoreLocatorSource\Observer\SourceSave" />
+    </event>
+</config>
