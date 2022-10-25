@@ -1,0 +1,189 @@
+& when (@media-common = true) {
+    .customer-account-login,
+    .form-create-account {
+        input[type="text"],
+        input[type="password"],
+        input[type="url"],
+        input[type="tel"],
+        input[type="search"],
+        input[type="number"],
+        input[type*="date"],
+        input[type="email"] {
+            height: 54px;
+            border-radius: 5px;
+            background: #f6f6f6;
+            border: 1px solid #f6f6f6;
+        }
+    }
+
+    .block.block-customer-login,
+    .block.block-new-customer,
+    .form.create.account.form-create-account {
+        width: 460px;
+    }
+
+    .form.create.account.form-create-account {
+        margin: 0 auto;
+    }
+
+    .login-container .block .block-title {
+        font-size: 30px;
+    }
+
+    .login-container .fieldset>.field>.control {
+        width: 100%;
+    }
+
+    .password a.action.remind {
+        color:#3F3F44;
+        position:absolute;
+        right: 0;
+    }
+
+    .password a.action.remind:hover {
+        color: #992E80;
+        text-decoration: none;
+    }
+
+    .field.password.required {
+        position: relative;
+    }
+
+    .block.block-customer-login .fieldset>.field {
+        margin-bottom: 30px;
+    }
+
+    input#show-password {
+        width: 16px;
+        height: 16px;
+    }
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .login-container .block.block-customer-login {
+        margin-right: 20px;
+    }
+
+    .block.block-new-customer {
+        margin-left: 20px;
+    }
+
+    .actions-toolbar button.action.login.primary,
+    .actions-toolbar a.action.create.primary,
+    .form-create-account button.action.submit.primary {
+        width: 100%;
+        height: 56px;
+        line-height: 40px;    
+    }
+
+    .block.block-new-customer .actions-toolbar,
+    .login-container .actions-toolbar,
+    .login-container .actions-toolbar .primary,
+    .block.block-new-customer .actions-toolbar .primary,
+    .form-create-account .primary {
+        width: 100%;
+    }
+
+    .amsl-popup-overlay {
+        background: #f9f9f9;
+    }
+    
+    .amsl-popup-block {
+        min-width: 520px;
+        .amsl-tablist {
+            margin: 0 0 40px;
+            display: flex;
+        }
+        .amsl-form {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .amsl-close {
+            display: none;
+        }
+        .fieldset.create.info {
+            padding: 0 30px;
+            box-sizing: border-box;
+            height: 500px;
+            overflow-y: scroll;
+        }
+        .actions-toolbar {
+            .action.primary {
+                background: #992E80;
+                border-radius: 5px;
+                line-height: 30px !important;
+                border-color: #992E80;
+                &:hover {
+                    background: #992E80;
+                    &:focus {
+                        background: #992E80;
+                    }
+                }
+            }
+        }
+    }
+    .amsl-tablist {
+        .amsl-title {
+            width: 50%;
+            .amsl-link {
+                padding: 14px 20px !important;
+                border-bottom: 3px solid #f6f6f6 !important;
+            }
+            &:hover {
+                background: rgba(153,46,128,0.05);
+            }
+        }
+        .amsl-title.active {
+            .amsl-link {
+                border-bottom: 3px solid #992E80 !important;
+                background: rgba(153,46,128,0.05);
+                color: #992E80;
+            }
+        }
+    }
+    .fieldset.login {
+        padding: 0 20px;
+    }
+    .block.block-customer-login {
+        width: 100%;
+    }
+    .block.block-new-customer {
+        width: 100%;
+    }
+    .form.create.account.form-create-account {
+        width: 100%;
+    }
+    .amsl-form {
+        width: 100%;
+        max-width: none;
+    }
+    .amsl-tabs-wrapper {
+        .amsl-tablist {
+            .amsl-title {
+                margin-right: 0;
+            }
+        }
+    }
+    .block-customer-login {
+        .fieldset.login {
+            padding: 0 30px;
+        }
+    }
+    .fieldset.create.info {
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #888;
+            &:hover {
+                background: #555;
+            }
+        }
+    }
+}

@@ -46,7 +46,7 @@
 
     				.ui-menu-item-wrapper {
 
-    					padding: 6px 12px 6px 12px;
+    					padding: 6px 12px 6px 6px;
     					border: 1px solid #D9D9D9;
     					border-radius: 6px;
     					color: #231D25;
@@ -62,6 +62,37 @@
 							display: none;
     						margin-right: 5px;
     					}
+
+						span {
+
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							position: relative;
+							line-height: 29px;
+							padding-left: 35px;
+							font-size: 14px;
+							font-weight: 400;
+							&:after {
+								content: '';
+								width: 29px;
+								height: 29px;
+								border-radius: 50%;
+								background: #EAEAEA;
+								left: 0;
+								position: absolute;
+							}
+						}
+						&:hover {
+							background: #992E80;
+							color: #FFF!important;
+							span {
+								color: FFF;
+								&:after {
+									background: #FFF;
+								}
+							}
+						}
     				}
 
     				&.active {
@@ -80,6 +111,141 @@
     			}
 			}
 		}
+		
+		li {
+		&.level {
+			&.nav-1 {
+				&.category-item {
+					&.first {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/category-cake.png);
+									left: 6px;
+									position: absolute;
+									z-index: 9;
+									top: 2px;
+								}
+							}
+						}
+					}
+				}
+			}
+			&.nav-2 {
+				&.category-item {
+					&.ui-menu-item {
+						span {
+							&:before {
+								content: url(../images/category-cake-slice.png);
+								left: 6px;
+								position: absolute;
+								z-index: 9;
+								top: 2px;
+							}
+						}
+					}
+				}
+			}
+			&.nav-3 {
+				&.category-item {
+					&.ui-menu-item {
+						span {
+							&:before {
+								content: url(../images/category-cake-cheese.png);
+								left: 6px;
+								position: absolute;
+								z-index: 9;
+								top: 2px;
+							}
+						}
+					}
+				}
+			}
+			&.nav-4 {
+				&.category-item {
+					&.ui-menu-item {
+						span {
+							&:before {
+								content: url(../images/category-cupcake.png);
+								left: 6px;
+								position: absolute;
+								z-index: 9;
+								top: 2px;
+							}
+						}
+					}
+				}
+			}
+			&.nav-5 {
+				&.category-item {
+					&.last {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/icon-location.png);
+									left: 7px;
+									position: absolute;
+									z-index: 9;
+									top: 5px;
+								}
+							}
+						}
+					}
+				}
+			}
+			&.nav-6 {
+				&.category-item {
+					&.last {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/icon-location.png);
+									left: 7px;
+									position: absolute;
+									z-index: 9;
+									top: 5px;
+								}
+							}
+						}
+					}
+				}
+			}
+			&.nav-7 {
+				&.category-item {
+					&.last {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/icon-location.png);
+									left: 7px;
+									position: absolute;
+									z-index: 9;
+									top: 5px;
+								}
+							}
+						}
+					}
+				}
+			}
+			&.nav-8 {
+				&.category-item {
+					&.last {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/icon-location.png);
+									left: 7px;
+									position: absolute;
+									z-index: 9;
+									top: 5px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	}
 }
 
