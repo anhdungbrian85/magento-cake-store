@@ -3,4 +3,11 @@
     <type name="Magento\Framework\App\Action\AbstractAction">
         <plugin name="x247_http_context_before_get_vary_string" type="X247Commerce\Checkout\Plugin\HttpContext" sortOrder="1"/>
     </type>
+    <type name="X247Commerce\Checkout\Block\Cart\StoreLocator">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="storeLocationPickup" xsi:type="object">X247Commerce\Checkout\Block\Cart\LayoutProcessor</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
