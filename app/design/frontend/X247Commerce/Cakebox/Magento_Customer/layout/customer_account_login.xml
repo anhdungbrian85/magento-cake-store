@@ -19,6 +19,7 @@
         <referenceBlock name="page.main.title" remove="true" />
 
         <move element="customer_form_login" destination="customer.login.content" />
+        <move element="customer.login.am-social-below_login" destination="customer.login.content" />
         <move element="customer.new" destination="customer.login.content" />
         <move element="social-login-popup-authentication-social-login" destination="customer.login.content" />
 
