@@ -48,15 +48,11 @@ define([
             ) {
                 customerData.reload([ this.storesSectionName ], false);
             }
-            console.log('pickupData()', pickupData());
-            console.log('amPickupConfig', amPickupConfig);  
+            
             this.options = stores || [];
             this.value = pickupDataResolver.getDataByKey('am_pickup_store');
             this.visible = pickup.isPickup();
-            if (window.storeLocationData.store_location_id_selected) {
-                console.log('window.storeLocationData.store_location_id_selected', window.storeLocationData.store_location_id_selected);
-                this.onChangeStore(window.storeLocationData.store_location_id_selected)
-            }
+            
             return this;
         },
 
@@ -85,6 +81,7 @@ define([
             if (window.storeLocationData.store_location_id_selected) {
                 selectShippingMethodAction('amstorepickup');
                 checkoutData.setSelectedShippingRate('amstorepickup_amstorepickup');
+                this.onChangeStore(window.storeLocationData.store_location_id_selected);
             }
 
             return this;

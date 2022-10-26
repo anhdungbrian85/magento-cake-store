@@ -142,8 +142,9 @@ define([
             })[0];
 
             pickupDataResolver.timeData(pickupTime);
-
-            this.pickupTimeLabel = pickupTimeOption.label;
+            if (pickupTimeOption) {
+                this.pickupTimeLabel = pickupTimeOption.label;
+            }  
         },
 
         pickupStateObserver: function (isActive) {

@@ -38,9 +38,7 @@ define([
 
         initialize: function () {
             this._super();
-            console.log('pickupDataResolver', pickupDataResolver);
-            if (pickupDataResolver.storeId()) {
-                console.log('pickupDataResolver', pickupDataResolver);
+            if (pickupDataResolver.storeId() != undefined) {
                 this.onChangeStore(pickupDataResolver.storeId());
                 this.getDataFromCache = true;
             }
@@ -152,18 +150,16 @@ define([
         getSelectedDay: function (datepickerDate, value) {
             var storeDateTime,
                 selectedDate;
-
+            console.log('getSelectedDay::value', value);
             if (value) {
                 storeDateTime = this.currentStoreDateTime.asDateTimeObject;
                 selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                     ? datepickerDate
                     : this.firstPickupDate;
-                console.log('selectedDate', selectedDate);
-                console.log('firstPickupDate', this.firstPickupDate);
-                console.log('datepickerDate', datepickerDate);
-                console.log('condition', (datepickerDate && typeof datepickerDate.getFullYear == 'function'));
-                this.selectedDayByName(this.weekDays[selectedDate.getDay()]);
-                this.isTodaySelected(this.isDateIsStoreToday(selectedDate, storeDateTime));
+                if (selectedDate) {
+                    this.selectedDayByName(this.weekDays[selectedDate.getDay()]);
+                    this.isTodaySelected(this.isDateIsStoreToday(selectedDate, storeDateTime));
+                }
             }
         },
 
