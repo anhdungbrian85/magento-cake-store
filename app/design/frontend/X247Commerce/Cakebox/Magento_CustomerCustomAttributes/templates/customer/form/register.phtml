@@ -37,8 +37,7 @@ $createAccountButtonViewModel = $block->getData('create_account_button_view_mode
     <?= /* @noEscape */ $block->getChildHtml('form_fields_before_in_form') ?>
     <?= /* @noEscape */ $block->getBlockHtml('formkey'); ?>
     <fieldset class="fieldset create info">
-        <div class="field note"><?= $block->escapeHtml(__('If are you visting us for the first time, please sign up below. Existing Customers please login into your account.')) ?></div>
-
+        <div class="field note"><?= $block->escapeHtml(__('Please complete all the mandatory fields marked with *')) ?></div>
         <input type="hidden" name="success_url" value="<?= $block->escapeUrl($block->getSuccessUrl()) ?>"/>
         <input type="hidden" name="error_url" value="<?= $block->escapeUrl($block->getErrorUrl()) ?>"/>
         <?= $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Name::class)
@@ -121,28 +120,33 @@ $createAccountButtonViewModel = $block->getData('create_account_button_view_mode
                        data-validate="{required:true, equalTo:'#password'}"/>
             </div>
         </div>
-        <div class="field choice" data-bind="scope: 'showPassword'">
-            <!-- ko template: getTemplate() --><!-- /ko -->
+
+        <div class="field choice up-to-date">
+            <input type="checkbox"
+                   name="up_to_date"
+                   title="<?= $block->escapeHtmlAttr(__('Up to date')) ?>"
+                   value="1"
+                   id="up_to_date"
+                   class="checkbox"/>
+            <label for="up_to_date" class="label">
+                <span><?= $block->escapeHtml(__('Keep up to date with the latest Cake Box news!')) ?></span>
+            </label>
         </div>
 
-         <?= $block->getChildHtml('form_additional_info') ?>
-
-            <?php if ($block->isNewsletterEnabled()): ?>
-            <div class="field choice newsletter">
-                <input type="checkbox"
-                       name="is_subscribed"
-                       title="<?= $block->escapeHtmlAttr(__('Sign Up for Newsletter')) ?>"
-                       value="1"
-                       id="is_subscribed"
-                    <?php if ($formData->getIsSubscribed()): ?> checked="checked"<?php endif; ?>
-                       class="checkbox"/>
-                <label for="is_subscribed" class="label">
-                    <span><?= $block->escapeHtml(__('Sign Up for Newsletter')) ?></span>
-                </label>
-            </div>
-                <?php /* Extensions placeholder */ ?>
-                <?= $block->getChildHtml('customer.form.register.newsletter') ?>
-            <?php endif ?>
+        <div class="field choice terms-conditions">
+            <input type="checkbox"
+                   name="terms_conditions"
+                   title="<?= $block->escapeHtmlAttr(__('Terms and conditions')) ?>"
+                   value="1"
+                   id="terms_conditions"
+                   class="checkbox"/>
+            <label for="terms_conditions" class="label">
+                <span><?= $block->escapeHtml(__('By signing in you are accepting')) . ' ' ?></span>
+                <a href="#" style="color: rgba(153, 46, 128, 1);"><?= $block->escapeHtml(__('Terms & Conditions')) . ' '?></a>
+                <span><?= __('and') ?></span>
+                <a href="#" style="color: rgba(153, 46, 128, 1);"><?= __('Privacy & Cookies Policy.') ?></a>
+            </label>
+        </div>
     </fieldset>
     <?php if ($block->getShowAddressFields()): ?>
         <fieldset class="fieldset address">
@@ -314,10 +318,10 @@ $createAccountButtonViewModel = $block->getData('create_account_button_view_mode
         <div class="primary">
             <button type="submit"
                     class="action submit primary"
-                    title="<?= $block->escapeHtmlAttr(__('Create an Account')) ?>"
+                    title="<?= $block->escapeHtmlAttr(__('Login')) ?>"
                     id="send2"
                 <?php if ($createAccountButtonViewModel->disabled()): ?> disabled="disabled" <?php endif; ?>>
-                <span><?= $block->escapeHtml(__('Create an Account')) ?></span>
+                <span><?= $block->escapeHtml(__('Login')) ?></span>
             </button>
         </div>
         <div class="secondary">

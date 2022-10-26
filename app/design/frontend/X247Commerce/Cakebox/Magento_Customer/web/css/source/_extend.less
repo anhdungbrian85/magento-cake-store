@@ -7,6 +7,20 @@
 	.page-main-content {
 		padding-top: 100px;
 
+		.amsl-social-wrapper {
+			display: block;
+
+			.amsl-social-login  {
+			    background: transparent;
+    			display: block;
+    			
+				.amsl-buttons {
+					margin-top: 20px;
+					justify-content: center;
+				}
+    		}
+    	}
+
 		.login-container {
 			max-width: 520px;
 			margin: 0 auto;
@@ -47,8 +61,8 @@
 			border: none;
 
 			a {
-				font-size: 29px;
-				font-weight: 600;
+				font-size: 22px;
+				font-weight: 500;
 				color: #363A40;
 				transition: all .3s;
 				text-decoration: none;
@@ -67,6 +81,10 @@
 				border-bottom: 3px solid #982E80;
 				color: #982E80;
 				background: rgba(153, 46, 128, 0.03);
+
+				a {
+					color: #982E80;
+				}
 			}
 
 			&:hover {
@@ -90,18 +108,46 @@
 			.block-customer-login,
 			.form-create-account {
 				margin-bottom: 20px;
+
+				.fieldset {
+					margin-bottom: 0;
+
+					&.login {
+						& > .field {
+							margin-bottom: 30px;
+						}
+					}
+
+					& > .field {
+						margin-bottom: 14px;
+
+						&.note {
+							margin-bottom: 30px;
+						}
+
+						& > .control {
+							width: 100%;
+						}
+
+						&.persistent {
+							.tooltip {
+								display: none;
+							}
+						}
+
+						&.terms-conditions {
+							a {
+								&:hover {
+									text-decoration: underline;
+								}
+							}
+						}
+					}
+				}
 			}
 
 			.note {
 				line-height: 24px;
-			}
-
-			.fieldset > .field {
-				margin-bottom: 30px;
-
-				& > .control {
-					width: 100%;
-				}
 			}
 		}
 
@@ -138,17 +184,12 @@
 
 		.field.password {
 			position: relative;
-
-			.secondary {
-				position: absolute;
-				top: 0;
-				right: 0;
-			}
 		}
 
 		.action.remind {
 			color: #3F3F44;
 			font-size: 14px;
+			top: 0;
 		}
 
 		.account-social-login {
@@ -204,6 +245,17 @@
 
 		.login-container {
 			box-shadow: 0 3px 6px rgba(0,0,0, 0.3);
+
+			.login-tab-content {
+				.block {
+					float: unset;
+				}
+			}
+		}
+
+		.block-customer-login {
+		    border-bottom: 1px solid rgba(63, 63, 68, 0.1);
+			padding-bottom: 20px;
 		}
 
 		.block-customer-login,
@@ -211,11 +263,12 @@
 			.note,
 			.fieldset > .field > .label {
 				font-size: 16px;
-				font-weight: 500;
-			}
-
-			.fieldset > .field > .label {
+				font-weight: 400;
 				margin-bottom: 12px;
+
+				&:after {
+					color: #3F3F44;
+				}
 			}
 		}
 
@@ -229,6 +282,35 @@
 
 		.action.remind {
 			font-weight: 500;
+		}
+
+	
+		.amsl-social-login  {
+			.amsl-title {
+				font-size: 18px;
+				font-weight: 500;
+			}
+		}
+		
+		.amsl-social-wrapper {
+			.amsl-buttons {
+				.amsl-button-wrapper {
+					margin: 0 3px;
+				    display: flex;
+				    align-items: center;
+				    padding: 10px 0 10px 10px;
+				    background: rgba(246, 246, 246, 1);
+				    min-width: 110px;
+				    border-radius: 10px;
+
+			        .amsl-button {
+			        	width: 35px;
+			        	height: 35px;
+			        	box-shadow: none;
+			        	margin-right: 5px;
+			        }
+				}
+			}
 		}
 
 		.account-social-login {
@@ -269,15 +351,32 @@
 	.customer-account-login,
 	.customer-account-create {
 		.page-main-content {
-
 			.page-main {
 				padding: 0;
 			}
+
+			.customer-tabs {
+				.tab-item {
+					a {
+						font-size: 24px;
+					}
+				}
+			}
+
 			.block-customer-login,
 			.form-create-account {
 				.note,
 				.fieldset > .field > .label {
 					font-size: 14px;
+					font-weight: 400;
+
+					&:after {
+						color: #3F3F44;
+					}
+				}
+
+				.fieldset.login {
+					padding: 0;
 				}
 			}
 
@@ -286,7 +385,27 @@
 					font-size: 14px;
 				}
 			}
-		}
 
+			.amsl-social-wrapper {
+				.amsl-buttons {
+					.amsl-button-wrapper {
+						margin: 0 5px 20px;
+					    padding: 27px;
+				        border-radius: 20px;
+			            background: rgba(246, 246, 246, 1);
+
+				        .amsl-button {
+				        	width: 35px;
+				        	height: 35px;
+				        	box-shadow: none;
+				        }
+
+				        .amsl-text {
+							display: none;
+						}
+					}
+				}
+			}
+		}
 	}
 }

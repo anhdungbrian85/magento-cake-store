@@ -26,5 +26,7 @@
 
         <move element="main.content" destination="page.main.content" />
         <move element="social-login-popup-authentication-social-create" destination="customer.login.content" />
+        <move element="customer.login.am-social-below_login" destination="customer.login.content" />
+        <move element="customer.create.am-social-below_registration" destination="customer.login.content" />
     </body>
 </page>
