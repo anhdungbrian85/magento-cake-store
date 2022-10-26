@@ -491,3 +491,26 @@
 		}
 	}
 }
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__s) {
+
+	.block-shop-now {
+		.toggle-content-shop-now{
+			.item_shop_now{
+				.item_shop_now_link{
+
+					.title{
+						max-width: 76px;
+						white-space: nowrap;
+						overflow: hidden;
+						display: block;
+						text-overflow: ellipsis;
+					}
+				}
+
+			} 
+
+		} 
+
+	}
+}
