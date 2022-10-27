@@ -17,10 +17,13 @@
         <select id="limiter" data-role="limiter" class="limiter-options">
             <?php foreach ($block->getAvailableLimit() as $_key => $_limit):?>
                 <option value="<?= $block->escapeHtmlAttr($_key) ?>"
-                    <?php if ($block->isLimitCurrent($_key)):?>
+                    <?php if ($block->isLimitCurrent($_key)): ?>
                         selected="selected"
                     <?php endif ?>>
-                    <?= $block->escapeHtml($localeFormatter->formatNumber((int) $_limit)) . ' items per page' ?>
+                    <?= $block->escapeHtml($localeFormatter->formatNumber((int) $_limit)) . ' items' ?>
+                    <?php if($block->isLimitCurrent($_key)): ?>
+                        <?= __(' per page') ?>
+                    <?php endif ?>
                 </option>
             <?php endforeach; ?>
         </select>
