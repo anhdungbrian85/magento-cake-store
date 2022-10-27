@@ -1,185 +1,380 @@
-& when (@media-common = true) {
-	.modals-wrapper {
-		.custom-delivery-popup-modal {
-			.modal-inner-wrap {
-				max-width: 740px;
-				background-color:  #00000090 !important;
-				/*background: url() no-repeat;*/
+& when (@media-common = true) {	
+	.delivery-popup {
+		display: none;
+	}
+	.modal-inner-wrap {
+		.delivery-popup {
+			display: block;
+			.opening-time {
+				color: black;
+				font-size: 14px;
 			}
-			.modal-inner-wrap {
-				
-				.delivery.popup.title {
-					padding-top: 30px;
-					display: flex;
-				    flex-wrap: wrap;
-				    justify-content: center;
-				    line-height: 67px;
-	    			letter-spacing: -1.2px;
-					span {
-						max-width: 560px;
-						font-size: 60px;
-						text-align: center;
-						color: white;
-						font-weight: 900;
-					}
-				}
 
-				.delivery.popup.text {
-					display: flex;
-				    flex-wrap: wrap;
-				    justify-content: center;
-				    letter-spacing: 0;
-	    			line-height: 24px;
-	    			margin-top: 19px;
-	    			min-height: 85px;
-					span {
-						max-width: 578px;
-						font-size: 16px;
-						text-align: center;
-						color: white;
-					}	
-				}
+			.open-time-store {
+				color: black;
+				font-size: 14px;
+			}
+			.amasty_distance {
+				width: 33.33%;
+				margin-right: 10px;
+				position: relative;
+			    display: flex;
+			    justify-content: center;
+			    align-items: center;
+				img {
+			    	border-radius: 50%;
+    				height: 90px;
+    				width: 88%;
 
-				.delivery.popup.postcode {
-					display: flex;
-				    flex-wrap: wrap;
+			    }
+			}
+
+			.distance.store.location {
+				background-color: #00000090;
+			    position: absolute;
+			    color: white;
+			    width: 88%;
+			    height: 100%;
+			    border-radius: 50%;   
+			    display: flex;
+			    justify-content: center;
+			    align-items: center;
+			    flex-wrap: wrap;
+			    
+			    .amasty_distance_number {
+			    	display: flex;
 				    justify-content: center;
-				    padding: 0 50px;
-				    input {
-				    	max-width: 100%;
-					    min-height: 85.68px;
-					    font-size: 24px;
-					    color: #9C9AAA;
-					    border-radius: 10px 10px 0 0;
+				    flex-wrap: wrap;
+				    width: 100%;
+				    &:before {
+				    	content: "\f041";
+					    font-family: FontAwesome;
+					    width: 100%;
+					    text-align: center;
+					    font-size: 20px;
 				    }
-				}
-
-				.selects.collection {
+			    }
+			    
+			}
+		}
+		.amlocator-schedule-container {
+			display: none;
+		}
+	}
+	.modal-popup.modal-slide.custom-delivery-popup-modal {
+		left: 15px;
+	    right: 15px;
+	    top: 15px;
+	}
+	.custom-delivery-popup-modal {
+		display: block;
+		.modal-inner-wrap {
+			max-width: 740px;
+			background-color:  #00000090 !important;
+			.modal-header {
+				position: absolute;
+				right: 0;
+				z-index: 10;
+			}
+			.action-close {
+				width: 30px;
+    			height: 30px;
+				background-color: #992E80;
+				&:before {
+					color: white;
+					font-size: 30px;
 					display: flex;
-					flex-wrap: nowrap;
-				    justify-content: center;
-				    min-height: 76.92px;
-				    margin-bottom: 40px;
-				    button {
-				    	
-				    	height: 100%;
-				    	background-color: #992E80;
-				    	border:unset;
-				    	color: white;
-				    	font-size: 22px;
-				    	border-radius:unset;
-				    	letter-spacing: -0.88px;
-				    	line-height: 26px;
-				    	font-weight: 400;
-				    }
-				    .collection {
-					    width: 33.33%;
-					}
-					.premium.delivery {
-						button {
-							background-color: #AF3B99;
-						}
-					}
-					.free.collection {
-						margin-left: 1px;
-						button {
-							border-radius: 0 0 0 10px;
-							padding: 0 22%;
-						}
-					}
-					.express.one.hour.collection {
-						button {
-							border-radius: 0 0 10px 0;
-						}
-					}
+				}
+			}
 
+			.modal-footer {
+				display: none;
+			}
+		}
+		.delivery-popup {
+			.title {
+				padding-top: 50px;
+				display: flex;
+			    flex-wrap: wrap;
+			    justify-content: center;
+			    line-height: 1.1;
+    			letter-spacing: -1.2px;
+				span {
+					max-width: 560px;
+					font-size: 34px;
+					text-align: center;
+					color: white;
+					font-weight: 900;
 				}
-				.modal-header {
-					position: absolute;
-					right: 0;
-					z-index: 10;
+			}
+
+			.text {
+				display: flex;
+			    flex-wrap: wrap;
+			    justify-content: center;
+			    letter-spacing: 0;
+    			line-height: 1.5;
+    			margin-top: 10px;
+    			margin-bottom: 15px;
+    			min-height: 85px;
+				span {
+					max-width: 578px;
+					font-size: 16px;
+					text-align: center;
+					color: white;
+				}	
+			}
+
+			.postcode {
+				display: block;
+			    padding: 0 20px;
+		    	max-width: 100%;
+			    min-height: 85.68px;
+			    font-size: 16px;
+			    color: #9C9AAA;
+			    border-radius: 5px;
+			    
+			}
+			
+			.select-collection {
+			    display: -ms-flexbox;
+			    display: flex;
+			    -ms-flex-wrap: wrap;
+			    flex-wrap: wrap;
+			    position: relative;
+			    top: -5px;
+				.delivery {
+				    -ms-flex: 0 0 calc(~"(100% - 2px)/3");
+				    flex: 0 0 calc(~"(100% - 2px)/3");
+				    max-width: calc(~"(100% - 2px)/3");
+				    text-align: center;
+				    display: -ms-flexbox;
+				    display: flex;
+				    align-items: center;
+				    justify-content: center;
 				}
-				.action-close {
-					width: 30px;
-	    			height: 30px;
+				.premium.delivery {
+					border-left:1px solid #fff;
+				}
+				.express.delivery {
+					border-left:1px solid #fff;
+				}
+				input[type="radio"] {
+					visibility: hidden;
+					width: 0;
+				    height: 0;
+				    position: absolute;
+				}
+				.label {
 					background-color: #992E80;
-					&:before {
-						color: white;
-						font-size: 30px;
-						display: flex;
-					}
+					font-size: 14px;
+					line-height: 1.1;
+					letter-spacing: -0.56px;
+					color: #fff;
+					padding: 20px 8px 15px;
+				    display: flex;
+				    width: 100%;
+				    height: -webkit-fill-available;
+				    justify-content: center;
+				    align-items: center;
+				    box-sizing: border-box;
 				}
+				input[type="radio"]:checked + .label {
+					background-color: #af3b99;
+				}
+			}
+		}
+		.modal-inner-wrap {
+			min-height: auto!important;
+			.amlocator-wrapper {
+				width: 100%;
+			}
 
-				.modal-footer {
-					display: none;
+			.hr {
+				display: none;
+			}	
+		}
+		.amlocator-store-desc {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			.select-location {
+				background-color: #992E80;
+				width: 68px;
+    			color: white;
+    			height: 34px;
+    			font-size: 14px;
+    			font-weight: 400;
+			}
+
+			.select.store.lacation {
+				width: 30%;
+			    display: flex;
+			    justify-content: center;
+			    flex-wrap: wrap;
+			}
+
+			.amlocator-title::after {
+				font-size: 1px;
+			    content: "";
+			    display: block;
+			    width: 100%;
+			    height: 1px;
+			    background: #707070;
+			    opacity: 0.7;
+			    margin-top: 4px;
+			}
+
+			.amlocator-block {
+				width: 70%;
+			}
+
+			.amlocator-link {
+				font-weight: 600;
+			}
+		}
+
+		.amlocator-store-information {
+			width: 100%;
+
+			.content-location {
+				display: none;
+			}
+		}
+	}
+}
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+	.modal-inner-wrap {
+		margin: auto;
+	}
+	.custom-delivery-popup-modal {	
+		.delivery-popup {
+			.title {
+				span {
+					font-size: 60px;
+				}
+			}
+			.postcode {
+				padding: 0 20px;
+				font-size: 24px;
+			}
+			.select-collection {
+				.label {
+					font-size: 22px;
+					padding: 20px 15px 15px;
+				}
+				.delivery {
+					display: block;
+				}
+			}
+		}
+		
+	}
+
+}
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+	.modal-inner-wrap {
+		margin: auto;
+	}
+	.custom-delivery-popup-modal {
+		.delivery-popup {
+			.select-collection {
+				.label {
+					font-size: 14px;
+				}
+			}
+			.amasty_distance {
+				width: 53%;
+
+				img {
+					height: 72px;
+	    			width: 72px;
+				}
+			}
+			.distance.store.location .amasty_distance_number {
+				height: 72px;
+	    		width: 72px;
+	    		font-size: 12px;
+			}
+			.distance.store.location {
+				height: 72px;
+	    		width: 72px;
+			}
+		}
+		.amlocator-store-information {
+			.amlocator-title {
+				a {
+					font-size: 18px;
+				    font-weight: 400;
 				}
 			}
 		}
 	}
 }
-.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
-	
-	.modals-wrapper {
-		.custom-delivery-popup-modal {
-			left: 0;
-
-			.modal-inner-wrap[class] {
-				max-width:393.79px;
-				min-width: unset;
-				margin: auto;
-
-				.delivery.popup.title {
-					span {
-						max-width:318px;
-						min-height: 79px;
-						font-size: 34px;
-						line-height: 37px;
-						letter-spacing: -0.68px;
-					}
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__xs) {
+	.custom-delivery-popup-modal {
+		.delivery-popup {
+			.select-collection {
+				align-items: stretch;
+				.label {
+					font-size: 12px;
 				}
-
-				.delivery.popup.text {
-					span {
-						letter-spacing: -0.64px;
-						max-width: 307px;
-						min-width: 79px;
-					}
+				.free.delivery {
+					background-color: #af3b99;
 				}
-
-				.delivery.popup.postcode {
-					padding: unset;
-					input {
-						max-width: 351px;
-						font-size: 16px;
-						min-height: 58px;
-						color: #282828;
-						line-height: 25px;
-						letter-spacing:0.25px;
-						border: 0;
-					}
+				.premium.delivery {
+					background-color: #992E80;
 				}
+			}
+			.amasty_distance {
+				width: 65%;
 
-				.selects.collection {
-					min-height: 31px;
-					max-width: 100%;
-					padding:unset;
-					flex-wrap: nowrap;
+				img {
+					height: 56px;
+	    			width: 56px;
+				}
+			}
+			.distance.store.location .amasty_distance_number {
+				height: 56px;
+	    		width: 56px;
+	    		font-size: 11px;
+			}
+			.distance.store.location {
+				height: 56px;
+	    		width: 56px;
+			}
+			.opening-time {
+				font-size: 12px;
+			}
+			.open-time-store {
+				font-size: 12px;
+			}
+			.amlocator-store-desc {
+				padding-right: 5px;
+
+				.select.store.lacation {
+					width: 23%;
+					margin-right: 3px;
+
 					button {
-						width: unset;
-						font-size: 14px;
-						line-height: 15px;
-						letter-spacing: -0.56px;
+						height: 32px;
+    					font-size: 9px;
 					}
-					.collection {
-					    width: 33.33%;
-					}
+				}
+				.select-location {
+					width: 100%;
+					font-size: 11px;
+
 				}
 			}
 		}
-	}
-	.modals-wrapper {
-		.modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
-			min-height: unset;
+		.amlocator-store-information {
+			.amlocator-title {
+				a {
+					font-size: 12px;
+				}
+			}
 		}
 	}
 }

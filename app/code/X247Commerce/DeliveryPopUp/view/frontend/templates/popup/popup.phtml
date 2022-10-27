@@ -3,53 +3,51 @@
 ?>
 <?php if ($block->shouldShowPopup()): ?>
 <div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal">
-    <div class="amlocator-map-container" id="map-container-delivery-popup">
-        <div class="delivery popup title">
+    <div class="amlocator-map-container delivery-popup" id="map-container-delivery-popup">
+        <div class="title">
             <span><?= __("FIND YOUR LOCAL CAKE BOX")?></span>
         </div>
-        <div class="delivery popup content">
-            <div class="delivery popup text"><span><?= __("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque")?></span>
+        <div class="amlocator-wrapper ">
+            <div class="delivery-popup text"><span><?= __("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque")?></span>
             </div>
-            <form class="delivery popup postcode" action="<?php echo $block->escapeUrl($block->postCode()) ?>" formKey ="<?php echo $block->getFormKey();?>" method="POST" >
-                <input class="input postcode" type="text" name="postcode" placeholder="Enter Postcode">
-                
-            </form>
-        </div>
-        
-        <div class="amlocator-wrapper">
-            <input type="text" value="" class="amlocator-text"
-                   name="address" placeholder="<?= $block->escapeHtml(__('Current location')); ?>"
+            <input type="text" value="" class="amlocator-text postcode"
+                   name="address" placeholder="<?= $block->escapeHtml(__('Enter postcode, address')); ?>"
                    data-amlocator-js="address"
                    autocomplete="off">
             <span class="amlocator-search" data-amlocator-js="search"></span>
             <span class="amlocator-reset -hidden" data-amlocator-js="reset"></span>
+            <div class="amlocator-block -search amlocator-search-radius">
+                <input
+                        data-amlocator-js="radius-value"
+                        name="radius"
+                        type="hidden"
+                        id="amlocator-search-radius"
+                        value="<?= (int) $block->getSearchRadius() ?>">
+                <input
+                        data-amlocator-js="radius-measurment"
+                        name="measurement"
+                        type="hidden"
+                        id="amlocator-measurement"
+                        value="<?= $block->escapeHtml($block->getDistanceConfig()) == 'km' ? 'km' : 'mi' ?>">
+            </div>
         </div>
-        <div class="selects collection">
-            <div class="free collection" type="submit" >
-                <button><?= __("Free Collection")?></button>
+       
+        <div class="select-collection">
+            <div class="free delivery" type="submit" >
+                <input id="delivery-type-free" checked type="radio" name="delivery-type" value="0">
+                <label class="label" for="delivery-type-free"><?= __("Free<br />Collection")?></label>
             </div>
             <div class="premium delivery">
-                <button><?= __("Premium Delivery")?></button>
+                <input id="delivery-type-premium"  type="radio" name="delivery-type" value="1">
+                <label class="label" for="delivery-type-premium"><?= __("Premium<br />Delivery")?></label>
             </div>
-            <div class="express one hour collection">
-                <button><?= __("Express 1 Hour Collection")?></button>
+            <div class="express delivery">
+                <input id="delivery-type-express"  type="radio" name="delivery-type" value="2">
+                <label class="label" for="delivery-type-express"><?= __("Express 1 Hour<br />Collection")?></label>
             </div>
         </div>
 
-        <div class="amlocator-block -search amlocator-search-radius">
-            <input
-                    data-amlocator-js="radius-value"
-                    name="radius"
-                    type="hidden"
-                    id="amlocator-search-radius"
-                    value="<?= (int) $block->getSearchRadius() ?>">
-            <input
-                    data-amlocator-js="radius-measurment"
-                    name="measurement"
-                    type="hidden"
-                    id="amlocator-measurement"
-                    value="<?= $block->escapeHtml($block->getDistanceConfig()) == 'km' ? 'km' : 'mi' ?>">
-        </div>
+        
         <div class="amlocator-block -storelist amlocator-store-list">
             
         </div>
@@ -98,7 +96,10 @@
                 useGeoConfig: "<?= (bool)$block->getGeoUse()?>",
                 allowedCountries: <?= /* @noEscape */ $block->getAllowedCountries(); ?>,
                 ajaxCallUrl: "<?= $block->escapeHtml(
-                    $block->getUrl('amlocator/index/ajax') . $block->getQueryString()
+                    $block->getUrl('deliverypopup/index/ajax') . $block->getQueryString()
+                ); ?>",
+                ajaxSelectUrl: "<?= $block->escapeHtml(
+                    $block->getUrl('deliverypopup/index/selectLocation')
                 ); ?>",
                 useBrowserLocation: "<?= (bool)$block->getUseBrowserLocation()?>",
                 jsonLocations: <?= /* @noEscape */ $block->getJsonLocations() ?>,

@@ -1,0 +1,19 @@
+{
+    "inventory_source": {
+        "column": {
+            "amlocator_store": true
+        }
+    },
+    "admin_user_source_link": {
+        "column": {
+            "entity_id": true,
+            "user_id": true,
+            "source_code": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ADMIN_USER_SOURCE_LINK_USER_ID_ADMIN_USER_USER_ID": true,
+            "ADMIN_USER_SOURCE_LINK_SOURCE_CODE_INVENTORY_SOURCE_SOURCE_CODE": true
+        }
+    }
+}

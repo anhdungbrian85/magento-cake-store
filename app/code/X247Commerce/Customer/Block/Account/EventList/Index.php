@@ -2,13 +2,11 @@
 
 namespace X247Commerce\Customer\Block\Account\EventList;
 
-use Magento\Backend\Block\Template\Context;
-
 class Index extends \Magento\Framework\View\Element\Template
 {
 
  	public function __construct(
- 		Context $context,
+ 		\Magento\Framework\View\Element\Template\Context $context,
 		\X247Commerce\Customer\Model\EventFactory $eventFactory,
 		\Magento\Customer\Model\Session $customerSession,
 		\Magento\Framework\Stdlib\DateTime\DateTime $date,

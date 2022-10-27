@@ -78,6 +78,14 @@
 
 & when (@media-common = true) {
 
+    body,html {
+        overflow-x: hidden;
+    }
+
+    .navigation ul {
+        padding: 0 !important;
+    }
+
     .block-search ::placeholder {
         color: rgba(0,0,0,0.4);
         opacity: 1; /* Firefox */
@@ -121,7 +129,7 @@
     }
 
     .minicart-wrapper .action.showcart:before {
-        content: url('../images/icon-basket.png');
+        content: url('../images/icon-basket.png') !important;
     }
 
     .minicart-wrapper a.action.showcart span.text {
@@ -304,5 +312,31 @@
 
     .link.authorization-link { 
         margin-top: 11px;
+    }
+
+    .page-footer ul {
+        display: block;
+    }
+
+    .page-footer ul.social-link {
+        display: flex;
+    }
+
+    .page-footer ul li {
+        padding-bottom: 8px;
+        padding-top: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .logo {
+        left: 40%;
+        transform: translateX(-45%);
+    }
+}
+
+@media(max-width: 350px) {
+    .minicart-wrapper {
+        right: 70px;
     }
 }

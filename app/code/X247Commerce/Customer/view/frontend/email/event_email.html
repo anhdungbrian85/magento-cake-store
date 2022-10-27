@@ -1,0 +1,21 @@
+<!--@subject {{trans "Reminder Mail"}}  @-->
+{{template config_path="design/email/header_template"}}
+<div>
+	<span>	{{trans "You have a reminder today (%_date)" _date=$date }}
+			{{trans " with Occasion is %_occasion" _occasion=$occasion}}
+			{{trans " for %_their_name ." _their_name=$their_name}}
+	</span>
+	<div>
+		<span>{{trans "Date : "}}</span>
+		<span>{{var date}}</span>
+	</div>
+	<div>
+		<span>{{trans "Occasion : "}}</span>
+		<span>{{var occasion}}</span>
+	</div>
+	<div>
+		<span>{{trans "Their Name : "}}</span>
+		<span>{{var their_name}}</span>
+	</div>
+</div>
+{{template config_path="design/email/footer_template"}}

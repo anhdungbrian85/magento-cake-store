@@ -34,4 +34,35 @@ class Data extends AbstractHelper
 		);
 	}
 
+	/**
+	 * calculate distancse from 2 place by latitude and longtitude
+	 * @var float $lat1
+	 * @var float $lon1
+	 * @var float $lat2
+	 * @var float $lon2
+	 * @var string $unit 
+	 * @return float
+	 **/
+
+	public function calculateDistance($lat1, $lon1, $lat2, $lon2, $unit)
+	{
+
+		if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+			return 0;
+		} else {
+			$theta = $lon1 - $lon2;
+			$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+			$dist = acos($dist);
+			$dist = rad2deg($dist);
+			$miles = $dist * 60 * 1.1515;
+			$unit = strtoupper($unit);
+
+			if ($unit == "km") {
+			  return ($miles * 1.609344);
+			}  else {
+			  return $miles;
+			}
+		}
+	}
+
 }	

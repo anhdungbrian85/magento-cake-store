@@ -179,7 +179,8 @@
 			width: 15px;
 		}
 
-		.actions {
+		.actions,
+		.action-bottom {
 			.price-sticky {
 				display: none;
 			}
@@ -210,6 +211,10 @@
 				z-index: 900;
 
 				.fieldset {
+					margin-bottom: 0;
+				}
+
+				.action.tocart {
 					margin-bottom: 0;
 				}
 
@@ -260,8 +265,8 @@
 					align-items: flex-end;
 					padding: 0 25px 20px;
 
-					.action.tocart {
-						margin-bottom: 0;
+					& > .price-sticky {
+						display: block;
 					}
 				}
 			}
