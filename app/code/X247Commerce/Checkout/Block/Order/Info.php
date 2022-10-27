@@ -36,9 +36,14 @@ class Info extends \Magento\Sales\Block\Adminhtml\Order\View\Info
 	}
 
 	public function getStoreName($id) {
-		$storeCollection = $this->locationFactory->create();
-		$store = $this->locationResource->load($storeCollection,$id);
-		$data = $storeCollection->getData();
+		if(empty($id)){
+
+			$data["name"]= Null;
+		} else {
+			$storeCollection = $this->locationFactory->create();
+			$store = $this->locationResource->load($storeCollection,$id);
+			$data = $storeCollection->getData();
+		}
 		return $data["name"];
 	}
 }
