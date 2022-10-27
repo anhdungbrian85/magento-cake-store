@@ -11,15 +11,15 @@
 			display: block;
 
 			.amsl-social-login  {
-			    background: transparent;
-    			display: block;
-    			
+				background: transparent;
+				display: block;
+				
 				.amsl-buttons {
 					margin-top: 20px;
 					justify-content: center;
 				}
-    		}
-    	}
+			}
+		}
 
 		.login-container {
 			max-width: 520px;
@@ -144,6 +144,62 @@
 						}
 					}
 				}
+
+
+				.field.password {
+					.control {
+						position: relative;
+					}
+
+					.field.choice {
+						position: absolute;
+						right: 0;
+						top: 0;
+						height: 56px;
+						z-index: 9;
+						width: 56px;
+
+						.label {
+							position: relative;
+							width: 56px;
+							height: 56px;
+							display: block;
+							cursor: pointer;
+						}
+
+						.icon-password {
+							position: absolute;
+							top: 0;
+							left: 0;
+							right: 0;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							bottom: 0;
+
+
+							&.icon-hidden {
+								display: none;
+							}
+						}
+
+						input {
+							display: none;
+
+							&:checked {
+								& ~ .label {
+									.icon-hidden {
+										display: flex;
+									}
+
+									.icon-show {
+										display: none;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			.note {
@@ -225,10 +281,41 @@
 			}
 		}
 
-
 		.form.create.account {
 			min-width: 100%;
 			width: 100%;
+		}
+
+		.amsl-buttons {
+			.amsl-button-wrapper {
+
+				.amsl-button {
+
+					&.-facebook {
+						.amsl-social-icon {
+							background-image: url('../images/social/icon-facebook.svg');
+						}
+					}
+
+					&.-google {
+						.amsl-social-icon {
+							background-image: url('../images/social/icon-google.svg');
+						}
+					}
+
+					&.-twitter {
+						.amsl-social-icon {
+							background-image: url('../images/social/icon-twitter.svg');
+						}
+					}
+
+					&.-apple {
+						.amsl-social-icon {
+							background-image: url('../images/social/icon-apple.svg');
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -254,7 +341,7 @@
 		}
 
 		.block-customer-login {
-		    border-bottom: 1px solid rgba(63, 63, 68, 0.1);
+			border-bottom: 1px solid rgba(63, 63, 68, 0.1);
 			padding-bottom: 20px;
 		}
 
@@ -284,31 +371,55 @@
 			font-weight: 500;
 		}
 
-	
+
 		.amsl-social-login  {
 			.amsl-title {
 				font-size: 18px;
 				font-weight: 500;
 			}
 		}
-		
+
 		.amsl-social-wrapper {
 			.amsl-buttons {
 				.amsl-button-wrapper {
 					margin: 0 3px;
-				    display: flex;
-				    align-items: center;
-				    padding: 10px 0 10px 10px;
-				    background: rgba(246, 246, 246, 1);
-				    min-width: 110px;
-				    border-radius: 10px;
+					display: flex;
+					align-items: center;
+					padding: 10px 0 10px 10px;
+					background: rgba(246, 246, 246, 1);
+					min-width: 110px;
+					border-radius: 10px;
 
-			        .amsl-button {
-			        	width: 35px;
-			        	height: 35px;
-			        	box-shadow: none;
-			        	margin-right: 5px;
-			        }
+					.amsl-button {
+						width: 35px;
+						height: 35px;
+						box-shadow: none;
+						margin-right: 5px;
+
+						&.-facebook {
+							.amsl-social-icon {
+								background-image: url('../images/social/icon-facebook.svg');
+							}
+						}
+
+						&.-google {
+							.amsl-social-icon {
+								background-image: url('../images/social/icon-google.svg');
+							}
+						}
+
+						&.-twitter {
+							.amsl-social-icon {
+								background-image: url('../images/social/icon-twitter.svg');
+							}
+						}
+
+						&.-apple {
+							.amsl-social-icon {
+								background-image: url('../images/social/icon-apple.svg');
+							}
+						}
+					}
 				}
 			}
 		}
@@ -390,17 +501,17 @@
 				.amsl-buttons {
 					.amsl-button-wrapper {
 						margin: 0 5px 20px;
-					    padding: 27px;
-				        border-radius: 20px;
-			            background: rgba(246, 246, 246, 1);
+						padding: 27px;
+						border-radius: 20px;
+						background: rgba(246, 246, 246, 1);
 
-				        .amsl-button {
-				        	width: 35px;
-				        	height: 35px;
-				        	box-shadow: none;
-				        }
+						.amsl-button {
+							width: 35px;
+							height: 35px;
+							box-shadow: none;
+						}
 
-				        .amsl-text {
+						.amsl-text {
 							display: none;
 						}
 					}

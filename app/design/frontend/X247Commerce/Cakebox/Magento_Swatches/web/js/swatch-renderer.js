@@ -588,10 +588,10 @@ define([
                                 textLabel += '<span class="number-highline">';
                             }
 
-                            textLabel += value;
+                            textLabel += '<span>' + value + '</span>';
 
                             if ( index == 0 ) {
-                                textLabel += ' "</span>'
+                                textLabel += '"</span>'
                             }
                         } );
                     }

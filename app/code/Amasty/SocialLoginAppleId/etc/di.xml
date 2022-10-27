@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\SocialLogin\Model\SocialData">
+        <plugin name="Amasty_SocialLoginAppleId::add-item" type="Amasty\SocialLoginAppleId\Plugin\SocialLogin\Model\SocialDataPlugin" />
+    </type>
+
+    <type name="Magento\Config\Controller\Adminhtml\System\Config\Save">
+        <plugin name="Amasty_SocialLoginAppleId::save-config" type="Amasty\SocialLoginAppleId\Plugin\Config\Controller\Adminhtml\System\Config\SavePlugin" />
+    </type>
+
+    <type name="Magento\Framework\Data\Form\FormKey\Validator">
+        <plugin name="Amasty_SocialLoginAppleId::form_key_fix"
+                type="Amasty\SocialLoginAppleId\Plugin\Framework\Data\Form\FormKey\ValidatorPlugin" />
+    </type>
+    <type name="Amasty\SocialLogin\Model\SocialList">
+        <plugin name="Amasty_SocialLoginAppleId::add_apple_code_to_list"
+                type="Amasty\SocialLoginAppleId\Plugin\SocialLogin\Model\SocialList\AddAppleCode"/>
+    </type>
+</config>

@@ -1,0 +1,67 @@
+<?xml version='1.0'?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amsociallogin" translate="label" type="text" sortOrder="190520" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="apple" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Apple ID</label>
+                <depends>
+                    <field id="*/general/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <comment><![CDATA[See how to configure app <a target="_blank" href="https://amasty.com/docs/doku.php?id=magento_2:social_login#apple_id">here</a>.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="info" translate="label" type="label" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <comment>Copy/paste API codes from application settings of corresponding social networks.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="team_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Apple Team ID</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="api_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="key_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Key ID</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="key" translate="label" type="file" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Key(*.p8 file)</label>
+                    <backend_model>Amasty\SocialLoginAppleId\Model\Config\Model\Config\Backend\File</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">amasty/login/apple</upload_dir>
+                    <base_url type="media" scope_info="1">amasty/login/apple</base_url>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_url" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Amasty\SocialLogin\Block\Adminhtml\System\Config\RedirectUrl</frontend_model>
+                    <label>Valid Redirect URI</label>
+                    <depends>
+                        <field id="*/general/use_new_url">0</field>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
