@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.addtocart">
+            <container name="product.info.price-sticky" htmlTag="div" htmlClass="price-sticky" before="-">
+                <block class="Magento\Catalog\Pricing\Render" name="sticky.price.final">
+                    <arguments>
+                        <argument name="price_render" xsi:type="string">product.price.render.default</argument>
+                        <argument name="price_type_code" xsi:type="string">final_price</argument>
+                        <argument name="zone" xsi:type="string">item_view</argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceBlock>
+
+        <referenceBlock name="product.info.addtocart.additional">
+            <container name="product.info.price-sticky.additional" htmlTag="div" htmlClass="price-sticky" before="-">
+                <block class="Magento\Catalog\Pricing\Render" name="sticky.price.final.additional">
+                    <arguments>
+                        <argument name="price_render" xsi:type="string">product.price.render.default</argument>
+                        <argument name="price_type_code" xsi:type="string">final_price</argument>
+                        <argument name="zone" xsi:type="string">item_view</argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceBlock>
+
+        <referenceBlock name="product.info.details">
+            <!-- <referenceBlock name="product.info.description" remove="true" /> -->
+            <referenceBlock name="product.attributes" remove="true" />
+            <!-- <referenceBlock name="reviews.tab" remove="true" /> -->
+            <referenceBlock name="product.info.description">
+                <arguments>
+                    <argument translate="true" name="title" xsi:type="string">Description</argument>
+                    <argument name="sort_order" xsi:type="string">14</argument>
+                </arguments>
+            </referenceBlock>
+            <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.allergen_information" as="allergen_information" template="Magento_Catalog::product/view/attribute.phtml" group="detailed_info">
+                <arguments>
+                    <argument name="at_call" xsi:type="string">getAllergenInformation</argument>
+                    <argument name="at_code" xsi:type="string">allergen_information</argument>
+                    <argument name="css_class" xsi:type="string">allergen_information</argument>
+                    <argument name="at_label" xsi:type="string">none</argument>
+                    <argument translate="true" name="title" xsi:type="string">Allergen Information</argument>
+                    <argument name="sort_order" xsi:type="string">15</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.nutritional_information" as="nutritional_information" template="Magento_Catalog::product/view/attribute.phtml" group="detailed_info">
+                <arguments>
+                    <argument name="at_call" xsi:type="string">getNutritionalInformation</argument>
+                    <argument name="at_code" xsi:type="string">nutritional_information</argument>
+                    <argument name="css_class" xsi:type="string">nutritional_information</argument>
+                    <argument name="at_label" xsi:type="string">none</argument>
+                    <argument translate="true" name="title" xsi:type="string">Nutritional Information</argument>
+                    <argument name="sort_order" xsi:type="string">16</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.ingredients" as="ingredients" template="Magento_Catalog::product/view/attribute.phtml" group="detailed_info">
+                <arguments>
+                    <argument name="at_call" xsi:type="string">getIngredients</argument>
+                    <argument name="at_code" xsi:type="string">ingredients</argument>
+                    <argument name="css_class" xsi:type="string">ingredients</argument>
+                    <argument name="at_label" xsi:type="string">none</argument>
+                    <argument name="title" translate="true" xsi:type="string">Ingredients</argument>
+                    <argument name="sort_order" xsi:type="string">17</argument>
+                </arguments>
+            </block>
+
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.delivery" as="delivery" template="Magento_Catalog::delivery.phtml" group="detailed_info">
+                <arguments>
+                    <argument name="title" translate="true" xsi:type="string">Delivery</argument>
+                    <argument name="sort_order" xsi:type="string">99</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+        <referenceContainer name="product.info.stock.sku" remove="true">
+        </referenceContainer>
+
+        <move element="product.info.overview" destination="product.info.main" after="product.info.price" />
+    </body>
+
+</page>
+
