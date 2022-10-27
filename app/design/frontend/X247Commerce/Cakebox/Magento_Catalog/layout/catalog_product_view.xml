@@ -74,6 +74,11 @@
                 </arguments>
             </block>
         </referenceBlock>
+
+        <referenceContainer name="product.info.stock.sku" remove="true">
+        </referenceContainer>
+
+        <move element="product.info.overview" destination="product.info.main" after="product.info.price" />
     </body>
 
 </page>
