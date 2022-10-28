@@ -1,4 +1,23 @@
+& when (@media-common = true) {
+	.sidebar.sidebar-main .filter.block{
+		padding-left:20px;
+	}
+	a.action.apply-filter {
+		background: #992E80;
+		color: #FFF;
+		width: 100%;
+		display: block;
+		text-align: center;
+		height: 52px;
+		line-height: 52px;
+		border-radius: 5px;
+		margin-bottom:10px;
+	}
 
+	.action.filter-sidebar {
+		margin-top:34px
+	}
+}
 .media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
 	.catalogsearch-result-index .page-main .sidebar.sidebar-main,
  	.catalog-category-view .page-main .sidebar.sidebar-main {
@@ -10,6 +29,7 @@
 	    margin-right: -400px;
 	    z-index: 99;
 	    background: #fff;
+		top:0;
  	}
 
  	.page-products {
@@ -31,8 +51,18 @@
     }
 
  	.close-desktop {
+		border-radius:5px;
+		background: #992E80;
+        color:#FFF;
+		width:29px;
+		height:29px;
+		float:right;
+		text-align:center;
+        margin:3px;
  		&:after {
-		    color: #7d7d7d;
+		    font-weight:bold;
+            color:#FFF;
+			line-height:29px;
 		    content: '\e616';
 		    font-family: 'luma-icons';
 		    font-weight: normal;
