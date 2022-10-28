@@ -11,6 +11,7 @@ class Data extends AbstractHelper
 	const XML_PATH_DELIVERY_POPUP_ENABLE = 'deliverypopup/general/enable';
 	const XML_PATH_DELIVERY_POPUP_SEARCH_RADIUS = 'deliverypopup/general/search_radius';
 	const XML_PATH_DELIVERY_POPUP_RESULT_RECORDS = 'deliverypopup/general/total_records';
+	const XML_PATH_DISTANCE_UNIT_CONFIG = 'amlocator/locator/visual_settings/distance';
 
 
 	public function isEnabledPopup() 
@@ -31,6 +32,13 @@ class Data extends AbstractHelper
 	{
 		return $this->scopeConfig->getValue(
 			self::XML_PATH_DELIVERY_POPUP_RESULT_RECORDS , ScopeInterface::SCOPE_STORE
+		);
+	}
+
+	public function getDistanceUnitSetting() 
+	{
+		return $this->scopeConfig->getValue(
+			self::XML_PATH_DISTANCE_UNIT_CONFIG , ScopeInterface::SCOPE_STORE
 		);
 	}
 
@@ -58,9 +66,9 @@ class Data extends AbstractHelper
 			$unit = strtoupper($unit);
 
 			if ($unit == "km") {
-			  return ($miles * 1.609344);
+			  return round(($miles * 1.609344), 1).'km';
 			}  else {
-			  return $miles;
+			  return round($miles, 1).'miles';
 			}
 		}
 	}
