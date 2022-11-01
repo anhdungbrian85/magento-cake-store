@@ -3,6 +3,7 @@
     <module name="X247Commerce_StoreLocatorSource">
         <sequence>
             <module name="Amasty_Storelocator"/>
+            <module name="Magento_InventoryCatalogAdminUi"/>
         </sequence>
     </module>
 </config>

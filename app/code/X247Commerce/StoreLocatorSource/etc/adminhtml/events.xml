@@ -2,4 +2,8 @@
     <event name="controller_action_inventory_populate_source_with_data">
         <observer name="x247Commerce_storelocatorsource_source_save" instance="X247Commerce\StoreLocatorSource\Observer\SourceSave" />
     </event>
+
+    <event name="controller_action_catalog_product_save_entity_after">
+        <observer name="process_source_items" instance="X247Commerce\StoreLocatorSource\Observer\ProcessSourceItemsObserver"/>
+    </event>
 </config>

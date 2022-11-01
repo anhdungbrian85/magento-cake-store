@@ -37,6 +37,10 @@ class Source extends \Magento\Backend\Block\Widget\Form\Generic
 
     private $sourceRepository;
 
+    protected $adminSourceFactory;
+
+    protected $adminSourceCollection;
+
     /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
@@ -53,6 +57,8 @@ class Source extends \Magento\Backend\Block\Widget\Form\Generic
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\InventoryApi\Api\SourceRepositoryInterface $sourceRepository,
         \Magento\Framework\Locale\ListsInterface $localeLists,
+        \X247Commerce\StoreLocatorSource\Model\AdminSourceFactory $adminSourceFactory,
+        \X247Commerce\StoreLocatorSource\Model\ResourceModel\AdminSource\CollectionFactory $adminSourceCollection,
         array $data = [],
         OptionInterface $deployedLocales = null
     ) {
@@ -61,6 +67,8 @@ class Source extends \Magento\Backend\Block\Widget\Form\Generic
         $this->sourceRepository = $sourceRepository;
         $this->deployedLocales = $deployedLocales
             ?: ObjectManager::getInstance()->get(OptionInterface::class);
+        $this->adminSourceFactory = $adminSourceFactory;
+        $this->adminSourceCollection = $adminSourceCollection;
         parent::__construct($context, $registry, $formFactory, $data);
     }
 
@@ -91,15 +99,12 @@ class Source extends \Magento\Backend\Block\Widget\Form\Generic
 
         $sourceList = $this->sourceRepository->getList()->getItems();
 
-        // foreach ($sourceList as $source) {
-        //     print_r($source->getData());
-        // }
-
         $sourceCode = [];
 
         foreach ($sourceList as $source) {
             $sourceCode[] = ['label' => $source['name'], 'value' => $source['source_code']];
         }
+
         $baseFieldset->addField(
             'source',
             'multiselect',
@@ -113,13 +118,31 @@ class Source extends \Magento\Backend\Block\Widget\Form\Generic
             ]
         );
 
+        $userId = $model->getUserId();
+        $source = $this->getSourceCodeCollection($userId);
+
+        $model->setData('source', $source);
         $data = $model->getData();
-        // unset($data['password']);
-        // unset($data[self::CURRENT_USER_PASSWORD_FIELD]);
+        
+
         $form->setValues($data);
 
         $this->setForm($form);
 
         return parent::_prepareForm();
+    }
+
+    public function getSourceCodeCollection($userId)
+    {
+
+        $collection = $this->adminSourceFactory->create()->getCollection()->addFieldToFilter('user_id', ['eq' => $userId]);
+        $data = [];
+        if ($collection) {
+            foreach ($collection as $item) {
+                $data[] = $item->getSourceCode();
+            }
+        }
+     
+        return $data;     
     }
 }
