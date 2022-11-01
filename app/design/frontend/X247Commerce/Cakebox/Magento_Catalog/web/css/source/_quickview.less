@@ -1,0 +1,78 @@
+& when (@media-common = true) {
+	.weltpixel_quickview-catalog_product-view {
+		.page-wrapper {
+			.breadcrumbs {
+				display: none !important;
+			}
+		}
+	}
+
+	.wp-quickview-popup {
+		.mfp-container {
+			padding: 0;
+
+			.mfp-content {
+				background: #fff;
+			}
+		}
+
+		.mfp-iframe-scaler {
+			// &:before {
+			//     content: 'Quick View';
+			//     position: absolute;
+			//     font-size: 26px;
+			//     font-weight: 500;
+			//     line-height: 30px;
+			//     top: 15px;
+			//     left: 20px;
+			//     height: 30px;
+			//     color: #363A40;
+			// }
+
+			.mfp-close {
+			    width: 30px;
+			    height: 30px;
+			    line-height: 30px;
+			    padding-right: 0;
+			    right: 20px;
+			    text-align: center;
+			    opacity: 1;
+			    border-radius: 5px;
+			    background: #992E80;
+			    top: 15px;
+			}
+
+			iframe {
+				top: 44px;
+			}
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+	.weltpixel_quickview-catalog_product-view {
+		.page-wrapper {
+
+			.product-info-main {
+				h1 {
+					span {
+						font-size: 24px;
+					} 
+				}
+			}
+
+			.product-add-form {
+				.box-tocart {
+					position: inherit;
+					right: 20px;
+					left: 20px;
+					margin-bottom: 10px;
+				}
+			}
+
+			.available-locator {
+    			margin-bottom: 50px;
+			}
+		}
+	}
+}
