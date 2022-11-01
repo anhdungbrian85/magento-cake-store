@@ -46,8 +46,53 @@
 				padding-bottom: 0;
 			}
 		}
+		
 	}
 }
+
+//home promo
+
+.home-promosion{
+	padding-left:20px;
+	padding-right:20px;
+	h2 {
+		font-size:48px;
+		letter-spacing: -0.9px;
+		font-family: TiemposHeadline-Black;
+	}
+	p span{
+		font-size:16px;font-weight: 200;
+	}
+	.pagebuilder-banner-wrapper .pagebuilder-overlay:not(.pagebuilder-poster-overlay){
+		max-width: 700px!important;
+		padding-left:90px;
+	}
+	.background-image-6345a6eda8620{
+		background-size: 100% 100%!important;
+	}
+}
+ 
+
+.mobile-home-promosion{
+	display:none!important;
+	h2{
+		font-size:22px;
+		font-family: TiemposHeadline-Black;
+		max-width:50%
+	}
+}
+
+@media (max-width:999px){
+
+	.mobile-home-promosion{
+		display:block!important;
+	}
+	.home-promosion,
+	.footer-top-section{
+		display:none!important;
+	}
+}
+
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
 	.footer-top-section {
 		display: none!important;
