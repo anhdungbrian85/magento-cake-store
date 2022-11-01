@@ -34,10 +34,30 @@
 		}
 	}
 
+	.swatch-option-lists {
+		max-width: 100%;
+		white-space: nowrap;
+		overflow-x: auto;
+	}
+
+	.swatch-attribute {
+		.swatch-attribute-arrow-icon {
+			display: none;
+		}
+	}
+
 	.size_servings {
-		.swatch-attribute-options {
-			white-space: nowrap;
-			overflow-x: auto;
+
+		.swatch-attribute-label-wrapper {
+			.swatch-attribute-arrow-icon {
+				display: block;
+			}
+		}
+
+		.swatch-attribute-label-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		}
 
 		.swatch-option.text {
@@ -47,6 +67,7 @@
 			min-width: unset;
 			margin: 0 5px 5px 0;
 			display: inline-block;
+			overflow: hidden;
 
 			&:focus {
 				outline: none;

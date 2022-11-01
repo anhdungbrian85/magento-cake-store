@@ -429,10 +429,21 @@ define([
 
                 if ($widget.options.enableControlLabel) {
                     label +=
+                        '<div class="swatch-attribute-label-wrapper">' +
+                        '<div class="swatch-label">' +
                         '<span id="' + controlLabelId + '" class="' + classes.attributeLabelClass + '">' +
                         $('<i></i>').text(item.label).html() +
                         '</span>' +
-                        '<span class="' + classes.attributeSelectedOptionLabelClass + '"></span>';
+                        '<span class="' + classes.attributeSelectedOptionLabelClass + '"></span>' +
+                        '</div>' +
+                        '<div class="swatch-attribute-arrow-icon">' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="25.000000pt" height="16.000000pt" viewBox="0 0 25.000000 16.000000" preserveAspectRatio="xMidYMid meet">' +
+                            '<g transform="translate(0.000000,16.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">' +
+                                '<path d="M194 122 l29 -31 -114 -4 -114 -3 114 -2 115 -2 -29 -30 c-16 -16 -26 -32 -24 -35 3 -2 22 12 42 33 l36 37 -42 34 -42 35 29 -32z"/>' +
+                            '</g>' +
+                        '</svg>' +
+                        '</div>' +
+                        '</div>';
                 }
 
                 if ($widget.inProductList) {
@@ -449,14 +460,16 @@ define([
                          'data-attribute-code="' + item.code + '" ' +
                          'data-attribute-id="' + item.id + '">' +
                         label +
-                        '<div aria-activedescendant="" ' +
-                             'tabindex="0" ' +
-                             'aria-invalid="false" ' +
-                             'aria-required="true" ' +
-                             'role="listbox" ' + listLabel +
-                             'class="' + classes.attributeOptionsWrapper + ' clearfix">' +
-                            options + select +
-                        '</div>' + input +
+                        '<div class="swatch-option-lists" >' +
+                            '<div aria-activedescendant="" ' +
+                                 'tabindex="0" ' +
+                                 'aria-invalid="false" ' +
+                                 'aria-required="true" ' +
+                                 'role="listbox" ' + listLabel +
+                                 'class="' + classes.attributeOptionsWrapper + ' clearfix">' +
+                                options + select +
+                            '</div>' + input +
+                        '</div>' +
                     '</div>'
                 );
 
@@ -521,8 +534,6 @@ define([
             if (!this.options.jsonSwatchConfig.hasOwnProperty(config.id)) {
                 return '';
             }
-
-            console.log(config);
 
             $.each(config.options, function (index) {
                 var id,
@@ -601,11 +612,11 @@ define([
                         if ( shapeImage ) {
                             html += '<img src="' + shapeImage + '" />';
                         }
-
                         if ( shapeLabel ) {
                             html += '<span class="shape-label">' + shapeLabel + '</span>';
                         }
                     }
+
                     html += '</div>';
                 } else if (type === 1) {
                     // Color
