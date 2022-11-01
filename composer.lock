@@ -126,8 +126,7 @@
             ],
             "description": "Social Login Lite by Amasty",
             "homepage": "https://amasty.com/"
-        },
-                },
+        },     
         {
             "name": "amasty/module-improved-layered-navigation-page",
             "version": "2.7.16",
