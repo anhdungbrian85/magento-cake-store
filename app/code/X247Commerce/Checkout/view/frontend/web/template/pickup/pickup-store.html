@@ -16,22 +16,24 @@
         </div>
     </div>
     <div class="store-location-picked_footer">
-        <div class="store-location-description"></div>
+        <div class="store-location-description">
+            <span data-bind="text: getSchedulePickUpData()"></span>
+        </div>
     </div>
-</div>
-<div class="ampickup-field -store">
-    <label class="label" data-bind="visible:labelVisible, text:label, attr:{for: uid}"></label>
-    <div class="ampickup-wrapper">
-        <select data-bind="attr: {id: uid},
-                   options: options,
-                   optionsValue: 'id',
-                   optionsText: 'name',
-                   optionsCaption: caption,
-                   value: value,
-                   event: {change: onChangeStore(value())};"
-                class="ampickup-store">
-        </select>
-        <span class="ampickup-separator -cart"></span>
-        
+    <div class="ampickup-field -store">
+        <label class="label" data-bind="visible:labelVisible, text:label, attr:{for: uid}"></label>
+        <div class="ampickup-wrapper">
+            <select data-bind="attr: {id: uid},
+                       options: options,
+                       optionsValue: 'id',
+                       optionsText: 'name',
+                       optionsCaption: caption,
+                       value: value,
+                       event: {change: onChangeStore(value())};"
+                    class="ampickup-store">
+            </select>
+            <span class="ampickup-separator -cart"></span>
+        </div>
     </div>
+
 </div>

@@ -1,5 +1,85 @@
 & when (@media-common = true) {
 	.checkout-cart-index {
+		.block.responsive.store.locator {
+			display: none;
+		}
+		.store-location-picked {
+			padding-left: 22px;
+			grid-area: menu;
+			background-color: #F9F9F9;
+			select {
+				margin-bottom: 5px;
+			}
+
+			.store-location-picked_title {
+				border-bottom: 1px solid #DBDBDB;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				span {
+					color: #992E80;
+					padding-right: 27px;
+					font-size: 11px;
+					font-weight: 600;
+				}
+			}
+			.store-location-address,
+			.store-location-telephone,
+			.ampickup-field.-store {
+				font-size: 14px;
+				font-weight: 600;
+				padding-top: 14px;
+			}
+
+			.store-location-picked_label {
+
+				padding: 10px 0;
+				font-size: 20px;
+    			font-weight: 500;
+			}
+
+			.ampickup-field.-store {
+				.label {
+					border-bottom: 1px solid #DBDBDB;
+					width: 100%;
+				}
+			}
+		}
+		.field.ampickup-field.-date._required {
+			grid-area: main;
+			margin-bottom: 0;
+		}
+		.field.ampickup-field.-time._required {
+			grid-area: footer;
+		}
+		.field.ampickup-field {
+			background-color: #F9F9F9;
+			.control {
+				margin-top: 4px;
+			}
+			.label {
+				display: none;
+			}
+			input,select {
+				height: 74px;
+				background-color: #F9F9F9;
+				border: unset;
+				font-size: 16px;
+				padding-left: 31px;
+			}
+		} 
+		.ampickup-store-container {
+			display: grid;
+			grid-template-areas: 'menu menu main main main main''menu menu footer footer footer footer ';
+			padding: 10px;
+			column-gap: 20px;
+			row-gap: 20px;
+
+			.ampickup-separator {
+				display: none;
+			}
+		}
 		.form-cart {
 			.cart.table-wrapper {
 				.cart {
@@ -204,6 +284,49 @@
 
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
 	.checkout-cart-index {
+		.column.main {
+
+			.block.responsive.store.locator {
+				display: block;
+				.block.store-locator {
+					display: block;
+				}
+				.ampickup-store-container.-cart {
+					display: flex;
+					width: 100%;
+					flex-wrap: wrap;
+					padding:0;
+				}
+				.store-location-picked {
+					width: 100%;
+					.store-location-picked_label {
+						font-size: 18px;
+						font-weight: 400;
+					}
+					.store-location-address,
+					.store-location-telephone {
+						padding-top: 5px;
+						font-weight: 500;
+						font-size: 14px;
+					}
+					.ampickup-field.-store {
+						padding-top: 0;
+						font-weight: 500;
+						font-size: 14px;
+					}
+				}
+			}
+			.block.store-locator {
+				display: none;
+			}
+		}
+		.cart.table-wrapper {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.block.responsive.store.locator {
+			order: 2;
+		}
 		.cart-container {
 			padding: 0 15px;
 			display: flex;

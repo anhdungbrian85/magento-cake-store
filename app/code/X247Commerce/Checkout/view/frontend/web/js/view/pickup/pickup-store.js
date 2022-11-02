@@ -129,6 +129,16 @@ define([
             } else {
                 return null;
             }
+        },
+
+        getSchedulePickUpData: function () {
+            let pickupData = pickupDataResolver.pickupData;
+            let selectedDate = new Date();
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            if (pickupDataResolver.dateData()) {
+                selectedDate = new Date(pickupDataResolver.dateData());
+            } 
+            return selectedDate.toLocaleDateString("en-US", options);
         }
     });
 });
