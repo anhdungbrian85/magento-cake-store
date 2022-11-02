@@ -179,7 +179,8 @@ define([
             return $.ajax({
                 url: clearUrl,
                 data: data,
-                cache: true,
+                cache: false,
+                showLoader: true,
                 success: function (response) {
                     try {
                         $.mage.amShopbyAjax.prototype.startAjax = false;
@@ -229,7 +230,7 @@ define([
                                 $(amShopbyButton).trigger('click');
                             });
                         }
-
+                        
                         $(document).trigger('amshopby:ajax_filter_applied');
                     } catch (e) {
                         var url = self.clearUrl ? self.clearUrl : self.options.clearUrl;

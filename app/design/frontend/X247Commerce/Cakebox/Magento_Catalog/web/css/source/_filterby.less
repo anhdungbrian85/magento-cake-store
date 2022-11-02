@@ -92,5 +92,23 @@
 		.am_shopby_apply_filters {
 			display: none;
 		}
+
+		.filter-options-content {
+			a {
+				&:hover {
+					.swatch-option.text {
+						border-color: #0000004D;
+    					background: #FFF;
+					    color: #686868;
+
+					    &.selected {
+				    	    border-color: #992E80;
+						    background: #992E80;
+						    color: #FFF;
+					    }
+					}
+				}
+			}
+		}
 	}
 }

@@ -27,8 +27,9 @@ define([
                         ' .amasty-catalog-topnav .am-filter-items-attr_price,' +
                         '.amasty-catalog-topnav .am-filter-items-attr_decimal,' +
                         '.amasty-catalog-topnav .am-fromto-widget').addClass('am-top-filters');
-                    self.applyShowButtonForSwatch();
+                    
                 }
+                self.applyShowButtonForSwatch();
 
                 element.on('click', function (e) {
                     var valid = true,
@@ -196,8 +197,6 @@ define([
             }
 
             self.setShowButton(posTop, posLeft, leftPosition);
-            // console.log($('.am_shopby_apply_filters .amshopby-button').prop('disabled'));
-            
         },
 
         getShowButtonType: function (element) {
@@ -315,6 +314,9 @@ define([
             $('.filter-options-content .swatch-option').on('click', function (e) {
                 var element = jQuery(e.target);
                 self.renderShowButton(e, element);
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
             });
         }
     });
