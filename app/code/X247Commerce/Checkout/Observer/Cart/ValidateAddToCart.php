@@ -53,7 +53,7 @@ class ValidateAddToCart implements ObserverInterface
                     $sourceCodes[] =  $source->getSourceCode();
                 }
             } else {
-                throw new LocalizedException(__("Store's source is not available."));
+                throw new LocalizedException(__("The product is not available in the selected store."));
             }
             
             $product = $observer->getProduct();
@@ -80,7 +80,7 @@ class ValidateAddToCart implements ObserverInterface
                     throw new LocalizedException(__('The requested qty is not available in selected store.'));
                 }
             } else {
-                throw new LocalizedException(__('The product is not available in current selected store.'));        
+                throw new LocalizedException(__('The product is not available in the selected store.'));        
             }
         }
 

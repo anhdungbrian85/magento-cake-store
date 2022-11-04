@@ -50,7 +50,7 @@ class ValidateBeforeOrder implements ObserverInterface
                     $sourceCodes[] =  $source->getSourceCode();
                 }
             } else {
-                throw new PaymentException(__("Store's source is not available."));
+                throw new PaymentException(__("Some of the products are not available in the selected store."));
             }
             $order = $observer->getEvent()->getOrder();
             $proSku = [];
