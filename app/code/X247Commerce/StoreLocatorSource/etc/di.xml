@@ -6,10 +6,15 @@
 
     <preference for="Magento\User\Block\User\Edit\Tabs" type="X247Commerce\StoreLocatorSource\Block\User\Edit\Tabs" />
     <preference for="Magento\User\Controller\Adminhtml\User\Save" type="X247Commerce\StoreLocatorSource\Controller\Adminhtml\User\Save" />
-    <!-- <preference for="Magento\InventoryAdminUi\Controller\Adminhtml\Source\Save" type="X247Commerce\StoreLocatorSource\Controller\Adminhtml\Source\Save" /> -->
 
     <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
         <plugin name="assign_amstore_locator_id" type="X247Commerce\StoreLocatorSource\Plugin\AssignAmStoreLocatorData"/>
+    </type>
+    <type name="Magento\InventoryCatalogAdminUi\Ui\DataProvider\Product\Form\Modifier\SourceItems">
+        <plugin name="modify_source_items" type="X247Commerce\StoreLocatorSource\Plugin\ModifySourceItems"/>
+    </type>
+    <type name="Magento\InventoryLowQuantityNotificationAdminUi\Ui\DataProvider\Product\Form\Modifier\SourceItemConfiguration">
+        <plugin name="modify_source_items_configuration" type="X247Commerce\StoreLocatorSource\Plugin\ModifySourceItemConfiguration"/>
     </type>
     <type name="Magento\InventoryShippingAdminUi\Ui\DataProvider\SourceSelectionDataProvider">
         <plugin name="assign_source_to_order" type="X247Commerce\StoreLocatorSource\Plugin\AssignSourceToOrder"/>

@@ -16,10 +16,9 @@ define([
                 }
 
                 if($(this).css("margin-right") == "400px") {
-                    $('.catalog-category-view .page-main .sidebar.sidebar-main').animate({"margin-right": '-=400'});
-                   
+                    $('.sidebar.sidebar-main').animate({"margin-right": '-=400'});
                 } else {
-                    $('.catalog-category-view .page-main .sidebar.sidebar-main').animate({"margin-right": '+=400'});
+                    $('.sidebar.sidebar-main').animate({"margin-right": '+=400'});
                 }
             });
         },
@@ -27,8 +26,10 @@ define([
         _hideFilter: function() {
             $(document).on('click','.close-desktop', function() {
                 if($(".filter-label").hasClass('active')){
-                    $('.catalog-category-view .page-main .sidebar.sidebar-main').animate({"margin-right": '-=400'});
+                    $('.sidebar.sidebar-main').animate({"margin-right": '-=400'});
                     $('.filter-label').removeClass('active');
+                } else {
+                    $('.sidebar.sidebar-main').animate({"margin-right": '-=400'});
                 }
             });
         },

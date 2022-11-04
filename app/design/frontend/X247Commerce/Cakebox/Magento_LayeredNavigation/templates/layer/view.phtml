@@ -46,6 +46,7 @@
             <?php foreach ($block->getFilters() as $filter) : ?>
                 <?php if ($filter->getItemsCount()) : ?>
                     <?php if (!$wrapOptions) : ?>
+                        <?php $collapsibleRange = implode(' ', range(0, $filter->getItemsCount())); ?>
                         <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><?= $block->escapeHtml(__('Shopping Options')) ?></strong>
                         <div class="filter-options" id="narrow-by-list" data-role="content" data-mage-init='
                         {
@@ -53,7 +54,7 @@
                             {
                                 "openedState": "active",
                                 "collapsible": true,
-                                "active": false,
+                                "active": "<?= $collapsibleRange ?>",
                                 "multipleCollapsible": false
                             }
                         }'>
@@ -67,12 +68,12 @@
             <?php endforeach; ?>
             <div class="action filter-sidebar">
                 <div class="action apply">
-                    <a class="action apply-filter" href="#">
+                    <button class="primary action apply-filter">
                         <span><?= ('Apply Filter') ?></span>
-                    </a>
+                    </button>
                 </div>
                 <div class="action clear">
-                    <a class="action apply-filter" href="<?= $block->getClearUrl() ?>">
+                    <a class="action clear-filter" href="<?= $block->getClearUrl() ?>">
                         <span><?= ('Clear Filter') ?></span>
                     </a>
                 </div>

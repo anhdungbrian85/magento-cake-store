@@ -41,7 +41,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     public function execute()
     {
         if ($this->getRequest()->getPost('delivery-type') == 0) {
-            return parent::execute();
+            $this->getCloseStoreLocations();
         }   else {
             $location = $this->getClosestStoreLocation();
             if ($location->getId()) {
@@ -52,9 +52,23 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
                 $resultJson = $this->resultJsonFactory->create();
                 return $resultJson->setData(['store_location_id' => $location->getId()]);
             }   else {
-                return parent::execute();
+                $this->getCloseStoreLocations();
             }
         }
+    }
+
+    public function getCloseStoreLocations() 
+    {
+        $this->_view->loadLayout();
+        $lng = $this->getRequest()->getPost('lng');
+        $lat = $this->getRequest()->getPost('lat');
+
+        /** @var \Amasty\Storelocator\Block\Location $block */
+        $block = $this->_view->getLayout()->getBlock('amlocator_ajax');
+        $block->setData('lng', $lng);
+        $block->setData('lat', $lat);
+
+        $this->getResponse()->setBody($block->getJsonLocations());
     }
 
     public function getClosestStoreLocation()

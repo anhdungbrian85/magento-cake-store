@@ -29,7 +29,7 @@
         <referenceBlock name="product.info.details">
             <!-- <referenceBlock name="product.info.description" remove="true" /> -->
             <referenceBlock name="product.attributes" remove="true" />
-            <!-- <referenceBlock name="reviews.tab" remove="true" /> -->
+            <referenceBlock name="reviews.tab" remove="true" />
             <referenceBlock name="product.info.description">
                 <arguments>
                     <argument translate="true" name="title" xsi:type="string">Description</argument>

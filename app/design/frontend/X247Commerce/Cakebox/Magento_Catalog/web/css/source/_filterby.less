@@ -2,18 +2,27 @@
 	.sidebar.sidebar-main .filter.block{
 		padding-left:20px;
 	}
-	a.action.apply-filter {
+	button.action.apply-filter {
 		background: #992E80;
 		color: #FFF;
 		width: 100%;
 		display: block;
 		text-align: center;
 		height: 52px;
-		line-height: 52px;
 		border-radius: 5px;
 		margin-bottom:10px;
 	}
-
+	.clear .action.clear-filter {
+		background: #FFF;
+		border:1px solid #992E80;
+		color: #992E80;
+		display: block;
+		text-align: center;
+		height: 52px;
+		line-height: 52px;
+		border-radius: 5px;
+		margin-bottom: 10px
+	}
 	.action.filter-sidebar {
 		margin-top:34px
 	}
@@ -30,6 +39,8 @@
 	    z-index: 99;
 	    background: #fff;
 		top:0;
+		overflow: auto;
+		padding-right: 20px;
  	}
 
  	.page-products {
@@ -47,6 +58,10 @@
     				display: none;
     			}
     		}
+    	}
+
+    	.amasty-catalog-topnav {
+    		display: none;
     	}
     }
 
@@ -73,5 +88,29 @@
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
 	.close-desktop {
 		display: none;
+	}
+
+	.page-products {
+		.am_shopby_apply_filters {
+			display: none;
+		}
+
+		.filter-options-content {
+			a {
+				&:hover {
+					.swatch-option.text {
+						border-color: #0000004D;
+    					background: #FFF;
+					    color: #686868;
+
+					    &.selected {
+				    	    border-color: #992E80;
+						    background: #992E80;
+						    color: #FFF;
+					    }
+					}
+				}
+			}
+		}
 	}
 }
