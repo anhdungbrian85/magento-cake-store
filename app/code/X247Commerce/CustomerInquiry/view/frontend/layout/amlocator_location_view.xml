@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="location">
+            <block class="Amasty\Storelocator\Block\View\Location" name="customer_inquiry_form" template="X247Commerce_CustomerInquiry::inquiry_form.phtml" after="amasty_store_locator_schedule">
+            </block>
+        </referenceBlock>
+    </body>
+</page>

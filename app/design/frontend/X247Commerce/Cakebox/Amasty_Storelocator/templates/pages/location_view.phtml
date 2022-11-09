@@ -168,6 +168,7 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
                 ->createBlock(\Amasty\Storelocator\Block\View\Reviews::class)
                 ->setData('location', $location)
                 ->toHtml(); ?>
+            <?= $block->getChildHtml('customer_inquiry_form'); ?>
         </div>
 
         <div class="amlocator-column -right">
