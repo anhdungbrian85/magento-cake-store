@@ -136,12 +136,30 @@ define([
         },
 
         onUpdate: function (pickupTime) {
-            console.log('this.options', this.options());
             var pickupTimeOption = this.options().filter(function (elem) {
                 return elem.value === pickupTime;
             })[0];
-
+            var secureTimeEnd = new Date(new Date().getTime() + 15 * 60000);
             pickupDataResolver.timeData(pickupTime);
+            pickupDataResolver.secureTimeData(secureTimeEnd.valueOf());
+            console.log('onUpdate function');
+            // var minutes, seconds;
+            
+            // var x = setInterval(function() {
+            //     var now = new Date().valueOf();
+            //     console.log(now);
+            //     var distance = secureTimeEnd.valueOf() - now;
+            //     console.log('secureTimeData', secureTimeEnd.valueOf());
+            //     console.log('distance', distance);
+            //     minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            //     seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            //     $('#block-secure-time-popup_wrapper .content').text('To secure your order time slot confirm within ' + minutes + ' min ' + seconds + ' sec');
+            //     if (distance < 0) {
+            //         clearInterval(x);
+            //     }
+            // }, 1000);
+
+             
             if (pickupTimeOption) {
                 this.pickupTimeLabel = pickupTimeOption.label;
             }  

@@ -33,6 +33,7 @@ define([
         },
 
         initConfig: function () {
+            console.log('amasty-selected-pickup-info', JSON.parse(window.localStorage.getItem('mage-cache-storage'))['amasty-selected-pickup-info']);
             var stores,
                 pickupData,
                 amPickupConfig;
@@ -51,6 +52,7 @@ define([
             
             this.options = stores || [];
             this.value = pickupDataResolver.getDataByKey('am_pickup_store');
+            
             this.visible = pickup.isPickup();
             
             return this;
@@ -72,18 +74,24 @@ define([
         },
 
         initialize: function () {
+            console.log('amasty-selected-pickup-info', JSON.parse(window.localStorage.getItem('mage-cache-storage'))['amasty-selected-pickup-info']);
             this._super();
-
-            if (pickupDataResolver.storeId() && pickup.isPickup()) {
+            console.log('initialize::pickup-store');
+            console.log('initialize::pickup-store::storeId', pickupDataResolver.storeId());
+            console.log('initialize::pickup-store::dateData', pickupDataResolver.dateData());
+            console.log('initialize::pickup-store::timeData', pickupDataResolver.timeData());
+            console.log('amasty-selected-pickup-info', JSON.parse(window.localStorage.getItem('mage-cache-storage'))['amasty-selected-pickup-info']);
+            if (pickupDataResolver.storeId()) {
                 pickupDataResolver.storeId.valueHasMutated();
-            }
-
-            if (window.storeLocationData.store_location_id_selected) {
+            } 
+            let selectedPickupInfo = customerData.get('x247_selected_pickup_info');
+            console.log('selectedPickupInfo', selectedPickupInfo());
+            if (selectedPickupInfo()) {
                 selectShippingMethodAction('amstorepickup');
                 checkoutData.setSelectedShippingRate('amstorepickup_amstorepickup');
-                this.onChangeStore(window.storeLocationData.store_location_id_selected);
+                this.onChangeStore(selectedPickupInfo().am_pickup_store);
             }
-
+            
             return this;
         },
 
@@ -99,7 +107,6 @@ define([
 
         onChangeStore: function (storeId) {
             if (storeId) {
-                console.log('onChangeStore::storeId', storeId);
                 pickupDataResolver.storeId(storeId);
             }
         },
@@ -120,6 +127,7 @@ define([
 
         getStoreLocationSelectedData: function () {
             let pickupData = pickupDataResolver.pickupData;
+  
             if (pickupDataResolver.storeId()) {
                 for (let i = 0; i < pickupData().stores.length; i++) {
                     if (pickupData().stores[i].id == window.storeLocationData.store_location_id_selected) {
@@ -127,8 +135,18 @@ define([
                     }
                 }
             } else {
-                return null;
+                return {name: ''};
             }
+        },
+
+        getSchedulePickUpData: function () {
+            let pickupData = pickupDataResolver.pickupData;
+            let selectedDate = new Date();
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            if (pickupDataResolver.dateData()) {
+                selectedDate = new Date(pickupDataResolver.dateData());
+            } 
+            return selectedDate.toLocaleDateString("en-US", options);
         }
     });
 });

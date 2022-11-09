@@ -14,6 +14,9 @@
                 </argument>
             </arguments>
         </referenceBlock> -->
+        <referenceContainer name="content">
+            <block class="X247Commerce\Checkout\Block\Cart\SecureTimePopup" name="secure.time.popup" template="X247Commerce_Checkout::cart/secure_time_popup.phtml" before="checkout.cart" />
+        </referenceContainer>
         <referenceContainer name="checkout.cart.items">
             <block class="X247Commerce\Checkout\Block\Cart\StoreLocator" name="checkout.cart.store.locator" template="X247Commerce_Checkout::cart/store_locator.phtml" before="checkout.cart.crosssell">
                 <arguments>

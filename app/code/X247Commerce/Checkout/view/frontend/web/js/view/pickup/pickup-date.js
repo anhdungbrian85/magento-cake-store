@@ -38,6 +38,9 @@ define([
 
         initialize: function () {
             this._super();
+            console.log('initialize::pickup-date');
+            console.log('initialize::pickup-date::storeId', pickupDataResolver.storeId());
+            console.log('initialize::pickup-date::dateData', pickupDataResolver.dateData());
             if (pickupDataResolver.storeId() != undefined) {
                 this.onChangeStore(pickupDataResolver.storeId());
                 this.getDataFromCache = true;
@@ -150,7 +153,7 @@ define([
         getSelectedDay: function (datepickerDate, value) {
             var storeDateTime,
                 selectedDate;
-            console.log('getSelectedDay::value', value);
+            
             if (value) {
                 storeDateTime = this.currentStoreDateTime.asDateTimeObject;
                 selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
@@ -170,11 +173,8 @@ define([
          * @return {void}
          */
         setDateToFirstPickupDate: function (store) {
-            console.log('store', store);
             var firstPickupDate = this.getFirstPickupDate(store);
-            console.log('firstPickupDate', firstPickupDate);
             this.firstPickupDate = firstPickupDate;
-            console.log('this.firstPickupDate', this.firstPickupDate);
             // This is direct access to the element because change of value does not trigger change of datepicker input
             $('#' + this.uid).datepicker('setDate', firstPickupDate);
             this.onValueChange(firstPickupDate);
