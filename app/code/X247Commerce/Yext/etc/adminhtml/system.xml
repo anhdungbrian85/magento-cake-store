@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<section id="yext" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+			<label>Yext API</label>
+			<tab>x247commerce</tab>
+			<resource>X247Commerce_Yext::config_x247commerce_yext</resource>
+			<group id="api_settings" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+				<label>Required settings</label>
+				<field id="account_id" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Account Id</label>
+					<comment>This field is optional for now.</comment>
+				</field>
+				<field id="key" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>API key</label>
+					<comment><![CDATA[See how to get an API key <a target="_blank" href="https://hitchhikers.yext.com/guides/get-started-yext-api/02-create-an-app/">here</a>? ]]></comment>
+				</field>
+				<field id="mode" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Mode</label>
+					<comment/>
+					<source_model>X247Commerce\Yext\Model\Config\Source\Mode</source_model>
+				</field>
+				<field id="type" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Type</label>
+					<comment><![CDATA[See the docs: <a target="_blank" href="https://hitchhikers.yext.com/docs/knowledgeapis/"> Knownleadge API</a> and <a target="_blank" href="https://hitchhikers.yext.com/docs/liveapis/">Live API </a>]]></comment>
+					<source_model>X247Commerce\Yext\Model\Config\Source\Type</source_model>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>
