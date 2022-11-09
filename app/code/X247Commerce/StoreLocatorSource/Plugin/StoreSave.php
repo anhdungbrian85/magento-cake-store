@@ -30,27 +30,29 @@ class StoreSave
 		$id = (int)$subject->getRequest()->getParam('id');
 
 		$nameSource = $data["amlocator_source"];
-		$soure = $this->sourceRepository->get($nameSource);
-		$idSource = $soure->getId();
-		$collection = $this->sourceFactory->create()->getCollection();
-		$storeCollection = $this->locationFactory->create()->getCollection();
-		foreach ($collection as $value) {
-			
-			if ($value->getAmlocatorStore()==$id) {
-				$value->setData("amlocator_store",'NULL')->save();
+		if ($nameSource) {
+			$soure = $this->sourceRepository->get($nameSource);
+			$idSource = $soure->getId();
+			$collection = $this->sourceFactory->create()->getCollection();
+			$storeCollection = $this->locationFactory->create()->getCollection();
+			foreach ($collection as $value) {
+				
+				if ($value->getAmlocatorStore()==$id) {
+					$value->setData("amlocator_store",'NULL')->save();
 
+				}
+			}	
+			foreach ($storeCollection as $value) {
+				if ($value->getAmlocatorSource()==$idSource) {
+					$value->setData("amlocator_source",'NULL')->save();
+
+				}
 			}
+
+			$soure->setData("amlocator_store",$id)->save();
+			$modelStore = $this->locationFactory->create();
+			$store = $this->locationResource->load($modelStore,$id);
+			$modelStore->setData("amlocator_source",$nameSource)->save();
 		}	
-		foreach ($storeCollection as $value) {
-			if ($value->getAmlocatorSource()==$idSource) {
-				$value->setData("amlocator_source",'NULL')->save();
-
-			}
-		}
-
-		$soure->setData("amlocator_store",$id)->save();
-		$modelStore = $this->locationFactory->create();
-		$store = $this->locationResource->load($modelStore,$id);
-		$modelStore->setData("amlocator_source",$nameSource)->save();	
 	}
 }
