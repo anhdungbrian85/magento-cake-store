@@ -46,7 +46,7 @@ class Config extends AbstractHelper
 
     ]; 
 
-
+    const YEXT_ENDPOINT_STATIC_PATH = 'v2/accounts/me/';
 
     public function __construct(
         Context $context
