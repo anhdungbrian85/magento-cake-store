@@ -74,22 +74,14 @@ define([
         },
 
         initialize: function () {
-            console.log('amasty-selected-pickup-info', JSON.parse(window.localStorage.getItem('mage-cache-storage'))['amasty-selected-pickup-info']);
             this._super();
-            console.log('initialize::pickup-store');
-            console.log('initialize::pickup-store::storeId', pickupDataResolver.storeId());
-            console.log('initialize::pickup-store::dateData', pickupDataResolver.dateData());
-            console.log('initialize::pickup-store::timeData', pickupDataResolver.timeData());
-            console.log('amasty-selected-pickup-info', JSON.parse(window.localStorage.getItem('mage-cache-storage'))['amasty-selected-pickup-info']);
             if (pickupDataResolver.storeId()) {
                 pickupDataResolver.storeId.valueHasMutated();
             } 
-            let selectedPickupInfo = customerData.get('x247_selected_pickup_info');
-            console.log('selectedPickupInfo', selectedPickupInfo());
-            if (selectedPickupInfo()) {
+            if (window.storeLocationData.store_location_id_selected) {
                 selectShippingMethodAction('amstorepickup');
                 checkoutData.setSelectedShippingRate('amstorepickup_amstorepickup');
-                this.onChangeStore(selectedPickupInfo().am_pickup_store);
+                this.onChangeStore(window.storeLocationData.store_location_id_selected);
             }
             
             return this;
