@@ -9,7 +9,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
-class CreateYextEntityId implements DataPatchInterface, PatchRevertableInterface
+class CreateYextEntityId implements DataPatchInterface
 {
     const ATTRIBUTE_CODE = 'yext_entity_id';
 
@@ -49,20 +49,6 @@ class CreateYextEntityId implements DataPatchInterface, PatchRevertableInterface
             ->save();
 
         $this->moduleDataSetup->endSetup();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function revert()
-    {
-        $sampleAttribute = $this->attributeFactory
-            ->create()
-            ->load(self::ATTRIBUTE_CODE, 'attribute_code');
-
-        if ($sampleAttribute->getId()) {
-            $sampleAttribute->delete();
-        }
     }
 
     /**
