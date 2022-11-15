@@ -26,6 +26,13 @@
 					<source_model>X247Commerce\Yext\Model\Config\Source\Type</source_model>
 				</field>
 			</group>
+			<group id="webhook" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+				<label>Webhook security settings</label>
+				<field id="signing_key" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Singing key</label>
+					<comment>It is useful when you want to validate a request is came from Yext. Leave it empty to disable HMAC validation. Compare the hex digest of the resulting signature to the ‘X-Yext-Signature’ header of the Webhook HTTP request. If they match, the request came from Yext. If not, you should disregard the request.</comment>
+				</field>
+			</group>
 		</section>
 	</system>
 </config>
