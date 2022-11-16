@@ -1,0 +1,90 @@
+& when (@media-common = true) {
+	.checkout-index-index {
+		.ampickup-details-container {
+			&.shipping-address-details {
+				background-color: #F6F6F6;
+				padding: 12px 20px 10px;
+				color: #282828;
+				font-size: 14px;
+				font-weight: 600;
+				.ampickup-title {
+					border-bottom: 1px solid #DBDBDB;
+					font-size: 18px;
+					line-height: 25px;
+					font-weight: 500;
+				    display: flex;
+				    justify-content: space-between;
+				    align-items: center;
+				    margin: 0;
+
+				    h2 {
+				    	margin: 0 0 10px;
+				    }
+
+					.ampickup-collect-button {
+						font-size: 11px;
+						color: #992E80;
+						font-weight: 600;
+					}
+				}
+
+				.amlocator-info-popup {
+					width: 100%;
+					border-bottom: 1px solid #DBDBDB;
+					padding: 12px 0;
+					.amlocator-name {
+					    margin: 0 0 5px;
+					    font-size: 14px;
+					}
+
+					.amlocator-image {
+						display: none;
+					}
+				}
+
+				.ampickup-pickup-details {
+				    display: flex;
+				    justify-content: space-between;
+				    align-items: center;
+				}
+			}
+		}
+
+		.ampickup-store-container {
+			&.-checkout {
+				.ampickup-field {
+					&.-store {
+						display: none;
+					}
+
+					&.-date, &.-time {
+						width: 100%;
+						padding: 0;
+						margin-bottom: 10px;
+						.label {
+							display: none;
+						}
+
+						.control {
+							input[type="text"] {
+								padding: 0 25px;
+							    background: #F6F6F6;
+							    border: none;
+							    height: 55px;
+							    line-height: 55px;
+							}
+
+							select {
+								padding: 0 25px;
+							    background: #F6F6F6;
+							    border: none;
+							    height: 55px;
+							    line-height: 55px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

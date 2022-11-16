@@ -1,8 +1,15 @@
 <!-- ko if: visible -->
 <div class="ampickup-details-container ampickup-details shipping-address-details">
     <!-- ko if: displayTitle -->
-    <h2 class="ampickup-title" data-bind="i18n: 'Collection Details'"></h2>
+    <div class="ampickup-title">
+	    <h2 data-bind="i18n: 'Collection Details'"></h2>
+	    <a class="ampickup-collect-button" data-bind="i18n: 'Click and Collect'"></a>
+    </div>
     <!-- /ko -->
     <p html="storeDetails()"></p>
+    <div class="ampickup-pickup-details">
+    	<div class="ampickup-pickup-date" data-bind="i18n: 'Wednesday, 17 August 2022'"></div>
+    	<div class="ampickup-pickup-time" data-bind="i18n: '4PM'"></div>
+    </div>
 </div>
 <!-- /ko -->

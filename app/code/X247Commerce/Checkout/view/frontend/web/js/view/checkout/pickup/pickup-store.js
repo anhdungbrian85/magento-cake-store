@@ -27,6 +27,6 @@ define([
 
         moveMapContainerDelivery: function () {
             $("#map-container-delivery-popup").detach().appendTo('#pickup-store-wrapper')
-        }
+        },
     });
 });

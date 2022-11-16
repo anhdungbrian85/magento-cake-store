@@ -1,10 +1,3 @@
-<?php
-    $storeLocatorPickedId = /* @noEscape */ $block->getStoreLocatorPickedId();
-    $scriptString = <<<script
-        window.storeLocatorPickedId = {$storeLocatorPickedId};
-script;
-    ?>
-<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 <div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal">
     <div class="amlocator-map-container delivery-popup" id="map-container-delivery-popup">
         <div class="title">
