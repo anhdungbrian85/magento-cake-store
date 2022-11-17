@@ -3,36 +3,47 @@ namespace X247Commerce\Yext\Model;
 
 class YextAttribute
 {
-    const YEXT_ATTRIBUTE_CODE = 'yext_entity_id';
+    protected const AMASTY_AMLOCATOR_STORE_ATTRIBUTE = 'amasty_amlocator_store_attribute';
 
     protected $locationCollectionFactory;
+
     protected $locationFactory;
+
     protected $attributeFactory;
+
     protected $logger;
+
+    protected $resource;
+
+    protected $connection;
 
     public function __construct(
     \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
     \Amasty\Storelocator\Model\LocationFactory $locationFactory,
     \Amasty\Storelocator\Model\AttributeFactory $attributeFactory,
-    \Psr\Log\LoggerInterface $logger
+    \Psr\Log\LoggerInterface $logger,
+    \Magento\Framework\App\ResourceConnection $resource
     ) {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->locationFactory = $locationFactory;
         $this->attributeFactory = $attributeFactory;
         $this->logger = $logger;
+        $this->resource = $resource;
+        $this->connection = $resource->getConnection();
     }
 
     public function getYextEntityAttributeId()
     {
-    	return $this->attributeFactory->create()->load(self::YEXT_ATTRIBUTE_CODE, 'attribute_code')->getAttributeId();
+        return $this->attributeFactory->create()->load('yext_entity_id', 'attribute_code')->getAttributeId();
     }
 
     public function getLocationByYext($value)
     {
-    	$yextAttributeId = $this->getYextEntityAttributeId();
-    	$attributesData = [$yextAttributeId => $value];
-    	$location = $this->locationCollectionFactory->create()
-                         ->applyAttributeFilters($attributesData)->getFirstItem();
+        $yextAttributeId = $this->getYextEntityAttributeId();
+        $attributesData = [$yextAttributeId => [$value]];
+
+        $locations = $this->locationCollectionFactory->create();
+        $location = $locations->applyAttributeFilters($attributesData)->getFirstItem();
 
         return $location;
     }
@@ -54,8 +65,8 @@ class YextAttribute
         $data['phone'] = isset($input['primaryProfile']['mainPhone']) ? $input['primaryProfile']['mainPhone'] : '' ;
         $data['email'] = isset($input['primaryProfile']['emails'][0]) ? $input['primaryProfile']['emails'][0] : '' ;
         $data['website'] = isset($input['primaryProfile']['facebookPageUrl']) ? $input['primaryProfile']['facebookPageUrl'] : '' ;
-        $data['actions_serialized'] = isset($input['primaryProfile']['facebookPageUrl']) ? $input['primaryProfile']['facebookPageUrl'] : '' ;
-        
+        // $data['actions_serialized'] = isset($input['primaryProfile']) ? $input['primaryProfile'] : '' ;
+
         return $data;
     }
 
@@ -65,7 +76,7 @@ class YextAttribute
             $location = $this->getLocationByYext($yexyEntityId);
             if ($location) {
                 $location->delete();
-            }           
+            }            
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -74,28 +85,48 @@ class YextAttribute
     {
         try {
             $insert = $this->responseDataProcess($data);
-            // $insert[self::YEXT_ATTRIBUTE_CODE] = $yexyEntityId;
-            // $insert["actions_serialized"] = '{"type":"Magento\\CatalogRule\\Model\\Rule\\Condition\\Combine","attribute":null,"operator":null,"value":true,"is_value_processed":null,"aggregator":"all"}';
-            // $insert['schedule'] = '';
-            $location = $this->getLocationByYext($yexyEntityId);
-
-            if (empty($location)) {
+            // $this->logger->log('600', print_r($insert, true));
+            $location = $this->getLocationByYext("'$yexyEntityId'");
+            if (!$location->getId()) {
                 // add new location
-                // $this->logger->log('600', 'location not exits');die();
                 $locationModel = $this->locationFactory->create();
-                $locationModel->setData($insert);
+                $locationModel->setData($insert); 
                 $locationModel->save();
+                if ($locationModel) {
+                   $this->insertYextEntityIdValue([$locationModel->getId() => $yexyEntityId]);
+                }
+                return $locationModel;
             } else {
                 //edit location
-                $locationModel = $this->locationFactory->create();
-                // $locationModel->load($location->getId());
-                $locationModel->setData($insert);
-                $locationModel->save();
+                $location->addData($insert);
+                $location->save();
+                if ($location->getId()) {
+                   $this->insertYextEntityIdValue([$location->getId() => $yexyEntityId]);
+                }
+                return $location;
             }
-            return $locationModel->getId();
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return false;
+        }
+    }
+
+    public function insertYextEntityIdValue($insert)
+    {
+        $yextAttribute = $this->getYextEntityAttributeId();
+        $data = [];
+        foreach ($insert as $key => $value) {        
+          $data[] = [
+            'attribute_id' => $yextAttribute,
+            'store_id' => $key,
+            'value' => $value
+          ];
+        }
+        try {
+            $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+            
+            $this->connection->insertOnDuplicate($tableName, $data, ['value']);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
     }
 }
