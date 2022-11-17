@@ -14,33 +14,64 @@ use Magento\Framework\App\Action\Context;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\App\ActionInterface;
+use X247Commerce\Yext\Model\YextAttribute;
 
 class Webhook extends Action implements ActionInterface
 {
 
     protected LoggerInterface $logger;
     protected RawFactory $rawFactory;
+    protected YextAttribute $yextAttribute;
 
     public function __construct(
         Context $context,
         LoggerInterface $logger,
-        RawFactory $rawFactory
-
+        RawFactory $rawFactory,
+        YextAttribute $yextAttribute
     ) {
         parent::__construct($context);
         $this->logger = $logger;
         $this->rawFactory = $rawFactory;
+        $this->yextAttribute = $yextAttribute;
     }
 
     public function execute()
     {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            return $this->rawFactory->create()
+                        ->setContents('You don\'t have permission to access this resource!');
+        }
         $body = file_get_contents("php://input");
         $events = json_decode($body, true);
+
+        if (!empty($events['meta']['eventType']) && $events['meta']['eventType'] == 'ENTITY_DELETED') {
+            $location = $this->deleteLocation($events['entityId']);
+        }
+
+        if (!empty($events['meta']['eventType']) && $events['meta']['eventType'] == 'ENTITY_UPDATED') {
+            $location = $this->editLocation($events, $events['entityId']);
+        }
 
         $this->logger->log('600', $body);
         $this->logger->log('600', print_r($_SERVER, true));
         $raw = $this->rawFactory->create();
-        $raw->setContents('Your webhook has been handled successfully!');
+        
+        if (!empty($location)) {
+            $raw->setContents('Your webhook has been handled successfully!'. $events['meta']['eventType'].'_'.$location->getId());
+        }   else {
+            $raw->setContents('Your webhook has been handled successfully! But we could not update your data.');
+        }
+        
         return $raw;
+    }
+
+    public function deleteLocation($yexyEntityId)
+    {
+        $this->yextAttribute->deleteLocation($yexyEntityId);
+    }
+
+    public function editLocation($data, $yexyEntityId)
+    {
+        $this->yextAttribute->editLocation($data, $yexyEntityId);
     }
 }
