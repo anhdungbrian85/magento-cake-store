@@ -48,6 +48,10 @@ class Webhook extends Action implements ActionInterface
             $location = $this->deleteLocation($events['entityId']);
         }
 
+        if (!empty($events['meta']['eventType']) && $events['meta']['eventType'] == 'ENTITY_CREATED') {
+            
+            $location = $this->addLocation($events, $events['entityId']);
+        }
         if (!empty($events['meta']['eventType']) && $events['meta']['eventType'] == 'ENTITY_UPDATED') {
             
             $location = $this->editLocation($events, $events['entityId']);
@@ -58,9 +62,9 @@ class Webhook extends Action implements ActionInterface
         $raw = $this->rawFactory->create();
         
         if (!empty($location)) {
-            $raw->setContents('Your webhook has been handled successfully!'. $events['meta']['eventType']);
+            $raw->setContents('Your webhook has been handled successfully!'. $events['meta']['eventType'].'_'.$location->getId());
         }   else {
-            $raw->setContents('Your webhook has been handled successfully!');
+            $raw->setContents('Your webhook has been handled successfully!'. $events['meta']['eventType']);
         }
         
         return $raw;
@@ -71,6 +75,10 @@ class Webhook extends Action implements ActionInterface
         return $this->yextAttribute->deleteLocation($yexyEntityId);
     }
 
+    public function addLocation($data, $yexyEntityId)
+    {
+        return $this->yextAttribute->addLocation($data, $yexyEntityId);
+    }
     public function editLocation($data, $yexyEntityId)
     {
         return $this->yextAttribute->editLocation($data, $yexyEntityId);

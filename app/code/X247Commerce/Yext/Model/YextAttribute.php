@@ -34,11 +34,13 @@ class YextAttribute
 
     public function getYextEntityAttributeId()
     {
+        //get id of attribute yext_entity_id in table amasty_amlocator_attribute
         return $this->attributeFactory->create()->load('yext_entity_id', 'attribute_code')->getAttributeId();
     }
 
     public function getLocationByYext($value)
     {
+        //get amasty_amlocator_location by attribut yext_entity_id
         $yextAttributeId = $this->getYextEntityAttributeId();
         $attributesData = [$yextAttributeId => [$value]];
 
@@ -50,6 +52,7 @@ class YextAttribute
 
     public function responseDataProcess($input)
     {
+        //process data from json $input to insert into amasty_amlocator_location
         $data = [];
         $data['name'] = isset($input['primaryProfile']['name']) ? $input['primaryProfile']['name'] : '';
         $data['country'] = isset($input['primaryProfile']['address']['countryCode']) ? $input['primaryProfile']['address']['countryCode'] : '' ;
@@ -81,21 +84,39 @@ class YextAttribute
             $this->logger->error($e->getMessage());
         }
     }
+    public function addLocation($data, $yexyEntityId)
+    {
+        try {
+            $insert = $this->responseDataProcess($data);
+            // $this->logger->log('600', print_r($insert, true));
+            $location = $this->getLocationByYext("'$yexyEntityId'");
+            if (!$location->getId()) {$this->logger->log('600', 'add new location');
+                // add new location
+                $locationModel = $this->locationFactory->create();
+                $locationModel->setData($insert); 
+                $locationModel->save();
+                if ($locationModel->getId()) {
+                   $this->insertYextEntityIdValue([$locationModel->getId() => $yexyEntityId]);
+                }
+                return $locationModel;
+            } else {
+                //location exists
+                return $location;
+            }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+
     public function editLocation($data, $yexyEntityId)
     {
         try {
             $insert = $this->responseDataProcess($data);
             // $this->logger->log('600', print_r($insert, true));
             $location = $this->getLocationByYext("'$yexyEntityId'");
-            if (!$location->getId()) {
-                // add new location
-                $locationModel = $this->locationFactory->create();
-                $locationModel->setData($insert); 
-                $locationModel->save();
-                if ($locationModel) {
-                   $this->insertYextEntityIdValue([$locationModel->getId() => $yexyEntityId]);
-                }
-                return $locationModel;
+            if (!$location->getId()) {$this->logger->log('600', 'edit location');
+                //location do not exist
+                return '';
             } else {
                 //edit location
                 $location->addData($insert);
@@ -112,6 +133,7 @@ class YextAttribute
 
     public function insertYextEntityIdValue($insert)
     {
+        //add value of attribute yext_entity_id to location in table amasty_amlocator_store_attribute
         $yextAttribute = $this->getYextEntityAttributeId();
         $data = [];
         foreach ($insert as $key => $value) {        
