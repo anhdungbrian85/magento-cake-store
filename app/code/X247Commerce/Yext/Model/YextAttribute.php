@@ -13,6 +13,8 @@ class YextAttribute
 
     protected $logger;
 
+    protected $yextHelper;
+
     protected $resource;
 
     protected $connection;
@@ -22,12 +24,14 @@ class YextAttribute
     \Amasty\Storelocator\Model\LocationFactory $locationFactory,
     \Amasty\Storelocator\Model\AttributeFactory $attributeFactory,
     \Psr\Log\LoggerInterface $logger,
+    \X247Commerce\Yext\Helper\YextHelper $yextHelper, 
     \Magento\Framework\App\ResourceConnection $resource
     ) {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->locationFactory = $locationFactory;
         $this->attributeFactory = $attributeFactory;
         $this->logger = $logger;
+        $this->yextHelper = $yextHelper;
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
     }
@@ -85,11 +89,7 @@ class YextAttribute
         $data['name'] = isset($input['primaryProfile']['name']) ? $input['primaryProfile']['name'] : '';
         $url_key = '';
         if (isset($input['primaryProfile']['name'])) {
-            $url_key = str_replace('Cake box', '', $input['primaryProfile']['name']);
-            $url_key = str_replace('Cake Box', '', $url_key);
-            $url_key = trim($url_key);
-            $url_key = preg_replace("/\s+/", "-", $url_key);
-            $url_key = strtolower($url_key);
+            $url_key = $this->yextHelper->getUrlKeyFromName($input['primaryProfile']['name']);
         }
         $data['url_key'] = $url_key;
         $data['country'] = isset($input['primaryProfile']['address']['countryCode']) ? $input['primaryProfile']['address']['countryCode'] : '' ;
