@@ -144,14 +144,15 @@
 			    position: relative;
 			    top: -5px;
 				.delivery {
-				    -ms-flex: 0 0 calc(~"(100% - 2px)/3");
-				    flex: 0 0 calc(~"(100% - 2px)/3");
-				    max-width: calc(~"(100% - 2px)/3");
+				    -ms-flex: 0 0 calc(~"100%/3");
+				    flex: 0 0 calc(~"100%/3");
+				    max-width: calc(~"100%/3");
 				    text-align: center;
 				    display: -ms-flexbox;
 				    display: flex;
 				    align-items: center;
 				    justify-content: center;
+				    box-sizing: border-box;
 				}
 				.premium.delivery {
 					border-left:1px solid #fff;

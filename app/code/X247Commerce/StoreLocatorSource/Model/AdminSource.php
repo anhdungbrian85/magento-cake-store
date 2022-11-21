@@ -11,4 +11,17 @@ class AdminSource extends AbstractModel
     {
         $this->_init('X247Commerce\StoreLocatorSource\Model\ResourceModel\AdminSource');
     }
+
+    public function getAssignedSources($userId)
+    {
+        $collection = $this->create()->getCollection()->addFieldToFilter('user_id', ['eq' => $userId]);
+        $data = [];
+        if ($collection) {
+            foreach ($collection as $item) {
+                $data[] = $item->getSourceCode();
+            }
+        }
+     
+        return $data;     
+    }
 }

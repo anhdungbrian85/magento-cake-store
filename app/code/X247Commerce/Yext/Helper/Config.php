@@ -26,6 +26,7 @@ class Config extends AbstractHelper
     const YEXT_CONFIG_PATH_API_KEY = 'yext/api_settings/key';
     const YEXT_CONFIG_PATH_API_MODE = 'yext/api_settings/mode';
     const YEXT_CONFIG_PATH_API_TYPE = 'yext/api_settings/type';
+    const YEXT_CONFIG_PATH_SINGING_KEY = 'yext/webhook/signing_key';
 
     const YEXT_CONFIG_LIVE_MODE = 1;
     const YEXT_CONFIG_SANDBOX_MODE = 2;
@@ -108,4 +109,13 @@ class Config extends AbstractHelper
             self::YEXT_ENDPOINT_LIVE_MODE[$type] : self::YEXT_ENDPOINT_SANDBOX_MODE[$type];
     }   
 
+    /**
+     * Get Yext Webhook Signing Key
+     *
+     * @return string|null
+     */
+    public function getYextWebhookSigningKey()
+    {
+        return $this->scopeConfig->getValue(self::YEXT_CONFIG_PATH_SINGING_KEY, ScopeInterface::SCOPE_STORE);
+    }
 }
