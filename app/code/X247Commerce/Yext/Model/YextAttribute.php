@@ -84,27 +84,34 @@ class YextAttribute
 
     public function responseDataProcess($input)
     {
-        //process data from json $input to insert into amasty_amlocator_location
+        //process data from $input to insert into amasty_amlocator_location
         $data = [];
-        $data['name'] = isset($input['primaryProfile']['name']) ? $input['primaryProfile']['name'] : '';
+        $data['name'] = isset($input['name']) ? $input['name'] : '';
         $url_key = '';
-        if (isset($input['primaryProfile']['name'])) {
-            $url_key = $this->yextHelper->getUrlKeyFromName($input['primaryProfile']['name']);
+        if (isset($input['name'])) {
+            $url_key = $this->yextHelper->getUrlKeyFromName($input['name']);
         }
         $data['url_key'] = $url_key;
-        $data['country'] = isset($input['primaryProfile']['address']['countryCode']) ? $input['primaryProfile']['address']['countryCode'] : '' ;
+        $data['country'] = isset($input['address']['countryCode']) ? $input['address']['countryCode'] : '' ;
         $data['status'] = 1;
         $data['stores'] = 0;
-        $data['city'] = isset($input['primaryProfile']['address']['city']) ? $input['primaryProfile']['address']['city'] : '';
-        $data['zip'] = isset($input['primaryProfile']['address']['postalCode']) ? $input['primaryProfile']['address']['postalCode'] : '';
-        $data['address'] = isset($input['primaryProfile']['address']['line1']) ? $input['primaryProfile']['address']['line1'] : '' ;
-        $data['state'] = isset($input['primaryProfile']['address']['region']) ? $input['primaryProfile']['address']['region'] : '' ;
-        $data['lat'] = isset($input['primaryProfile']['cityCoordinate']['latitude']) ? $input['primaryProfile']['cityCoordinate']['latitude'] : '' ;
-        $data['lng'] = isset($input['primaryProfile']['cityCoordinate']['longitude']) ? $input['primaryProfile']['cityCoordinate']['longitude'] : '' ;
-        $data['description'] = isset($input['primaryProfile']['description']) ? $input['primaryProfile']['description'] : '' ;
-        $data['phone'] = isset($input['primaryProfile']['mainPhone']) ? $input['primaryProfile']['mainPhone'] : '' ;
-        $data['email'] = isset($input['primaryProfile']['emails'][0]) ? $input['primaryProfile']['emails'][0] : '' ;
-        $data['website'] = isset($input['primaryProfile']['facebookPageUrl']) ? $input['primaryProfile']['facebookPageUrl'] : '' ;
+        $address = '';
+        if (isset($input['address']['line1']) && isset($input['address']['line2'])) {
+            $address = $input['address']['line1'] . ' ' . $input['address']['line2'];
+        }
+        if (isset($input['address']['line1']) && !isset($input['address']['line2'])) {
+            $address = $input['address']['line1'];
+        }
+        $data['address'] = $address;
+        $data['city'] = isset($input['address']['city']) ? $input['address']['city'] : '';
+        $data['zip'] = isset($input['address']['postalCode']) ? $input['address']['postalCode'] : '';
+        $data['state'] = isset($input['address']['region']) ? $input['address']['region'] : '' ;
+        $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : '' ;
+        $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : '' ;
+        $data['description'] = isset($input['description']) ? $input['description'] : '' ;
+        $data['phone'] = isset($input['mainPhone']) ? $input['mainPhone'] : '' ;
+        $data['email'] = isset($input['emails'][0]) ? $input['emails'][0] : '' ;
+        $data['website'] = isset($input['facebookPageUrl']) ? $input['facebookPageUrl'] : '' ;
         // $data['actions_serialized'] = isset($input['primaryProfile']) ? $input['primaryProfile'] : '' ;
 
         return $data;
@@ -124,10 +131,10 @@ class YextAttribute
     public function addLocation($data, $yextEntityId)
     {
         try {
-            $insert = $this->responseDataProcess($data);
+            $insert = $this->responseDataProcess($data['primaryProfile']);
             // $this->logger->log('600', print_r($insert, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
-            if (!$location->getId()) {$this->logger->log('600', 'add new location');
+            if (!$location->getId()) {
                 // add new location
                 $locationModel = $this->locationFactory->create();
                 $locationModel->setData($insert); 
@@ -148,10 +155,12 @@ class YextAttribute
     public function editLocation($data, $yextEntityId)
     {
         try {
-            $insert = $this->responseDataProcess($data);
+            
+            $insert = $this->responseDataProcess($data['primaryProfile']);
+            
             // $this->logger->log('600', print_r($insert, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
-            if (!$location->getId()) {$this->logger->log('600', 'edit location');
+            if (!$location->getId()) {
                 //location do not exist
                 return '';
             } else {
