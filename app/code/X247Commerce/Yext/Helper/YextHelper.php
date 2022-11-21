@@ -5,11 +5,6 @@ namespace X247Commerce\Yext\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 
-/**
- * Class Config
- *
- * @package Avento\Checkout\Helper
- */
 class YextHelper extends AbstractHelper
 {
 
