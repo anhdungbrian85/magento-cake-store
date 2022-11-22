@@ -19,4 +19,12 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="admin_user_source_link_user_id" table="admin_user_source_link" column="user_id" referenceTable="admin_user" referenceColumn="user_id" onDelete="CASCADE"/>
     </table>
+
+    <table name="amasty_amlocator_location">
+        <column xsi:type="int" name="enable_delivery" unsigned="true" nullable="true"
+                comment="amlocator store active" />
+        <index referenceId="DELIVERY_SOURCE_AMLOCATOR_STORE" indexType="btree">
+            <column name="enable_delivery"/>
+        </index>        
+    </table>
 </schema>

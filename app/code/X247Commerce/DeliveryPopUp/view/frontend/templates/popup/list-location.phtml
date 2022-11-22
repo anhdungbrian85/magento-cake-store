@@ -21,7 +21,12 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
         <?php foreach ($locations as $location): ?> 
             <?php $loLng = (float) $location->getLng() ?>
             <?php $loLat = (float) $location->getLat() ?>
-            <div class="amlocator-store-desc" name="leftLocation"
+            <?php
+            $deliveryActive = $location->getEnableDelivery();
+            if ($deliveryActive==1) :
+                $active = "Online";
+            ?>
+            <div class="amlocator-store-desc <?php echo $active ?> " name="leftLocation"
                  data-mapid="<?= $block->escapeHtml($block->getMapId()); ?>"
                  data-amid="<?= (int)$location['id']; ?>">
 
@@ -40,6 +45,10 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
                         </div>
                     </div>
                     <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>
+                        <div class="active delivery store">
+                            <p><?= __("Status:") ?></p>
+                            <p><?php echo $active ?></p>
+                        </div>
                     </div>
                 </div>
                 <?=
@@ -54,6 +63,7 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
 	                </button>
                 </div>
             </div>
+            <?php endif; ?>
         <?php endforeach; ?>
     </div>
 
@@ -61,3 +71,12 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
         <div class="amlocator-pager-container"><?= /** @escapeNotVerified */ $pager; ?></div>
     <?php endif; ?>
 </div>
+<script type="text/x-magento-init">
+    {
+    ".amlocator-wrapper":
+        {
+            "X247Commerce_DeliveryPopUp/js/enabledelivery": {
+            }
+        }
+    }
+</script>

@@ -15,5 +15,28 @@
             </item>
         </argument>
     </field>
+    <field name="enable_delivery" formElement="select">
+        <settings>
+            <dataType>int</dataType>
+            <label translate="true">Store Active</label>
+            <dataScope>enable_delivery</dataScope>
+        </settings>
+        <formElements>
+            <select>
+                <settings>
+                    <options>
+                        <option name="1" xsi:type="array">
+                            <item name="value" xsi:type="string">1</item>
+                            <item name="label" xsi:type="string">Online</item>
+                        </option>
+                        <option name="2" xsi:type="array">
+                            <item name="value" xsi:type="string">0</item>
+                            <item name="label" xsi:type="string">Offline</item>
+                        </option>
+                    </options>
+                </settings>
+            </select>
+        </formElements>
+    </field>
 </fieldset>
 </form>
