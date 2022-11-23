@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="after_order_email_template_staff_location" label="Email order for Staff location" file="email.html" type="html" module="X247Commerce_Sales" area="frontend"/> 
+</config>
