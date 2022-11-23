@@ -22,13 +22,22 @@ use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Widget\Block\BlockInterface;
+use Amasty\Storelocator\Model\LocationFactory;
 
 class Location extends \Amasty\Storelocator\Block\Location
 {	
 
+    private $locationCollection;
+
 	protected $formKey;
 
+    private $locationCollectionFactory;
+
+    protected $locationFactory;
+
 	protected $locationModel;
+
+     private $reviewRepository;
 
 	public function __construct(
         LocationModel $locationModel,
@@ -46,11 +55,15 @@ class Location extends \Amasty\Storelocator\Block\Location
         CollectionFactory $locationCollectionFactory,
         BaseImageLocation $baseImageLocation,
         LocationProductValidatorInterface $locationProductValidator,
+        LocationFactory $locationFactory,
         \Amasty\Storelocator\Api\ReviewRepositoryInterface  $reviewRepository,
         array $data = []
 	) {
         $this->locationModel = $locationModel;
 		$this->formKey = $formKey;
+        $this->locationFactory = $locationFactory;
+        $this->locationCollectionFactory = $locationCollectionFactory;
+        $this->reviewRepository = $reviewRepository;
 		parent::__construct(
 			$context, 
 			$coreRegistry,
@@ -93,5 +106,63 @@ class Location extends \Amasty\Storelocator\Block\Location
     public function getWorkingTime() {
        
         return $this->locationModel->getWorkingTime("monday");
+    }
+
+    public function getJsonLocations()
+    {
+        $locationArray = [];
+        $locationArray['items'] = [];
+        /** @var LocationModel $location */
+        foreach ($this->getLocationCollection() as $location) {
+            $data = $location->getData();
+            if($data['curbside_enabled']==1){
+
+                if ($markerImg = $location->getMarkerImg()) {
+                    $location['marker_url'] = $this->imageProcessor->getImageUrl(
+                        [ImageProcessor::AMLOCATOR_MEDIA_PATH, $location->getId(), $markerImg]
+                    );
+                }
+                $locationArray['items'][] = $location->getFrontendData();
+            }
+        }
+        $locationArray['totalRecords'] = count($locationArray['items']);
+        $store = $this->_storeManager->getStore(true)->getId();
+        $locationArray['currentStoreId'] = $store;
+
+        //remove double spaces
+        $locationArray['block'] = $this->dataHelper->compressHtml($this->getLeftBlockHtml());
+
+        return $this->jsonEncoder->encode($locationArray);
+    }
+    
+    public function getLocationCollection()
+    {
+        $needToPrepareCollection = false;
+        $pageNumber = (int)$this->getRequest()->getParam('p') ? (int)$this->getRequest()->getParam('p') : 1;
+        if (!$this->locationCollection) {
+            $this->locationCollection = $this->locationCollectionFactory->create()->addFieldToFilter('curbside_enabled',1);
+            $this->locationCollection->applyDefaultFilters();
+            $this->locationCollection->joinScheduleTable();
+            $this->locationCollection->joinMainImage();
+            $needToPrepareCollection = true;
+        }
+        if ($attributesData = $this->prepareWidgetAttributes()) {
+            $this->locationCollection->clear();
+            $this->locationCollection->applyAttributeFilters($attributesData);
+            $needToPrepareCollection = true;
+        }
+
+        if ($needToPrepareCollection) {
+            $this->locationCollection->setCurPage($pageNumber);
+            $this->locationCollection->setPageSize($this->configProvider->getPaginationLimit());
+            $this->reviewRepository->loadReviewForLocations($this->locationCollection->getAllIds());
+            foreach ($this->locationCollection as $location) {
+                $data = $location->getData();
+                $location->setRating($this->getRatingHtml($location));
+                $location->setTemplatesHtml();
+            }
+        }
+        
+        return $this->locationCollection;
     }
 }

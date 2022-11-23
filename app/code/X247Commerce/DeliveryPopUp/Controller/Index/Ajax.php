@@ -33,13 +33,9 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $this->storeLocationContextInterface = $storeLocationContextInterface;
     }
 
-    /**
-     * Default customer account page
-     *
-     * @return void
-     */
+    
     public function execute()
-    {
+    {   
         if ($this->getRequest()->getPost('delivery-type') == 0) {
             $this->getCloseStoreLocations();
         }   else {
@@ -67,16 +63,14 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $block = $this->_view->getLayout()->getBlock('amlocator_ajax');
         $block->setData('lng', $lng);
         $block->setData('lat', $lat);
-
         $this->getResponse()->setBody($block->getJsonLocations());
     }
 
     public function getClosestStoreLocation()
     {
         $needToPrepareCollection = false;
-        $location = $this->locationCollectionFactory->create();
+        $location = $this->locationCollectionFactory->create()->addFieldToFilter('enable_delivery', ['eq' => 1]);
         $location->applyDefaultFilters();
         return $location->getFirstItem();
-    
     }
 }
