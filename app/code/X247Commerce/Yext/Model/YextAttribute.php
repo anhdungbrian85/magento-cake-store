@@ -19,13 +19,22 @@ class YextAttribute
 
     protected $connection;
 
+    protected $directoryList;
+    
+    protected $file;
+
+    protected $imageProcessor;
+
     public function __construct(
     \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
     \Amasty\Storelocator\Model\LocationFactory $locationFactory,
     \Amasty\Storelocator\Model\AttributeFactory $attributeFactory,
     \Psr\Log\LoggerInterface $logger,
     \X247Commerce\Yext\Helper\YextHelper $yextHelper, 
-    \Magento\Framework\App\ResourceConnection $resource
+    \Magento\Framework\App\ResourceConnection $resource,
+    \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
+    \Magento\Framework\Filesystem\Io\File $file,
+    \Amasty\Storelocator\Model\ImageProcessor $imageProcessor
     ) {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->locationFactory = $locationFactory;
@@ -34,6 +43,9 @@ class YextAttribute
         $this->yextHelper = $yextHelper;
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
+        $this->directoryList = $directoryList;
+        $this->file = $file;
+        $this->imageProcessor = $imageProcessor;
     }
 
     public function getYextEntityAttributeId()
@@ -113,6 +125,12 @@ class YextAttribute
         $data['email'] = isset($input['emails'][0]) ? $input['emails'][0] : '' ;
         $data['website'] = isset($input['facebookPageUrl']) ? $input['facebookPageUrl'] : '' ;
         // $data['actions_serialized'] = isset($input['primaryProfile']) ? $input['primaryProfile'] : '' ;
+        $data['photoGallery'] = [];
+        if (isset($input["photoGallery"])) {
+            foreach ($input["photoGallery"] as $image) {
+                $data['photoGallery'][] = $image["image"]["url"];
+            }
+        }
 
         return $data;
     }
@@ -158,7 +176,7 @@ class YextAttribute
             
             $insert = $this->responseDataProcess($data['primaryProfile']);
             
-            // $this->logger->log('600', print_r($insert, true));
+            $this->logger->log('600', print_r($data, true));die();
             $location = $this->getLocationByYext("'$yextEntityId'");
             if (!$location->getId()) {
                 //location do not exist
@@ -196,5 +214,33 @@ class YextAttribute
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
+    }
+
+    public function downloadLocationImageToLocal($imageUrl, $locationId)
+    {//download location photo gallery from Yext to local server
+        /** @var string $tmpDir */
+        $tmpDir = $this->getAmastyMediaDir();
+        $uploadDir = $tmpDir . '/' . $locationId;
+        /** create folder if it is not exists */
+        $this->file->checkAndCreateFolder($tmpDir);
+
+        $arr = explode('/', $imageUrl);
+        // var_dump($arr);
+        $name = implode('-',array_slice($arr, 4, 5));
+        /** @var string $newFileName */
+        $newFileName = $uploadDir . '/' . $name;
+        /** read file from URL and copy it to the new destination */
+        $result = $this->file->read($imageUrl, $newFileName);
+        // var_dump($newFileName); var_dump($tmpDir);die();
+        if ($result) {
+            return $name;
+        } else {
+            return false;
+        }
+        
+    }
+    protected function getAmastyMediaDir()
+    {
+        return $this->directoryList->getPath($this->directoryList::MEDIA) . DIRECTORY_SEPARATOR . 'amasty/amlocator/gallery';
     }
 }

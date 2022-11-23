@@ -11,6 +11,9 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
     protected $resource;
     protected $connection;
     protected $yextAttribute;
+    protected $gallery;
+    protected $galleryCollection;
+    protected $locationResource;
 
     public function __construct (
         \Magento\Backend\App\Action\Context $context,
@@ -27,13 +30,19 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         \Amasty\Storelocator\Model\ResourceModel\Location\Collection $locationCollection,
         \X247Commerce\Yext\Service\YextApi $yextApi,
         \Magento\Framework\App\ResourceConnection $resource,
-        \X247Commerce\Yext\Model\YextAttribute $yextAttribute
+        \X247Commerce\Yext\Model\YextAttribute $yextAttribute,
+        \Amasty\Storelocator\Model\GalleryFactory $gallery,
+        \Amasty\Storelocator\Model\ResourceModel\Gallery\Collection $galleryCollection,
+        \Amasty\Storelocator\Model\ResourceModel\Location $locationResource
     ) {
         parent::__construct($context, $coreRegistry, $resultForwardFactory, $resultPageFactory, $filesystem, $fileUploaderFactory, $serializer, $ioFile, $locationModel, $logger, $filter, $locationCollection);
         $this->yextApi = $yextApi;
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
         $this->yextAttribute = $yextAttribute;
+        $this->gallery = $gallery;
+        $this->galleryCollection = $galleryCollection;
+        $this->locationResource = $locationResource;
     }
 
  
@@ -45,6 +54,7 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
      */
     public function execute()
     {
+                   
         $collection = $this->filter->getCollection($this->locationCollection);
         $collectionSize = $collection->getSize();
 
@@ -65,11 +75,46 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
 
         foreach ($listResponse['response']['entities'] as $locationData) {
             if (in_array($locationData['meta']['id'], $allYextEntityIdValue)) {
-                $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);
-                $location = $this->locationModel->load($locationId);
-                $syncData = $this->yextAttribute->responseDataProcess($locationData);
-                $location->addData($syncData);
-                $location->save();
+                try {                        
+                    $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);
+                    $location = $this->locationModel->load($locationId);
+                    $syncData = $this->yextAttribute->responseDataProcess($locationData);
+                    //@todo sync Photo gallery from Yext, download image and link to store location
+                    // $data = [];
+                    // $data['id'] = $locationId;
+                    // foreach ($syncData['photoGallery'] as $imageUrl) {
+                        //download image from Yext to sever
+                        // $img = $this->yextAttribute->downloadLocationImageToLocal($imageUrl, $locationId);
+                        // if ($img) {                            
+                        //     $data["gallery_image"][] = ['name' => $img,
+                        //                'full_path' => $img,
+                        //                'type' => "image/jpeg",
+                        //                "tmp_name" => "/tmp/phpW2tbW5",
+                        //                "file" => $img,
+                        //                "error" => 0,
+                        //                "size" => 116753,
+                        //                 "cookie" => ["name" => "admin",
+                        //                              "value" => "2dq6ffho7b0n480bu9m68san32",
+                        //                              "lifetime" => "900000",
+                        //                              "path" => "/admin",
+                        //                              "domain" => "cong-cake-box.247vn.asia"
+                        //                             ],
+                        //                "url" => "https://cong-cake-box.247vn.asia/media/amasty/amlocator/tmp/859/".$img,
+                        //                "previewType" => "image",
+                        //                "id" => "UjMyOV8xNC5qcGc,"
+                        //            ];
+                        // }
+                    // }
+                    // $this->locationResource->saveGallery($data);
+                                                  
+                    $location->addData($syncData);
+                    $location->save();
+
+                    $gallery = $this->gallery->create();
+                    $gallery->setData($data)->save();
+                } catch (\Exception $e) {
+                    $this->logger->error($e->getMessage());
+                }
             }
         }
         $this->messageManager->addSuccess(__('A total of %1 record(s) have been modified.', count($listResponse['response']['entities'])));

@@ -197,7 +197,7 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
 
                 <div class="amlocator-stores-collection">
                     <?php foreach ($allLocation as $item): ?>
-                        <a class="amlocator-store-link" href="<?= $item->getLocationUrl() ?>">
+                        <a class="amlocator-store-link" href="<?= $block->getBaseUrl() . 'storelocator' . '/' . $item->getUrlKey() ?>">
                             <div class="amlocator-block-store">
                                 <?php if ($baseImage = $blockLocationCollection->getLocationImage($item)):?>
                                     <div class="amlocator-store-image"
@@ -205,7 +205,7 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
                                                  url('<?= $block->escapeUrl($baseImage) ?>')">
                                     </div>
                                 <?php else: ?>
-                                    <img class="amlocator-store-image" src="<?= $placeholderImageUrl ?>">
+                                    <img class="amlocator-store-image" src="https://www.eggfreecake.co.uk/media/bond_storelocator/storelocator/image//t/e/temporary_for_store_image.jpg">
                                     </img>
                                 <?php endif;?>
                                 <h4 class="amlocator-store-name"><?= $item->getData('name') ?></h4>
