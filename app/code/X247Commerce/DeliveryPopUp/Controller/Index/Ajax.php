@@ -22,8 +22,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         CollectionFactory $locationCollectionFactory,
         JsonFactory $resultJsonFactory,
         StoreLocationContextInterface $storeLocationContextInterface,
-        Context $context,
-
+        Context $context
     )
     {
         parent::__construct($context);
