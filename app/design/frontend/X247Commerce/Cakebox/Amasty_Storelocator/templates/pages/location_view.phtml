@@ -197,7 +197,7 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
 
                 <div class="amlocator-stores-collection">
                     <?php foreach ($allLocation as $item): ?>
-                        <a class="amlocator-store-link" href="<?= $block->getBaseUrl() . 'storelocator' . '/' . $item->getUrlKey() ?>">
+                        <a class="amlocator-store-link" href="<?= $item->getLocationUrl() ?>">
                             <div class="amlocator-block-store">
                                 <?php if ($baseImage = $blockLocationCollection->getLocationImage($item)):?>
                                     <div class="amlocator-store-image"
