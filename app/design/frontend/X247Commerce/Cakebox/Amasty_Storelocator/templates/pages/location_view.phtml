@@ -196,10 +196,10 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
                 <h3 class="branch-group"><?= __('Branches') ?></h3>
 
                 <div class="amlocator-stores-collection">
-                    <?php foreach ($allLocation as $location): ?>
-                        <a class="amlocator-store-link" href="<?= $location->getLocationUrl() ?>">
+                    <?php foreach ($allLocation as $item): ?>
+                        <a class="amlocator-store-link" href="<?= $item->getLocationUrl() ?>">
                             <div class="amlocator-block-store">
-                                <?php if ($baseImage = $blockLocationCollection->getLocationImage($location)):?>
+                                <?php if ($baseImage = $blockLocationCollection->getLocationImage($item)):?>
                                     <div class="amlocator-store-image"
                                          style="background-image:
                                                  url('<?= $block->escapeUrl($baseImage) ?>')">
@@ -208,7 +208,7 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
                                     <img class="amlocator-store-image" src="<?= $placeholderImageUrl ?>">
                                     </img>
                                 <?php endif;?>
-                                <h4 class="amlocator-store-name"><?= $location->getData('name') ?></h4>
+                                <h4 class="amlocator-store-name"><?= $item->getData('name') ?></h4>
                             </div>
                         </a>
                     <?php endforeach; ?>
