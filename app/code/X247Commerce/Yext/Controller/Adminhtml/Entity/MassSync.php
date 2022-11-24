@@ -74,11 +74,17 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         $listResponse = json_decode($this->yextApi->getList(['filter'=> json_encode($filterParams)]), true);
 
         foreach ($listResponse['response']['entities'] as $locationData) {
+                    // $schedule = $this->yextAttribute->convertSchedule($locationData['hours']);
+        // echo "<pre>";
+        // print_r($schedule);
+        // echo "</pre>";
+                // var_dump($schedule);    die();
             if (in_array($locationData['meta']['id'], $allYextEntityIdValue)) {
-                try {                        
+                // try {                        
                     $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);
                     $location = $this->locationModel->load($locationId);
                     $syncData = $this->yextAttribute->responseDataProcess($locationData);
+                    $locationSchedule = $this->yextAttribute->editLocationSchedule($location, $locationData['hours']);
                     //@todo sync Photo gallery from Yext, download image and link to store location
                     // $data = [];
                     // $data['id'] = $locationId;
@@ -106,21 +112,25 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
                         // }
                     // }
                     // $this->locationResource->saveGallery($data);
-                                                  
+                    $syncData['schedule'] = $locationSchedule->getId();
+                    // var_dump($locationSchedule);die();
                     $location->addData($syncData);
                     $location->save();
 
-                    $gallery = $this->gallery->create();
-                    $gallery->setData($data)->save();
-                } catch (\Exception $e) {
-                    $this->logger->error($e->getMessage());
-                }
+                    // $gallery = $this->gallery->create();
+                    // $gallery->setData($data)->save();
+                    $this->messageManager->addSuccess(__('A total of %1 record(s) have been modified.', count($listResponse['response']['entities'])));
+                // } catch (\Exception $e) {
+                //     $this->logger->error($e->getMessage());
+                //     $this->messageManager->addError(__('Something wrong').$e->getMessage());
+                // }
             }
         }
-        $this->messageManager->addSuccess(__('A total of %1 record(s) have been modified.', count($listResponse['response']['entities'])));
 
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $resultRedirect->setPath('amasty_storelocator/location/');
     }
+
+
 }
