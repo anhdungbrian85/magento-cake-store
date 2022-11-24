@@ -11,23 +11,19 @@ class UrlKeyStore extends Command
 {
 	protected $state;
 
-	protected $collection;
+	protected $resource;
 
-	protected $locationCollectionFactory;
-
-	protected $locationFactory;
+	protected $yexthelper;
 
 	function __construct(
 		\Magento\Framework\App\State $state,
-		\Amasty\Storelocator\Model\ResourceModel\Location\Collection $collection,
-		\Amasty\Storelocator\Model\LocationFactory $locationFactory,
-		\Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory
+		\Magento\Framework\App\ResourceConnection $resource,
+		\X247Commerce\Yext\Helper\YextHelper $yexthelper
 	) {
 		parent::__construct();
        	$this->state = $state;
-       	$this->collection = $collection;
-       	$this->locationCollectionFactory = $locationCollectionFactory;
-       	$this->locationFactory = $locationFactory;
+       	$this->resource = $resource;
+       	$this->yexthelper = $yexthelper;
 	}
 
 	protected function configure()
@@ -41,16 +37,20 @@ class UrlKeyStore extends Command
     {
     	$this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
     	try {
-    		$collectionStore = $this->locationFactory->create()->getCollection();
-
-    		foreach ($collectionStore as $value) {
-    			$data = $value->getData();
-    			$nameStore = $data['name'];
-    			$url_key = trim($nameStore,")");
-    			$url_key = strtolower($url_key);
-    			$url_key = str_replace('(', '', $url_key);
-    			$url_key = str_replace(' ', '_', $url_key);
-    			$value->setData('url_key',$url_key)->save();
+    		$tableName = $this->resource->getTableName('amasty_amlocator_location');
+    		$connection = $this->resource->getConnection();
+			$name = $connection->select()
+			    	->from(
+				        ['ce' => 'amasty_amlocator_location'],
+				        ['id','name']
+			    	);
+			$data = $connection->fetchAll($name);
+    		foreach ($data as $value) {
+	    		$connection->update(
+				    $tableName,
+				    ["url_key" =>$this->yexthelper->getUrlKeyFromName($value["name"])],
+				    ['id = ?' => $value["id"]]
+				);	
     		}
     	} catch (Exception $e) {
     		$output->writeln("<error>Error executing command: {$e->getMessage()}</error>");
