@@ -7,4 +7,11 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Amasty\Storelocator\Controller\Index\Ajax" type="X247Commerce\DeliveryPopUp\Controller\Index\Ajax"/>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="x247commerce_urlkeystore" xsi:type="object">X247Commerce\DeliveryPopUp\Console\Command\UrlKeyStore</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
