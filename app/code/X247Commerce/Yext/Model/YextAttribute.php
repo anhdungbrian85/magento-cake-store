@@ -25,6 +25,10 @@ class YextAttribute
 
     protected $imageProcessor;
 
+    protected $scheduleModel;
+
+    protected $serializer;
+
     public function __construct(
     \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
     \Amasty\Storelocator\Model\LocationFactory $locationFactory,
@@ -34,7 +38,9 @@ class YextAttribute
     \Magento\Framework\App\ResourceConnection $resource,
     \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
     \Magento\Framework\Filesystem\Io\File $file,
-    \Amasty\Storelocator\Model\ImageProcessor $imageProcessor
+    \Amasty\Storelocator\Model\ImageProcessor $imageProcessor,
+    \Amasty\Storelocator\Model\Schedule $scheduleModel,
+    \Amasty\Base\Model\Serializer $serializer
     ) {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->locationFactory = $locationFactory;
@@ -46,14 +52,27 @@ class YextAttribute
         $this->directoryList = $directoryList;
         $this->file = $file;
         $this->imageProcessor = $imageProcessor;
+        $this->scheduleModel = $scheduleModel;
+        $this->serializer = $serializer;
     }
 
+    /**
+     * Get yext_entity_id attribute id in table amasty_amlocator_attribute
+     *
+     * @return int|null
+     */
     public function getYextEntityAttributeId()
     {
         //get id of attribute yext_entity_id in table amasty_amlocator_attribute
         return $this->attributeFactory->create()->load('yext_entity_id', 'attribute_code')->getAttributeId();
     }
 
+    /**
+     * Get Location by yext_entity_id value
+     *
+     * @param value of yext_entity_id
+     * @return \Amasty\Storelocator\Model\Location ||null
+     */
     public function getLocationByYext($value)
     {
         //get amasty_amlocator_location by attribute yext_entity_id
@@ -66,6 +85,13 @@ class YextAttribute
         return $location;
     }
 
+    /**
+     * Get yext_entity_id value by Location 
+     *
+     * @param \Amasty\Storelocator\Model\Location
+     * 
+     * @return string||null
+     */
     public function getYextEntityIdByLocation($location)
     {
         //get value of yext_entity_id by location
@@ -80,6 +106,11 @@ class YextAttribute
         return $data;
     }
 
+    /**
+     * Get all yext_entity_id values in table amasty_amlocator_store_attribute
+     * 
+     * @return array||null
+     */
     public function getAllYextEntityIdValue()
     {
         //get all value of yext_entity_id
@@ -94,6 +125,13 @@ class YextAttribute
         return $data;
     }
 
+    /**
+     * Process data from event or response to data of \Amasty\Storelocator\Model\Location
+     *
+     * @param array $input
+     * 
+     * @return array
+     */
     public function responseDataProcess($input)
     {
         //process data from $input to insert into amasty_amlocator_location
@@ -135,6 +173,12 @@ class YextAttribute
         return $data;
     }
 
+    /**
+     * Delete \Amasty\Storelocator\Model\Location base on yext_entity_id value
+     *
+     * @param $yextEntityId: (string) yext_entity_id value
+     * 
+     */
     public function deleteLocation($yextEntityId)
     {
         try {
@@ -146,6 +190,14 @@ class YextAttribute
             $this->logger->error($e->getMessage());
         }
     }
+
+    /**
+     * Add new \Amasty\Storelocator\Model\Location
+     * 
+     * @param $data array from event or response, $yextEntityId: (string) yext_entity_id value
+     * 
+     * @return \Amasty\Storelocator\Model\Location
+     */
     public function addLocation($data, $yextEntityId)
     {
         try {
@@ -170,13 +222,20 @@ class YextAttribute
         }
     }
 
+    /**
+     * Edit \Amasty\Storelocator\Model\Location
+     * 
+     * @param $data array from event or response, $yextEntityId: (string) yext_entity_id value
+     * 
+     * @return \Amasty\Storelocator\Model\Location
+     */
     public function editLocation($data, $yextEntityId)
     {
         try {
             
             $insert = $this->responseDataProcess($data['primaryProfile']);
             
-            $this->logger->log('600', print_r($data, true));die();
+            $this->logger->log('600', print_r($data, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
             if (!$location->getId()) {
                 //location do not exist
@@ -195,6 +254,13 @@ class YextAttribute
         }
     }
 
+    /**
+     * Link location with yext_entity_id in table amasty_amlocator_store_attribute
+     * 
+     * @param $insert array
+     * 
+     * @return
+     */
     public function insertYextEntityIdValue($insert)
     {
         //add value of attribute yext_entity_id to location in table amasty_amlocator_store_attribute
@@ -216,6 +282,13 @@ class YextAttribute
         }
     }
 
+    /**
+     * Download location photo gallery from Yext to local server when sync data
+     * 
+     * @param $imageUrl (string) Image Url, $locationId: id of Location
+     * 
+     * @return $name: name of downloaded image || false
+     */
     public function downloadLocationImageToLocal($imageUrl, $locationId)
     {//download location photo gallery from Yext to local server
         /** @var string $tmpDir */
@@ -231,7 +304,7 @@ class YextAttribute
         $newFileName = $uploadDir . '/' . $name;
         /** read file from URL and copy it to the new destination */
         $result = $this->file->read($imageUrl, $newFileName);
-        // var_dump($newFileName); var_dump($tmpDir);die();
+        
         if ($result) {
             return $name;
         } else {
@@ -239,8 +312,108 @@ class YextAttribute
         }
         
     }
+
+    /**
+     * Get download location
+     * 
+     * @param 
+     * 
+     * @return string
+     */
     protected function getAmastyMediaDir()
     {
         return $this->directoryList->getPath($this->directoryList::MEDIA) . DIRECTORY_SEPARATOR . 'amasty/amlocator/gallery';
+    }
+
+    /**
+     * Convert from Yext Open Hours to Amasty Schedule
+     * 
+     * @param $yextSchedule array
+     * 
+     * @return array
+     */
+    public function convertSchedule($yextSchedule)
+    {
+        // $yextSchedule = json_decode($yextHours);
+
+        $amastySchedule = [];
+
+        $amastySchedule =   [   
+                                "monday" => $this->convertWeekDay($yextSchedule, "monday"),
+                                "tuesday" => $this->convertWeekDay($yextSchedule, "tuesday"),
+                                "wednesday" => $this->convertWeekDay($yextSchedule, "wednesday"),
+                                "thursday" => $this->convertWeekDay($yextSchedule, "thursday"),
+                                "friday" => $this->convertWeekDay($yextSchedule, "friday"),
+                                "saturday" => $this->convertWeekDay($yextSchedule, "saturday"),
+                                "sunday" => $this->convertWeekDay($yextSchedule, "sunday")
+                            ];
+
+        return $amastySchedule;
+    }
+
+    /**
+     * Convert from week day of Yext Open Hours to week day of Amasty Schedule
+     * 
+     * @param $yextSchedule array, $day week day
+     * 
+     * @return array
+     */
+    public function convertWeekDay($yextSchedule, $day) 
+    {
+        $amastySchedule = [];
+        if (!$yextSchedule[$day]["isClosed"]) {
+            $amastySchedule[$day."_status"] = 1;
+            $openTime = $yextSchedule[$day]["openIntervals"];
+            if ($openTime) {
+                $amastySchedule["from"]["hours"] = explode(':', $openTime[0]["start"])[0];
+                $amastySchedule["from"]["minutes"] = explode(':', $openTime[0]["start"])[1];
+                $amastySchedule["break_from"]["hours"] = isset($openTime[1]) ? explode(':', $openTime[0]["end"])[0] : "00";
+                $amastySchedule["break_from"]["minutes"] = isset($openTime[1]) ? explode(':', $openTime[0]["end"])[1] : "00";
+                $amastySchedule["break_to"]["hours"] = isset($openTime[1]) ? explode(':', $openTime[1]["start"])[0] : "00";
+                $amastySchedule["break_to"]["minutes"] = isset($openTime[1]) ? explode(':', $openTime[1]["start"])[1] : "00";
+                $amastySchedule["to"]["hours"] = isset($openTime[1]) ? explode(':', $openTime[1]["end"])[0] : explode(':', $openTime[0]["end"])[0];
+                $amastySchedule["to"]["minutes"] = isset($openTime[1]) ? explode(':', $openTime[1]["end"])[1] : explode(':', $openTime[0]["end"])[1];
+            }            
+        } else {
+            $amastySchedule[$day."_status"] = 0;
+            $amastySchedule["from"]["hours"] = "00";
+            $amastySchedule["from"]["minutes"] = "00";
+            $amastySchedule["break_from"]["hours"] = "00";
+            $amastySchedule["break_from"]["minutes"] = "00";
+            $amastySchedule["break_to"]["hours"] = "00";
+            $amastySchedule["break_to"]["minutes"] = "00";
+            $amastySchedule["to"]["hours"] = "00";
+            $amastySchedule["to"]["minutes"] = "00";
+        }
+
+        return $amastySchedule;
+    }
+
+    /**
+     * Edit or Add new \Amasty\Storelocator\Model\Schedule
+     * 
+     * @param $location Location, $openHoursfromYext Location's Open Time from Yext
+     * 
+     * @return \Amasty\Storelocator\Model\Schedule
+     */
+    public function editLocationSchedule($location, $openHoursfromYext)
+    {
+        $locationSchedule = $this->convertSchedule($openHoursfromYext);
+        $schedule = $this->scheduleModel->load($location->getSchedule());
+        
+        if ($schedule) {            
+            if (is_array($locationSchedule)) {
+                $schedule->setSchedule($this->serializer->serialize($locationSchedule));
+            }            
+            $schedule->setName($location->getName() . " Schedule");
+            // var_dump($schedule->getData());die();
+            return $schedule->save();
+        } else {            
+            if (is_array($locationSchedule)) {
+                $this->scheduleModel->setSchedule($this->serializer->serialize($locationSchedule));
+            }
+            $this->scheduleModel->setName($location->getName() . " Schedule");
+            return $this->scheduleModel->save();
+        }
     }
 }
