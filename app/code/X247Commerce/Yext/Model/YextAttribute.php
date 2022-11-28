@@ -1,6 +1,7 @@
 <?php
 namespace X247Commerce\Yext\Model;
 
+use Magento\InventoryApi\Api\Data\SourceInterface;
 class YextAttribute
 {
     protected const AMASTY_AMLOCATOR_STORE_ATTRIBUTE = 'amasty_amlocator_store_attribute';
@@ -29,6 +30,14 @@ class YextAttribute
 
     protected $serializer;
 
+    protected $userFactory;
+
+    protected $userHelper;
+
+    protected $sourceInterface;
+
+    protected $adminSource;
+
     public function __construct(
     \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
     \Amasty\Storelocator\Model\LocationFactory $locationFactory,
@@ -40,7 +49,11 @@ class YextAttribute
     \Magento\Framework\Filesystem\Io\File $file,
     \Amasty\Storelocator\Model\ImageProcessor $imageProcessor,
     \Amasty\Storelocator\Model\Schedule $scheduleModel,
-    \Amasty\Base\Model\Serializer $serializer
+    \Amasty\Base\Model\Serializer $serializer,
+    \Magento\User\Model\UserFactory $userFactory,
+    \X247Commerce\StoreLocatorSource\Helper\User $userHelper,
+    SourceInterface $sourceInterface,
+    \X247Commerce\StoreLocatorSource\Model\AdminSource $adminSource
     ) {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->locationFactory = $locationFactory;
@@ -54,6 +67,10 @@ class YextAttribute
         $this->imageProcessor = $imageProcessor;
         $this->scheduleModel = $scheduleModel;
         $this->serializer = $serializer;
+        $this->userFactory = $userFactory;
+        $this->userHelper = $userHelper;
+        $this->sourceInterface = $sourceInterface;
+        $this->adminSource = $adminSource;
     }
 
     /**
@@ -184,6 +201,18 @@ class YextAttribute
         try {
             $location = $this->getLocationByYext($yextEntityId);
             if ($location) {
+                if ($this->yextHelper->getDeleteAdminSyncSetting()) {
+                    $user = $this->userFactory->create()->load($location->getYextUserId());
+                    if ($user->getId()) {
+                        $user->delete();
+                    }
+                }
+                if ($this->yextHelper->getDeleteSourceSyncSetting()) {
+                    $source = $this->sourceInterface->load($location->getYextSourceCode());
+                    if ($source->getSourceCode()) {
+                        $source->delete();
+                    }
+                }
                 $location->delete();
             }            
         } catch (\Exception $e) {
@@ -211,6 +240,13 @@ class YextAttribute
                 $locationModel->save();
                 if ($locationModel->getId()) {
                    $this->insertYextEntityIdValue([$locationModel->getId() => $yextEntityId]);
+                    $newUser = $this->editAdminUser($insert, $locationModel->getId());
+                    $newSource = $this->editSource($insert, $locationModel->getId());
+                    $locationModel->setYextSourceCode($newSource->getSourceCode());
+                    $locationModel->setYextUserId($newUser->getUserId());
+                    $locationModel->save();
+                    $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
+                    $this->adminSource->save();
                 }
                 return $locationModel;
             } else {
@@ -243,6 +279,16 @@ class YextAttribute
             } else {
                 //edit location
                 $location->addData($insert);
+                $yextUserId = $location->getYextUserId();
+                $yextSourceCode = $location->getYextSourceCode();
+                $newUser = $this->editAdminUser($insert, $location->getId(), $location->getYextUserId());
+                $source = $this->editSource($insert, $location->getId(), $location->getYextSourceCode());
+                $location->setYextUserId($newUser->getUserId());
+                $location->setYextSourceCode($source->getSourceCode());
+                if (!$yextUserId || !$yextSourceCode) {
+                    $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $source->getSourceCode()]);
+                }
+                $this->adminSource->save();
                 $location->save();
                 if ($location->getId()) {
                    $this->insertYextEntityIdValue([$location->getId() => $yextEntityId]);
@@ -254,6 +300,78 @@ class YextAttribute
         }
     }
 
+    /**
+     * Edit or Create Admin User
+     * 
+     * @param $userId int||null, $data array
+     * 
+     * @return \Magento\User\Model\UserFactory
+     */
+    public function editAdminUser($data, $locationId, $userId = null)
+    {
+        $adminInfo = [
+            'username'  => $data['name'] ? strtolower(str_replace(' ', '_', trim($data['name']))) : 'x247commerce'.date("Y.m.d.h.i.s"),
+            'firstname' => $data['name'] ? $data['name'] : 'x247commerce'.date("Y.m.d.h.i.s"),
+            'lastname'    => $data['name'] ? $data['name'] : 'x247commerce'.date("Y.m.d.h.i.s"),
+            'email'     => $data['email'] ? $data['email'] : 'x247commerce'.date("Y.m.d.h.i.s").'@247commerce.co.uk' ,
+            'password'  =>'x247commerce',       
+            'interface_locale' => 'en_US',
+            'is_active' => 1,
+            'yext_amlocator_store' => $locationId
+        ];
+
+        try {
+            if (!$userId) {
+                $userModel = $this->userFactory->create();
+                $userModel->setData($adminInfo);
+                $userModel->setRoleId($this->userHelper->getStaffRole());var_dump('editAdminUser new');
+                return $userModel->save();             
+            } else {
+                $userModel = $this->userFactory->create()->load($userId);var_dump('editAdminUser old');
+                $userModel->addData($adminInfo);
+                
+                return $userModel->save(); 
+            }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+    /**
+     * Edit or Create Inventory Source
+     * 
+     * @param $userId int||null, $data array
+     * 
+     * @return \Magento\Inventory\Model\Source
+     */
+    public function editSource($storeData, $locationId, $sourceCode = null)
+    {
+       
+        $sourceData = [
+            SourceInterface::SOURCE_CODE => strtolower(str_replace(' ', '_', trim($storeData['name']))),
+            SourceInterface::NAME => $storeData['name'],
+            SourceInterface::ENABLED => 1,
+            SourceInterface::DESCRIPTION => $storeData['description'],
+            SourceInterface::LATITUDE => $storeData['lat'],
+            SourceInterface::LONGITUDE => $storeData['lng'],
+            SourceInterface::COUNTRY_ID => $storeData['country'],
+            SourceInterface::POSTCODE => $storeData['zip'],
+            'amlocator_store' => $locationId
+        ];
+        try {
+            if (!$sourceCode) {
+                $source = $this->sourceInterface;
+                $source->setData($sourceData);
+                return $source->save();
+                
+            } else {
+                $source = $this->sourceInterface->load($sourceCode);
+                $source->addData($sourceData);
+                return $source->save();            
+            }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
     /**
      * Link location with yext_entity_id in table amasty_amlocator_store_attribute
      * 
@@ -326,70 +444,6 @@ class YextAttribute
     }
 
     /**
-     * Convert from Yext Open Hours to Amasty Schedule
-     * 
-     * @param $yextSchedule array
-     * 
-     * @return array
-     */
-    public function convertSchedule($yextSchedule)
-    {
-        // $yextSchedule = json_decode($yextHours);
-
-        $amastySchedule = [];
-
-        $amastySchedule =   [   
-                                "monday" => $this->convertWeekDay($yextSchedule, "monday"),
-                                "tuesday" => $this->convertWeekDay($yextSchedule, "tuesday"),
-                                "wednesday" => $this->convertWeekDay($yextSchedule, "wednesday"),
-                                "thursday" => $this->convertWeekDay($yextSchedule, "thursday"),
-                                "friday" => $this->convertWeekDay($yextSchedule, "friday"),
-                                "saturday" => $this->convertWeekDay($yextSchedule, "saturday"),
-                                "sunday" => $this->convertWeekDay($yextSchedule, "sunday")
-                            ];
-
-        return $amastySchedule;
-    }
-
-    /**
-     * Convert from week day of Yext Open Hours to week day of Amasty Schedule
-     * 
-     * @param $yextSchedule array, $day week day
-     * 
-     * @return array
-     */
-    public function convertWeekDay($yextSchedule, $day) 
-    {
-        $amastySchedule = [];
-        if (!$yextSchedule[$day]["isClosed"]) {
-            $amastySchedule[$day."_status"] = 1;
-            $openTime = $yextSchedule[$day]["openIntervals"];
-            if ($openTime) {
-                $amastySchedule["from"]["hours"] = explode(':', $openTime[0]["start"])[0];
-                $amastySchedule["from"]["minutes"] = explode(':', $openTime[0]["start"])[1];
-                $amastySchedule["break_from"]["hours"] = isset($openTime[1]) ? explode(':', $openTime[0]["end"])[0] : "00";
-                $amastySchedule["break_from"]["minutes"] = isset($openTime[1]) ? explode(':', $openTime[0]["end"])[1] : "00";
-                $amastySchedule["break_to"]["hours"] = isset($openTime[1]) ? explode(':', $openTime[1]["start"])[0] : "00";
-                $amastySchedule["break_to"]["minutes"] = isset($openTime[1]) ? explode(':', $openTime[1]["start"])[1] : "00";
-                $amastySchedule["to"]["hours"] = isset($openTime[1]) ? explode(':', $openTime[1]["end"])[0] : explode(':', $openTime[0]["end"])[0];
-                $amastySchedule["to"]["minutes"] = isset($openTime[1]) ? explode(':', $openTime[1]["end"])[1] : explode(':', $openTime[0]["end"])[1];
-            }            
-        } else {
-            $amastySchedule[$day."_status"] = 0;
-            $amastySchedule["from"]["hours"] = "00";
-            $amastySchedule["from"]["minutes"] = "00";
-            $amastySchedule["break_from"]["hours"] = "00";
-            $amastySchedule["break_from"]["minutes"] = "00";
-            $amastySchedule["break_to"]["hours"] = "00";
-            $amastySchedule["break_to"]["minutes"] = "00";
-            $amastySchedule["to"]["hours"] = "00";
-            $amastySchedule["to"]["minutes"] = "00";
-        }
-
-        return $amastySchedule;
-    }
-
-    /**
      * Edit or Add new \Amasty\Storelocator\Model\Schedule
      * 
      * @param $location Location, $openHoursfromYext Location's Open Time from Yext
@@ -398,7 +452,7 @@ class YextAttribute
      */
     public function editLocationSchedule($location, $openHoursfromYext)
     {
-        $locationSchedule = $this->convertSchedule($openHoursfromYext);
+        $locationSchedule = $this->yextHelper->convertSchedule($openHoursfromYext);
         $schedule = $this->scheduleModel->load($location->getSchedule());
         
         if ($schedule) {            

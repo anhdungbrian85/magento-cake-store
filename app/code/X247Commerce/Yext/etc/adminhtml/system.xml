@@ -33,6 +33,19 @@
 					<comment>It is useful when you want to validate a request is came from Yext. Leave it empty to disable HMAC validation. Compare the hex digest of the resulting signature to the ‘X-Yext-Signature’ header of the Webhook HTTP request. If they match, the request came from Yext. If not, you should disregard the request.</comment>
 				</field>
 			</group>
+			<group id="sync_settings" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+				<label>Sync settings</label>
+				<field id="delete_admin" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Delete Admin when delete Store Location?</label>
+					<comment>When delete store location on Yext, the admin account was created when create that store location will be deleted too?</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="delete_source" type="select" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Delete Source when delete Store Location?</label>
+					<comment>When delete store location on Yext, the source was created when create that store location will be deleted too?</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+			</group>
 		</section>
 	</system>
 </config>
