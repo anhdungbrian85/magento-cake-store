@@ -3,4 +3,7 @@
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <plugin name="sales_admin_grid_validate" type="X247Commerce\Sales\Plugin\SalesAdminGridValidate" sortOrder="10" disabled="false" />
     </type>
+     <type name="Magento\Sales\Model\Order\Email\Container\IdentityInterface">
+        <plugin name="send_email_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\SendEmailForAdmin"/>
+    </type>
 </config>

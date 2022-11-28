@@ -18,7 +18,7 @@
     <field name="enable_delivery" formElement="select">
         <settings>
             <dataType>int</dataType>
-            <label translate="true">Store Active</label>
+            <label translate="true">Delivery</label>
             <dataScope>enable_delivery</dataScope>
         </settings>
         <formElements>
@@ -27,11 +27,11 @@
                     <options>
                         <option name="1" xsi:type="array">
                             <item name="value" xsi:type="string">1</item>
-                            <item name="label" xsi:type="string">Online</item>
+                            <item name="label" xsi:type="string">Enable</item>
                         </option>
-                        <option name="2" xsi:type="array">
+                        <option name="0" xsi:type="array">
                             <item name="value" xsi:type="string">0</item>
-                            <item name="label" xsi:type="string">Offline</item>
+                            <item name="label" xsi:type="string">Disable </item>
                         </option>
                     </options>
                 </settings>
