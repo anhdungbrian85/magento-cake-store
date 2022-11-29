@@ -19,6 +19,8 @@
 
 				    h2 {
 				    	margin: 0 0 10px;
+				    	font-size: 20px;
+						font-weight: 500;
 				    }
 
 					.ampickup-collect-button {
@@ -86,5 +88,194 @@
 				}
 			}
 		}
+
+		.pickup-store-wrapper {
+			margin-bottom: 20px;
+			padding: 20px;
+			background: #f6f6f6;
+
+			.title {
+				font-size: 20px;
+				color: #282828;
+				font-weight: 500;
+				margin-bottom: 10px;
+			}
+
+			.amlocator-wrapper {
+				.delivery-popup {
+					margin-bottom: 10px;
+					font-size: 14px;
+					font-weight: 600;
+				}
+
+				input[type="text"] {
+					height: 60px;
+					font-size: 18px;
+					padding-left: 25px;
+				}
+
+				.amlocator-store-desc {
+				    display: flex;
+					justify-content: space-between;
+					align-items: center;
+
+					.amlocator-block {
+						width: 75%;
+
+						.amasty_distance, .distance.store.location, img {
+							width: 90px;
+							max-width: 90px;
+						}
+
+						.distance.store.location {
+							.amasty_distance_number {
+								font-size: 12px;
+							}
+						}
+
+						.amlocator-title {
+						    font-weight: 400;
+						    font-size: 18px;
+						    text-transform: uppercase;
+						}
+					}
+
+					.select.store {
+						width: 25%;
+						text-align: right;
+
+						.select-location {
+						    background-color: #992E80;
+						    width: 68px;
+						    color: white;
+						    height: 34px;
+						    font-size: 14px;
+						    font-weight: 400;
+						}
+					}
+				}
+			}
+
+			.select-collection {
+				display: flex;
+
+				.delivery {
+					width: 33.33333%;
+
+					input[type="radio"] {
+					    visibility: hidden;
+					    width: 0;
+					    height: 0;
+					    position: absolute;
+
+					    &:checked {
+					    	+ .label {
+				    			background-color: #af3b99;
+					    	}
+					    }
+					}
+				}
+
+				.free.delivery .label {
+					border-radius: 0 0 0 10px;
+				}	
+
+				.express.delivery .label {
+					border-radius: 0 0 10px 0;
+				}
+
+				.premium.delivery, .express.delivery {
+				    position: relative;
+    				border: 0;
+
+    				&:before {
+    					content: '';
+					    position: absolute;
+					    left: 0;
+					    top: 0;
+					    height: 100%;
+					    width: 1px;
+					    background: #fff;
+    				}
+				}
+
+				.express.delivery {
+
+				}
+
+				.label {
+				    font-size: 16px;
+				    padding: 20px 10px 15px;
+				    background-color: #992E80;
+				    line-height: 1.1;
+				    letter-spacing: -0.56px;
+				    color: #fff;
+				    display: flex;
+				    width: 100%;
+				    justify-content: center;
+				    align-items: center;
+				    box-sizing: border-box;
+				    text-align: center;
+				    cursor: pointer;
+				}
+			}
+
+			.amlocator-block.-separator {
+				display: none;
+			}
+		}
 	}
+}
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break = @screen__m) {
+	.checkout-index-index {
+		.custom-slide {
+			position: relative;
+			visibility: visible;
+			opacity: 1;
+			left: 0;
+
+			.modal-inner-wrap{
+				box-shadow: none;
+				transform: none;
+
+				.select-collection {
+					.label {
+						padding: 20px 2px;
+						font-size: 14px;
+					}
+				}
+
+				.amlocator-wrapper {
+					input[type="text"] {
+						font-size: 16px;
+					}
+				}
+			}
+		}
+	}
+}
+
+& when (@media-target = 'desktop'), (@media-target = 'all') {
+    @media only screen and (min-width: @screen__m) and (max-width: (@screen__l - 1)) {
+        .checkout-index-index {
+        	.opc-sidebar, .opc-wrapper {
+        		width: 100%;
+        	}
+        }
+    }
+}
+
+& when (@media-target = 'desktop'), (@media-target = 'all') {
+    @media only screen and (min-width: @screen__l) and (max-width: @screen__xl) {
+        .checkout-index-index {
+        	.pickup-store-wrapper {
+        		.select-collection {
+        			.label {
+        				min-height: 90px;
+        			}
+        		}
+        	}
+        }
+    }
 }
