@@ -5,39 +5,37 @@ namespace X247Commerce\Sales\Plugin;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
-class SendEmailForAdmin
+class SendEmailToStaffAdmin
 {
     protected $request;
 
     protected $scopeConfig;
 
-    protected $_checkoutSession;
-
     protected $locationFactory;
+
+    protected $_coreSession;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\App\Request\Http $request,
-        \Magento\Checkout\Model\Session $checkoutSession,
         \Amasty\Storelocator\Model\LocationFactory $locationFactory,
+        \Magento\Framework\Session\SessionManagerInterface $coreSession,
         ScopeConfigInterface $scopeConfig
     ){
         $this->scopeConfig = $scopeConfig;
         $this->locationFactory = $locationFactory;
         $this->request = $request;
-        $this->_checkoutSession = $checkoutSession;
+        $this->_coreSession = $coreSession;
     }
-    public function afterGetEmailCopyTo(\Magento\Sales\Model\Order\Email\Container\IdentityInterface $subject, $result)
+    public function afterGetEmailCopyTo(\Magento\Sales\Model\Order\Email\Container\OrderIdentity $subject, $result)
     {
 
-        $session = $this->_checkoutSession;
-        $dataOrder =  $session->getLastRealOrder()->getData();
-        $storeIdPickUp = $dataOrder["store_location_id"];
-
-        if (!empty($storeIdPickUp)) {
-            $storeCollection = $this->locationFactory->create()->getCollection()->addFieldToFilter('id', ['eq' => $storeIdPickUp]);
+        $this->_coreSession->start();
+        $storeLocationId = $this->_coreSession->getMessage();
+        if (!empty($storeLocationId)) {
+            $storeCollection = $this->locationFactory->create()->load($storeLocationId);
             $dataLocation = $storeCollection->getData();
-            $emailAdmin = $dataLocation[0]["email"];
+            $emailAdmin = $dataLocation["email"];
             array_push($result, $emailAdmin);
         }
         return $result; 
