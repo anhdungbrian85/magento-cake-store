@@ -58,7 +58,7 @@ class YextApi
      * @param array $params 
      * @return string|null
      */
-    protected function buildQueryParams($params)
+    public function buildQueryParams($params)
     {
         try {
             $apiKey = $this->configHelper->getYextApiKey();
@@ -91,7 +91,7 @@ class YextApi
      * @return string
      */
 
-    protected function buildApiUri($requestPath, $params = [])
+    public function buildApiUri($requestPath, $params = [])
     {
         $baseEndpoint = $this->configHelper->getBaseApiEndPointUrl(). ConfigHelper::YEXT_ENDPOINT_STATIC_PATH;
         $paramsString = $this->buildQueryParams($params);

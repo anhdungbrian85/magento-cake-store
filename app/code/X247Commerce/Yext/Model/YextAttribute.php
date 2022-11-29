@@ -1,59 +1,64 @@
 <?php
 namespace X247Commerce\Yext\Model;
 
+use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory;
+use Amasty\Storelocator\Model\LocationFactory;
+use Amasty\Storelocator\Model\AttributeFactory;
+use Psr\Log\LoggerInterface;
+use X247Commerce\Yext\Helper\YextHelper;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem\Io\File;
+use Amasty\Storelocator\Model\ImageProcessor;
+use Amasty\Storelocator\Model\Schedule;
+use Amasty\Base\Model\Serializer;
+use Magento\User\Model\UserFactory;
+use X247Commerce\StoreLocatorSource\Helper\User;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use X247Commerce\StoreLocatorSource\Model\AdminSource;
+use Magento\Framework\Event\ManagerInterface as EventManager;
+use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
+
 class YextAttribute
 {
     protected const AMASTY_AMLOCATOR_STORE_ATTRIBUTE = 'amasty_amlocator_store_attribute';
-
-    protected $locationCollectionFactory;
-
-    protected $locationFactory;
-
-    protected $attributeFactory;
-
-    protected $logger;
-
-    protected $yextHelper;
-
-    protected $resource;
-
+    protected CollectionFactory $locationCollectionFactory;
+    protected LocationFactory $locationFactory;
+    protected AttributeFactory $attributeFactory;
+    protected LoggerInterface $logger;
+    protected YextHelper $yextHelper;
+    protected ResourceConnection $resource;
     protected $connection;
-
-    protected $directoryList;
-    
-    protected $file;
-
-    protected $imageProcessor;
-
-    protected $scheduleModel;
-
-    protected $serializer;
-
-    protected $userFactory;
-
-    protected $userHelper;
-
-    protected $sourceInterface;
-
-    protected $adminSource;
+    protected DirectoryList $directoryList;
+    protected File $file;
+    protected ImageProcessor $imageProcessor;
+    protected Schedule $scheduleModel;
+    protected Serializer $serializer;
+    protected UserFactory $userFactory;
+    protected User $userHelper;
+    protected SourceInterface $sourceInterface;
+    protected AdminSource $adminSource;
+    private EventManager $eventManager;
+    protected LocatorSourceResolver $locatorSourceResolver;
 
     public function __construct(
-    \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
-    \Amasty\Storelocator\Model\LocationFactory $locationFactory,
-    \Amasty\Storelocator\Model\AttributeFactory $attributeFactory,
-    \Psr\Log\LoggerInterface $logger,
-    \X247Commerce\Yext\Helper\YextHelper $yextHelper, 
-    \Magento\Framework\App\ResourceConnection $resource,
-    \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
-    \Magento\Framework\Filesystem\Io\File $file,
-    \Amasty\Storelocator\Model\ImageProcessor $imageProcessor,
-    \Amasty\Storelocator\Model\Schedule $scheduleModel,
-    \Amasty\Base\Model\Serializer $serializer,
-    \Magento\User\Model\UserFactory $userFactory,
-    \X247Commerce\StoreLocatorSource\Helper\User $userHelper,
-    SourceInterface $sourceInterface,
-    \X247Commerce\StoreLocatorSource\Model\AdminSource $adminSource
+        CollectionFactory $locationCollectionFactory,
+        LocationFactory $locationFactory,
+        AttributeFactory $attributeFactory,
+        LoggerInterface $logger,
+        YextHelper $yextHelper, 
+        ResourceConnection $resource,
+        DirectoryList $directoryList,
+        File $file,
+        ImageProcessor $imageProcessor,
+        Schedule $scheduleModel,
+        Serializer $serializer,
+        UserFactory $userFactory,
+        User $userHelper,
+        SourceInterface $sourceInterface,
+        AdminSource $adminSource,
+        EventManager $eventManager,
+        LocatorSourceResolver $locatorSourceResolver
     ) {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->locationFactory = $locationFactory;
@@ -71,6 +76,8 @@ class YextAttribute
         $this->userHelper = $userHelper;
         $this->sourceInterface = $sourceInterface;
         $this->adminSource = $adminSource;
+        $this->eventManager = $eventManager;
+        $this->locatorSourceResolver = $locatorSourceResolver;
     }
 
     /**
@@ -202,15 +209,33 @@ class YextAttribute
             $location = $this->getLocationByYext($yextEntityId);
             if ($location) {
                 if ($this->yextHelper->getDeleteAdminSyncSetting()) {
-                    $user = $this->userFactory->create()->load($location->getYextUserId());
-                    if ($user->getId()) {
-                        $user->delete();
+                    try {                        
+                        $users = $this->locatorSourceResolver->getUserByAmLocatorStore($location->getId());
+                        if ($users) {
+                            foreach ($users as $userId)
+                            {
+                                $user = $this->userFactory->create()->load($userId);
+                                if ($user->getId()) {
+                                    $user->delete();
+                                }                        
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->error($e->getMessage());
                     }
                 }
                 if ($this->yextHelper->getDeleteSourceSyncSetting()) {
-                    $source = $this->sourceInterface->load($location->getYextSourceCode());
-                    if ($source->getSourceCode()) {
-                        $source->delete();
+                    try {
+                        $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($location->getId());
+                        foreach ($sources as $code)
+                        {                       
+                            $source = $this->sourceInterface->load($code);
+                            if ($source->getSourceCode()) {
+                                $source->delete();
+                            } 
+                        }                        
+                    } catch (\Exception $e) {
+                        $this->logger->error($e->getMessage());
                     }
                 }
                 $location->delete();
@@ -227,7 +252,7 @@ class YextAttribute
      * 
      * @return \Amasty\Storelocator\Model\Location
      */
-    public function addLocation($data, $yextEntityId)
+    public function addLocation($data, $yextEntityId) 
     {
         try {
             $insert = $this->responseDataProcess($data['primaryProfile']);
@@ -239,14 +264,21 @@ class YextAttribute
                 $locationModel->setData($insert); 
                 $locationModel->save();
                 if ($locationModel->getId()) {
-                   $this->insertYextEntityIdValue([$locationModel->getId() => $yextEntityId]);
+                    $this->insertYextEntityIdValue([$locationModel->getId() => $yextEntityId]);
+                    
+                    $this->eventManager->dispatch('yext_webhook_location_add_after', [
+                        'location' => $locationModel, 
+                        'yext_data' => $data
+
+                    ]);
+
                     $newUser = $this->editAdminUser($insert, $locationModel->getId());
                     $newSource = $this->editSource($insert, $locationModel->getId());
-                    $locationModel->setYextSourceCode($newSource->getSourceCode());
-                    $locationModel->setYextUserId($newUser->getUserId());
-                    $locationModel->save();
-                    $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
-                    $this->adminSource->save();
+
+                    if (!is_null($newUser) && !is_null($newSource)) {
+                        $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
+                        $this->adminSource->save();
+                    }
                 }
                 return $locationModel;
             } else {
@@ -279,16 +311,10 @@ class YextAttribute
             } else {
                 //edit location
                 $location->addData($insert);
-                $yextUserId = $location->getYextUserId();
-                $yextSourceCode = $location->getYextSourceCode();
-                $newUser = $this->editAdminUser($insert, $location->getId(), $location->getYextUserId());
-                $source = $this->editSource($insert, $location->getId(), $location->getYextSourceCode());
-                $location->setYextUserId($newUser->getUserId());
-                $location->setYextSourceCode($source->getSourceCode());
-                if (!$yextUserId || !$yextSourceCode) {
-                    $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $source->getSourceCode()]);
-                }
-                $this->adminSource->save();
+
+                // $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $source->getSourceCode()]);
+                $this->editAdminUser($insert, $location->getId());
+                // $this->adminSource->save();
                 $location->save();
                 if ($location->getId()) {
                    $this->insertYextEntityIdValue([$location->getId() => $yextEntityId]);
@@ -307,31 +333,68 @@ class YextAttribute
      * 
      * @return \Magento\User\Model\UserFactory
      */
-    public function editAdminUser($data, $locationId, $userId = null)
+    public function editAdminUser($data, $locationId, $userId = null, $locationMail = null)
     {
         $adminInfo = [
-            'username'  => $data['name'] ? strtolower(str_replace(' ', '_', trim($data['name']))) : 'x247commerce'.date("Y.m.d.h.i.s"),
-            'firstname' => $data['name'] ? $data['name'] : 'x247commerce'.date("Y.m.d.h.i.s"),
-            'lastname'    => $data['name'] ? $data['name'] : 'x247commerce'.date("Y.m.d.h.i.s"),
-            'email'     => $data['email'] ? $data['email'] : 'x247commerce'.date("Y.m.d.h.i.s").'@247commerce.co.uk' ,
-            'password'  =>'x247commerce',       
+            'username'  => $data['name'] ? strtolower(str_replace(' ', '_', trim($data['name']))) : 'cakebox',
+            'firstname' => $data['name'] ? $data['name'] : 'Cakebox',
+            'lastname'    => $data['name'] ? $data['name'] : 'Cakebox',
+            'email'     => $data['email'] ? $data['email'] : strtolower(str_replace(' ', '_', trim($data['name']))).'@eggfreecake.co.uk',
             'interface_locale' => 'en_US',
-            'is_active' => 1,
-            'yext_amlocator_store' => $locationId
+            'is_active' => 1
         ];
-
+        
         try {
             if (!$userId) {
-                $userModel = $this->userFactory->create();
-                $userModel->setData($adminInfo);
-                $userModel->setRoleId($this->userHelper->getStaffRole());var_dump('editAdminUser new');
-                return $userModel->save();             
-            } else {
-                $userModel = $this->userFactory->create()->load($userId);var_dump('editAdminUser old');
-                $userModel->addData($adminInfo);
-                
-                return $userModel->save(); 
-            }
+                if ($data['email']) {
+                    $userModel = $this->userFactory->create();
+                    $user = $userModel->load($data['email'], 'email');
+                    if ($user->getUserId()) {
+                        return $user;
+                    } else {
+                        $this->logger->log('600', "Add New User");
+                        $adminInfo['password']  = 'Cakebox123'.$this->yextHelper->randomString(10);
+                        $this->logger->log('600', print_r($adminInfo, true));
+                        $userModel->setData($adminInfo);
+                        $userModel->setRoleId($this->userHelper->getStaffRole());
+                    
+                        $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']); 
+                        $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
+                        $user = $userModel->save();
+                        if ($sources) {
+                            foreach ($sources as $source)
+                            {
+                                $this->adminSource->setData(['user_id' => $user->getUserId(), 'source_code' => $source]);
+                                $this->adminSource->save();                                
+                            }
+                        }
+                        return $user; 
+                    }
+                }            
+            } 
+            // else {
+            //     $userModel = $this->userFactory->create()->load($userId);
+            //     if ($userModel->getUsername() == $adminInfo['username'] && $userModel->getEmail() == $adminInfo['email']) {
+            //         $this->logger->log('600', "Not Edit User");
+            //         try {
+                        
+            //             $this->yextHelper->sendEmail($adminInfo['username'], $userModel->getPassword(), $adminInfo['email']);                        
+            //         } catch (\Exception $e) {
+            //             $this->logger->error($e->getMessage());
+            //         }
+            //         return $userModel;
+            //     } else {
+            //         $userModel->addData($adminInfo);
+            //         $this->logger->log('600', "Edit User");
+            //         try {
+                        
+            //             $this->yextHelper->sendEmail($adminInfo['username'], $userModel->getPassword(), $adminInfo['email']);                        
+            //         } catch (\Exception $e) {
+            //             $this->logger->error($e->getMessage());
+            //         }
+            //         return $userModel->save();
+            //     }             
+            // }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -347,14 +410,14 @@ class YextAttribute
     {
        
         $sourceData = [
-            SourceInterface::SOURCE_CODE => strtolower(str_replace(' ', '_', trim($storeData['name']))),
-            SourceInterface::NAME => $storeData['name'],
-            SourceInterface::ENABLED => 1,
-            SourceInterface::DESCRIPTION => $storeData['description'],
-            SourceInterface::LATITUDE => $storeData['lat'],
-            SourceInterface::LONGITUDE => $storeData['lng'],
-            SourceInterface::COUNTRY_ID => $storeData['country'],
-            SourceInterface::POSTCODE => $storeData['zip'],
+            'source_code' => strtolower(str_replace(' ', '_', trim($storeData['name']))),
+            'name' => $storeData['name'],
+            'enabled' => 1,
+            'description' => $storeData['description'],
+            'latitude' => $storeData['lat'],
+            'longitude' => $storeData['lng'],
+            'country_id' => $storeData['country'],
+            'postcode' => $storeData['zip'],
             'amlocator_store' => $locationId
         ];
         try {
@@ -365,8 +428,12 @@ class YextAttribute
                 
             } else {
                 $source = $this->sourceInterface->load($sourceCode);
-                $source->addData($sourceData);
-                return $source->save();            
+                if ($source->getSourceCode()) {
+                    return $source;
+                } else {
+                    $source->addData($sourceData);
+                    return $source->save();
+                }            
             }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -408,7 +475,8 @@ class YextAttribute
      * @return $name: name of downloaded image || false
      */
     public function downloadLocationImageToLocal($imageUrl, $locationId)
-    {//download location photo gallery from Yext to local server
+    {
+        //download location photo gallery from Yext to local server
         /** @var string $tmpDir */
         $tmpDir = $this->getAmastyMediaDir();
         $uploadDir = $tmpDir . '/' . $locationId;
@@ -416,7 +484,7 @@ class YextAttribute
         $this->file->checkAndCreateFolder($tmpDir);
 
         $arr = explode('/', $imageUrl);
-        // var_dump($arr);
+        
         $name = implode('-',array_slice($arr, 4, 5));
         /** @var string $newFileName */
         $newFileName = $uploadDir . '/' . $name;
@@ -460,7 +528,7 @@ class YextAttribute
                 $schedule->setSchedule($this->serializer->serialize($locationSchedule));
             }            
             $schedule->setName($location->getName() . " Schedule");
-            // var_dump($schedule->getData());die();
+            
             return $schedule->save();
         } else {            
             if (is_array($locationSchedule)) {

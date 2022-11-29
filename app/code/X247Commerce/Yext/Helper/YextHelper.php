@@ -5,15 +5,36 @@ namespace X247Commerce\Yext\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Translate\Inline\StateInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Backend\Helper\Data;
 
 class YextHelper extends AbstractHelper
 {
     const DELETE_ADMIN_SYNC_SETTING_PATH = 'yext/sync_settings/delete_admin';
     const DELETE_SOURCE_SYNC_SETTING_PATH = 'yext/sync_settings/delete_source';
+    const NOTIFICATION_EMAIL_TEMPLATE_CREATED_USER = 'yext/email_template/create_user';
+
+    protected $transportBuilder;
+    protected $storeManager;
+    protected $inlineTranslation;
+    protected $logger;
+    protected $backendHelper;
 
     public function __construct(
-        Context $context
-    ) {
+        Context $context,
+        TransportBuilder $transportBuilder,
+        StoreManagerInterface $storeManager,
+        StateInterface $state,
+        Data $backendHelper
+    ) 
+    {
+        $this->transportBuilder = $transportBuilder;
+        $this->storeManager = $storeManager;
+        $this->inlineTranslation = $state;
+        $this->logger = $context->getLogger();
+        $this->backendHelper = $backendHelper;
         parent::__construct($context);
     }
 
@@ -25,7 +46,7 @@ class YextHelper extends AbstractHelper
         $url_key = preg_replace("/\s+/", "-", $url_key);
         return $url_key;
     }
-    
+
     /**
      * Get sync setting webhook when delete store location on Yext
      *
@@ -109,4 +130,66 @@ class YextHelper extends AbstractHelper
 
         return $amastySchedule;
     }
+
+    /**
+     * get random string
+     * 
+     * @param $textLength string length
+     * 
+     * @return string
+     */
+    public function randomString($textLength)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+     
+        for ($i = 0; $i < $textLength; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+     
+        return $randomString;
+    }
+
+    /**
+     * send notification email to staff admin
+     * 
+     * @param $username, $password, $sendToEmail
+     * 
+     * @return void
+     */
+    public function sendEmail($username, $password, $sendToEmail)
+    {
+        $templateConfigPath = self::NOTIFICATION_EMAIL_TEMPLATE_CREATED_USER;
+
+        try {
+            // template variables pass here
+            $templateVars = [
+                'backend_url' => $this->backendHelper->getHomePageUrl(),
+                'username' => $username,
+                'password' => $password
+            ];
+
+            $storeId = $this->storeManager->getStore()->getId();
+            $templateId = $this->scopeConfig->getValue(self::NOTIFICATION_EMAIL_TEMPLATE_CREATED_USER, ScopeInterface::SCOPE_STORE, $storeId);
+            $this->inlineTranslation->suspend();
+
+            $storeScope = ScopeInterface::SCOPE_STORE;
+            $templateOptions = [
+                'area' => \Magento\Framework\App\Area::AREA_ADMINHTML,
+                'store' => $storeId
+            ];
+            $transport = $this->transportBuilder->setTemplateIdentifier($templateId, $storeScope)
+                ->setTemplateOptions($templateOptions)
+                ->setTemplateVars($templateVars)
+                ->setFromByScope('general')
+                ->addTo($sendToEmail)
+                ->getTransport();
+            $transport->sendMessage();
+            $this->inlineTranslation->resume();
+        } catch (\Exception $e) {
+            $this->logger->info($e->getMessage());
+        }
+    }
+
 }
