@@ -24,7 +24,7 @@ class BeforeSendEmailOrder
     {
         $orderData = $order->getData();
         $this->_coreSession->start();
-        $this->_coreSession->setMessage($orderData["store_location_id"]);
+        $this->_coreSession->setX247Order($orderData["store_location_id"]);
         return [$order];
     }
 
@@ -32,7 +32,7 @@ class BeforeSendEmailOrder
     {
         
         $this->_coreSession->start();
-        $this->_coreSession->unsMessage();
+        $this->_coreSession->unsX247Order();
         return $result;
     }
 }

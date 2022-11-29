@@ -34,8 +34,7 @@ class SendEmailShipmentToStaffAdmin
     public function afterGetEmailCopyTo(\Magento\Sales\Model\Order\Email\Container\ShipmentIdentity $subject, $result)
     {
         $this->_coreSession->start();
-        $orderId = $this->_coreSession->getMessage();
-        $order = $this->order->load($orderId);
+        $order = $this->_coreSession->getX247Order();
         $storeLocationId = $order["store_location_id"];
 
         if (!empty($storeLocationId)) {

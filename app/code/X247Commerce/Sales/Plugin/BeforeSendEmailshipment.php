@@ -22,9 +22,9 @@ class BeforeSendEmailshipment
     }
     public function beforeSend(\Magento\Sales\Model\Order\Email\Sender\ShipmentSender $subject, $shipment)
     {
-        $orderId = $shipment->getOrder()->getId();
+        $order = $shipment->getOrder();
         $this->_coreSession->start();
-        $this->_coreSession->setMessage($orderId);
+        $this->_coreSession->setX247Order($order);
         return [$shipment];
     }
 
@@ -32,7 +32,7 @@ class BeforeSendEmailshipment
     {
         
         $this->_coreSession->start();
-        $this->_coreSession->unsMessage();
+        $this->_coreSession->unsX247Order();
         return $result;
     }
 }

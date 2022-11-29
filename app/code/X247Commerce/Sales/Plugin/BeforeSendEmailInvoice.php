@@ -22,9 +22,9 @@ class BeforeSendEmailInvoice
     }
     public function beforeSend(\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $subject, $invoice)
     {
-        $orderId = $invoice->getOrder()->getId();
+        $order = $invoice->getOrder();
         $this->_coreSession->start();
-        $this->_coreSession->setMessage($orderId);
+        $this->_coreSession->setX247Order($order);
         return [$invoice];
     }
 
@@ -32,7 +32,7 @@ class BeforeSendEmailInvoice
     {
         
         $this->_coreSession->start();
-        $this->_coreSession->unsMessage();
+        $this->_coreSession->unsX247Order();
         return $result;
     }
 }
