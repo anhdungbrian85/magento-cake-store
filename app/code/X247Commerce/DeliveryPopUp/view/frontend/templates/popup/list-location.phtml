@@ -17,7 +17,7 @@ $deliveryHelper = $this->helper('X247Commerce\DeliveryPopUp\Helper\Data');
 $unitSetting = $deliveryHelper->getDistanceUnitSetting();
 ?>
 <div class="amlocator-wrapper">
-    <div class="amlocator-stores-wrapper"> <?= count($locations) ?>
+    <div class="amlocator-stores-wrapper">
         <?php foreach ($locations as $location): ?> 
             <?php $loLng = (float) $location->getLng() ?>
             <?php $loLat = (float) $location->getLat() ?>
