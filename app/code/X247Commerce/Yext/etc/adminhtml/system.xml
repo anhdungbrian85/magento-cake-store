@@ -37,13 +37,21 @@
 				<label>Sync settings</label>
 				<field id="delete_admin" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
 					<label>Delete Admin when delete Store Location?</label>
-					<comment>When delete store location on Yext, the admin account was created when create that store location will be deleted too?</comment>
+					<comment>When delete store location on Yext, the admin account was assigned to the Source of the store will be deleted too?</comment>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
 				<field id="delete_source" type="select" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
 					<label>Delete Source when delete Store Location?</label>
-					<comment>When delete store location on Yext, the source was created when create that store location will be deleted too?</comment>
+					<comment>When delete a store location on Yext, the source was assigned to the store will be deleted too?</comment>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+			</group>
+			<group id="email_template" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+				<label>Email template settings</label>
+				<field id="create_user" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Account Id</label>
+					<comment>Email template when user is created</comment>
+					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
 				</field>
 			</group>
 		</section>
