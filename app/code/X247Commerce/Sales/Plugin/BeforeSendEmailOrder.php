@@ -22,9 +22,8 @@ class BeforeSendEmailOrder
     }
     public function beforeSend(\Magento\Sales\Model\Order\Email\Sender\OrderSender $subject, $order)
     {
-        $orderData = $order->getData();
         $this->_coreSession->start();
-        $this->_coreSession->setX247Order($orderData["store_location_id"]);
+        $this->_coreSession->setX247Order($order);
         return [$order];
     }
 
@@ -32,7 +31,7 @@ class BeforeSendEmailOrder
     {
         
         $this->_coreSession->start();
-        $this->_coreSession->unsX247Order();
+        $this->_coreSession->setX247Order();
         return $result;
     }
 }
