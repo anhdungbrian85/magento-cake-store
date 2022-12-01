@@ -22,6 +22,7 @@ use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 class YextAttribute
 {
     protected const AMASTY_AMLOCATOR_STORE_ATTRIBUTE = 'amasty_amlocator_store_attribute';
+    protected const AMASTY_AMLOCATOR_STORE_HOLIDAY_HOURS = 'amasty_amlocator_holiday_hours';
     protected CollectionFactory $locationCollectionFactory;
     protected LocationFactory $locationFactory;
     protected AttributeFactory $attributeFactory;
@@ -89,6 +90,17 @@ class YextAttribute
     {
         //get id of attribute yext_entity_id in table amasty_amlocator_attribute
         return $this->attributeFactory->create()->load('yext_entity_id', 'attribute_code')->getAttributeId();
+    }
+
+    /**
+     * Get $attributeName id in table amasty_amlocator_attribute
+     *
+     * @return int|null
+     */
+    public function getIdOfAttribute($attributeName)
+    {
+        //get id of attribute $attributeName in table amasty_amlocator_attribute
+        return $this->attributeFactory->create()->load($attributeName, 'attribute_code')->getAttributeId();
     }
 
     /**
@@ -302,7 +314,6 @@ class YextAttribute
         try {
             
             $insert = $this->responseDataProcess($data['primaryProfile']);
-            
             $this->logger->log('600', print_r($data, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
             if (!$location->getId()) {
@@ -314,10 +325,20 @@ class YextAttribute
 
                 // $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $source->getSourceCode()]);
                 $this->editAdminUser($insert, $location->getId());
+                
+                if (isset($data['primaryProfile']['hours']['holidayHours'])) {
+                    $this->editLocationHolidayHours($location, $data['primaryProfile']['hours']['holidayHours']);
+                }
                 // $this->adminSource->save();
                 $location->save();
                 if ($location->getId()) {
                    $this->insertYextEntityIdValue([$location->getId() => $yextEntityId]);
+                   if (isset($data['primaryProfile']['hours']['reopenDate'])) {                       
+                    $this->insertAttributeValue($location->getId(), 'temporarily_closed', 'Reopen Date: '.$data['primaryProfile']['hours']['reopenDate']);
+                    var_dump($data['primaryProfile']['hours']['reopenDate']);
+                   } else {
+                    $this->insertAttributeValue($location->getId(), 'temporarily_closed');
+                   }
                 }
                 return $location;
             }
@@ -466,6 +487,30 @@ class YextAttribute
             $this->logger->error($e->getMessage());
         }
     }
+    /**
+     * insert Attribute Value of store into table amasty_amlocator_store_attribute
+     * 
+     * @param $insert array
+     * 
+     * @return
+     */
+    public function insertAttributeValue($locationId, $attributeCode, $value = '')
+    {
+        //add value of attribute of location to table amasty_amlocator_store_attribute
+        $attributeId = $this->getIdOfAttribute($attributeCode);
+        $data = [];      
+        $data['attribute_id'] = $attributeId;
+        $data['store_id'] = $locationId;
+        $data['value'] = $value;
+        var_dump($data);
+        try {
+            $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+            
+            $this->connection->insertOnDuplicate($tableName, $data, ['value']);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
 
     /**
      * Download location photo gallery from Yext to local server when sync data
@@ -536,6 +581,46 @@ class YextAttribute
             }
             $this->scheduleModel->setName($location->getName() . " Schedule");
             return $this->scheduleModel->save();
+        }
+    }
+    /**
+     * Edit or Add new AmLocator Holiday Hours
+     * 
+     * @param $location Location, $holidayHoursfromYext Location's Open Time from Yext
+     * 
+     * @return LocationHolidayHours
+     */
+    public function editLocationHolidayHours($location, $holidayHoursfromYexts)
+    {        
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_HOLIDAY_HOURS);
+        $this->connection->delete($tableName, ['store_id = ?' => $location->getId()]);
+        $insertData = [];
+        $openTime = '00:00';
+        $breakStart = '00:00';
+        $breakEnd = '00:00';
+        $endTime = '00:00';
+
+        try {
+            foreach ($holidayHoursfromYexts as $holidayHoursfromYext)
+            {
+                if (!isset($holidayHoursfromYext['isRegularHours']) && !isset($holidayHoursfromYext['isClosed'])) {
+                    $openTime = isset($holidayHoursfromYext['openIntervals'][0]["start"]) ? $holidayHoursfromYext['openIntervals'][0]["start"] : '00:00';
+                    $breakStart = isset($holidayHoursfromYext['openIntervals'][1]["start"]) ? $holidayHoursfromYext['openIntervals'][0]["end"] : 0;
+                    $breakEnd = isset($holidayHoursfromYext['openIntervals'][1]["start"]) ? $holidayHoursfromYext['openIntervals'][1]["start"] : 0;
+                    $endTime = isset($holidayHoursfromYext['openIntervals'][1]["end"]) ? $holidayHoursfromYext['openIntervals'][1]["end"] : $holidayHoursfromYext['openIntervals'][0]["end"];
+                    $insertData[] = ['store_id' => $location->getId(), 'type' => 'Holiday Hours', 'store_name' => $location->getName(), 'date' => $holidayHoursfromYext['date'], 'open_time' => $openTime, 'break_start' => $breakStart, 'break_end' => $breakEnd, 'close_time' => $endTime];
+                }
+                if (isset($holidayHoursfromYext['isClosed'])) {
+                   $insertData[] = ['store_id' => $location->getId(), 'type' => 'Closed', 'store_name' => $location->getName(), 'date' => $holidayHoursfromYext['date'], 'open_time' => $openTime, 'break_start' => $breakStart, 'break_end' => $breakEnd, 'close_time' => $endTime];
+                }
+                if (isset($holidayHoursfromYext['isRegularHours'])) {
+                   $insertData[] = ['store_id' => $location->getId(), 'type' => 'Regular Hours', 'store_name' => $location->getName(), 'date' => $holidayHoursfromYext['date'], 'open_time' => $openTime, 'break_start' => $breakStart, 'break_end' => $breakEnd, 'close_time' => $endTime];
+                }
+            }
+            var_dump($insertData);
+            return $this->connection->insertOnDuplicate($tableName, $insertData, ['open_time', 'break_start', 'break_end', 'close_time']);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
     }
 }

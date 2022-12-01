@@ -9,6 +9,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Backend\Helper\Data;
+use Amasty\Storelocator\Model\AttributeFactory;
 
 class YextHelper extends AbstractHelper
 {
@@ -21,21 +22,35 @@ class YextHelper extends AbstractHelper
     protected $inlineTranslation;
     protected $logger;
     protected $backendHelper;
+    protected $attributeFactory;
 
     public function __construct(
         Context $context,
         TransportBuilder $transportBuilder,
         StoreManagerInterface $storeManager,
         StateInterface $state,
-        Data $backendHelper
+        Data $backendHelper,
+        AttributeFactory $attributeFactory
     ) 
     {
+        parent::__construct($context);
         $this->transportBuilder = $transportBuilder;
         $this->storeManager = $storeManager;
         $this->inlineTranslation = $state;
         $this->logger = $context->getLogger();
         $this->backendHelper = $backendHelper;
-        parent::__construct($context);
+        $this->attributeFactory = $attributeFactory;
+    }
+    
+    /**
+     * Get $attributeName id in table amasty_amlocator_attribute
+     *
+     * @return int|null
+     */
+    public function getIdOfAttribute($attributeName)
+    {
+        //get id of attribute $attributeName in table amasty_amlocator_attribute
+        return $this->attributeFactory->create()->load($attributeName, 'attribute_code')->getAttributeId();
     }
 
     public function getUrlKeyFromName($name)
@@ -76,8 +91,6 @@ class YextHelper extends AbstractHelper
      */
     public function convertSchedule($yextSchedule)
     {
-        // $yextSchedule = json_decode($yextHours);
-
         $amastySchedule = [];
 
         $amastySchedule =   [   
@@ -192,4 +205,27 @@ class YextHelper extends AbstractHelper
         }
     }
 
+    // /**
+    //  * Convert from Yext Holiday to array
+    //  * 
+    //  * @param $yextSchedule array
+    //  * 
+    //  * @return array
+    //  */
+    // public function convertHoliday($yextSchedule)
+    // {
+    //     $amastySchedule = [];
+
+    //     $amastySchedule =   [   
+    //                             "monday" => $this->convertWeekDay($yextSchedule, "monday"),
+    //                             "tuesday" => $this->convertWeekDay($yextSchedule, "tuesday"),
+    //                             "wednesday" => $this->convertWeekDay($yextSchedule, "wednesday"),
+    //                             "thursday" => $this->convertWeekDay($yextSchedule, "thursday"),
+    //                             "friday" => $this->convertWeekDay($yextSchedule, "friday"),
+    //                             "saturday" => $this->convertWeekDay($yextSchedule, "saturday"),
+    //                             "sunday" => $this->convertWeekDay($yextSchedule, "sunday")
+    //                         ];
+
+    //     return $amastySchedule;
+    // }
 }

@@ -7,4 +7,17 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="amstorelocator_location_holiday_hours_data_source" xsi:type="string">amstorelocator_location_holiday_hours</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="amstorelocator_location_holiday_hours" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">amasty_amlocator_holiday_hours</argument>
+            <argument name="resourceModel" xsi:type="string">X247Commerce\Yext\Model\ResourceModel\HolidayHous</argument>
+        </arguments>
+    </virtualType>
 </config>
