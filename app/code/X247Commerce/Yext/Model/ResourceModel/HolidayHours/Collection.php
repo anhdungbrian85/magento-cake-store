@@ -1,6 +1,6 @@
 <?php
 
-namespace X247Commerce\Yext\Model\ResourceModel\HolidayHous;
+namespace X247Commerce\Yext\Model\ResourceModel\HolidayHours;
 
 /**
  * Class Collection
@@ -11,8 +11,8 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     {
         parent::_construct();
         $this->_init(
-            \Amasty\Storelocator\Model\HolidayHous::class,
-            \Amasty\Storelocator\Model\ResourceModel\HolidayHous::class
+            \X247Commerce\Yext\Model\HolidayHours::class,
+            \X247Commerce\Yext\Model\ResourceModel\HolidayHours::class
         );
         $this->_setIdFieldName($this->getResource()->getIdFieldName());
     }

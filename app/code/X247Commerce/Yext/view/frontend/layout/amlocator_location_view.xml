@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Amasty_Storelocator::vendor/fancybox/jquery.fancybox.min.css"/>
+        <css src="Amasty_Base::vendor/slick/amslick.min.css"/>
+    </head>
+    <body>
+        <referenceBlock name="location">
+            <block class="X247Commerce\Yext\Block\View\SpecialSchedule" name="amasty_store_special_schedule" template="X247Commerce_Yext::special_schedule.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

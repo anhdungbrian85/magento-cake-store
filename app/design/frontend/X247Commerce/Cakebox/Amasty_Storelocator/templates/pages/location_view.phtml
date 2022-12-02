@@ -182,14 +182,11 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
             </div>
 
             <div class="amlocator-block-closed">
-               <h3 class="close-title">Queen Funeral Closed</h3>               
-               <div class="intro-text">
-                  <p>
-                    <strong>
-                        Closed: 19/9/2022
-                    </strong>
-                  </p>
-               </div>               
+               <h3 class="close-title"><?= $block->escapeHtml(__('Special Schedule'))?>: </h3>
+               <?= $block->getChildBlock('amasty_store_special_schedule')
+                ->setData('location', $location)
+                ->toHtml();
+                ?>
                <div class="opening-custom"></div>
             </div>
             <div class="amlocator-store-list">

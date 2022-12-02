@@ -104,6 +104,24 @@ class YextAttribute
     }
 
     /**
+     * Get attribute value by Location 
+     *
+     * @param \Amasty\Storelocator\Model\Location, attribute_code String
+     * 
+     * @return string||null
+     */
+    public function getAttributeValueByLocation($location, $attributeCode)
+    {
+        //get id of attribute in table
+        $attributeId = $this->getIdOfAttribute($attributeCode);
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $location->getId())->where('attribute_id = ?', $attributeId);
+
+        $data = $this->connection->fetchOne($select);
+
+        return $data;
+    }
+    /**
      * Get Location by yext_entity_id value
      *
      * @param value of yext_entity_id
@@ -605,8 +623,8 @@ class YextAttribute
             {
                 if (!isset($holidayHoursfromYext['isRegularHours']) && !isset($holidayHoursfromYext['isClosed'])) {
                     $openTime = isset($holidayHoursfromYext['openIntervals'][0]["start"]) ? $holidayHoursfromYext['openIntervals'][0]["start"] : '00:00';
-                    $breakStart = isset($holidayHoursfromYext['openIntervals'][1]["start"]) ? $holidayHoursfromYext['openIntervals'][0]["end"] : 0;
-                    $breakEnd = isset($holidayHoursfromYext['openIntervals'][1]["start"]) ? $holidayHoursfromYext['openIntervals'][1]["start"] : 0;
+                    $breakStart = isset($holidayHoursfromYext['openIntervals'][1]["start"]) ? $holidayHoursfromYext['openIntervals'][0]["end"] : '00:00';
+                    $breakEnd = isset($holidayHoursfromYext['openIntervals'][1]["start"]) ? $holidayHoursfromYext['openIntervals'][1]["start"] : '00:00';
                     $endTime = isset($holidayHoursfromYext['openIntervals'][1]["end"]) ? $holidayHoursfromYext['openIntervals'][1]["end"] : $holidayHoursfromYext['openIntervals'][0]["end"];
                     $insertData[] = ['store_id' => $location->getId(), 'type' => 'Holiday Hours', 'store_name' => $location->getName(), 'date' => $holidayHoursfromYext['date'], 'open_time' => $openTime, 'break_start' => $breakStart, 'break_end' => $breakEnd, 'close_time' => $endTime];
                 }
