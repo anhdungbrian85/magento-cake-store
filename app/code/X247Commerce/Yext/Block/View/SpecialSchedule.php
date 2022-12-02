@@ -69,8 +69,14 @@ class SpecialSchedule extends \Amasty\Storelocator\Block\View\Location
             $location = $this->getLocation();
         }
         $reopenString = $this->yextAttribute->getAttributeValueByLocation($location, 'temporarily_closed');
-        $reopenArray = explode(" ", $reopenString);
-        return date_format(date_create($reopenArray[2]),"d/m/Y");
+        if ($reopenString) {
+            $reopenArray = explode(" ", $reopenString);
+            if (isset($reopenArray[2])) {
+                return date_format(date_create($reopenArray[2]),"d/m/Y");
+            } else {
+                return $reopenString;
+            }
+        }
     }
     /**
      * Get Holiday Hours value by Location 
