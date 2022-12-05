@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "35bf5b127786fd678d97193aca42d396",
+    "content-hash": "848b794e6016b3bf791c504004a6fc75",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -101,33 +101,6 @@
             "description": "Amasty Geoip Data"
         },
         {
-            "name": "amasty/module-social-login-lite",
-            "version": "1.10.5",
-            "dist": {
-                "type": "zip",
-                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-social-login-lite-1.10.5.zip"
-            },
-            "require": {
-                "amasty/base": ">=1.13.5",
-                "amasty/social-login": "*",
-                "php": ">=7.3"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Amasty\\SocialLoginLite\\": ""
-                }
-            },
-            "license": [
-                "Commercial"
-            ],
-            "description": "Social Login Lite by Amasty",
-            "homepage": "https://amasty.com/"
-        },     
-        {
             "name": "amasty/module-improved-layered-navigation-page",
             "version": "2.7.16",
             "dist": {
@@ -210,6 +183,33 @@
                 "Commercial"
             ],
             "description": "Shop by Brand by Amasty"
+        },
+        {
+            "name": "amasty/module-social-login-lite",
+            "version": "1.10.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-social-login-lite-1.10.5.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.5",
+                "amasty/social-login": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\SocialLoginLite\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Social Login Lite by Amasty",
+            "homepage": "https://amasty.com/"
         },
         {
             "name": "amasty/module-store-locator",
@@ -297,7 +297,7 @@
             ],
             "description": "Store Pickup with Locator by Amasty"
         },
-                {
+        {
             "name": "amasty/shopby",
             "version": "2.19.3",
             "dist": {
@@ -3038,6 +3038,41 @@
                 "source": "https://github.com/justinrainbow/json-schema/tree/5.2.12"
             },
             "time": "2022-04-13T08:02:27+00:00"
+        },
+        {
+            "name": "klaviyo/magento2-extension",
+            "version": "4.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klaviyo/magento2-klaviyo.git",
+                "reference": "ede96acac5da82f4bbbf333e5353e7002a4eb3e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klaviyo/magento2-klaviyo/zipball/ede96acac5da82f4bbbf333e5353e7002a4eb3e4",
+                "reference": "ede96acac5da82f4bbbf333e5353e7002a4eb3e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "magento/module-quote": ">=101.1.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Klaviyo\\Reclaim\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Klaviyo extension for Magento 2. Allows pushing newsletters to Klaviyo's platform and more.",
+            "support": {
+                "issues": "https://github.com/klaviyo/magento2-klaviyo/issues",
+                "source": "https://github.com/klaviyo/magento2-klaviyo/tree/4.0.8"
+            },
+            "time": "2022-11-10T20:09:52+00:00"
         },
         {
             "name": "klevu/module-addtocart",
@@ -27882,17 +27917,11 @@
         },
         {
             "name": "trustpilot/module-reviews",
-            "version": "2.6.572",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/trustpilot/plugin-magento2.git",
-                "reference": "4af52e07ce4bf6e7acccb4a74b3fec64808a07e3"
-            },
+            "version": "2.6.574",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/trustpilot/plugin-magento2/zipball/4af52e07ce4bf6e7acccb4a74b3fec64808a07e3",
-                "reference": "4af52e07ce4bf6e7acccb4a74b3fec64808a07e3",
-                "shasum": ""
+                "url": "https://repo.magento.com/archives/trustpilot/module-reviews/trustpilot-module-reviews-2.6.574.0.zip",
+                "shasum": "152d71daf103500afc3b77faad5f61f436d453e6"
             },
             "require": {
                 "magento/framework": ">=100.0.20",
@@ -27915,16 +27944,10 @@
                     "Trustpilot\\Reviews\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
-            "description": "The Trustpilot Review extension makes it simple and easy for merchants to collect reviews from their customers to power their marketing efforts, increase sales conversion, build their online reputation and draw business insights.",
-            "support": {
-                "issues": "https://github.com/trustpilot/plugin-magento2/issues",
-                "source": "https://github.com/trustpilot/plugin-magento2/tree/2.6.572"
-            },
-            "time": "2022-05-13T10:53:45+00:00"
+            "description": "The Trustpilot Review extension makes it simple and easy for merchants to collect reviews from their customers to power their marketing efforts, increase sales conversion, build their online reputation and draw business insights."
         },
         {
             "name": "tubalmartin/cssmin",
