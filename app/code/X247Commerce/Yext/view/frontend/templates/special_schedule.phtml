@@ -1,6 +1,9 @@
 <?php 
 /** @var \X247Commerce\Yext\Block\View\SpecialSchedule $block */ 
 $location = $block->getCurrentLocation();
+$holiday = $block->getClosestHolidatHoursByLocation($location);
+
+if ($holiday && $holiday->getDate()):
 ?>
 <div class="amasty-store-special-schedule">
     <div class="amlocator-temporarily-closed">
@@ -10,19 +13,17 @@ $location = $block->getCurrentLocation();
         <?php endif ?>
     </div>
     <div class="amlocator-holiday-hours">
-        <?php if ($block->getClosestHolidatHoursByLocation($location)) : ?>
-            <?php $holiday = $block->getClosestHolidatHoursByLocation($location); ?>
-                <div class="holiday-hours-detail">
-                    <strong class="holiday-title"><?= $block->escapeHtml(__('Special Date')); ?>: <?= date_format(date_create($holiday->getDate()),"d/m/Y") ?></strong>
-                    <div class="schedule-hours">
-                        <span class="open-time"><?= $block->escapeHtml(__('Open Time')); ?>: <?= $holiday->getOpenTime() ?>,</span>
-                        <?php if ($holiday->getBreakStart() != 0 && $holiday->getBreakStart() != '00:00' && $holiday->getBreakEnd() != 0 && $holiday->getBreakEnd() != '00:00') : ?>
-                            <span class="break-start"><?= $block->escapeHtml(__('Break Start')); ?>: <?= $holiday->getBreakStart() ?>,</span>
-                            <span class="break-end"><?= $block->escapeHtml(__('Break End')); ?>: <?= $holiday->getBreakEnd() ?>,</span>
-                        <?php endif ?>
-                        <span class="close-time"><?= $block->escapeHtml(__('Close Time')); ?>: <?= $holiday->getCloseTime() ?></span>
-                    </div>
-                </div>
-        <?php endif ?>
+        <div class="holiday-hours-detail">
+            <strong class="holiday-title"><?= $block->escapeHtml(__('Special Date')); ?>: <?= date_format(date_create($holiday->getDate()),"d/m/Y") ?></strong>
+            <div class="schedule-hours">
+                <span class="open-time"><?= $block->escapeHtml(__('Open Time')); ?>: <?= $holiday->getOpenTime() ?>,</span>
+                <?php if ($holiday->getBreakStart() != 0 && $holiday->getBreakStart() != '00:00' && $holiday->getBreakEnd() != 0 && $holiday->getBreakEnd() != '00:00') : ?>
+                    <span class="break-start"><?= $block->escapeHtml(__('Break Start')); ?>: <?= $holiday->getBreakStart() ?>,</span>
+                    <span class="break-end"><?= $block->escapeHtml(__('Break End')); ?>: <?= $holiday->getBreakEnd() ?>,</span>
+                <?php endif ?>
+                <span class="close-time"><?= $block->escapeHtml(__('Close Time')); ?>: <?= $holiday->getCloseTime() ?></span>
+            </div>
+        </div>
     </div>
 </div>
+<?php endif ?>
