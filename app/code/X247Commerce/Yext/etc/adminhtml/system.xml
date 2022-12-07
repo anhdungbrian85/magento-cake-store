@@ -49,7 +49,7 @@
 			<group id="email_template" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
 				<label>Email template settings</label>
 				<field id="create_user" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-					<label>Account Id</label>
+					<label>Email template</label>
 					<comment>Email template when user is created</comment>
 					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
 				</field>
