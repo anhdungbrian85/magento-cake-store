@@ -1,0 +1,23 @@
+<?php
+/*** Copyright © Ulmod. All rights reserved. **/
+?> 
+<?php
+/**
+ * @var $block Ulmod\Productinquiry\Block\ProductinquiryForm
+ */
+?>
+<?php if ($block->isRecaptchaV2CheckboxEnabled()): ?>
+    <div class="field-recaptcha um-field um-recaptcha required">
+           <label class="label um-required" for="recaptcha">
+            <?= $block->escapeHtml(__('Human Verification')) ?></label>
+           <div class="box">
+                <div id="g-recaptcha-response-umprodinquiry" 
+                    class="g-recaptcha" 
+                    data-sitekey="<?= $block->escapeHtml($block->getRecaptchaSiteKey()) ?>">
+                </div>
+           </div>
+          <div id="g_recaptcha-error-umprodinquiry" style="display: none; color: #e02b27; font-size: 1.2rem;" 
+              generated="true"><?= $block->escapeHtml(__('This is a required field.')); ?>                
+          </div>
+     </div>
+<?php endif; ?> 

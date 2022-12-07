@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ulmod_extensions" translate="label" sortOrder="8888888">
+            <label>Ulmod Extensions</label>
+        </tab>		
+        <section id="productinquiry" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Product Inquiry</label>
+		   <tab>ulmod_extensions</tab>
+			<resource>Ulmod_Productinquiry::config_productinquiry</resource>		
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment>If Yes, the extension will be enable in storefront</comment>
+                </field>
+			    <field id="inquiry_for_all_products" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Enable The "Product Inquiry" For All Products</label>
+    			   <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>		
+                    <comment><![CDATA[If "Yes", the "Product Inquiry" will be enable at the frontend for all products. If "No", 
+					please enable the "Product Inquiry" per product under <strong>CATALOG -> Catalog -> Products -> Edit Product -> Product Inquiry (by Ulmod) </strong> tab, 
+					set the <strong>Enable Inquiry Button For This Product</strong> field to "Yes" and specify the <strong>Inquiry Button Text</strong>.]]></comment>
+                </field>
+                <field id="inquiry_for_category" translate="label" type="multiselect" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable The "Product Inquiry" for Selected Categories</label>
+                    <source_model>Ulmod\Productinquiry\Model\Config\Source\Categorylist</source_model> 
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends> 					
+					<comment><![CDATA[Choose the categories to enable "Product Inquiry"]]></comment> 				 
+                </field>				
+			    <field id="inquiry_link_text" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                       <label>Inquiry Button Text</label>
+                        <depends>
+                            <field id="enabled">1</field>
+                        </depends>					   
+                      <comment>Enter the text to appear at the inquiry button. Eg. Inquiry.</comment>
+                </field>		
+           </group>		
+           <group id="form" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Inquiry Form</label> 
+               <group id="type" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                 <label>Type</label>          
+    	            <field id="formtype" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Form Type</label>
+                        <source_model>Ulmod\Productinquiry\Model\Config\Source\FormType</source_model>
+                        <comment> ‘New page’ to display inquiry form in new page. ‘Pop up’ to display inquiry form in pop up</comment>					
+                    </field> 
+                      <field id="formtitle" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Form Title</label>                    
+                    </field> 
+                 <field id="show_product_image" translate="label" type="select" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Product Image on Form?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>          
+                 </field> 
+                 <field id="show_product_name" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Product Name on Form?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field> 
+                 <field id="show_product_sku" translate="label" type="select" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Product Sku on Form?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>
+
+                    <field id="layout" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Form Layout Page</label>
+                        <source_model>Ulmod\Productinquiry\Model\Config\Source\Layouts</source_model>
+    	                   <depends>
+                                <field id="formtype">new_page</field>
+                            </depends>						
+                    </field>				
+                    <field id="sent_message" translate="label" type="textarea" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Message to display after inquiry is successfully submitted</label>
+                    </field>
+                </group>
+               <group id="fields" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                 <label>Fields</label>
+                 <field id="enable_phone" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Telephone Field in Form?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>                 
+                 <field id="enable_attachment" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Attachment Field in Form?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>  
+                 <field id="enable_subject" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Subject Field in Form?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>         
+              </group>
+               <group id="additiona_fields" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                 <label>Additional Fields</label>
+                 <field id="field_one_enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Extra field 1</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>
+                 <field id="field_one_type" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 1 Type</label>
+                    <source_model>Ulmod\Productinquiry\Model\Config\Source\FieldsType</source_model>  
+                     <depends>
+                        <field id="field_one_enable">1</field>
+                    </depends>     
+                 </field>  
+                 <field id="field_one_label" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 1 Label</label>
+                     <depends>
+                        <field id="field_one_enable">1</field>
+                    </depends>                    
+                 </field>
+                 <field id="field_two_enable" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Extra field 2</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>
+                 <field id="field_two_type" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 2 Type</label>
+                    <source_model>Ulmod\Productinquiry\Model\Config\Source\FieldsType</source_model>  
+                     <depends>
+                        <field id="field_two_enable">1</field>
+                    </depends>     
+                 </field>  
+                 <field id="field_two_label" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 2 Label</label>
+                     <depends>
+                        <field id="field_two_enable">1</field>
+                    </depends>                    
+                 </field>
+                 <field id="field_three_enable" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Extra field 3</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>
+                 <field id="field_three_type" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 3 Type</label>
+                    <source_model>Ulmod\Productinquiry\Model\Config\Source\FieldsType</source_model>  
+                     <depends>
+                        <field id="field_three_enable">1</field>
+                    </depends>     
+                 </field>  
+                 <field id="field_three_label" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 3 Label</label>
+                     <depends>
+                        <field id="field_three_enable">1</field>
+                    </depends>                    
+                 </field>
+                 <field id="field_four_enable" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Extra field 4</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>
+                 <field id="field_four_type" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 4 Type</label>
+                    <source_model>Ulmod\Productinquiry\Model\Config\Source\FieldsType</source_model>  
+                     <depends>
+                        <field id="field_four_enable">1</field>
+                    </depends>     
+                 </field>  
+                 <field id="field_four_label" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra field 4 Label</label>
+                     <depends>
+                        <field id="field_four_enable">1</field>
+                    </depends>                    
+                 </field>
+              </group> 
+
+               <group id="privacy_policy_field" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                 <label>Privacy Policy Field (GDPR)</label>
+                 <field id="privacy_policy_enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Privacy Policy Agreement (GDPR)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>           
+                 </field>                 
+ 				<field id="privacy_policy_msg" translate="label comment" type="editor" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Privacy Policy Agreement Message</label>
+					<frontend_model>Ulmod\Productinquiry\Block\System\Config\Form\Field\Editor</frontend_model>
+					   <comment>Define the "Privacy Policy Agreement" message to display. Eg. Yes, I agree to this privacy policy</comment>	
+                     <depends>
+                        <field id="privacy_policy_enable">1</field>
+                    </depends>    					   
+				</field>      
+              </group>			  
+               <group id="spam_block" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                 <label>Spam Blocker (CAPTCHA - reCAPTCHA - Honeypot)</label>
+                 <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+					<source_model>Ulmod\Productinquiry\Model\Config\Source\SpamBlockType</source_model> 	
+					<comment><![CDATA[ If <strong>"Yes, CAPTCHA by Magento"</strong> is selected: make sure that Magento_Captcha module 
+					is enabled and select "Product Inquiry Form by Ulmod" under
+					<strong>Admin -> Stores -> Configuration -> Customer -> Customer Configuration 
+					-> CAPTCHA -> Forms </strong> field ]]></comment>					
+                 </field>  				
+                 <field id="recaptcha_v2_checkbox_site_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google reCAPTCHA Site Key</label>
+	                   <depends>
+                            <field id="enable">google_recaptcha_v2_checkbox</field>
+                        </depends>	
+                    <comment>Site Key provided by Google reCAPTCHA</comment>
+                 </field>
+                 <field id="recaptcha_v2_checkbox_secret_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google reCAPTCHA Secret Key</label>
+	                   <depends>
+                            <field id="enable">google_recaptcha_v2_checkbox</field>
+                        </depends>				
+                    <comment>Secret Key provided by Google reCAPTCHA</comment>
+                 </field>
+                <field id="honeypot_notallowed_message" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Not Allowed Honeypot Message</label>
+                    <comment><![CDATA[Enter the message that will display to users that are not allowed 
+					to submit the form (spambots in most of the case).
+					 Eg <strong>"You can not submit this form for now. Please contact our team"</strong>]]></comment>
+	                  <depends>
+                           <field id="enable">ulmod_honeypot</field>
+                      </depends>						
+                </field>			
+              </group>			
+            </group>			
+			<group id="inquiry_notification" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email Notifications</label>
+                <field id="notifyadmin" translate="label" type="select" sortOrder="10"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email notification for admin on new inquiry</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="inquiry_template" translate="label" type="select" sortOrder="20"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Inquiry Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <depends>
+                        <field id="notifyadmin">1</field>
+                    </depends>
+                </field>
+                <field id="admin_email" translate="label" type="text" sortOrder="30"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Admin Email ID</label>
+					<validate>validate-no-empty</validate>
+                    <depends>
+                        <field id="notifyadmin">1</field>
+                    </depends>
+                </field>
+                <field id="admin_email_bcc" translate="label comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Bcc Email ID (Asociated Admins or Users)</label>
+					<comment><![CDATA[Please enter asociated admins or any email id separed by comma, eg : sales@company.com, team@company.com]]></comment>					
+                    <validate>validate-emails</validate>
+                   <depends>
+                        <field id="notifyadmin">1</field>
+                    </depends>					
+                </field>				
+				<field id="email_sender" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Email Sender</label>
+					<source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                   <depends>
+                        <field id="notifyadmin">1</field>
+                    </depends>					
+				</field>						
+                <field id="enable_autoreply" translate="label" type="select" sortOrder="90"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Auto Response?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                          <comment>Set "Yes", to automatically answer the submitted inquiry via e-mail. It delivers an autoresponder e-mail to an address given in the form</comment>
+                </field>
+                <field id="autoreply_template" translate="label" type="select" sortOrder="100"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Reply Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <depends>
+                        <field id="enable_autoreply">1</field>
+                    </depends>
+                </field>
+				<field id="autoreply_email_sender" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Auto Reply Email Sender</label>
+					<source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                    <depends>
+                        <field id="enable_autoreply">1</field>
+                    </depends>					
+				</field>
+              </group>			  
+        </section>
+		
+    </system>
+</config>

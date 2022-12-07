@@ -1,0 +1,24 @@
+<?php
+/*** Copyright © Ulmod. All rights reserved. **/
+?> 
+<?php
+/**
+ * @var $block Ulmod\Productinquiry\Block\ProductinquiryForm
+ */
+?>
+<?php
+$configData = $block->getConfigData();
+?>
+<?php if ($configData->isPrivacyPolicyEnabled()): ?>
+  <div class="field-privacy-policy">
+       <div class="control um-checkbox-control">
+          <input name="privacy_policy_field" id="extra_field_checkbox" 
+            title="<?= $block->escapeHtml(__('Privacy Policy Agreement')) ?>" 
+              value="No"
+              class="input-checkbox" type="checkbox" data-validate="{required:true}"/>
+          <label class="label" for="privacy_policy_field">
+              <?= /* @noEscape */ $configData->getPrivacyPolicyMsgFiltered(); ?>
+          </label> 
+      </div>
+  </div> 
+<?php endif; ?>

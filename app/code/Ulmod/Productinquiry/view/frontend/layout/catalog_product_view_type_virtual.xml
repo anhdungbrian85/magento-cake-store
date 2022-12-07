@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+		  <referenceContainer name="product.info.form.content">
+			<block class="Ulmod\Productinquiry\Block\ProductinquiryLink" name="um.productinquiry.link" 
+			  template="Ulmod_Productinquiry::productinquiry_link.phtml" after="-"/>
+		  </referenceContainer>		
+          <block class="Ulmod\Productinquiry\Block\ProductinquiryForm" name="productinquiry.form" 
+            template="Ulmod_Productinquiry::form.phtml">	
+				<container name="um.productinquiry.container.core.captcha" htmlTag="div" htmlClass="um-productinquiry-core-captcha">
+					<block class="Magento\Captcha\Block\Captcha" name="captcha" after="-">
+						<action method="setFormId">
+							<argument name="formId" xsi:type="string">um_productinquiry_form</argument>
+						</action>
+						<action method="setImgWidth">
+							<argument name="width" xsi:type="string">230</argument>
+						</action>
+						<action method="setImgHeight">
+							<argument name="width" xsi:type="string">50</argument>
+						</action>
+					</block>  
+				</container>	
+			</block>			
+        </referenceContainer>	
+        <referenceBlock name="head.components">
+            <block class="Magento\Framework\View\Element\Js\Components" name="captcha_page_head_components" 
+				template="Magento_Captcha::js/components.phtml"/>
+        </referenceBlock>		
+    </body>
+</page>

@@ -1,0 +1,29 @@
+<!--@subject New Product inquiry submitted @-->
+{{template config_path="design/email/header_template"}}
+
+<h5>{{trans "Dear admins"}},</h5>
+
+<p>{{trans "A New Product inquiry Has Been Submmited"}}</p>
+
+<p>{{trans "Here's the details:"}}</p>	 
+
+<table class="message-details">
+ </tbody>
+    <tr>
+        <td><strong>{{trans "Name"}}</strong></td>
+        <td>{{var user_name}}</td>
+    </tr>
+    <tr>
+        <td><strong>{{trans "Email"}}</strong></td>
+        <td>{{var user_email}}</td>
+    </tr>
+    <tr>
+        <td><strong>{{trans "Message"}} </strong></td>
+        <td>{{var message}}</td>
+    </tr>
+ </tbody>
+</table>
+
+<p><strong>{{trans "Thank You."}}</strong></p>
+	
+{{template config_path="design/email/footer_template"}}
