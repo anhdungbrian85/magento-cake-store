@@ -302,8 +302,8 @@ define([
          */
         getProductId: function () {
             var products = this._CalcProducts();
-
-            return _.isArray(products) && products.length === 1 ? products[0] : null;
+            var productId = _.isArray(products) && products.length === 1 ? products[0] : null;
+            return productId;
         },
 
         /**
@@ -715,8 +715,7 @@ define([
 
             $widget.element.on('click', '.' + options.moreButton, function (e) {
                 e.preventDefault();
-
-                return $widget._OnMoreClick($(this));
+                return $widget._OnMoreClick($(this), $widget);
             });
 
             $widget.element.on('keydown', function (e) {
@@ -734,6 +733,21 @@ define([
                     }
                 }
             });
+        },
+
+        /**
+         * Callback for update character limit change event.
+         */
+        updateCharacterLimit: function () {
+            var selectedProductId = this.getProductId();
+            if (selectedProductId) {
+                var clone = $("textarea.product-custom-option").clone(); console.log(clone);
+                var characterLimit = this.options.jsonConfig.character_limit[selectedProductId];
+                var newValue = '{"required": true,"maxlength":"' + characterLimit + '","validate-no-utf8mb4-characters": true}';
+                
+                clone.attr("data-validate", newValue); 
+                $("textarea.product-custom-option").replaceWith(clone);
+            }         
         },
 
         /**
@@ -813,6 +827,8 @@ define([
 
             $widget._Rebuild();
 
+            $widget.updateCharacterLimit();
+            
             if ($priceBox.is(':data(mage-priceBox)')) {
                 $widget._UpdatePrice();
             }
