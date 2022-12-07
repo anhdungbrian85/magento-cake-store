@@ -741,13 +741,21 @@ define([
         updateCharacterLimit: function () {
             var selectedProductId = this.getProductId();
             if (selectedProductId) {
-                var clone = $("textarea.product-custom-option").clone(); console.log(clone);
+                var clone = $("textarea.product-custom-option").clone();
                 var characterLimit = this.options.jsonConfig.character_limit[selectedProductId];
-                var newValue = '{"required": true,"maxlength":"' + characterLimit + '","validate-no-utf8mb4-characters": true}';
-                
+                var newValue = '{"required": false,"maxlength":"' + characterLimit + '","validate-no-utf8mb4-characters": true}';
+                var note = "<p class='note character-limit-note'>You can if you want add a personalised message. This can be " + characterLimit + " characters long including spaces.</p>";
                 clone.attr("data-validate", newValue); 
                 $("textarea.product-custom-option").replaceWith(clone);
-            }         
+                $(".character-limit-note").remove();
+                $("textarea.product-custom-option").after(note);
+            } else {                
+                var clone = $("textarea.product-custom-option").clone();
+                var newValue = '{"required": false, validate-no-utf8mb4-characters": true}';
+                clone.attr("data-validate", newValue); 
+                $(".character-limit-note").remove();
+                $("textarea.product-custom-option").replaceWith(clone);
+            }
         },
 
         /**
