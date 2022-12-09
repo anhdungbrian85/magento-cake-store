@@ -11,6 +11,9 @@
         <css src="Magento_Checkout::css/source/owl/_owl.carousel.css"/>
         <css src="Magento_Checkout::css/source/owl/_owl.theme.css"/>
     </head> -->
+    <head>
+        <script  src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" src_type="url"></script >
+    </head>
     <body>
         <referenceContainer name="header.container">
             <!-- <container name="custom.menu.mobile" label="Categories" htmlTag="div" htmlClass="custom-topmenu-mobile" after="-"> -->
@@ -20,6 +23,9 @@
                     </arguments> 
                 </block> 
             <!-- </container> -->
+        </referenceContainer>
+        <referenceContainer name="top.container">
+            <block class="Magento\Framework\View\Element\Template" name="header.top.trustpilot" template="Magento_Theme::review-header.phtml"/>
         </referenceContainer>
     </body>
 </page>

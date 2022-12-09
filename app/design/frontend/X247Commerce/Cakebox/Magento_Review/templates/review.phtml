@@ -1,0 +1,29 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Review\Block\Product\Review $block */
+
+$product = $block->getProduct();
+$sku = $product->getSku();
+$rangeSkus = $product->getRangeSkus();
+$skuTruspilot = $rangeSkus ? $rangeSkus . ',' . $sku : $sku;
+?>
+<div id="product-review-container" data-role="product-review"></div>
+<div class="trustpilot-review-container">
+    <div class="trustpilot-widget" data-locale="en-GB" data-template-id="544a426205dc0a09088833c6" data-businessunit-id="58f3a4e60000ff0005a097e6" data-style-height="700px" data-style-width="100%" data-theme="light" data-sku="<?= $skuTruspilot ?>" data-review-languages="en"  data-fullwidth="true" data-style-alignment="left" data-font-family="Poppins">
+        <a href="https://uk.trustpilot.com/review/eggfreecake.co.uk" target="_blank" rel="noopener">Trustpilot</a>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Review/js/process-reviews": {
+                "productReviewUrl": "<?= $block->escapeJs($block->getProductReviewUrl()) ?>",
+                "reviewsTabSelector": "#tab-label-reviews"
+            }
+        }
+    }
+</script>
