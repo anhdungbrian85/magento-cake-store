@@ -12,11 +12,6 @@
         <css src="Magento_Checkout::css/source/owl/_owl.theme.css"/>
     </head> -->
     <body>
-        <referenceContainer name="header.container">
-            <container name="custom.menu.mobile" label="Categories" htmlTag="div" htmlClass="custom-topmenu-mobile" after="-">
-                <block class="X247Commerce\Theme\Block\Html\Topmenu" name="catalog.topnav.mobile" template="X247Commerce_Theme::html/topmenu.phtml" ttl="3600" before="-"/>
-            </container>
-        </referenceContainer>
         <move element="register-link" destination="header-wrapper" after="minicart"/>
         <move element="breadcrumbs" destination="main.content" before="-"/>
         <referenceContainer name="footer_links" remove="true"/>

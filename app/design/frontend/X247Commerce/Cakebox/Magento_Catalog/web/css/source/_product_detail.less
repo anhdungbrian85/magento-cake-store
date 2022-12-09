@@ -5,7 +5,7 @@
 		.product.data.items {
 			.item.content {
 				padding: 10px;
-				border: 0px;
+				border: 0;
 				border-top: 1px solid #cccccc;
 			}
 
@@ -33,23 +33,23 @@
 }
 
 .media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__m) {
-	.page-main {		
+	.page-main {
 		.product.info.detailed {
 			.product.data.items {
-				margin: 0px;
+				margin: 0;
 				.item.title {
 					border-top: 1px solid #E6E6E6;
 					// border-bottom: 1px solid #E6E6E6;
 				}
 				.item.title > .switch {
-					margin-right: 0px;
+					margin-right: 0;
 					height: 46px;
 					line-height: 46px;
 				}
 
 				.item.title.active > .switch {
 					color: #282828;
-					border-bottom: 0px;
+					border-bottom: 0;
 				}
 			}
 		}

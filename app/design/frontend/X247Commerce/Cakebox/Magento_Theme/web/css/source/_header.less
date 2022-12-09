@@ -259,16 +259,55 @@
 		}
 	}
 	}
+
+
+	// For trustpilot top.
+	.full-width {
+		margin-left: ~'calc(-100vw/2 + 100%/2)';
+		margin-right: ~'calc(-100vw/2 + 100%/2)';
+		max-width: 100vw;
+	}
+
+	.trustpilot-header {
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.trustpilot-widget {
+			margin-top: 5px;
+		}
+	}
 }
 
 .media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
 	.custom-topmenu-mobile {
 		display: none;
 	}
+
+	.trustpilot-header {
+		background: #E8E8E8;
+
+	}
 }
 
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
 	.page-header {
 		border-bottom: none;
+		margin-bottom: 0;
+	}
+
+	.trustpilot-header {
+		padding: 0 15px;
+
+		.trustpilot-header-wrapper {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-top: 1px solid rgba(112, 112, 112, 0.06);
+			border-bottom: 1px solid rgba(112, 112, 112, 0.06);
+		}
 	}
 }
