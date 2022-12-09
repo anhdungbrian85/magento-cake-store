@@ -4,7 +4,7 @@ namespace X247Commerce\Yext\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\VersionControl\AbstractDb;
 
-class HolidayHous extends AbstractDb
+class HolidayHours extends AbstractDb
 {
     public const TABLE_NAME = 'amasty_amlocator_holiday_hours';
 

@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+	<template id="yext_email_template_create_user" label="User created notification email" file="user_created_notification_email_template.html" type="html" module="X247Commerce_Yext" area="adminhtml"/>
+</config>

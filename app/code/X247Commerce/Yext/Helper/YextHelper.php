@@ -10,12 +10,15 @@ use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Backend\Helper\Data;
 use Amasty\Storelocator\Model\AttributeFactory;
+use Magento\Framework\App\ResourceConnection;
+use X247Commerce\Yext\Model\ResourceModel\HolidayHours\CollectionFactory as HolidayHoursCollection;
 
 class YextHelper extends AbstractHelper
 {
     const DELETE_ADMIN_SYNC_SETTING_PATH = 'yext/sync_settings/delete_admin';
     const DELETE_SOURCE_SYNC_SETTING_PATH = 'yext/sync_settings/delete_source';
     const NOTIFICATION_EMAIL_TEMPLATE_CREATED_USER = 'yext/email_template/create_user';
+    const AMASTY_AMLOCATOR_STORE_ATTRIBUTE = 'amasty_amlocator_store_attribute';
 
     protected $transportBuilder;
     protected $storeManager;
@@ -23,6 +26,9 @@ class YextHelper extends AbstractHelper
     protected $logger;
     protected $backendHelper;
     protected $attributeFactory;
+    protected $resource;
+    protected $connection;
+    protected $holidayHoursCollection;
 
     public function __construct(
         Context $context,
@@ -30,7 +36,9 @@ class YextHelper extends AbstractHelper
         StoreManagerInterface $storeManager,
         StateInterface $state,
         Data $backendHelper,
-        AttributeFactory $attributeFactory
+        AttributeFactory $attributeFactory,
+        ResourceConnection $resource,
+        HolidayHoursCollection $holidayHoursCollection
     ) 
     {
         parent::__construct($context);
@@ -40,6 +48,9 @@ class YextHelper extends AbstractHelper
         $this->logger = $context->getLogger();
         $this->backendHelper = $backendHelper;
         $this->attributeFactory = $attributeFactory;
+        $this->resource = $resource;
+        $this->connection = $resource->getConnection();
+        $this->holidayHoursCollection = $holidayHoursCollection;
     }
     
     /**
@@ -205,27 +216,45 @@ class YextHelper extends AbstractHelper
         }
     }
 
+    /**
+     * Get attribute value by Location 
+     *
+     * @param \Amasty\Storelocator\Model\Location, attribute_code String
+     * 
+     * @return string||null
+     */
+    public function getAttributeValueByLocation($location, $attributeCode)
+    {
+        //get id of attribute in table
+        $attributeId = $this->getIdOfAttribute($attributeCode);
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $location->getId())->where('attribute_id = ?', $attributeId);
+
+        $data = $this->connection->fetchOne($select);
+
+        return $data;
+    }
     // /**
-    //  * Convert from Yext Holiday to array
+    //  * Get Reopen Date value by Location 
+    //  *
+    //  * @param \Amasty\Storelocator\Model\Location
     //  * 
-    //  * @param $yextSchedule array
-    //  * 
-    //  * @return array
+    //  * @return string||null
     //  */
-    // public function convertHoliday($yextSchedule)
+    // public function getReopenDateByLocation($location = null)
     // {
-    //     $amastySchedule = [];
-
-    //     $amastySchedule =   [   
-    //                             "monday" => $this->convertWeekDay($yextSchedule, "monday"),
-    //                             "tuesday" => $this->convertWeekDay($yextSchedule, "tuesday"),
-    //                             "wednesday" => $this->convertWeekDay($yextSchedule, "wednesday"),
-    //                             "thursday" => $this->convertWeekDay($yextSchedule, "thursday"),
-    //                             "friday" => $this->convertWeekDay($yextSchedule, "friday"),
-    //                             "saturday" => $this->convertWeekDay($yextSchedule, "saturday"),
-    //                             "sunday" => $this->convertWeekDay($yextSchedule, "sunday")
-    //                         ];
-
-    //     return $amastySchedule;
+    //     return $this->yextAttribute->getAttributeValueByLocation($location, 'temporarily_closed');
+    // }
+    // /**
+    //  * Get Holiday Hours value by Location 
+    //  *
+    //  * @param \Amasty\Storelocator\Model\Location
+    //  * 
+    //  * @return string||null
+    //  */
+    // public function getHolidatHoursByLocation($location = null)
+    // {
+    //     $holidayHours = $this->holidayHoursCollection->create();
+    //     return $holidayHours->addAttributeToFilter('store_id', ['eq' => $location->getId()]);
     // }
 }

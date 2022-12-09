@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+    <menu>
+        <add id="Ulmod_Productinquiry::productinquiry" title="Product Inquiry by Ulmod" module="Ulmod_Productinquiry" parent="Magento_Backend::marketing" sortOrder="140"  resource="Ulmod_Productinquiry::productinquiry"/>
+        <add id="Ulmod_Productinquiry::manage_items" title="Product inquiries" module="Ulmod_Productinquiry" sortOrder="10" parent="Ulmod_Productinquiry::productinquiry" action="productinquiry/index" resource="Ulmod_Productinquiry::manage_items"/>
+    </menu>
+</config>

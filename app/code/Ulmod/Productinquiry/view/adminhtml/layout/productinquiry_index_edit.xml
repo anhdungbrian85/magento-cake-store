@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Ulmod\Productinquiry\Block\Adminhtml\Index\Edit" name="productinquiry_index_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Ulmod\Productinquiry\Block\Adminhtml\Index\Edit\Tabs" name="inquiry_edit_tabs">
+                <block class="Ulmod\Productinquiry\Block\Adminhtml\Index\Edit\Tab\Main" name="inquiry_edit_tab_main"/>   
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">main_section</argument>
+                    <argument name="block" xsi:type="string">inquiry_edit_tab_main</argument>
+                </action>  				
+            </block>
+        </referenceContainer>		
+    </body>
+</page>

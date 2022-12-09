@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+--> 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <productinquiry>
+            <general>
+                <enabled>0</enabled>
+                <inquiry_for_all_products>0</inquiry_for_all_products>
+                <inquiry_link_text>Inquiry</inquiry_link_text>			
+			
+            </general>		
+            <form>
+              <layout>2columns-right</layout>
+              <sent_message>Thanks for contacting us with your inquiry.  We will respond to you very soon.</sent_message>
+              <spam_block>				
+				   <enable>no</enable>	
+				   <honeypot_notallowed_message>You can not submit this form for now. Please contact our team</honeypot_notallowed_message>				   
+              </spam_block>			  
+            </form>
+            <inquiry_notification>
+              <notifyadmin>0</notifyadmin>	
+            </inquiry_notification>			
+        </productinquiry>
+        <customer>
+            <captcha>
+                <shown_to_logged_in_user>
+                    <um_productinquiry_form>1</um_productinquiry_form>
+                </shown_to_logged_in_user>
+                <always_for>
+                    <um_productinquiry_form>1</um_productinquiry_form>
+                </always_for>
+            </captcha>
+        </customer>
+        <captcha translate="label">
+            <frontend>
+                <areas>
+                    <um_productinquiry_form>
+                        <label>Product Inquiry Form by Ulmod</label>
+                    </um_productinquiry_form>
+                </areas>
+            </frontend>
+        </captcha>		
+    </default>
+</config>

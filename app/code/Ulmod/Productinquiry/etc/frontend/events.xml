@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+--> 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="productinquiry_save_new">
+        <observer name="admin_notification" instance="Ulmod\Productinquiry\Model\Notification\Admin" />
+    </event>
+    <event name="productinquiry_autoreply">
+        <observer name="inquiry_autoreply" instance="Ulmod\Productinquiry\Model\Notification\Autoreply" />
+    </event>
+    <event name="controller_action_predispatch_productinquiry_index_save">
+        <observer name="um_productinquiry_form_validate_spamblocker" instance="Ulmod\Productinquiry\Observer\ValidateSpamBlocker" />
+    </event>
+</config>

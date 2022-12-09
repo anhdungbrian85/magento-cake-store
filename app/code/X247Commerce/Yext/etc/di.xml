@@ -17,7 +17,7 @@
     <virtualType name="amstorelocator_location_holiday_hours" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">amasty_amlocator_holiday_hours</argument>
-            <argument name="resourceModel" xsi:type="string">X247Commerce\Yext\Model\ResourceModel\HolidayHous</argument>
+            <argument name="resourceModel" xsi:type="string">X247Commerce\Yext\Model\ResourceModel\HolidayHours</argument>
         </arguments>
     </virtualType>
 </config>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Ulmod. All rights reserved.
+ * See LICENSE.txt for license details.
+ */ 
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ulmod_productinquiry_data" resource="default" engine="innodb" comment="ulmod_productinquiry_data">
+        <column xsi:type="int" name="inquiry_id" padding="10" unsigned="true" nullable="false" identity="true" comment="inquiry_id"/>
+        <column xsi:type="smallint" name="status" padding="6" unsigned="true" nullable="false" default="1" comment="status"/>
+        <column xsi:type="datetime" name="date" on_update="false" nullable="false" comment="date"/>
+        <column xsi:type="varchar" name="subject" nullable="true" length="255" comment="subject"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="name"/>
+        <column xsi:type="varchar" name="email" nullable="true" length="255" comment="email"/>
+        <column xsi:type="varchar" name="telephone" nullable="true" length="255" comment="telephone"/>
+        <column xsi:type="varchar" name="message" nullable="true" length="255" comment="message"/>
+        <column xsi:type="varchar" name="store_name" nullable="true" length="255" comment="store_name"/>
+        <column xsi:type="varchar" name="current_page_url" nullable="true" length="255" comment="current_page_url"/>
+        <column xsi:type="text" name="extra_field_one" nullable="true" comment="extra_field_one"/>
+        <column xsi:type="text" name="extra_field_two" nullable="true" comment="extra_field_two"/>
+        <column xsi:type="text" name="extra_field_three" nullable="true" comment="extra_field_three"/>
+        <column xsi:type="text" name="extra_field_four" nullable="true" comment="extra_field_four"/>        
+        <column xsi:type="text" name="extra_field_five" nullable="true" comment="extra_field_five"/>  
+        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="image"/>
+        <column xsi:type="varchar" name="product_sku" nullable="true" length="255" comment="product_sku"/>
+        <column xsi:type="smallint" name="product_id" padding="6" nullable="true" comment="product_id"/>
+        <column xsi:type="varchar" name="product_url" nullable="true" length="255" comment="product_url"/>
+        <column xsi:type="varchar" name="product_name" nullable="true" length="255" comment="product_name"/>
+        <column xsi:type="varchar" name="product_img" nullable="true" length="255" comment="product_img"/>
+        <column xsi:type="varchar" name="address" nullable="true" length="255" comment="address"/>
+        <column xsi:type="varchar" name="job_position" nullable="true" length="255" comment="job_position"/>
+        <column xsi:type="varchar" name="company" nullable="true" length="255" comment="company"/>        
+        <column xsi:type="varchar" name="website" nullable="true" length="255" comment="website"/>    
+        <index referenceId="ULMOD_PRODUCTINQUIRY_DATA_NAME" indexType="btree">
+            <column name="name"/>
+        </index>
+        <index referenceId="ULMOD_PRODUCTINQUIRY_DATA_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+        <index referenceId="ULMOD_PRODUCTINQUIRY_DATA_MESSAGE" indexType="btree">
+            <column name="message"/>
+        </index>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="inquiry_id"/>
+        </constraint>
+    </table>    
+    <table name="ulmod_productinquiry_store" resource="default" engine="innodb" comment="ulmod_productinquiry_store">
+        <column xsi:type="int" name="inquiry_id" padding="10" unsigned="true" nullable="false" comment="inquiry_id" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="store_id"/>
+        <index referenceId="ULMOD_PRODUCTINQUIRY_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>        
+        <constraint xsi:type="foreign" referenceId="ULMOD_PRODUCTINQUIRY_STORE_ULMOD_PRODUCTINQUIRY_DATA_INQUIRY_ID" 
+			table="ulmod_productinquiry_store" column="inquiry_id" 
+			referenceTable="ulmod_productinquiry_data" referenceColumn="inquiry_id" 
+			onDelete="CASCADE" />
+        <constraint xsi:type="foreign" referenceId="ULMOD_PRODUCTINQUIRY_STORE_STORE_STORE_ID" 
+			table="ulmod_productinquiry_store" column="store_id" 
+			referenceTable="store" referenceColumn="store_id" 
+			onDelete="CASCADE" />
+    </table>
+</schema>

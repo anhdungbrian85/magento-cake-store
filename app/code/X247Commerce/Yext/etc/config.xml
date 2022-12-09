@@ -6,6 +6,13 @@
 				<mode>2</mode>
 				<type>1</type>
 			</api_settings>
+			<sync_settings>
+				<delete_admin>1</delete_admin>
+				<delete_source>1</delete_source>
+			</sync_settings>
+			<email_template>
+				<create_user>yext_email_template_create_user</create_user>
+			</email_template>
 		</yext>
 	</default>
 </config>
