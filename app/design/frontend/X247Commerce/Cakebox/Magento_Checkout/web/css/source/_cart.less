@@ -60,6 +60,21 @@
 					width: 100%;
 				}
 			}
+
+			.store-location-description {
+				display: flex;
+			    padding-right: 20px;
+			    justify-content: space-between;
+			    font-size: 14px;
+			    color: #262626;
+			    font-weight: 600;
+		        padding-top: 5px;
+			}
+
+			// .store-location-picked_content {
+			//     border-bottom: 1px solid #DBDBDB;
+    		// 	padding-bottom: 5px;
+			// }
 		}
 		.field.ampickup-field.-date._required {
 			grid-area: main;
@@ -70,14 +85,19 @@
 		}
 		.field.ampickup-field {
 			background-color: #F9F9F9;
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between;
+
 			.control {
 				margin-top: 4px;
+				width: 100%;
 			}
 			.label {
 				display: none;
 			}
 			input,select {
-				height: 74px;
+				// height: 74px;
 				background-color: #F9F9F9;
 				border: unset;
 				font-size: 16px;
@@ -347,7 +367,13 @@
 				}
 			}
 			.block.store-locator {
-				display: none;
+				.ampickup-store-container {
+					display: flex;
+
+					.store-location-picked {
+						width: 100%;
+					}
+				}
 			}
 		}
 		.cart.table-wrapper {

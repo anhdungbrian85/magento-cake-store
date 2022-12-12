@@ -11,14 +11,22 @@ define([
         defaults: {
             template: 'X247Commerce_Checkout/checkout/pickup/pickup-store',
             visiblePickupForm: false,
+            visible: true,
         },
 
         initObservable: function () {
             this._super()
-                .observe('visiblePickupForm');
+                .observe('visiblePickupForm visible');
 
             pickup.isPickup.subscribe(this.pickupStateObserver, this);
+            this.showChooseLocation();
             return this;
+        },
+
+        showChooseLocation: function () {
+            if (pickupDataResolver.storeId()) {
+                this.visible(false);
+            }
         },
 
         pickupStateObserver: function (isActive) {

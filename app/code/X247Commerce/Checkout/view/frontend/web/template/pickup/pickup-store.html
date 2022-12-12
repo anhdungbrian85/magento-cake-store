@@ -12,12 +12,16 @@
             <span data-bind="text: getStoreLocationSelectedData().address"></span>
         </div>
         <div class="store-location-telephone">
+            <!-- ko if: getStoreLocationSelectedData().phone -->
+            <span data-bind="i18n: 't:'"></span>
             <span data-bind="text: getStoreLocationSelectedData().phone"></span>
+            <!-- /ko -->
         </div>
     </div>
     <div class="store-location-picked_footer">
         <div class="store-location-description">
-            <span data-bind="text: getSchedulePickUpData()"></span>
+            <span data-bind="text: datePickup"></span>
+            <span data-bind="text: timePickup"></span>
         </div>
     </div>
     <div class="ampickup-field -store">

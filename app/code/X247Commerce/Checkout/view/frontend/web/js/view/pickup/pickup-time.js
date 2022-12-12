@@ -2,15 +2,19 @@
  * Main Pickup Time UIElement
  */
 define([
+    'uiRegistry',
     'ko',
     'jquery',
     'Magento_Ui/js/form/element/select',
     'Magento_Customer/js/customer-data',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
-    'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (ko, $, Component, customerData, pickup, pickupDataResolver) {
+    'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date',
+    'mage/calendar'
+], function (registry, ko, $, Component, customerData, pickup, pickupDataResolver) {
     'use strict';
+
+    var countDown;
 
     return Component.extend({
         defaults: {
@@ -28,7 +32,7 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean(pickupDataResolver.storeId() && pickupDataResolver.dateData() && pickup.isPickup());
+            return Boolean(pickupDataResolver.storeId() && pickupDataResolver.dateData());
         }),
 
         initialize: function () {
@@ -136,32 +140,51 @@ define([
         },
 
         onUpdate: function (pickupTime) {
+            if (countDown) {
+                clearInterval(countDown);
+            }
+
+            if (window.timer) {
+                clearInterval(window.timer);
+            }
+            
             var pickupTimeOption = this.options().filter(function (elem) {
                 return elem.value === pickupTime;
             })[0];
+
+            var pickupDateOld = registry.get('block-store-locator.amstorepickup.am_pickup_date'),
+                valueDateInit = pickupDateOld.initialValue,
+                pickupTimeOld = registry.get('block-store-locator.amstorepickup.am_pickup_time'),
+                valueTimeInit = pickupTimeOld.options()[0];
+                
             var secureTimeEnd = new Date(new Date().getTime() + 15 * 60000);
             pickupDataResolver.timeData(pickupTime);
             pickupDataResolver.secureTimeData(secureTimeEnd.valueOf());
-            console.log('onUpdate function');
-            // var minutes, seconds;
-            
-            // var x = setInterval(function() {
-            //     var now = new Date().valueOf();
-            //     console.log(now);
-            //     var distance = secureTimeEnd.valueOf() - now;
-            //     console.log('secureTimeData', secureTimeEnd.valueOf());
-            //     console.log('distance', distance);
-            //     minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            //     seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            //     $('#block-secure-time-popup_wrapper .content').text('To secure your order time slot confirm within ' + minutes + ' min ' + seconds + ' sec');
-            //     if (distance < 0) {
-            //         clearInterval(x);
-            //     }
-            // }, 1000);
+            var minutes, seconds;
 
+            window.timer = countDown = setInterval(function() {
+                var now = new Date().valueOf(),
+                    distance = secureTimeEnd.valueOf() - now;
+
+                minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                seconds = Math.floor((distance % (1000 * 60)) / 1000);
+              
+                $('#block-secure-time-popup_wrapper .content').text('To secure your order time slot confirm within ' + minutes + ' min ' + seconds + ' sec');
+                if (minutes <= 0 && seconds <= 0) {
+                    pickupDateOld.value(valueDateInit);
+                    if (valueTimeInit) {
+                        pickupTimeOld.value(valueTimeInit.value);
+                    }
+                    
+                    $('#' + pickupDateOld.uid).datepicker('setDate', valueDateInit);
+                    clearInterval(countDown);
+                }
+            }, 1000);
              
             if (pickupTimeOption) {
                 this.pickupTimeLabel = pickupTimeOption.label;
+                var details = registry.get('block-store-locator.amstorepickup.am_pickup_store');
+                details.timePickup(pickupTimeOption.label);
             }  
         },
 

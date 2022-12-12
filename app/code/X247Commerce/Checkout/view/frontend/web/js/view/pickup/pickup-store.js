@@ -26,6 +26,10 @@ define([
     return Select.extend({
         defaults: {
             value: '',
+            datePickup: '',
+            timePickup: '',
+            chooseStore: false,
+            store: '',
             caption: $.mage.__('Choose a store...'),
             storesSectionName: 'amasty-storepickup-data',
             selectedStoreSectionName: 'amasty-selected-pickup-info',
@@ -59,7 +63,7 @@ define([
         },
 
         initObservable: function () {
-            this.observe('options');
+            this.observe('options datePickup timePickup chooseStore store');
 
             pickupDataResolver.pickupData.subscribe(function (data) {
                 this.options(data.stores);
@@ -98,6 +102,7 @@ define([
         },
 
         onChangeStore: function (storeId) {
+            console.log("222");
             if (storeId) {
                 pickupDataResolver.storeId(storeId);
             }
@@ -119,15 +124,20 @@ define([
 
         getStoreLocationSelectedData: function () {
             let pickupData = pickupDataResolver.pickupData;
-  
-            if (pickupDataResolver.storeId()) {
-                for (let i = 0; i < pickupData().stores.length; i++) {
-                    if (pickupData().stores[i].id == window.storeLocationData.store_location_id_selected) {
-                        return pickupData().stores[i];
+            if (!this.chooseStore()) {
+                if (pickupDataResolver.storeId()) {
+                    for (let i = 0; i < pickupData().stores.length; i++) {
+                        if (pickupData().stores[i].id == window.storeLocationData.store_location_id_selected) {
+                            return pickupData().stores[i];
+                        }
                     }
-                }
+                } 
+             
+                if (window.storeLocationData.store_location_id_selected == 0 || !pickupDataResolver.storeId()) {
+                   return {name: ''};
+                } 
             } else {
-                return {name: ''};
+                return this.store();
             }
         },
 

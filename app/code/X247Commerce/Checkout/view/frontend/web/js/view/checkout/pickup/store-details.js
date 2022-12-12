@@ -11,13 +11,15 @@ define([
         defaults: {
             visible: false,
             displayTitle: 1,
+            datePickup: '',
+            timePickup: '',
             template: 'X247Commerce_Checkout/checkout/pickup/store-details',
             storeDetailsPlaceholder: $.mage.__('Please, choose a store where you would like to pick up your order')
         },
 
         initObservable: function () {
             this._super()
-                .observe('visible')
+                .observe('visible datePickup timePickup')
                 .observe({ storeDetails: this.storeDetailsPlaceholder });
 
             pickup.isPickup.subscribe(this.pickupStateObserver, this);
@@ -49,6 +51,12 @@ define([
                 this.storeDetails(this.selectedStore.details);
             } else {
                 this.storeDetails(this.storeDetailsPlaceholder);
+            }
+        },
+
+        getSeletedStoreData: function () {
+            if (this.selectedStore) {
+                return this.selectedStore;
             }
         }
     });

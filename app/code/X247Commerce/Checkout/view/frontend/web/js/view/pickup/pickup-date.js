@@ -2,6 +2,7 @@
  * Main Pickup Date UIElement
  */
 define([
+    'uiRegistry',
     'ko',
     'jquery',
     'underscore',
@@ -10,8 +11,10 @@ define([
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-store',
     'mage/calendar'
-], function (ko, $, _, Component, pickup, pickupDataResolver) {
+], function (registry, ko, $, _, Component, pickup, pickupDataResolver) {
     'use strict';
+
+    var countDown;
 
     return Component.extend({
         defaults: {
@@ -33,7 +36,7 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean(pickupDataResolver.storeId() && pickup.isPickup());
+            return Boolean(pickupDataResolver.storeId());
         }),
 
         initialize: function () {
@@ -83,8 +86,19 @@ define([
         },
 
         onValueChange: function (value) {
+            if (countDown) {
+                clearInterval(countDown);
+            }
+
+            if (window.timer) {
+                clearInterval(window.timer);
+            }
+
             var datepickerDate,
-                selectedDate;
+                selectedDate,
+                details = registry.get('block-store-locator.amstorepickup.am_pickup_store'),
+                selectedDateFormat = new Date(value),
+                options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
             this._super();
 
@@ -93,13 +107,44 @@ define([
             selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                 ? datepickerDate
                 : value;
-
+            
             pickupDataResolver.dateData(selectedDate);
+            details.datePickup(selectedDateFormat.toLocaleDateString("en-US", options));
             this.getSelectedDay(datepickerDate, value);
             this.source.trigger('amStorepickup.date.change', {
                 date: value,
                 store: this.selectedStore
             });
+
+            var pickupDateOld = registry.get('block-store-locator.amstorepickup.am_pickup_date'),
+                pickupTimeOld = registry.get('block-store-locator.amstorepickup.am_pickup_time'),
+                valueTimeInit = pickupTimeOld.options()[0];
+ 
+            var secureTimeEnd = new Date(new Date().getTime() + 15 * 60000);
+            var minutes, seconds;
+            window.timer = countDown = setInterval(function() {
+                var now = new Date().valueOf(),
+                    distance = secureTimeEnd.valueOf() - now;
+
+                minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                seconds = Math.floor((distance % (1000 * 60)) / 1000);
+              
+                $('#block-secure-time-popup_wrapper .content').text('To secure your order time slot confirm within ' + minutes + ' min ' + seconds + ' sec');
+                if (minutes <= 0 && seconds <= 0) {
+                    
+                    if (pickupDateOld) {
+                        pickupDateOld.value(pickupDateOld.initialValue);
+                        $('#' + pickupDateOld.uid).datepicker('setDate', pickupDateOld.initialValue);
+                    }
+
+                    if (valueTimeInit) {
+                        pickupTimeOld.value(valueTimeInit.value);
+
+                    }
+                    
+                    clearInterval(countDown);
+                }
+            }, 1000);
         },
 
         onChangeStore: function () {
@@ -153,7 +198,7 @@ define([
         getSelectedDay: function (datepickerDate, value) {
             var storeDateTime,
                 selectedDate;
-            
+
             if (value) {
                 storeDateTime = this.currentStoreDateTime.asDateTimeObject;
                 selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
@@ -189,7 +234,7 @@ define([
         getFirstPickupDate: function (store) {
             var minPickupDate = this.minPickupDateTime.asDateTimeObject,
                 index;
-
+                
             if (!store.schedule_id) {
                 this.storeScheduleSelected(false);
 

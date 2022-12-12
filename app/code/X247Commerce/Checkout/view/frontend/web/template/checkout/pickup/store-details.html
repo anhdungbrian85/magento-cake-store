@@ -6,10 +6,16 @@
 	    <a class="ampickup-collect-button" data-bind="i18n: 'Click and Collect'"></a>
     </div>
     <!-- /ko -->
-    <p html="storeDetails()"></p>
+    <div class="store-details">
+        <p html="storeDetails()"></p>
+        <!-- ko if: getSeletedStoreData() -->
+        <span data-bind="i18n: 't:'"></span>
+        <span data-bind="text: getSeletedStoreData().phone"></span>
+        <!-- /ko -->
+    </div>
     <div class="ampickup-pickup-details">
-    	<div class="ampickup-pickup-date" data-bind="i18n: 'Wednesday, 17 August 2022'"></div>
-    	<div class="ampickup-pickup-time" data-bind="i18n: '4PM'"></div>
+    	<div class="ampickup-pickup-date" data-bind="text: datePickup"></div>
+    	<div class="ampickup-pickup-time" data-bind="text: timePickup"></div>
     </div>
 </div>
 <!-- /ko -->
