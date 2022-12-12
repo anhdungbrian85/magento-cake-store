@@ -9,7 +9,6 @@
 			<block class="Ulmod\Productinquiry\Block\ProductinquiryLink" name="um.productinquiry.link" 
 			  template="Ulmod_Productinquiry::productinquiry_link.phtml" after="-"/>
 		  </referenceContainer>	
-		  <move element="um.productinquiry.link" destination="product.info.options.wrapper" after="-" />
           <block class="Ulmod\Productinquiry\Block\ProductinquiryForm" name="productinquiry.form" 
             template="Ulmod_Productinquiry::form.phtml">	
 				<container name="um.productinquiry.container.core.captcha" htmlTag="div" htmlClass="um-productinquiry-core-captcha">
@@ -30,6 +29,7 @@
         <referenceBlock name="head.components">
             <block class="Magento\Framework\View\Element\Js\Components" name="captcha_page_head_components" 
 				template="Magento_Captcha::js/components.phtml"/>
-        </referenceBlock>		
+        </referenceBlock>
+        <move element="um.productinquiry.link" destination="product.info.options.wrapper" after="-" />
     </body>
 </page>
