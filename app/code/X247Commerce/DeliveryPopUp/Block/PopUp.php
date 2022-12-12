@@ -30,11 +30,17 @@ use Magento\Framework\App\Http\Context as HttpContext;
 class PopUp extends \Amasty\Storelocator\Block\Location
 {
  	protected FormKey       $formKey;
+
     protected PopUpHelper   $popupHelper;
+
     protected StoreLocationContextInterface $storeLocationContextInterface;
+
     protected HttpContext $httpContext;
 
+    protected \Magento\Framework\App\Request\Http $request;
+
  	public function __construct(
+        \Magento\Framework\App\Request\Http $request,
         FormKey $formKey,
         PopUpHelper $popupHelper,
         StoreLocationContextInterface $storeLocationContextInterface,
@@ -60,6 +66,7 @@ class PopUp extends \Amasty\Storelocator\Block\Location
         $this->popupHelper = $popupHelper;
         $this->storeLocationContextInterface = $storeLocationContextInterface;
         $this->httpContext = $httpContext;
+        $this->request = $request;
  		parent::__construct(
             $context, 
             $coreRegistry, 
@@ -81,9 +88,9 @@ class PopUp extends \Amasty\Storelocator\Block\Location
 
     public function shouldShowPopup()
     {
-        // var_dump($this->httpContext->getValue('store_location_id'));
-
-        return !$this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID) && $this->popupHelper->isEnabledPopup();
+        return !$this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID) && $this->popupHelper->isEnabledPopup() && (
+            $this->request->getFullActionName() != "checkout_index_index"
+        );
     }
 
  	public function postCode()

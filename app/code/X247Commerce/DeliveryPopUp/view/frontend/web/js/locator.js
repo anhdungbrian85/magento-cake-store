@@ -1,6 +1,7 @@
 define([
     'jquery',
     'Amasty_Storelocator/js/model/states-storage',
+    'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'mage/translate',
     'Amasty_Storelocator/vendor/chosen/chosen.min',
     'Amasty_Storelocator/vendor/jquery.ui.touch-punch.min',
@@ -8,7 +9,7 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery/jquery-ui',
     'jquery-ui-modules/slider'
-], function ($, statesStorage) {
+], function ($, statesStorage, pickupDataResolver) {
     $.widget('mage.amLocator', {
         options: {},
         url: null,
@@ -60,6 +61,7 @@ define([
                     data: {'location_id': location_id},
                     showLoader: true
                 }).done($.proxy(function (response) {
+                    pickupDataResolver.storeId(location_id);
                     window.location.reload();
                 }));
             })
@@ -283,6 +285,7 @@ define([
 
             self.mapContainer.find(this.selectors.searchSelector).on('click', self.searchLocations.bind(this));
             self.mapContainer.find(this.selectors.addressSelector).on('keydown', function (e) {
+                console.log(e.keyCode);
                 if (e.keyCode !== 13) {
                     return;
                 }
