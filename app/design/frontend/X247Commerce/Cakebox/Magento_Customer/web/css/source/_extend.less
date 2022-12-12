@@ -13,7 +13,7 @@
 			.amsl-social-login  {
 				background: transparent;
 				display: block;
-				
+
 				.amsl-buttons {
 					margin-top: 20px;
 					justify-content: center;
@@ -205,6 +205,10 @@
 			.note {
 				line-height: 24px;
 			}
+
+			.password-strength-meter {
+				background: transparent;
+			}
 		}
 
 		.fieldset.login {
@@ -314,6 +318,20 @@
 							background-image: url('../images/social/icon-apple.svg');
 						}
 					}
+				}
+			}
+		}
+	}
+
+	.ui-datepicker {
+		.ui-datepicker-header {
+			.ui-datepicker-title {
+				display: flex;
+
+				.ui-datepicker-month,
+				.ui-datepicker-year {
+					width: max-content;
+					font-size: 14px;
 				}
 			}
 		}
