@@ -1,0 +1,65 @@
+& when (@media-common = true) {
+	.umprodinquiry-modals-wrapper {
+		.modal-popup.um-prodinquiry-m-container {
+			.modal-header {
+				background: #992E80;
+				padding: 20px 20px 10px;
+				position: relative;
+
+				.modal-title {
+					text-align: left;
+					border-bottom: 0;
+					font-weight: 600;
+					color: #fff;
+				}
+
+				.action-close {
+					padding: 20px;
+					display: flex;
+					align-items: center;
+					margin: 0;
+					right: 0;
+					bottom: 0;
+
+					&:before {
+						color: #fff;
+					}
+				}
+			}
+
+			.modal-inner-wrap {
+				width: 75vw;
+				max-width: 75vw;
+			}
+
+			.inquiry-formfields {
+				width: 100%;
+
+				input[type="text"],
+				input[type="email"] {
+					height: 45px;
+					border-radius: 50px;
+				}
+
+				.label {
+					font-weight: 600;
+				}
+
+				.um-field {
+					margin-bottom: 10px;
+				}
+			}
+
+			.inquiry-actions {
+				text-align: left;
+				padding-top: 10px;
+
+				.action.submit {
+					text-transform: uppercase;
+					width: 195px;
+					border-radius: 50px;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,170 @@
+<?php
+/*** Copyright © Ulmod. All rights reserved. **/
+?> 
+<?php
+/**
+ * @var $block Ulmod\Productinquiry\Block\ProductinquiryForm
+ */
+?>
+<?php
+$productImageUrl = '';
+$productName = '';
+$productSku = '';
+$configData = $block->getConfigData();
+if ($configData->isInquiryFormNewPage()) {
+	$productImageUrl = $block->getProductImageUrl();
+	$productName = $block->getProductName();
+	$productSku = $block->getProductSku();
+}
+$currentPageUrl = $block->getCurrentPageUrl();
+?>
+<div id="um-prodinq-<?= $block->escapeHtml($block->getFormClassSuffix()) ?>" 
+	class="um-prodinq-form-container-<?= $block->escapeHtml($block->getFormClassSuffix()) ?>" 
+	style="display:none;">
+	<div class="um-block-wrapper">
+		<div class="um-inquiry-title">
+			<h1 class="inquiry_title_popup"><?= $block->escapeHtml($block->getFormTitle()) ?></h1>
+		</div>
+		<div class="um-inquiry-form-block">
+			<form class="form inquiry" action="<?= $block->escapeUrl($block->getFormAction()); ?>"
+				id="um-prodinq-form" method="post" enctype="multipart/form-data" 
+				data-hasrequired="<?= $block->escapeHtml(__('* Required Fields')) ?>"
+				data-mage-init='{"validation":{}}'>
+				<div class="inquiry-formfields"> 
+					<div class="form-fieldset um-prodinquiry_request">
+						<div class="um-prodinquiry-top-block">
+							<?php if ($block->isShowProductImage()): ?>
+								<div class="um-prodimg-block">
+									<img src="<?= $block->escapeUrl($productImageUrl); ?>" alt="" class="um-prodimg">
+								</div>
+							<?php endif; ?>
+							<?php if ($block->isShowProductName()): ?>
+								<div class="um-prodname-block">
+									<span class="um-prodname-label"><?= $block->escapeHtml(__('Product Name :')) ?>
+									</span> <span class="um-prodname"><?= $block->escapeHtml(__($productName)) ?></span>
+								</div>
+							<?php endif; ?>    
+							<?php if ($block->isShowProductSku()): ?>
+								<div class="um-prodsku-block">
+									<span class="um-prodsku-label"><?= $block->escapeHtml(__('Product SKU :')) ?></span>
+									<span class="um-prodsku"><?= $block->escapeHtml(__($productSku)) ?></span>
+								</div>
+							<?php endif; ?>
+						</div>
+						<div class="field-name um-field required um-inline">
+							<label class="label um-required" for="name">
+								<span><?= $block->escapeHtml(__('Name')) ?></span></label>
+							<div class="control">
+								<input name="name" id="name" title="<?= $block->escapeHtml(__('Name')) ?>" 
+									value="<?= $block->escapeHtml($block->getUserName()) ?>" 
+									class="input-text" type="text" data-validate="{required:true}"/>
+							</div>
+						</div>
+						<div class="field-email um-field required um-inline">
+							<label class="label um-required" for="email">
+								<span><?= $block->escapeHtml(__('Email')) ?></span></label>
+							<div class="control">
+								<input name="email" id="email" title="<?= $block->escapeHtml(__('Email')) ?>" 
+									value="<?= $block->escapeHtml($block->getUserEmail()) ?>" 
+									class="input-text" type="email" data-validate="{required:true, 'validate-email':true}"/>
+							</div>
+						</div>
+						<?php if ($block->isPhoneEnabled()): ?>
+						<div class="field-telephone um-field um-inline">
+							<label class="label" for="telephone">
+								<span><?= $block->escapeHtml(__('Telephone')) ?></span></label>
+							<div class="control">
+								<input name="telephone" id="telephone" title="<?= $block->escapeHtml(__('Telephone')) ?>" 
+									value="<?= $block->escapeHtml($block->getTelephone()) ?>"
+									class="input-text" type="text" data-validate="{required:false}"/>
+							</div>
+						</div>
+						<?php endif; ?>
+						<?php if ($block->isAttachmentEnabled()): ?>
+						<div class="field-image um-field um-inline">
+							<label class="label" for="image">
+								<span><?= $block->escapeHtml(__('Attachment')) ?></span>
+							</label>
+							<div class="control">
+								<input name="image" id="image" title="<?= $block->escapeHtml(__('Attachment')) ?>" 
+									value="" class="input-text" type="file" data-validate="{required:false}"/>
+							</div>
+						</div> 
+						<?php endif; ?>
+						<?php if ($block->isSubjectEnabled()): ?>
+						<div class="field-subject um-field um-inline">
+							<label class="label" for="subject">
+								<span><?= $block->escapeHtml(__('Subject')) ?></span>
+							</label>
+							<div class="control">
+								<input name="subject" id="subject" title="<?= $block->escapeHtml(__('Subject')) ?>" 
+									value="<?= $block->escapeHtml($block->getSubject()) ?>"
+									class="input-text" type="text" data-validate="{required:false}"/>
+							</div>
+						</div>
+						<?php endif; ?>
+						<?php // Extra fields  ?>
+						<?= $block->getLayout()->createBlock(\Ulmod\Productinquiry\Block\ProductinquiryForm::class)
+								->setTemplate("Ulmod_Productinquiry::form_extra_fields.phtml")->toHtml(); ?> 
+						<div class="field-message um-field um-inline required">
+							<label class="label um-required" for="message"><span>
+								<?= $block->escapeHtml(__('Message')) ?></span>
+							</label>
+							<div class="control">
+								<textarea name="message" id="message" title="<?= $block->escapeHtml(__('Message')) ?>" 
+									class="input-text" cols="5" rows="5"
+									data-validate="{required:true}"><?= $block->escapeHtml($block->getMessage()) ?></textarea>
+							</div>
+						</div>
+						<?php // Privacy Policy field  ?>
+						<?= $block->getLayout()->createBlock(\Ulmod\Productinquiry\Block\ProductinquiryForm::class)
+								->setTemplate("Ulmod_Productinquiry::form_privacy_policy_field.phtml")->toHtml(); ?>
+						<?php // reCAPTCHA v2 (“I am not a robot”) by Google ?>
+						<?= $block->getLayout()->createBlock(\Ulmod\Productinquiry\Block\ProductinquiryForm::class)
+								->setTemplate("Ulmod_Productinquiry::spamblocker/recaptcha/checkbox_v2.phtml")->toHtml(); ?>
+						<?php // CAPTCHA by Magento  ?>   
+						<?php if ($block->isMagentoCaptchaEnabled()): ?>
+						<div class="field-magento-captcha um-field um-magento-captcha required">
+							<?= $block->getChildHtml('um.productinquiry.container.core.captcha'); ?>
+						</div>
+						<?php endif; ?>    
+						<?php // Honeypot  ?>   
+						<?= $block->getLayout()->createBlock(\Ulmod\Productinquiry\Block\ProductinquiryForm::class)
+								->setTemplate("Ulmod_Productinquiry::spamblocker/honeypot/field.phtml")->toHtml(); ?>
+					</div>
+				</div>
+				<div class="inquiry-actions um-prodinquiry-actions" id="um-prodinquiry-actions">
+					<div class="um-primary"> 
+						<input type="hidden" value="<?= $block->escapeHtml(__($block->getProductId())) ?>"
+							name="product_ids" class="product_ids"/>
+						<input type="hidden" value="<?= $block->escapeHtml(__($productName)) ?>" 
+							name="product_name" class="product_name"/>
+						<input type="hidden" value="<?= $block->escapeHtml(__($productSku)) ?>" 
+							name="product_sku" class="product_sku"/>
+						<input type="hidden" name="hideit" id="hideit" value="" />
+						<input type="hidden" name="current_page_url" id="current_page_url" 
+						value="<?= $block->escapeUrl($currentPageUrl); ?>"/>  
+						<button type="submit" title="<?= $block->escapeHtml(__('Submit')) ?>" 
+							class="action submit primary">
+							<span><?= $block->escapeHtml(__('Submit')) ?></span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<?php if ($block->isPopupForm()): ?>
+<script type="text/x-magento-init">
+	{
+		"#um-prodinq-popup": {
+			"Ulmod_Productinquiry/js/popupform": {
+				"umProdInquiryPopupTitle": "<?= $block->escapeHtml($block->getFormTitle()) ?>"
+			}
+		}
+	}
+</script>
+<?php endif; ?>
+<?php // reCAPTCHA v2 scripts ?>
+<?= $block->getLayout()->createBlock(\Ulmod\Productinquiry\Block\ProductinquiryForm::class)
+	->setTemplate("Ulmod_Productinquiry::spamblocker/recaptcha/checkbox_v2_script.phtml")->toHtml(); ?>
