@@ -24,11 +24,14 @@
         }
     },
     "require": {
+        "amasty/module-delivery-date-manager": "^1.0",
         "amasty/module-improved-layered-navigation-page": "^2.7",
+        "amasty/module-mega-menu-package-pro": "2.4.1",
         "amasty/module-shop-by-base": "^2.16",
         "amasty/module-shop-by-brand": "^2.13",
         "amasty/module-social-login-lite": "^1.10",
         "amasty/module-store-pickup-with-locator": "^2.5",
+        "amasty/module-store-pickup-with-locator-msi": "^1.0",
         "amasty/shopby": "^2.19",
         "amasty/shopby-seo": "^2.13",
         "iwd/opc": "^5.0",

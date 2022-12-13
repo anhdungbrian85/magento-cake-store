@@ -27,5 +27,10 @@
         <referenceContainer name="top.container">
             <block class="Magento\Framework\View\Element\Template" name="header.top.trustpilot" template="Magento_Theme::review-header.phtml"/>
         </referenceContainer>
+
+
+        <move element="navigation.sections" destination="header-wrapper" after="ammenu.logo" />
+        <move element="minicart" destination="header-wrapper" after="-" />
+
     </body>
 </page>
