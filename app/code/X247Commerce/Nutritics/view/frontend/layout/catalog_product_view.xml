@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.details">
+            <block class="X247Commerce\Nutritics\Block\Product\View\Nutritics" name="product.info.nutritics" as="product.nutritics" template="X247Commerce_Nutritics::product/view/nutritics.phtml" group="detailed_info">
+                <arguments>
+                    <!-- <argument name="at_call" xsi:type="string">getNutritionalInformation</argument>
+                    <argument name="at_code" xsi:type="string">nutritional_information</argument>
+                    <argument name="css_class" xsi:type="string">nutritional_information</argument>
+                    <argument name="at_label" xsi:type="string">none</argument> -->
+                    <argument translate="true" name="title" xsi:type="string">Nutritics</argument>
+                    <!-- <argument name="sort_order" xsi:type="string">16</argument> -->
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+
+</page>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<section id="nutritics" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+			<label>Nutritics API</label>
+			<tab>x247commerce</tab>
+			<resource>X247Commerce_Nutritics::config_x247commerce_nutritics</resource>
+			<group id="api_settings" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+				<label>API Settings</label>
+				<field id="username" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Username</label>
+					<comment>Nutritics Account Username</comment>
+				</field>
+				<field id="password" type="password" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Password</label>
+					<comment>Nutritics Account Password</comment>
+					<config_path>nutritics/api_settings/password</config_path>
+				</field>
+				<field id="user_id" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>User Id</label>
+					<comment>Enter the ID of the Nutritics user (Your developer account can be granted access to multiple Nutritics users) who's objects (An Nutritics object is a client, food, recipe, mealplan or dietlog) you would like to work with</comment>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>

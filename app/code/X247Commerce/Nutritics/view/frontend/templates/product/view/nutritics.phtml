@@ -1,0 +1,13 @@
+<?php
+/**
+ * @var $block \X247Commerce\Nutritics\Block\Product\View\Nutritics
+ */
+?>
+<?php
+$nutriticsInfo = $block->getNutriticsInfo();
+$reporturl = $nutriticsInfo[1]['reporturl'];
+?>
+<div class="nutritics-info-wraper">
+    <iframe class="nutritics-info" src="<?= $reporturl ?>" title="Product's Nutrition Information">
+    </iframe>
+</div>
