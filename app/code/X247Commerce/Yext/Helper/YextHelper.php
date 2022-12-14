@@ -17,6 +17,7 @@ class YextHelper extends AbstractHelper
 {
     const DELETE_ADMIN_SYNC_SETTING_PATH = 'yext/sync_settings/delete_admin';
     const DELETE_SOURCE_SYNC_SETTING_PATH = 'yext/sync_settings/delete_source';
+    const STOCK_SYNC_SETTING_PATH = 'yext/sync_settings/default_stock';
     const NOTIFICATION_EMAIL_TEMPLATE_CREATED_USER = 'yext/email_template/create_user';
     const AMASTY_AMLOCATOR_STORE_ATTRIBUTE = 'amasty_amlocator_store_attribute';
 
@@ -91,6 +92,15 @@ class YextHelper extends AbstractHelper
     public function getDeleteSourceSyncSetting()
     {
         return  $this->scopeConfig->getValue(self::DELETE_SOURCE_SYNC_SETTING_PATH, ScopeInterface::SCOPE_STORE);
+    }
+    /**
+     * Get Default Stock to Assign new source
+     *
+     * @return boolean
+     */
+    public function getDefaultAssignStock()
+    {
+        return  $this->scopeConfig->getValue(self::STOCK_SYNC_SETTING_PATH, ScopeInterface::SCOPE_STORE);
     }
 
     /**

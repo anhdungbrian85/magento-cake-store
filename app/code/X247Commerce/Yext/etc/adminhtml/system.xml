@@ -45,6 +45,11 @@
 					<comment>When delete a store location on Yext, the source was assigned to the store will be deleted too?</comment>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
+				<field id="default_stock" type="select" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Default Stock to Assign </label>
+					<comment>Choose default stock to assign when create source</comment>
+					<source_model>X247Commerce\Yext\Model\Config\Source\Stocks</source_model>
+				</field>
 			</group>
 			<group id="email_template" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
 				<label>Email template settings</label>

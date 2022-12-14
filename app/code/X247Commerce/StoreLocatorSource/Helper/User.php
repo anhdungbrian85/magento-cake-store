@@ -19,7 +19,7 @@ use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
  */
 class User extends AbstractHelper
 {
-    const XML_CONFIG_PATH_STAFF_ROLE_ID = 'staff_role/general/role_id';
+    const XML_CONFIG_PATH_STAFF_ROLE_ID = 'yext/staff_role/role_id';
 
     protected AdminSession $adminSession;
     protected LocatorSourceResolver $locatorSourceResolver;

@@ -305,6 +305,12 @@ class YextAttribute
                     $newUser = $this->editAdminUser($insert, $locationModel->getId());
                     $newSource = $this->editSource($insert, $locationModel->getId());
 
+                    $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
+
+                    if ($newSource->getSourceCode()) {
+                        $this->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $locationModel->getId());
+                    }
+
                     if (!is_null($newUser) && !is_null($newSource)) {
                         $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
                         $this->adminSource->save();
@@ -477,6 +483,22 @@ class YextAttribute
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
+    }
+
+    /**
+     * Assign source to a stock
+     *
+     * @return void
+     */
+    public function assignSourceToStock($sourceCode, $stockId, $priority = 1)
+    {
+        $connection = $this->resource->getConnection();
+        $stockSourceLinkData = [
+            'source_code' => $sourceCode,
+            'stock_id' => $stockId,
+            'priority' => $priority,
+        ];
+        $connection->insert($this->resource->getTableName('inventory_source_stock_link'), $stockSourceLinkData);
     }
     /**
      * Link location with yext_entity_id in table amasty_amlocator_store_attribute

@@ -1,13 +1,14 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="staff_role" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
-            <label>Staff Role</label>
+        <section id="yext" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
             <tab>x247commerce</tab>
             <resource>X247Commerce_StoreLocatorSource::config_x247commerce_storeLocatorsource</resource>
-            <group id="general" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+            <group id="staff_role" sortOrder="10" showInWebsite="1" showInStore="0" showInDefault="1" translate="label">
+                <label>Staff Role</label>
                 <field id="role_id" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                   <label>Staff Role</label>        
+                   <label>Staff Role</label> 
+                   <comment>Choose which User Roles is Staff Role (don't have full permission).</comment>      
                    <source_model>X247Commerce\StoreLocatorSource\Model\Config\AdminRoleSource</source_model>
                 </field>
             </group>
