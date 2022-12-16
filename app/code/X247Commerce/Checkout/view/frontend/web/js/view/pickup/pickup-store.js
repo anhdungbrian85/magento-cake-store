@@ -102,7 +102,6 @@ define([
         },
 
         onChangeStore: function (storeId) {
-            console.log("222");
             if (storeId) {
                 pickupDataResolver.storeId(storeId);
             }

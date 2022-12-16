@@ -29,7 +29,7 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean(pickupDataResolver.storeId() && pickupDataResolver.dateData() && pickup.isPickup());
+            return Boolean(pickupDataResolver.storeId() && pickup.isPickup());
         }),
 
         initialize: function () {
@@ -61,7 +61,7 @@ define([
         initObservable: function () {
             this._super();
 
-            pickup.isPickup.subscribe(this.pickupStateObserver, this);
+            // pickup.isPickup.subscribe(this.pickupStateObserver, this);
             this.visibleComputed.subscribe(this.visible);
 
             return this;
@@ -137,15 +137,28 @@ define([
         },
 
         onUpdate: function (pickupTime) {
-            var pickupTimeOption = this.options().filter(function (elem) {
-                return elem.value === pickupTime;
-            })[0];
-            pickupDataResolver.timeData(pickupTime);
-            var details = registry.get('checkout.sidebar.block-store-locator.x247_pickup_store_details');
+            console.log(pickupTime);
+            var details = registry.get('checkout.sidebar.block-store-locator.x247_pickup_store_details'),
+                timePickup = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_time');
+                console.log(timePickup);
             if (details) {
+                var pickupTimeOption = this.options().filter(function (elem) {
+                    return elem.value === pickupTime;
+                })[0];
+
+                // if (window.localStorage.getItem('timePickUpInCart')) {
+                //     pickupTimeOption = JSON.parse(window.localStorage.getItem('timePickUpInCart'));
+                //     pickupTime = pickupTimeOption.value;
+                // }
+
+                pickupDataResolver.timeData(pickupTime);
                 details.timePickup(pickupTimeOption.label);
+                
+                if (timePickup) {
+                    timePickup.value(pickupTimeOption.value);
+                }
+                this.pickupTimeLabel = pickupTimeOption.label;
             }
-            this.pickupTimeLabel = pickupTimeOption.label;
         },
 
         pickupStateObserver: function (isActive) {

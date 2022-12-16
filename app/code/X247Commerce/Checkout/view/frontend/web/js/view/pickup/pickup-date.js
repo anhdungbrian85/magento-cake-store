@@ -89,11 +89,9 @@ define([
             if (countDown) {
                 clearInterval(countDown);
             }
-
             if (window.timer) {
                 clearInterval(window.timer);
             }
-
             var datepickerDate,
                 selectedDate,
                 details = registry.get('block-store-locator.amstorepickup.am_pickup_store'),
@@ -101,7 +99,6 @@ define([
                 options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
             this._super();
-
             // This is direct access to the element because need to push date object(not string) to customer data
             datepickerDate = $('#' + this.uid).datepicker('getDate');
             selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
@@ -115,13 +112,14 @@ define([
                 date: value,
                 store: this.selectedStore
             });
+            window.localStorage.setItem('datePickUpInCart',value);
 
             var pickupDateOld = registry.get('block-store-locator.amstorepickup.am_pickup_date'),
                 pickupTimeOld = registry.get('block-store-locator.amstorepickup.am_pickup_time'),
-                valueTimeInit = pickupTimeOld.options()[0];
- 
-            var secureTimeEnd = new Date(new Date().getTime() + 15 * 60000);
-            var minutes, seconds;
+                valueTimeInit = pickupTimeOld.options()[0],
+                secureTimeEnd = new Date(new Date().getTime() + 15 * 60000),
+                minutes, seconds;
+
             window.timer = countDown = setInterval(function() {
                 var now = new Date().valueOf(),
                     distance = secureTimeEnd.valueOf() - now;
@@ -149,7 +147,6 @@ define([
 
         onChangeStore: function () {
             this.selectedStore = pickupDataResolver.getCurrentStoreData();
-
             if (this.selectedStore) {
                 this.initStoreDateTimeOptions(this.selectedStore);
                 this.setDateToFirstPickupDate(this.selectedStore);
@@ -204,6 +201,7 @@ define([
                 selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                     ? datepickerDate
                     : this.firstPickupDate;
+
                 if (selectedDate) {
                     this.selectedDayByName(this.weekDays[selectedDate.getDay()]);
                     this.isTodaySelected(this.isDateIsStoreToday(selectedDate, storeDateTime));
