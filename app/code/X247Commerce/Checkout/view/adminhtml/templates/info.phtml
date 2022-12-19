@@ -187,7 +187,19 @@ $allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub
                     <span class="title"><?= $block->escapeHtml(__('Shipping Address')) ?></span>
                     <div class="actions"><?= /* @noEscape */ $block->getAddressEditLink($order->getShippingAddress()); ?></div>
                 </div>
+
                 <address class="admin__page-section-item-content"><?= $block->escapeHtml($block->getFormattedAddress($order->getShippingAddress()), $allowedAddressHtmlTags); ?></address>
+            <?php if ($block->getOrderPickUp($order)): ?>
+                <div class="admin__page-section-item-date-pickup">
+                    <strong class="title"><?= __('Date PickUp:') ?></strong>
+                    <span><?= $block->getOrderPickUp($order)['date'] ?></span>
+                </div>
+                <div class="admin__page-section-item-time-pickup">
+                    <strong class="title"><?= __('Time PickUp:') ?></strong>
+                    <span><?= $block->getOrderPickUp($order)['timeFrom'] . '-' ?></span>
+                    <span><?= $block->getOrderPickUp($order)['timeTo'] ?></span>
+                </div>    
+            <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>

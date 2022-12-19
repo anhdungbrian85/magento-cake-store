@@ -82,6 +82,10 @@ define([
         },
 
         onValueChange: function (value) {
+            if (window.localStorage.getItem('datePickUpInCart')) {
+                value = window.localStorage.getItem('datePickUpInCart');
+            }
+            
             var datepickerDate,
                 selectedDate,
                 details = registry.get('checkout.sidebar.block-store-locator.x247_pickup_store_details'),
@@ -95,7 +99,6 @@ define([
             selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                 ? datepickerDate
                 : value;
-
             pickupDataResolver.dateData(selectedDate);
             if (details) {
                 details.datePickup(selectedDateFormat.toLocaleDateString("en-US", options));
@@ -108,8 +111,9 @@ define([
         },
 
         onChangeStore: function () {
-            this.selectedStore = pickupDataResolver.getCurrentStoreData();
             var storeDetails = registry.get('block-store-locator.amstorepickup.am_pickup_store');
+
+            this.selectedStore = pickupDataResolver.getCurrentStoreData();
             if (this.selectedStore) {
                 this.initStoreDateTimeOptions(this.selectedStore);
                 this.setDateToFirstPickupDate(this.selectedStore);
@@ -168,7 +172,9 @@ define([
                 selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                     ? datepickerDate
                     : this.firstPickupDate;
-
+                if (window.localStorage.getItem('datePickUpInCart')) {
+                    selectedDate = new Date(window.localStorage.getItem('datePickUpInCart'));
+                }
                 this.selectedDayByName(this.weekDays[selectedDate.getDay()]);
                 this.isTodaySelected(this.isDateIsStoreToday(selectedDate, storeDateTime));
             }
@@ -182,6 +188,10 @@ define([
          */
         setDateToFirstPickupDate: function (store) {
             var firstPickupDate = this.getFirstPickupDate(store);
+
+            if (window.localStorage.getItem('datePickUpInCart')) {
+                firstPickupDate = window.localStorage.getItem('datePickUpInCart');
+            }
             this.firstPickupDate = firstPickupDate;
 
             // This is direct access to the element because change of value does not trigger change of datepicker input
