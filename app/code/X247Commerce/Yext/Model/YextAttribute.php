@@ -210,8 +210,8 @@ class YextAttribute
         $data['city'] = isset($input['address']['city']) ? $input['address']['city'] : '';
         $data['zip'] = isset($input['address']['postalCode']) ? $input['address']['postalCode'] : '';
         $data['state'] = isset($input['address']['region']) ? $input['address']['region'] : '' ;
-        $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : '' ;
-        $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : '' ;
+        $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : '' ;
+        $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : '' ;
         $data['description'] = isset($input['description']) ? $input['description'] : '' ;
         $data['phone'] = isset($input['mainPhone']) ? $input['mainPhone'] : '' ;
         $data['email'] = isset($input['emails'][0]) ? $input['emails'][0] : '' ;
