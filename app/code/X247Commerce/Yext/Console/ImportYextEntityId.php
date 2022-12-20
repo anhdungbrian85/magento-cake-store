@@ -172,8 +172,11 @@ class ImportYextEntityId extends Command
         $varDir = $this->directoryList->getPath('var');
         $csvFile = $varDir . self::DATA_FILE_PATH;
         if (!file_exists($csvFile)) {
+            $csvFile = $this->directoryList->getRoot() . "/app/code/X247Commerce/Yext" . self::DATA_FILE_PATH;            
+        }
+        if (!file_exists($csvFile)) {
             $this->output->writeln('File does not exist!');
-            return [];
+            return [];          
         }
         $fileData = $this->csvReader->getData($csvFile);
 

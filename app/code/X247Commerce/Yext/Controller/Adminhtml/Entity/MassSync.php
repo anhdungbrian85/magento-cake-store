@@ -55,13 +55,14 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
     public function execute()
     {
                    
-        $collection = $this->filter->getCollection($this->locationCollection);
-        $collectionSize = $collection->getSize();
+        $locationCollection = $this->filter->getCollection($this->locationCollection);
+        $collectionSize = $locationCollection->getSize();
 
         $allYextEntityIdValue = array_column($this->yextAttribute->getAllYextEntityIdValue(),'value', 'store_id');
+
         $yextEntityIds = [];
         if ($collectionSize) {
-            foreach ($collection as $location) {
+            foreach ($locationCollection as $location) {
                 if (array_key_exists($location->getId(), $allYextEntityIdValue)) {
                     $yextEntityIds[] = $allYextEntityIdValue[$location->getId()];
                 }
@@ -71,20 +72,25 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         foreach ($yextEntityIds as $id) {
             $filterParams['$or'][] = ['entityId' => ['$eq' => $id]];
         }
+        
+        
         $listResponse = json_decode($this->yextApi->getList(['filter'=> json_encode($filterParams)]), true);
 
         foreach ($listResponse['response']['entities'] as $locationData) {
-                    // $schedule = $this->yextAttribute->convertSchedule($locationData['hours']);
-        // echo "<pre>";
-        // print_r($schedule);
-        // echo "</pre>";
-                // var_dump($schedule);    die();
+                    
+            $syncData = [];
             if (in_array($locationData['meta']['id'], $allYextEntityIdValue)) {
                 // try {                        
                     $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);
+                    
                     $location = $this->locationModel->load($locationId);
                     $syncData = $this->yextAttribute->responseDataProcess($locationData);
-                    $locationSchedule = $this->yextAttribute->editLocationSchedule($location, $locationData['hours']);
+                    if (isset($locationData['hours'])) {
+                        $locationSchedule = $this->yextAttribute->editLocationSchedule($location, $locationData['hours']);
+                        $syncData['schedule'] = $locationSchedule->getId();
+                        // echo "<pre>"; var_dump($locationSchedule->getId());
+                    }
+                    
                     //@todo sync Photo gallery from Yext, download image and link to store location
                     // $data = [];
                     // $data['id'] = $locationId;
@@ -112,7 +118,6 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
                         // }
                     // }
                     // $this->locationResource->saveGallery($data);
-                    $syncData['schedule'] = $locationSchedule->getId();
                     // var_dump($locationSchedule);die();
                     $location->addData($syncData);
                     $location->save();
