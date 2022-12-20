@@ -10,7 +10,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File;
 use Amasty\Storelocator\Model\ImageProcessor;
-use Amasty\Storelocator\Model\Schedule;
+use Amasty\Storelocator\Model\ScheduleFactory;
 use Amasty\Base\Model\Serializer;
 use Magento\User\Model\UserFactory;
 use X247Commerce\StoreLocatorSource\Helper\User;
@@ -33,7 +33,7 @@ class YextAttribute
     protected DirectoryList $directoryList;
     protected File $file;
     protected ImageProcessor $imageProcessor;
-    protected Schedule $scheduleModel;
+    protected ScheduleFactory $scheduleModel;
     protected Serializer $serializer;
     protected UserFactory $userFactory;
     protected User $userHelper;
@@ -52,7 +52,7 @@ class YextAttribute
         DirectoryList $directoryList,
         File $file,
         ImageProcessor $imageProcessor,
-        Schedule $scheduleModel,
+        ScheduleFactory $scheduleModel,
         Serializer $serializer,
         UserFactory $userFactory,
         User $userHelper,
@@ -606,21 +606,24 @@ class YextAttribute
     public function editLocationSchedule($location, $openHoursfromYext)
     {
         $locationSchedule = $this->yextHelper->convertSchedule($openHoursfromYext);
-        $schedule = $this->scheduleModel->load($location->getSchedule());
         
-        if ($schedule) {            
+        if ($location->getSchedule()) {
+            
+            $schedule = $this->scheduleModel->create()->load($location->getSchedule());
             if (is_array($locationSchedule)) {
                 $schedule->setSchedule($this->serializer->serialize($locationSchedule));
             }            
             $schedule->setName($location->getName() . " Schedule");
             
             return $schedule->save();
-        } else {            
+        } else {
+
             if (is_array($locationSchedule)) {
-                $this->scheduleModel->setSchedule($this->serializer->serialize($locationSchedule));
+                $newSchedule = $this->scheduleModel->create();
+                $newSchedule->setSchedule($this->serializer->serialize($locationSchedule));
             }
-            $this->scheduleModel->setName($location->getName() . " Schedule");
-            return $this->scheduleModel->save();
+            $newSchedule->setName($location->getName() . " Schedule");
+            return $newSchedule->save();
         }
     }
     /**

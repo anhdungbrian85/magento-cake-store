@@ -137,9 +137,9 @@ class YextHelper extends AbstractHelper
     public function convertWeekDay($yextSchedule, $day) 
     {
         $amastySchedule = [];
-        if (!$yextSchedule[$day]["isClosed"]) {
+        if (!isset($yextSchedule[$day]["isClosed"])) {
             $amastySchedule[$day."_status"] = 1;
-            $openTime = $yextSchedule[$day]["openIntervals"];
+            $openTime = isset($yextSchedule[$day]["openIntervals"]) ? $yextSchedule[$day]["openIntervals"] : [];
             if ($openTime) {
                 $amastySchedule["from"]["hours"] = explode(':', $openTime[0]["start"])[0];
                 $amastySchedule["from"]["minutes"] = explode(':', $openTime[0]["start"])[1];
