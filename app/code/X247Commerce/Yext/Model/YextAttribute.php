@@ -210,8 +210,18 @@ class YextAttribute
         $data['city'] = isset($input['address']['city']) ? $input['address']['city'] : '';
         $data['zip'] = isset($input['address']['postalCode']) ? $input['address']['postalCode'] : '';
         $data['state'] = isset($input['address']['region']) ? $input['address']['region'] : '' ;
-        $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : '' ;
-        $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : '' ;
+        if ($input['geocodedCoordinate']) {
+            $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : '' ;
+            $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : '' ;
+        }
+        if (!$input['geocodedCoordinate'] && $input['yextDisplayCoordinate']) {
+            $data['lat'] = isset($input['yextDisplayCoordinate']['latitude']) ? $input['yextDisplayCoordinate']['latitude'] : '' ;
+            $data['lng'] = isset($input['yextDisplayCoordinate']['longitude']) ? $input['yextDisplayCoordinate']['longitude'] : '' ;
+        }
+        if (!$input['geocodedCoordinate'] && !$input['yextDisplayCoordinate'] && $input['cityCoordinate']) {
+            $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : '' ;
+            $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : '' ;
+        }
         $data['description'] = isset($input['description']) ? $input['description'] : '' ;
         $data['phone'] = isset($input['mainPhone']) ? $input['mainPhone'] : '' ;
         $data['email'] = isset($input['emails'][0]) ? $input['emails'][0] : '' ;
