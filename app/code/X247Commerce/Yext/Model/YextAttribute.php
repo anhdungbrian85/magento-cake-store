@@ -210,17 +210,17 @@ class YextAttribute
         $data['city'] = isset($input['address']['city']) ? $input['address']['city'] : '';
         $data['zip'] = isset($input['address']['postalCode']) ? $input['address']['postalCode'] : '';
         $data['state'] = isset($input['address']['region']) ? $input['address']['region'] : '' ;
-        if ($input['geocodedCoordinate']) {
-            $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : '' ;
-            $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : '' ;
+        if (isset($input['geocodedCoordinate'])) {
+            $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : 0 ;
+            $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : 0 ;
         }
-        if (!$input['geocodedCoordinate'] && $input['yextDisplayCoordinate']) {
-            $data['lat'] = isset($input['yextDisplayCoordinate']['latitude']) ? $input['yextDisplayCoordinate']['latitude'] : '' ;
-            $data['lng'] = isset($input['yextDisplayCoordinate']['longitude']) ? $input['yextDisplayCoordinate']['longitude'] : '' ;
+        if (!isset($input['geocodedCoordinate']) && isset($input['yextDisplayCoordinate'])) {
+            $data['lat'] = isset($input['yextDisplayCoordinate']['latitude']) ? $input['yextDisplayCoordinate']['latitude'] : 0 ;
+            $data['lng'] = isset($input['yextDisplayCoordinate']['longitude']) ? $input['yextDisplayCoordinate']['longitude'] : 0 ;
         }
-        if (!$input['geocodedCoordinate'] && !$input['yextDisplayCoordinate'] && $input['cityCoordinate']) {
-            $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : '' ;
-            $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : '' ;
+        if (!isset($input['geocodedCoordinate']) && !isset($input['yextDisplayCoordinate']) && isset($input['cityCoordinate'])) {
+            $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : 0 ;
+            $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : 0 ;
         }
         $data['description'] = isset($input['description']) ? $input['description'] : '' ;
         $data['phone'] = isset($input['mainPhone']) ? $input['mainPhone'] : '' ;
@@ -391,10 +391,10 @@ class YextAttribute
     public function editAdminUser($data, $locationId, $userId = null, $locationMail = null)
     {
         $adminInfo = [
-            'username'  => $data['name'] ? strtolower(str_replace(' ', '_', trim($data['name']))) : 'cakebox',
-            'firstname' => $data['name'] ? $data['name'] : 'Cakebox',
-            'lastname'    => $data['name'] ? $data['name'] : 'Cakebox',
-            'email'     => $data['email'] ? $data['email'] : strtolower(str_replace(' ', '_', trim($data['name']))).'@eggfreecake.co.uk',
+            'username'  => $data['name'] ? strtolower(str_replace([' ', '(', ')'], ['_', '', ''], trim($data['name']))) : 'cakebox',
+            'firstname' => 'Cake Box',
+            'lastname'    => $data['name'] ? str_replace(['Cake Box ', '(', ')'], '', trim($data['name'])) : 'Cake Box',
+            'email'     => $data['email'] ? $data['email'] : strtolower(str_replace(['cake box', ' ', '(', ')'], '_', trim($data['name']))).'@eggfreecake.co.uk',
             'interface_locale' => 'en_US',
             'is_active' => 1
         ];
@@ -404,6 +404,7 @@ class YextAttribute
                 if ($data['email']) {
                     $userModel = $this->userFactory->create();
                     $user = $userModel->load($data['email'], 'email');
+                    // var_dump($user->getUserId());die();
                     if ($user->getUserId()) {
                         return $user;
                     } else {
@@ -465,7 +466,7 @@ class YextAttribute
     {
        
         $sourceData = [
-            'source_code' => strtolower(str_replace(' ', '_', trim($storeData['name']))),
+            'source_code' => strtolower(str_replace([' ', '(', ')'], ['_', '', ''], trim($storeData['name']))),
             'name' => $storeData['name'],
             'enabled' => 1,
             'description' => $storeData['description'],
@@ -475,6 +476,7 @@ class YextAttribute
             'postcode' => $storeData['zip'],
             'amlocator_store' => $locationId
         ];
+        
         try {
             if (!$sourceCode) {
                 $source = $this->sourceInterface;
@@ -670,7 +672,7 @@ class YextAttribute
                    $insertData[] = ['store_id' => $location->getId(), 'type' => 'Regular Hours', 'store_name' => $location->getName(), 'date' => $holidayHoursfromYext['date'], 'open_time' => $openTime, 'break_start' => $breakStart, 'break_end' => $breakEnd, 'close_time' => $endTime];
                 }
             }
-            var_dump($insertData);
+            // var_dump($insertData);
             return $this->connection->insertOnDuplicate($tableName, $insertData, ['open_time', 'break_start', 'break_end', 'close_time']);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

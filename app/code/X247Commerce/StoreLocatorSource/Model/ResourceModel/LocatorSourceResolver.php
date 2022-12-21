@@ -97,7 +97,6 @@ class LocatorSourceResolver
      **/
     public function getUserBySource($sourceCode)
     {
-        $userId = $user->getId();
         $sourcesCol = $this->sourceLink->create()->addFieldToFilter('source_code', $sourceCode);
         $result = [];
         foreach($sourcesCol as $sourceUser) {

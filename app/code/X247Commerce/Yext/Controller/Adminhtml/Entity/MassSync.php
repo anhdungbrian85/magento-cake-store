@@ -14,6 +14,9 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
     protected $gallery;
     protected $galleryCollection;
     protected $locationResource;
+    protected $yextHelper;
+    protected $adminSource;
+    protected $locatorSourceResolver;
 
     public function __construct (
         \Magento\Backend\App\Action\Context $context,
@@ -33,7 +36,10 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         \X247Commerce\Yext\Model\YextAttribute $yextAttribute,
         \Amasty\Storelocator\Model\GalleryFactory $gallery,
         \Amasty\Storelocator\Model\ResourceModel\Gallery\Collection $galleryCollection,
-        \Amasty\Storelocator\Model\ResourceModel\Location $locationResource
+        \Amasty\Storelocator\Model\ResourceModel\Location $locationResource,
+        \X247Commerce\StoreLocatorSource\Model\AdminSource $adminSource,
+        \X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver $locatorSourceResolver,
+        \X247Commerce\Yext\Helper\YextHelper $yextHelper
     ) {
         parent::__construct($context, $coreRegistry, $resultForwardFactory, $resultPageFactory, $filesystem, $fileUploaderFactory, $serializer, $ioFile, $locationModel, $logger, $filter, $locationCollection);
         $this->yextApi = $yextApi;
@@ -43,6 +49,9 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         $this->gallery = $gallery;
         $this->galleryCollection = $galleryCollection;
         $this->locationResource = $locationResource;
+        $this->adminSource = $adminSource;
+        $this->locatorSourceResolver = $locatorSourceResolver;
+        $this->yextHelper = $yextHelper;
     }
 
  
@@ -55,14 +64,14 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
     public function execute()
     {
                    
-        $locationCollection = $this->filter->getCollection($this->locationCollection);
-        $collectionSize = $locationCollection->getSize();
+        $locationsCollection = $this->filter->getCollection($this->locationCollection);
+        $collectionSize = $locationsCollection->getSize();
 
         $allYextEntityIdValue = array_column($this->yextAttribute->getAllYextEntityIdValue(),'value', 'store_id');
 
         $yextEntityIds = [];
         if ($collectionSize) {
-            foreach ($locationCollection as $location) {
+            foreach ($locationsCollection as $location) {
                 if (array_key_exists($location->getId(), $allYextEntityIdValue)) {
                     $yextEntityIds[] = $allYextEntityIdValue[$location->getId()];
                 }
@@ -84,13 +93,42 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
                     $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);
                     
                     $location = $this->locationModel->load($locationId);
-                    $syncData = $this->yextAttribute->responseDataProcess($locationData);
+                    $syncData = $this->yextAttribute->responseDataProcess($locationData);                    
+                    $locationAdmin = $this->yextAttribute->editAdminUser($syncData, $location->getId());
+                    $locationSourceCodes = $this->yextHelper->getSourceCodeByAmastyLocationId($location->getId());
+                    
+                    if (!$locationSourceCodes) {
+                        $newSource = $this->yextAttribute->editSource($syncData, $location->getId());
+                    
+                        $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
+
+                        if ($newSource->getSourceCode()) {
+                            $this->yextAttribute->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $location->getId());
+                        }
+
+                        if (!is_null($locationAdmin) && !is_null($newSource)) {
+                            $this->adminSource->setData(['user_id' => $locationAdmin->getUserId(), 'source_code' => $newSource->getSourceCode()]);
+                            $this->adminSource->save();
+                        }
+                    } else {
+                        foreach ($locationSourceCodes as $source)
+                        {
+                            $usersAssignToSource = $this->locatorSourceResolver->getUserBySource($source);
+                            if (!$usersAssignToSource) {
+                                $this->adminSource->setData(['user_id' => $locationAdmin->getUserId(), 'source_code' => $source]);
+                                $this->adminSource->save();
+                            } else {
+                                if (!in_array($locationAdmin->getId(), $usersAssignToSource)) {
+                                    $this->adminSource->setData(['user_id' => $locationAdmin->getUserId(), 'source_code' => $source]);
+                                    $this->adminSource->save();
+                                }
+                            }
+                        }
+                    }
                     if (isset($locationData['hours'])) {
                         $locationSchedule = $this->yextAttribute->editLocationSchedule($location, $locationData['hours']);
                         $syncData['schedule'] = $locationSchedule->getId();
-                        // echo "<pre>"; var_dump($locationSchedule->getId());
                     }
-                    
                     //@todo sync Photo gallery from Yext, download image and link to store location
                     // $data = [];
                     // $data['id'] = $locationId;
@@ -136,6 +174,4 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $resultRedirect->setPath('amasty_storelocator/location/');
     }
-
-
 }

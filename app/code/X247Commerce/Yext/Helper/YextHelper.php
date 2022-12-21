@@ -68,7 +68,7 @@ class YextHelper extends AbstractHelper
     public function getUrlKeyFromName($name)
     {        
         $url_key = strtolower($name);
-        $url_key = str_replace('cake box', '', $url_key);
+        $url_key = str_replace(['cake box', '(', ')'], '', $url_key);
         $url_key = trim($url_key);
         $url_key = preg_replace("/\s+/", "-", $url_key);
         return $url_key;
@@ -267,4 +267,32 @@ class YextHelper extends AbstractHelper
     //     $holidayHours = $this->holidayHoursCollection->create();
     //     return $holidayHours->addAttributeToFilter('store_id', ['eq' => $location->getId()]);
     // }
+
+    /**
+     * Get source_code by Amasty Location id
+     * @param $locationId
+     * @return array [source_code]|null
+     * 
+     **/
+    public function getSourceCodeByAmastyLocationId($locationId)
+    {
+        $resultSource = [];
+        if ($locationId) {
+            $sourceTbl = $this->resource->getTableName('inventory_source');
+            $sqlQuery = $this->connection->select()
+                    ->from($sourceTbl, ['source_code'])
+                    ->where("amlocator_store = ?", $locationId);
+            $results = $this->connection->fetchAll($sqlQuery);
+            
+            if ($results) {
+                foreach($results as $result) {
+                    if (!empty($result['source_code'])) {
+                        $resultSource[] = $result['source_code'];
+                    }
+                }
+            }
+        }
+
+        return $resultSource;
+    }
 }
