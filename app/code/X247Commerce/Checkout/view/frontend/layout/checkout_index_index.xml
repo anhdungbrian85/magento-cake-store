@@ -32,6 +32,7 @@
                 </arguments>
             </referenceBlock>
             <block class="X247Commerce\Checkout\Block\StoreLocatorConfig" name="x247.pickup.locator" template="X247Commerce_Checkout::pickup/pickup_store_config.phtml" before="checkout.root"/>
+            <block class="X247Commerce\Checkout\Block\Cart\SecureTimePopup" name="checkout.secure.time.popup" template="X247Commerce_Checkout::cart/secure_time_popup.phtml" before="x247.pickup.locator" />
         </referenceContainer>
     </body>
 </page>

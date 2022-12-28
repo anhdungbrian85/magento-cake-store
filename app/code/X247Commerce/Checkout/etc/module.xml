@@ -3,6 +3,7 @@
 	<module name="X247Commerce_Checkout">
 		<sequence>
 			<module name="Magento_Checkout" />
+			<module name="Amasty_StorePickupWithLocator" />
 		</sequence>
 	</module>
 </config>

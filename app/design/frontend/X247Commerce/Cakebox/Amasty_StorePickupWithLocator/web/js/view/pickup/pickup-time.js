@@ -9,8 +9,9 @@ define([
     'Magento_Customer/js/customer-data',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+    'X247Commerce_Checkout/js/model/secure-time',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (registry, ko, $, Component, customerData, pickup, pickupDataResolver) {
+], function (registry, ko, $, Component, customerData, pickup, pickupDataResolver, secureTime) {
     'use strict';
 
     return Component.extend({
@@ -29,7 +30,8 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean(pickupDataResolver.storeId() && pickup.isPickup());
+            return Boolean((pickupDataResolver.storeId() && pickup.isPickup()) ||
+                            (window.storeLocationData.store_location_id_selected && pickup.isPickup()));
         }),
 
         initialize: function () {
@@ -53,7 +55,7 @@ define([
             this._super();
 
             this.visible = this.visibleComputed();
-            this.getPickupTimeFromCache();
+            // this.getPickupTimeFromCache();
 
             return this;
         },
@@ -137,19 +139,21 @@ define([
         },
 
         onUpdate: function (pickupTime) {
-            console.log(pickupTime);
+            console.log('test1111');
             var details = registry.get('checkout.sidebar.block-store-locator.x247_pickup_store_details'),
-                timePickup = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_time');
-                console.log(timePickup);
+                timePickup = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_time'),
+                pickupDateOld = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_date'),
+                pickupTimeOption;
+
+            if (window.localStorage.getItem('timePickUpInCart')) {
+                pickupTimeOption = JSON.parse(window.localStorage.getItem('timePickUpInCart'));
+                pickupTime = pickupTimeOption.value;
+            }
+
             if (details) {
-                var pickupTimeOption = this.options().filter(function (elem) {
+                pickupTimeOption = this.options().filter(function (elem) {
                     return elem.value === pickupTime;
                 })[0];
-
-                // if (window.localStorage.getItem('timePickUpInCart')) {
-                //     pickupTimeOption = JSON.parse(window.localStorage.getItem('timePickUpInCart'));
-                //     pickupTime = pickupTimeOption.value;
-                // }
 
                 pickupDataResolver.timeData(pickupTime);
                 details.timePickup(pickupTimeOption.label);
@@ -158,7 +162,10 @@ define([
                     timePickup.value(pickupTimeOption.value);
                 }
                 this.pickupTimeLabel = pickupTimeOption.label;
+
+                secureTime.countDownTimer(pickupDateOld, timePickup);
             }
+            window.localStorage.removeItem('timePickUpInCart');
         },
 
         pickupStateObserver: function (isActive) {

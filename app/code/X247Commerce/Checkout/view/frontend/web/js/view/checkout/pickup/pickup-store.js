@@ -18,13 +18,13 @@ define([
             this._super()
                 .observe('visiblePickupForm visible');
 
-            pickup.isPickup.subscribe(this.pickupStateObserver, this);
+            // pickup.isPickup.subscribe(this.pickupStateObserver, this);
             this.showChooseLocation();
             return this;
         },
 
         showChooseLocation: function () {
-            if (pickupDataResolver.storeId()) {
+            if (pickupDataResolver.storeId() || window.storeLocationData.store_location_id_selected) {
                 this.visible(false);
             }
         },

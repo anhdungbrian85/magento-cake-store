@@ -9,6 +9,7 @@
             </action>
         </referenceBlock>
         <referenceBlock name="checkout.cart.coupon" remove="true"/>
+        <referenceContainer name="checkout.cart.am-social-login" remove="true" />
         <block class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon.sidebar" as="coupon" template="Magento_Checkout::cart/coupon.phtml"/>
         <move element="checkout.cart.coupon.sidebar" destination="cart.summary" before="-"/>
     </body>

@@ -26,6 +26,8 @@ use Amasty\Storelocator\Api\ReviewRepositoryInterface;
 use X247Commerce\DeliveryPopUp\Helper\Data as PopUpHelper;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Framework\App\Http\Context as HttpContext;
+use Magento\Framework\Serialize\Serializer\JsonHexTag;
+use Magento\Framework\App\ObjectManager;
 
 class StoreLocatorConfig extends \Amasty\Storelocator\Block\Location
 {
@@ -45,6 +47,7 @@ class StoreLocatorConfig extends \Amasty\Storelocator\Block\Location
         PopUpHelper $popupHelper,
         StoreLocationContextInterface $storeLocationContextInterface,
         HttpContext $httpContext,
+        JsonHexTag $jsonHexTagSerializer = null,
         Context $context,
         Registry $coreRegistry,
         EncoderInterface $jsonEncoder,
@@ -67,6 +70,7 @@ class StoreLocatorConfig extends \Amasty\Storelocator\Block\Location
         $this->storeLocationContextInterface = $storeLocationContextInterface;
         $this->httpContext = $httpContext;
         $this->request = $request;
+        $this->jsonHexTagSerializer = $jsonHexTagSerializer ?: ObjectManager::getInstance()->get(JsonHexTag::class);
  		parent::__construct(
             $context, 
             $coreRegistry, 
@@ -123,5 +127,13 @@ class StoreLocatorConfig extends \Amasty\Storelocator\Block\Location
             'showSearch' => 1
         ];
         return $this->serializer->serialize($amLocatorConfig);
+    }
+
+    public function getStoreLocationData()
+    {
+        $data = [
+            'store_location_id_selected' => $this->storeLocationContextInterface->getStoreLocationId()
+        ];
+        return $this->jsonHexTagSerializer->serialize($data);
     }
 }

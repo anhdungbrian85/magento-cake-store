@@ -10,9 +10,10 @@ define([
     'Magento_Ui/js/form/element/date',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+    'X247Commerce_Checkout/js/model/secure-time',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-store',
     'mage/calendar'
-], function (customerData, registry, ko, $, _, Component, pickup, pickupDataResolver) {
+], function (customerData, registry, ko, $, _, Component, pickup, pickupDataResolver, secureTime) {
     'use strict';
 
     return Component.extend({
@@ -35,7 +36,8 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean(pickupDataResolver.storeId() && pickup.isPickup());
+            return Boolean((pickupDataResolver.storeId() && pickup.isPickup()) || 
+                            (window.storeLocationData.store_location_id_selected && pickup.isPickup()));
         }),
 
         initialize: function () {
@@ -82,10 +84,6 @@ define([
         },
 
         onValueChange: function (value) {
-            if (window.localStorage.getItem('datePickUpInCart')) {
-                value = window.localStorage.getItem('datePickUpInCart');
-            }
-            
             var datepickerDate,
                 selectedDate,
                 details = registry.get('checkout.sidebar.block-store-locator.x247_pickup_store_details'),
@@ -93,27 +91,43 @@ define([
                 options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
             this._super();
-            console.log('Amasty_StorePickupWithLocator/pickup/date', value);
-            // This is direct access to the element because need to push date object(not string) to customer data
-            datepickerDate = $('#' + this.uid).datepicker('getDate');
-            selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
-                ? datepickerDate
-                : value;
-            pickupDataResolver.dateData(selectedDate);
             if (details) {
+                // This is direct access to the element because need to push date object(not string) to customer data
+                datepickerDate = $('#' + this.uid).datepicker('getDate');
+                selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
+                    ? datepickerDate
+                    : value;
+                pickupDataResolver.dateData(selectedDate);
+                
                 details.datePickup(selectedDateFormat.toLocaleDateString("en-US", options));
+                var pickupDateOld = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_date'),
+                    pickupTimeOld = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_time');
+
+                secureTime.countDownTimer(pickupDateOld, pickupTimeOld);
+                
+                this.getSelectedDay(datepickerDate, value);
+                this.source.trigger('amStorepickup.date.change', {
+                    date: value,
+                    store: this.selectedStore
+                });
             }
-            this.getSelectedDay(datepickerDate, value);
-            this.source.trigger('amStorepickup.date.change', {
-                date: value,
-                store: this.selectedStore
-            });
         },
 
         onChangeStore: function () {
             var storeDetails = registry.get('block-store-locator.amstorepickup.am_pickup_store');
+            let pickupData = pickupDataResolver.pickupData();
+            let locationSelectedPopup = window.storeLocationData.store_location_id_selected;
 
             this.selectedStore = pickupDataResolver.getCurrentStoreData();
+
+            if (locationSelectedPopup && pickupDataResolver.pickupData().stores) {
+                for (let i = 0; i < pickupDataResolver.pickupData().stores.length; i++) {
+                    if (pickupDataResolver.pickupData().stores[i].id == locationSelectedPopup) {
+                        this.selectedStore = pickupDataResolver.pickupData().stores[i];
+                    }
+                }
+            }
+
             if (this.selectedStore) {
                 this.initStoreDateTimeOptions(this.selectedStore);
                 this.setDateToFirstPickupDate(this.selectedStore);
@@ -171,10 +185,8 @@ define([
                 storeDateTime = this.currentStoreDateTime.asDateTimeObject;
                 selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                     ? datepickerDate
-                    : this.firstPickupDate;
-                if (window.localStorage.getItem('datePickUpInCart')) {
-                    selectedDate = new Date(window.localStorage.getItem('datePickUpInCart'));
-                }
+                    : new Date(this.firstPickupDate);
+
                 this.selectedDayByName(this.weekDays[selectedDate.getDay()]);
                 this.isTodaySelected(this.isDateIsStoreToday(selectedDate, storeDateTime));
             }
@@ -197,6 +209,7 @@ define([
             // This is direct access to the element because change of value does not trigger change of datepicker input
             $('#' + this.uid).datepicker('setDate', firstPickupDate);
             this.onValueChange(firstPickupDate);
+            // window.localStorage.removeItem('datePickUpInCart');
         },
 
         /**

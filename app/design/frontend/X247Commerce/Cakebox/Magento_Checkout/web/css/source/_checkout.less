@@ -12,16 +12,16 @@
 					font-size: 18px;
 					line-height: 25px;
 					font-weight: 500;
-				    display: flex;
-				    justify-content: space-between;
-				    align-items: center;
-				    margin: 0;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin: 0;
 
-				    h2 {
-				    	margin: 0 0 10px;
-				    	font-size: 20px;
+					h2 {
+						margin: 0 0 10px;
+						font-size: 20px;
 						font-weight: 500;
-				    }
+					}
 
 					.ampickup-collect-button {
 						font-size: 11px;
@@ -35,8 +35,8 @@
 					border-bottom: 1px solid #DBDBDB;
 					padding: 12px 0;
 					.amlocator-name {
-					    margin: 0 0 5px;
-					    font-size: 14px;
+						margin: 0 0 5px;
+						font-size: 14px;
 					}
 
 					.amlocator-image {
@@ -45,9 +45,9 @@
 				}
 
 				.ampickup-pickup-details {
-				    display: flex;
-				    justify-content: space-between;
-				    align-items: center;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
 				}
 			}
 		}
@@ -70,18 +70,18 @@
 						.control {
 							input[type="text"] {
 								padding: 0 25px;
-							    background: #F6F6F6;
-							    border: none;
-							    height: 55px;
-							    line-height: 55px;
+								background: #F6F6F6;
+								border: none;
+								height: 55px;
+								line-height: 55px;
 							}
 
 							select {
 								padding: 0 25px;
-							    background: #F6F6F6;
-							    border: none;
-							    height: 55px;
-							    line-height: 55px;
+								background: #F6F6F6;
+								border: none;
+								height: 55px;
+								line-height: 55px;
 							}
 						}
 					}
@@ -115,7 +115,7 @@
 				}
 
 				.amlocator-store-desc {
-				    display: flex;
+					display: flex;
 					justify-content: space-between;
 					align-items: center;
 
@@ -134,9 +134,9 @@
 						}
 
 						.amlocator-title {
-						    font-weight: 400;
-						    font-size: 18px;
-						    text-transform: uppercase;
+							font-weight: 400;
+							font-size: 18px;
+							text-transform: uppercase;
 						}
 					}
 
@@ -145,12 +145,12 @@
 						text-align: right;
 
 						.select-location {
-						    background-color: #992E80;
-						    width: 68px;
-						    color: white;
-						    height: 34px;
-						    font-size: 14px;
-						    font-weight: 400;
+							background-color: #992E80;
+							width: 68px;
+							color: white;
+							height: 34px;
+							font-size: 14px;
+							font-weight: 400;
 						}
 					}
 				}
@@ -163,16 +163,16 @@
 					width: 33.33333%;
 
 					input[type="radio"] {
-					    visibility: hidden;
-					    width: 0;
-					    height: 0;
-					    position: absolute;
+						visibility: hidden;
+						width: 0;
+						height: 0;
+						position: absolute;
 
-					    &:checked {
-					    	+ .label {
-				    			background-color: #af3b99;
-					    	}
-					    }
+						&:checked {
+							+ .label {
+								background-color: #af3b99;
+							}
+						}
 					}
 				}
 
@@ -185,18 +185,18 @@
 				}
 
 				.premium.delivery, .express.delivery {
-				    position: relative;
-    				border: 0;
+					position: relative;
+					border: 0;
 
-    				&:before {
-    					content: '';
-					    position: absolute;
-					    left: 0;
-					    top: 0;
-					    height: 100%;
-					    width: 1px;
-					    background: #fff;
-    				}
+					&:before {
+						content: '';
+						position: absolute;
+						left: 0;
+						top: 0;
+						height: 100%;
+						width: 1px;
+						background: #fff;
+					}
 				}
 
 				.express.delivery {
@@ -204,25 +204,165 @@
 				}
 
 				.label {
-				    font-size: 16px;
-				    padding: 20px 10px 15px;
-				    background-color: #992E80;
-				    line-height: 1.1;
-				    letter-spacing: -0.56px;
-				    color: #fff;
-				    display: flex;
-				    width: 100%;
-				    justify-content: center;
-				    align-items: center;
-				    box-sizing: border-box;
-				    text-align: center;
-				    cursor: pointer;
+					font-size: 16px;
+					padding: 20px 10px 15px;
+					background-color: #992E80;
+					line-height: 1.1;
+					letter-spacing: -0.56px;
+					color: #fff;
+					display: flex;
+					width: 100%;
+					justify-content: center;
+					align-items: center;
+					box-sizing: border-box;
+					text-align: center;
+					cursor: pointer;
 				}
 			}
 
 			.amlocator-block.-separator {
 				display: none;
 			}
+		}
+
+		.logo {
+			margin: 0;
+		}
+
+		.page-header .header.content {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		input[type="text"],
+		input[type="password"],
+		input[type="url"],
+		input[type="tel"],
+		input[type="search"],
+		input[type="number"],
+		input[type*="date"],
+		input[type="email"],
+		select {
+			height: 50px;
+			border-radius: 5px;
+		}
+
+		.page-main {
+			max-width: 1200px;
+		}
+
+		.opc-wrapper {
+			.form-shipping-address,
+			.form-login {
+				max-width: 100%;
+			}
+		}
+
+		.step-title {
+			font-weight: 500;
+			color: #363A40;
+			padding-bottom: 20px;
+			border-bottom: 1px solid rgba(112, 112, 112, 0.28);
+			margin-bottom: 25px;
+		}
+
+		.opc-block-summary {
+			& > .title {
+				font-size: 22px;
+				font-weight: 500;
+				padding-bottom: 3px;
+			}
+
+			.items-in-cart {
+				& > .title {
+					padding-top: 0;
+					border-bottom: 1px solid #DBDBDB;
+					margin-bottom: 20px;
+
+					strong {
+						font-size: 14px;
+						font-weight: 400;
+					}
+				}
+			}
+
+
+			.minicart-items {
+				.product-item-name {
+					font-size: 12px;
+					margin-bottom: 0;
+				}
+
+				.product-item-details {
+					.details-qty {
+						margin-top: 2px;
+					}
+				}
+
+				.product-item {
+					.product-item-inner {
+						margin-bottom: 0;
+					}
+				}
+
+				.product {
+					.toggle {
+						font-size: 12px;
+					}
+				}
+			}
+		}
+
+		.form.methods-shipping input.input-text {
+			height: 50px !important;
+			width: 100%;
+			margin: 0;
+		}
+
+		.pickup-store-wrapper {
+			.select-collection {
+				.label {
+					font-size: 12px;
+				}
+			}
+
+			.amlocator-wrapper {
+				input[type="text"] {
+					border-radius: 0;
+				}
+			}
+		}
+
+		.ampickup-store-container {
+			.ampickup-field.-date .control {
+				background: #F6F6F6;
+				border-radius: 5px;
+			}
+		}
+
+		.ampickup-store-container {
+			.ampickup-options-container {
+				margin-bottom: 0;
+			}
+		}
+
+		.checkout-shipping-method {
+			.actions-toolbar > .primary {
+				float: left;
+
+				.action.continue {
+					min-width: 100px;
+				}
+			}
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum ='min') and (@break = @screen__m) {
+	.checkout-index-index {
+		.opc-wrapper {
+			width: 60%;
 		}
 	}
 }
@@ -253,29 +393,33 @@
 				}
 			}
 		}
+
+		.step-title {
+			font-size: 28px;
+		}
 	}
 }
 
 & when (@media-target = 'desktop'), (@media-target = 'all') {
-    @media only screen and (min-width: @screen__m) and (max-width: (@screen__l - 1)) {
-        .checkout-index-index {
-        	.opc-sidebar, .opc-wrapper {
-        		width: 100%;
-        	}
-        }
-    }
+	@media only screen and (min-width: @screen__m) and (max-width: (@screen__l - 1)) {
+		.checkout-index-index {
+			.opc-sidebar, .opc-wrapper {
+				width: 100%;
+			}
+		}
+	}
 }
 
 & when (@media-target = 'desktop'), (@media-target = 'all') {
-    @media only screen and (min-width: @screen__l) and (max-width: @screen__xl) {
-        .checkout-index-index {
-        	.pickup-store-wrapper {
-        		.select-collection {
-        			.label {
-        				min-height: 90px;
-        			}
-        		}
-        	}
-        }
-    }
+	@media only screen and (min-width: @screen__l) and (max-width: @screen__xl) {
+		.checkout-index-index {
+			.pickup-store-wrapper {
+				.select-collection {
+					.label {
+						min-height: 90px;
+					}
+				}
+			}
+		}
+	}
 }
