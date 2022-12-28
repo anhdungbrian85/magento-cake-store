@@ -20,7 +20,7 @@ class OptionsLocatorStore implements \Magento\Framework\Data\OptionSourceInterfa
 
 	public function toOptionArray() {
 		$options = [];
-		$locationStore = $this->locationFactory->create()->getCollection();
+		$locationStore = $this->locationFactory->create()->getCollection()->setOrder('name','ASC');;
 					
 		foreach ($locationStore as $store) {
 			$options[] =

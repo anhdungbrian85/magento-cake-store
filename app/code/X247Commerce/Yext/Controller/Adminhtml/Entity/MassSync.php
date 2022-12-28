@@ -102,13 +102,14 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
                     
                         $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
 
-                        if ($newSource->getSourceCode()) {
+                        if (!is_null($newSource)) {
                             $this->yextAttribute->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $location->getId());
                         }
 
                         if (!is_null($locationAdmin) && !is_null($newSource)) {
                             $this->adminSource->setData(['user_id' => $locationAdmin->getUserId(), 'source_code' => $newSource->getSourceCode()]);
                             $this->adminSource->save();
+                            $this->locatorSourceResolver->assignAmLocatorStoreToSource($location->getId(), $newSource->getSourceCode());
                         }
                     } else {
                         foreach ($locationSourceCodes as $source)

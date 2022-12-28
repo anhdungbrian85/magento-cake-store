@@ -317,13 +317,14 @@ class YextAttribute
 
                     $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
 
-                    if ($newSource->getSourceCode()) {
+                    if (!is_null($newSource)) {
                         $this->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $locationModel->getId());
                     }
 
                     if (!is_null($newUser) && !is_null($newSource)) {
                         $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
                         $this->adminSource->save();
+                        $this->locatorSourceResolver->assignAmLocatorStoreToSource($locationModel->getId(), $newSource->getSourceCode());
                     }
                 }
                 return $locationModel;
@@ -369,7 +370,7 @@ class YextAttribute
                    $this->insertYextEntityIdValue([$location->getId() => $yextEntityId]);
                    if (isset($data['primaryProfile']['hours']['reopenDate'])) {                       
                     $this->insertAttributeValue($location->getId(), 'temporarily_closed', 'Reopen Date: '.$data['primaryProfile']['hours']['reopenDate']);
-                    var_dump($data['primaryProfile']['hours']['reopenDate']);
+                    
                    } else {
                     $this->insertAttributeValue($location->getId(), 'temporarily_closed');
                    }
@@ -404,12 +405,18 @@ class YextAttribute
                 if ($data['email']) {
                     $userModel = $this->userFactory->create();
                     $user = $userModel->load($data['email'], 'email');
+                    if (!$user->getUserId()) {
+                        $user = $userModel->load($adminInfo['email'], 'email');
+                    }
                     // var_dump($user->getUserId());die();
                     if ($user->getUserId()) {
-                        return $user;
+                        $this->logger->log('600', "Edit User with Yext Store Email");
+                        $adminInfo['password']  = 'Cakebox123';
+                        $user->addData($adminInfo);
+                        return $user->save();
                     } else {
-                        $this->logger->log('600', "Add New User");
-                        $adminInfo['password']  = 'Cakebox123'.$this->yextHelper->randomString(10);
+                        $this->logger->log('600', "Add New User with Yext Store Email");
+                        $adminInfo['password']  = 'Cakebox123';
                         $this->logger->log('600', print_r($adminInfo, true));
                         $userModel->setData($adminInfo);
                         $userModel->setRoleId($this->userHelper->getStaffRole());
@@ -426,7 +433,36 @@ class YextAttribute
                         }
                         return $user; 
                     }
-                }            
+                } else {
+                    $userModel = $this->userFactory->create();
+                    $user = $userModel->load($adminInfo['email'], 'email');
+                    // var_dump($user->getUserId());die();
+                    if ($user->getUserId()) {
+                        $this->logger->log('600', "Edit User without Yext Store Email");
+                        $adminInfo['password']  = 'Cakebox123';
+                        $user->addData($adminInfo);
+                        return $user->save();
+                    } else {
+                        $this->logger->log('600', "Add New User without Yext Store Email");
+                        $adminInfo['password']  = 'Cakebox123';
+                        $this->logger->log('600', print_r($adminInfo, true));
+                        $userModel->setData($adminInfo);
+                        $userModel->setRoleId($this->userHelper->getStaffRole());
+                    
+                        $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']); 
+                        $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
+                        $user = $userModel->save();
+                        if ($sources) {
+                            foreach ($sources as $source)
+                            {
+                                $this->adminSource->setData(['user_id' => $user->getUserId(), 'source_code' => $source]);
+                                $this->adminSource->save();                                
+                            }
+                        }
+                        return $user; 
+                    }
+
+                }
             } 
             // else {
             //     $userModel = $this->userFactory->create()->load($userId);
@@ -464,9 +500,10 @@ class YextAttribute
      */
     public function editSource($storeData, $locationId, $sourceCode = null)
     {
-       
+        $locationName = strtolower(str_replace(['(ASDA)'], [''], trim($storeData['name'])));
+
         $sourceData = [
-            'source_code' => strtolower(str_replace([' ', '(', ')'], ['_', '', ''], trim($storeData['name']))),
+            'source_code' => strtolower(str_replace([' ', '(', ')', '(ASDA)'], ['_', '', '', ''], trim($locationName))),
             'name' => $storeData['name'],
             'enabled' => 1,
             'description' => $storeData['description'],
@@ -479,9 +516,20 @@ class YextAttribute
         
         try {
             if (!$sourceCode) {
-                $source = $this->sourceInterface;
-                $source->setData($sourceData);
-                return $source->save();
+                $source = $this->sourceInterface->load($sourceData['source_code']);
+
+                if ($source->getSourceCode()) {
+                    return $source;
+                } else {
+                    if (!strpos($storeData['name'], 'ASDA')) 
+                    {
+                        $source = $this->sourceInterface;
+                        $source->setData($sourceData);
+                        return $source->save();
+                    } else {
+                        return null;
+                    }
+                }
                 
             } else {
                 $source = $this->sourceInterface->load($sourceCode);
@@ -677,5 +725,25 @@ class YextAttribute
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
+    }
+    /**
+     * Assign Amasty Store Location To Source
+     * @param AmLocation Id, Source Code
+     * @return 
+     * 
+     **/
+    public function assignAmLocatorStoreToSource($locationId, $sourceCode)
+    {
+        $this->locatorSourceResolver->assignAmLocatorStoreToSource($locationId, $sourceCode);
+    }
+    /**
+     * Unassign Amasty Store Location To Source
+     * @param AmLocation Id, Source Code
+     * @return 
+     * 
+     **/
+    public function unAssignAmLocatorStoreWithSource($locationId, $sourceCode)
+    {
+        $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($locationId, $sourceCode);
     }
 }
