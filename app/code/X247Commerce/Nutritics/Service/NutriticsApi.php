@@ -58,15 +58,15 @@ class NutriticsApi
             $password = $this->configHelper->getNutriticsAccountPassword();
             $limit = $this->configHelper->getLimit();
 
-            $filter = $this->configHelper->getFilter();
+            // $filter = $this->configHelper->getFilter();
 
             if (!$username || !$password) {
                 throw new \Exception("Username or Password cannot be empty");
             }
 
-            $filterParams = [];
-            if ($filter) {
-                // code...
+            // $filterParams = [];
+            if ($params) {
+                $params = implode(',', $params);
             }
             $requestParams = ['attr' => $params];
             $limitParams = ['limit' => $limit];

@@ -20,6 +20,10 @@
 					<label>User Id</label>
 					<comment>Enter the ID of the Nutritics user (Your developer account can be granted access to multiple Nutritics users) who's objects (An Nutritics object is a client, food, recipe, mealplan or dietlog) you would like to work with</comment>
 				</field>
+				<field id="limit" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Limit</label>
+					<comment>Optional. Enter an offset and limit for the list you would like to work with. This is used for pagination and works in a similar way to SQL limits. For example, enter 11,20 to return 20 records, starting from the 11th record. Ignore this field to return all records.</comment>
+				</field>
 			</group>
 		</section>
 	</system>

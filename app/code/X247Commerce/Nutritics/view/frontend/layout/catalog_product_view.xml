@@ -5,7 +5,12 @@
         <referenceBlock name="product.info.details">
             <block class="X247Commerce\Nutritics\Block\Product\View\Nutritics" name="product.info.nutritics" as="product.nutritics" template="X247Commerce_Nutritics::product/view/nutritics.phtml" group="detailed_info">
                 <arguments>
-                    <argument translate="true" name="title" xsi:type="string">Nutritics</argument>
+                    <argument translate="true" name="title" xsi:type="string">Nutritional Information</argument>
+                </arguments>
+            </block>
+            <block class="X247Commerce\Nutritics\Block\Product\View\Nutritics" name="product.info.allergen" as="product.allergen" template="X247Commerce_Nutritics::product/view/allergen.phtml" group="detailed_info">
+                <arguments>
+                    <argument translate="true" name="title" xsi:type="string">Allergen Information</argument>
                 </arguments>
             </block>
         </referenceBlock>

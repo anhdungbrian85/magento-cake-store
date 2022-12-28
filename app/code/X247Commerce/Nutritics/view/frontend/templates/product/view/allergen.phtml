@@ -1,0 +1,46 @@
+<?php
+/**
+ * @var $block \X247Commerce\Nutritics\Block\Product\View\Nutritics
+ */
+?>
+<?php
+$nutritics = $block->getNutriticsInfoFromApi();
+
+$nutriticsInfos = $block->getProductNutriticsInfoInDb();
+?>
+<div class="allergens-info-wraper">
+
+    <div class="allergens-info">
+        <?php foreach ($nutriticsInfos as $info): ?>
+            <?php if ($info['attribute_code'] == 'allergens'): ?>
+                    <div class="allergens-info-detail">
+                        <?php $allergens = json_decode($info['value'], true) ?>
+                        <?php if ($allergens['contains']) : ?>
+                            <p>
+                                <span class="allergens-title"><?= __('This product contains the following allergens') ?>: </span>
+                                <span class="allergens-detail contains"><?= implode(', ', $allergens['contains']) ?></span>
+                            </p>
+                        <?php endif?>
+                        <?php if ($allergens['maycontain']) : ?>
+                            <p>
+                                <span class="allergens-title"><?= __('This product may contains the following allergens') ?>: </span>
+                                <span class="allergens-detail maycontain"><?= implode(', ', $allergens['maycontain']) ?></span>
+                            </p>
+                        <?php endif?>
+                        <?php if ($allergens['freefrom']) : ?>
+                            <p>
+                                <span class="allergens-title"><?= __('This product free from the following allergens') ?>: </span>
+                                <span class="allergens-detail freefrom"><?= implode(', ', $allergens['freefrom']) ?></span>
+                            </p>
+                        <?php endif?>
+                        <?php if ($allergens['suitablefor']) : ?>
+                            <p>
+                                <span class="allergens-title"><?= __('This product suitablefor the following') ?>: </span>
+                                <span class="allergens-detail suitablefor"><?= implode(', ', $allergens['suitablefor']) ?></span>
+                            </p>
+                        <?php endif?>
+                    </div>
+            <?php endif ?>
+        <?php endforeach ?>
+    </div>
+</div>

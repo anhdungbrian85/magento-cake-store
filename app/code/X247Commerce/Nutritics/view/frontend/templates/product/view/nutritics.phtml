@@ -4,13 +4,28 @@
  */
 ?>
 <?php
-$nutriticsInfo = $block->getNutriticsInfo();
-$reporturl = '';
-if ($nutriticsInfo) {
-    $reporturl = $nutriticsInfo[1]['reporturl'];
-}
+$nutritics = $block->getNutriticsInfoFromApi();
+
+$nutriticsInfos = $block->getProductNutriticsInfoInDb();
 ?>
 <div class="nutritics-info-wraper">
-    <iframe class="nutritics-info" src="<?= $reporturl ?>" title="Product's Nutrition Information">
-    </iframe>
+
+    <table class="table-nutritics-info">
+        <tr>
+            <th><?= __('Nutritionals')?></th>
+            <th><?= __('Value')?></th>
+            <th><?= __('Unit')?></th>
+            <th><?= __('Percent RI')?></th>
+        </tr>
+        <?php foreach ($nutriticsInfos as $info): ?>
+            <?php if ($info['value'] && $info['attribute_code'] != 'allergens'): ?>
+                    <tr class="nutritics-info-detail">
+                        <td class="attribute_name"><?= $info['attribute_name'] ?></td>
+                        <td class="value"><?= $info['value'] ?></td>
+                        <td class="attribute_unit"><?= $info['attribute_unit'] ?></td>
+                        <td class="percent_ri"><?= $info['percent_ri'] ?></td>
+                    </tr>
+            <?php endif ?>
+        <?php endforeach ?>
+    </table>
 </div>

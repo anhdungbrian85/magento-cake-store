@@ -10,12 +10,8 @@ class Config extends AbstractHelper
 {
     const NUTRITICS_CONFIG_PATH_USERNAME = 'nutritics/api_settings/username';
     const NUTRITICS_CONFIG_PATH_PASSWORD = 'nutritics/api_settings/password';
-    const NUTRITICS_CONFIG_PATH_API_FUNCTION = 'nutritics/api_settings/function';
     const NUTRITICS_CONFIG_PATH_USER_ID = 'nutritics/api_settings/user_id';
-    const NUTRITICS_CONFIG_PATH_OBJECT = 'nutritics/api_settings/object';
-    const NUTRITICS_CONFIG_PATH_FILTER = 'nutritics/api_settings/filter';
     const NUTRITICS_CONFIG_PATH_LIMIT = 'nutritics/api_settings/limit';
-    const NUTRITICS_CONFIG_PATH_ATTRIBUTES = 'nutritics/api_settings/attributes';
     
     const NUTRITICS_ENDPOINT = 'www.nutritics.com/api/v1.2';     
 
@@ -46,16 +42,6 @@ class Config extends AbstractHelper
     }
 
     /**
-     * Get Nutritics Attributes To Fetch
-     *
-     * @return string
-     */
-    public function getAttributesToFetch()
-    {
-        return $this->scopeConfig->getValue(self::NUTRITICS_CONFIG_PATH_ATTRIBUTES, ScopeInterface::SCOPE_STORE);
-    }
-
-    /**
      * Get Limit To Fetch
      *
      * @return int
@@ -65,15 +51,6 @@ class Config extends AbstractHelper
         return $this->scopeConfig->getValue(self::NUTRITICS_CONFIG_PATH_LIMIT, ScopeInterface::SCOPE_STORE);
     }
 
-    /**
-     * Get Filter
-     *
-     * @return int
-     */
-    public function getFilter()
-    {
-        return $this->scopeConfig->getValue(self::NUTRITICS_CONFIG_PATH_FILTER, ScopeInterface::SCOPE_STORE);
-    }
     /**
      * Get User Id (the ID of the Nutritics user (your developer account can be granted access to multiple Nutritics users) who's objects you would like to work with)
      *

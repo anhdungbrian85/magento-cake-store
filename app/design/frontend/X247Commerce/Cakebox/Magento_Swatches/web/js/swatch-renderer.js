@@ -759,6 +759,35 @@ define([
         },
 
         /**
+         * Callback for update nutritics Info.
+         */
+        nutriticsInfo: function() {
+            var selectedProductId = this.getProductId();
+            var characterLimit = this.options.jsonConfig.character_limit[selectedProductId];
+            console.log(selectedProductId);
+            var nutriticsUrl = this.options.getNutriticsUrl;
+            console.log(nutriticsUrl);
+            if (selectedProductId) {
+                $.ajax({
+                    url: nutriticsUrl,
+                    type: 'POST',
+                    data: {
+                        selectedProductId: selectedProductId
+                    },
+                    success: function(response) {     
+                        var newHtmls = $.parseJSON(response);
+                        console.log(newHtmls['nutriticsHtml']);
+                        console.log(newHtmls['allergensHtml']);
+                        $(".nutritics-info-wraper").replaceWith(newHtmls['nutriticsHtml']);
+                        $(".allergens-info-wraper").replaceWith(newHtmls['allergensHtml']);
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log('Error happens. Try again.');
+                    }
+                });
+            }            
+        },
+        /**
          * Load media gallery using ajax or json config.
          *
          * @private
@@ -836,6 +865,7 @@ define([
             $widget._Rebuild();
 
             $widget.updateCharacterLimit();
+            $widget.nutriticsInfo();
             
             if ($priceBox.is(':data(mage-priceBox)')) {
                 $widget._UpdatePrice();

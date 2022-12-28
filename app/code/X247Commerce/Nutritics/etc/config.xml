@@ -3,14 +3,10 @@
 	<default>
 		<nutritics>
 			<api_settings>
-				<username/>
-				<password/>
-				<function/>
-				<user_id/>
-				<object/>
-				<filter/>
-				<limit/>
-				<attributes/>
+				<username></username>
+				<password></password>
+				<user_id></user_id>
+				<limit>100</limit>
 			</api_settings>
 		</nutritics>
 	</default>
