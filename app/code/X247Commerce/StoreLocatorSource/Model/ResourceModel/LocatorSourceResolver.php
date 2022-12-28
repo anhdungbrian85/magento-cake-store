@@ -14,6 +14,7 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 class LocatorSourceResolver
 {
+    const LOCATION_SOURCE_LINK_TABLE = 'amasty_amlocator_location_source_link';
     protected ResourceConnection $resource;
     protected $connection;
     protected AdminSourceCollectionFactory $sourceLink;
@@ -41,13 +42,21 @@ class LocatorSourceResolver
      * 
      **/
 
+    // public function getAmLocatorBySource($sourceCode)
+    // {
+    //     $sourceTbl = $this->resource->getTableName('inventory_source');
+    //     $sqlQuery = $this->connection->select()
+    //             ->from($sourceTbl, ['amlocator_store'])
+    //             ->where("source_code = ?", $sourceCode);
+    //     return $this->connection->fetchOne($sqlQuery);
+    // }
     public function getAmLocatorBySource($sourceCode)
     {
-        $sourceTbl = $this->resource->getTableName('inventory_source');
+        $sourceTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $sqlQuery = $this->connection->select()
-                ->from($sourceTbl, ['amlocator_store'])
+                ->from($sourceTbl, ['location_id'])
                 ->where("source_code = ?", $sourceCode);
-        return $this->connection->fetchOne($sqlQuery);
+        return $this->connection->fetchCol($sqlQuery);
     }
 
     /**
@@ -56,12 +65,27 @@ class LocatorSourceResolver
      * @return [source_code]|null
      * 
      **/
+    // public function getSourceCodeByAmLocator($locationId)
+    // {
+    //     $sourceTbl = $this->resource->getTableName('inventory_source');
+    //     $sqlQuery = $this->connection->select()
+    //             ->from($sourceTbl, ['source_code'])
+    //             ->where("amlocator_store = ?", $locationId);
+    //     $results = $this->connection->fetchAll($sqlQuery);
+    //     $resultSource = [];
+    //     foreach($results as $result) {
+    //         if (!empty($result['source_code'])) {
+    //             $resultSource[] = $result['source_code'];
+    //         }
+    //     }
+    //     return $resultSource;
+    // }
     public function getSourceCodeByAmLocator($locationId)
     {
-        $sourceTbl = $this->resource->getTableName('inventory_source');
+        $sourceTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $sqlQuery = $this->connection->select()
                 ->from($sourceTbl, ['source_code'])
-                ->where("amlocator_store = ?", $locationId);
+                ->where("location_id = ?", $locationId);
         $results = $this->connection->fetchAll($sqlQuery);
         $resultSource = [];
         foreach($results as $result) {
@@ -114,18 +138,18 @@ class LocatorSourceResolver
     public function getAmLocatorStoresByUser($user)
     {
         $sources = $this->getSourcesByUser($user);
-        $sourceTbl = $this->resource->getTableName('inventory_source');
+        $sourceTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
 
         if ($sources) {
             $sqlGetSources = $this->connection->select()
-                ->from($sourceTbl, ['amlocator_store'])
+                ->from($sourceTbl, ['location_id'])
                 ->where("source_code IN (?)", $sources);
             
             $amStores = $this->connection->fetchAll($sqlGetSources);
             $resultAmStoreIds = [];
             foreach($amStores as $amStore) {
-                if (!empty($amStore['amlocator_store'])) {
-                    $resultAmStoreIds[] = $amStore['amlocator_store'];
+                if (!empty($amStore['location_id'])) {
+                    $resultAmStoreIds[] = $amStore['location_id'];
                 }
             }
             return $resultAmStoreIds;
@@ -160,5 +184,36 @@ class LocatorSourceResolver
             return $resultUserIds;
         }
         return false;
+    }
+    /**
+     * Assign Amasty Store Location To Source
+     * @param AmLocation Id, Source Code
+     * @return 
+     * 
+     **/
+    public function assignAmLocatorStoreToSource($locationId, $sourceCode)
+    {
+        $sourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
+        $data =['location_id' => $locationId, 'source_code' => $sourceCode];
+        if ($sourceLinkTbl) {
+            $this->connection->insert($sourceLinkTbl, $data);
+        }
+    }
+    /**
+     * Unassign Amasty Store Location To Source
+     * @param AmLocation Id, Source Code
+     * @return 
+     * 
+     **/
+    public function unAssignAmLocatorStoreWithSource($locationId, $sourceCode)
+    {
+        $sourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
+        $data = [
+                    $this->connection->quoteInto('location_id = ?', $locationId),
+                    $this->connection->quoteInto('source_code = ?', $sourceCode)
+                ];
+        if ($sourceLinkTbl) {
+            $this->connection->delete($sourceLinkTbl, $data);
+        }
     }
 }

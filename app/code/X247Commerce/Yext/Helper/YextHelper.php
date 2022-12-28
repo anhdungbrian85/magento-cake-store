@@ -278,10 +278,10 @@ class YextHelper extends AbstractHelper
     {
         $resultSource = [];
         if ($locationId) {
-            $sourceTbl = $this->resource->getTableName('inventory_source');
+            $sourceTbl = $this->resource->getTableName('amasty_amlocator_location_source_link');
             $sqlQuery = $this->connection->select()
                     ->from($sourceTbl, ['source_code'])
-                    ->where("amlocator_store = ?", $locationId);
+                    ->where("location_id = ?", $locationId);
             $results = $this->connection->fetchAll($sqlQuery);
             
             if ($results) {

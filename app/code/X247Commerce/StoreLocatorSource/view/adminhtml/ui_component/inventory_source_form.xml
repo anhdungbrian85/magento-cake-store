@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <fieldset name="general">
-    	<field name="amlocator_store" formElement="select" sortOrder="75">
-           <settings>
-                <dataType>number</dataType>
-                <label translate="true">Location</label>
-                <validation>
-                    <rule name="required-entry" xsi:type="boolean">true</rule>
-                </validation>
+        <field name="amlocator_store" component="X247Commerce_StoreLocatorSource/js/components/select-location">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorStore</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Select Locations</item>
+                    <item name="source" xsi:type="string">locations</item>
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="multiple" xsi:type="boolean">true</item>
+                    <item name="sortOrder" xsi:type="number">75</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                    <item name="dataScope" xsi:type="string">amlocator_store</item>
+                    <item name="componentType" xsi:type="string">field</item>
+                </item>
+            </argument>
+            <settings>
+                <listens>
+                    <link name="${ $.namespace }.${ $.namespace }:responseData">setParsed</link>
+                </listens>
             </settings>
-            <formElements>
-                <select>
-                    <settings>
-                        <options class="X247Commerce\StoreLocatorSource\Model\OptionsLocatorStore"/>
-                    </settings>
-                </select>
-            </formElements>
         </field>
     </fieldset>
 </form>

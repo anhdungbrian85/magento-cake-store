@@ -35,6 +35,7 @@ class AssignAmStoreLocatorData
     	$action = $this->request->getFullActionName();
     	if ($action == 'inventory_source_edit') {
     		// Only when edit source 
+
     		foreach($result as $sourceCode => &$sourceData) {
 	    		if (!empty($sourceCode)) {
 		    		$sourceData['general']['amlocator_store'] = $this->locatorSourceResolver->getAmLocatorBySource($sourceCode);
