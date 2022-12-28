@@ -9,12 +9,11 @@ define([
     'Magento_Ui/js/form/element/date',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+    'X247Commerce_Checkout/js/model/secure-time',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-store',
     'mage/calendar'
-], function (registry, ko, $, _, Component, pickup, pickupDataResolver) {
+], function (registry, ko, $, _, Component, pickup, pickupDataResolver, secureTime) {
     'use strict';
-
-    var countDown;
 
     return Component.extend({
         defaults: {
@@ -41,9 +40,7 @@ define([
 
         initialize: function () {
             this._super();
-            console.log('initialize::pickup-date');
-            console.log('initialize::pickup-date::storeId', pickupDataResolver.storeId());
-            console.log('initialize::pickup-date::dateData', pickupDataResolver.dateData());
+
             if (pickupDataResolver.storeId() != undefined) {
                 this.onChangeStore(pickupDataResolver.storeId());
                 this.getDataFromCache = true;
@@ -86,12 +83,6 @@ define([
         },
 
         onValueChange: function (value) {
-            if (countDown) {
-                clearInterval(countDown);
-            }
-            if (window.timer) {
-                clearInterval(window.timer);
-            }
             var datepickerDate,
                 selectedDate,
                 details = registry.get('block-store-locator.amstorepickup.am_pickup_store'),
@@ -104,7 +95,7 @@ define([
             selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
                 ? datepickerDate
                 : value;
-            
+
             pickupDataResolver.dateData(selectedDate);
             details.datePickup(selectedDateFormat.toLocaleDateString("en-US", options));
             this.getSelectedDay(datepickerDate, value);
@@ -112,37 +103,13 @@ define([
                 date: value,
                 store: this.selectedStore
             });
+
             window.localStorage.setItem('datePickUpInCart',value);
 
             var pickupDateOld = registry.get('block-store-locator.amstorepickup.am_pickup_date'),
-                pickupTimeOld = registry.get('block-store-locator.amstorepickup.am_pickup_time'),
-                valueTimeInit = pickupTimeOld.options()[0],
-                secureTimeEnd = new Date(new Date().getTime() + 15 * 60000),
-                minutes, seconds;
+                pickupTimeOld = registry.get('block-store-locator.amstorepickup.am_pickup_time');
 
-            window.timer = countDown = setInterval(function() {
-                var now = new Date().valueOf(),
-                    distance = secureTimeEnd.valueOf() - now;
-
-                minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                seconds = Math.floor((distance % (1000 * 60)) / 1000);
-              
-                $('#block-secure-time-popup_wrapper .content').text('To secure your order time slot confirm within ' + minutes + ' min ' + seconds + ' sec');
-                if (minutes <= 0 && seconds <= 0) {
-                    
-                    if (pickupDateOld) {
-                        pickupDateOld.value(pickupDateOld.initialValue);
-                        $('#' + pickupDateOld.uid).datepicker('setDate', pickupDateOld.initialValue);
-                    }
-
-                    if (valueTimeInit) {
-                        pickupTimeOld.value(valueTimeInit.value);
-
-                    }
-                    
-                    clearInterval(countDown);
-                }
-            }, 1000);
+            secureTime.countDownTimer(pickupDateOld, pickupTimeOld);
         },
 
         onChangeStore: function () {

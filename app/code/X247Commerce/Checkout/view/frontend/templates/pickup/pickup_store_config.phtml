@@ -1,3 +1,5 @@
+
+<?php /** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */ ?>
 <div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal">
     <div class="amlocator-map-container delivery-popup" id="map-container-delivery-popup">
         <div class="title">
@@ -117,3 +119,20 @@
         })
     </script>
 </div>
+
+<?php 
+$serializedStoreLocationData = /* @noEscape */ $block->getStoreLocationData();
+$scriptString = <<<script
+            window.storeLocationData = {$serializedStoreLocationData};
+            require([
+                'mage/url',
+                'Magento_Ui/js/block-loader'
+            ], function(url, blockLoader) {
+                blockLoader(
+                    "{$block->escapeJs($block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')))}"
+                );
+                return url.setBaseUrl('{$block->escapeJs($block->escapeUrl($block->getBaseUrl()))}');
+            })
+script;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

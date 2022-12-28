@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="content">
-            <block class="X247Commerce\Checkout\Block\Cart\SecureTimePopup" name="secure.time.popup" template="X247Commerce_Checkout::cart/secure_time_popup.phtml" before="checkout.cart" />
+        <referenceContainer name="columns.top">
+            <container name="title.header.wrapper"  htmlTag="div" htmlClass="header-title-wrapper" before="-">
+                <block class="X247Commerce\Checkout\Block\Cart\SecureTimePopup" name="secure.time.popup" template="X247Commerce_Checkout::cart/secure_time_popup.phtml" before="checkout.cart" />
+            </container>
         </referenceContainer>
-        <referenceContainer name="checkout.cart.items">
-            <block class="X247Commerce\Checkout\Block\Cart\StoreLocator" name="checkout.cart.store.locator" template="X247Commerce_Checkout::cart/store_locator.phtml" before="checkout.cart.crosssell">
+        <move element="page.main.title" destination="title.header.wrapper" before="-" />
+        <referenceContainer name="checkout.cart.container">
+            <block class="X247Commerce\Checkout\Block\Cart\StoreLocator" name="checkout.cart.store.locator" template="X247Commerce_Checkout::cart/store_locator.phtml" after="-">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="types" xsi:type="array">

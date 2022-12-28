@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="ampickup-field -store">
-        <label class="label" data-bind="visible:labelVisible, text:label, attr:{for: uid}"></label>
+<!--         <label class="label" data-bind="visible:labelVisible, text:label, attr:{for: uid}"></label>
         <div class="ampickup-wrapper">
             <select data-bind="attr: {id: uid},
                        options: options,
@@ -37,7 +37,10 @@
                     class="ampickup-store">
             </select>
             <span class="ampickup-separator -cart"></span>
-        </div>
+        </div> -->
+        <div id="pickup-store-wrapper" class="pickup-store-wrapper"></div>
+        <div data-bind="afterRender: moveMapContainerDelivery"></div>
+
     </div>
 
 </div>

@@ -148,6 +148,9 @@ define([
                 selectedDate = new Date(pickupDataResolver.dateData());
             } 
             return selectedDate.toLocaleDateString("en-US", options);
-        }
+        },
+        moveMapContainerDelivery: function () {
+            $("#map-container-delivery-popup").detach().appendTo('#pickup-store-wrapper')
+        },
     });
 });
