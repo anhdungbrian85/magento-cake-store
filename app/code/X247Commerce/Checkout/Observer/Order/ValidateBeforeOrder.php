@@ -41,6 +41,7 @@ class ValidateBeforeOrder implements ObserverInterface
     {
         $locationId = $this->customerSession->getStoreLocationId();
         if ($locationId) {
+            // $this->logger->log('600', 'Selected Location '.print_r($locationId, true));
             $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
             $searchCriteria = $searchCriteriaBuilder->addFilter('amlocator_store', $locationId, 'in')->create();
             $sources = $this->sourceRepository->getList($searchCriteria)->getItems();
@@ -57,6 +58,7 @@ class ValidateBeforeOrder implements ObserverInterface
             foreach ($order->getAllItems() as $item) {
                 $proSku[] = $item->getSku();
             }
+            // $this->logger->log('600', 'Selected Skus '.print_r($proSku, true));
             foreach ($proSku as $sku) {
                 $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($sku);
                 $sourceList = [];
@@ -83,6 +85,8 @@ class ValidateBeforeOrder implements ObserverInterface
                     throw new PaymentException(__('Some of the products are not available.'));     
                 }
             }
+        } else {
+            throw new PaymentException(__('Please choose a store!'));
         }
         return;
     }

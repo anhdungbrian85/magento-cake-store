@@ -114,6 +114,12 @@ $allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub
                         <td><?= $block->escapeHtml($order->getBaseToOrderRate()) ?></td>
                     </tr>
                 <?php endif; ?>
+                <?php if ($order->getSmsReminder()) : ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('SMS Reminder:')) ?></th>
+                        <td><?= $block->escapeHtml(__('Enable')) ?></td>
+                    </tr>
+                <?php endif; ?>
             </table>
             </div>
         </div>

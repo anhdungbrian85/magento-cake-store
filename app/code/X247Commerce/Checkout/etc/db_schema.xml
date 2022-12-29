@@ -2,8 +2,10 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="sales_order" resource="default" engine="innodb">
         <column xsi:type="int" name="store_location_id" nullable="true" comment="Store Location ID"/>
+        <column xsi:type="int" name="sms_reminder" nullable="true" comment="Sms Reminder Status"/>
     </table>
     <table name="quote" resource="default" engine="innodb">
         <column xsi:type="int" name="store_location_id" nullable="true" comment="Store Location ID"/>
+        <column xsi:type="int" name="sms_reminder" nullable="true" comment="Sms Reminder Status"/>
     </table>
 </schema>

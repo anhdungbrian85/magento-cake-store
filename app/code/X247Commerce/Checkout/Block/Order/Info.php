@@ -76,4 +76,14 @@ class Info extends \Magento\Sales\Block\Adminhtml\Order\View\Info
 		}
 		return false;
 	}
+
+	public function getOrderSmsReminder($order)
+	{
+		if ($order->getSmsReminder()) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
 }
