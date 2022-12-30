@@ -104,13 +104,17 @@ class LocatorSourceResolver
      **/
     public function getSourcesByUser($user)
     {
-        $userId = $user->getId();
-        $sourcesCol = $this->sourceLink->create()->addFieldToFilter('user_id', $userId);
-        $result = [];
-        foreach($sourcesCol as $sourceUser) {
-            $result[] = $sourceUser->getData('source_code');
+        if ($user) {
+            $userId = $user->getId();
+            if ($userId) {
+                $sourcesCol = $this->sourceLink->create()->addFieldToFilter('user_id', $userId);
+                $result = [];
+                foreach($sourcesCol as $sourceUser) {
+                    $result[] = $sourceUser->getData('source_code');
+                }
+                return $result ? : false;
+            }
         }
-        return $result ? : false;
     }
 
     /**
