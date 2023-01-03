@@ -125,7 +125,9 @@ class Nutritics
     public function getNutriticsEnergy($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['energyKcal', 'energyKj']), true);
-        return $nutriticsInfo[1];
+        
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
     /**
      * Get Macronutrients info of Product by product's ifc code
@@ -135,7 +137,8 @@ class Nutritics
     public function getNutriticsMacro($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol']), true);
-        return $nutriticsInfo[1];
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
     /**
      * Get Carbohydrates info of Product by product's ifc code
@@ -145,7 +148,8 @@ class Nutritics
     public function getNutriticsCarbohydrates($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose']), true);
-        return $nutriticsInfo[1];
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
     /**
      * Get Fats (Lipid Components) info of Product by product's ifc code
@@ -155,7 +159,8 @@ class Nutritics
     public function getNutriticsFats($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol']), true);
-        return $nutriticsInfo[1];
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
     /**
      * Get Minerals and Trace Elements info of Product by product's ifc code
@@ -165,7 +170,8 @@ class Nutritics
     public function getNutriticsMinerals($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine']), true);
-        return $nutriticsInfo[1];
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
     /**
      * Get Vitamins info of Product by product's ifc code
@@ -176,7 +182,9 @@ class Nutritics
     {
         $nutriticsInfo1 = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv']), true);
         $nutriticsInfo2 = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc']), true);
-        return array_merge($nutriticsInfo1[1], $nutriticsInfo2[1]);
+        $return1  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $return2  = isset($nutriticsInfo[2]) ? $nutriticsInfo[2] : [] ;
+        return array_merge($return1, $return2);
     }
     /**
      * Get Other info of Product by product's ifc code
@@ -186,7 +194,8 @@ class Nutritics
     public function getNutriticsOther($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['gi','gl','caffeine']), true);
-        return $nutriticsInfo[1];
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
     /**
      * Get Miscellaneous info of Product by product's ifc code
@@ -196,7 +205,8 @@ class Nutritics
     public function getNutriticsMiscellaneous($ifc) 
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['allergens']), true);
-        return $nutriticsInfo[1];
+        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        return $return;
     }
 
     /**

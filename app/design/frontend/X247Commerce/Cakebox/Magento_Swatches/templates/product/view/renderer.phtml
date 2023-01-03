@@ -30,6 +30,7 @@ if ( $product->getData('shape') ) {
                 "jsonSwatchConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonSwatchConfig() ?>,
                 "mediaCallback": "<?= $block->escapeJs($block->escapeUrl($block->getMediaCallback())) ?>",
                 "getNutriticsUrl": "<?= /* @escapeNotVerified */ $block->getUrl('nutritics/ajax/GetNutriticsInfo') ?>",
+                "parentProductId": "<?= /* @escapeNotVerified */ $product->getId() ?>",
                 "gallerySwitchStrategy": "<?= $block->escapeJs($block->getVar('gallery_switch_strategy', 'Magento_ConfigurableProduct')) ?: 'replace'; ?>",
                 "jsonSwatchImageSizeConfig": <?= /* @noEscape */ $block->getJsonSwatchSizeConfig() ?>,
                 "showTooltip": <?= $block->escapeJs($configurableViewModel->getShowSwatchTooltip()) ?>,

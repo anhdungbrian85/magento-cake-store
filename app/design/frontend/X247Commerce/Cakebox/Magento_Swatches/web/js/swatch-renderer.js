@@ -740,8 +740,9 @@ define([
          */
         updateCharacterLimit: function () {
             var selectedProductId = this.getProductId();
+            
             if (selectedProductId) {
-                if (typeof this.options.jsonConfig.character_limit[selectedProductId] !== 'undefined') {
+                if ($("textarea.product-custom-option").length !== 0) {
                     var clone = $("textarea.product-custom-option").clone();
                     var characterLimit = this.options.jsonConfig.character_limit[selectedProductId];
                     var newValue = '{"required": false,"maxlength":"' + characterLimit + '","validate-no-utf8mb4-characters": true}';
@@ -751,12 +752,14 @@ define([
                     $(".character-limit-note").remove();
                     $("textarea.product-custom-option").after(note);                    
                 }
-            } else {                
-                var clone = $("textarea.product-custom-option").clone();
-                var newValue = '{"required": false, validate-no-utf8mb4-characters": true}';
-                clone.attr("data-validate", newValue); 
-                $(".character-limit-note").remove();
-                $("textarea.product-custom-option").replaceWith(clone);
+            } else {
+                if ($("textarea.product-custom-option").length !== 0) {         
+                    var clone = $("textarea.product-custom-option").clone();
+                    var newValue = '{"required": false, validate-no-utf8mb4-characters": true}';
+                    clone.attr("data-validate", newValue); 
+                    $(".character-limit-note").remove();
+                    $("textarea.product-custom-option").replaceWith(clone);
+                }
             }
         },
 
@@ -764,10 +767,12 @@ define([
          * Callback for update nutritics Info.
          */
         nutriticsInfo: function() {
-            var selectedProductId = this.getProductId();
-            var characterLimit = this.options.jsonConfig.character_limit[selectedProductId];
+            var productId = this.getProductId();
+            var parentProductId = this.options.parentProductId;
             
             var nutriticsUrl = this.options.getNutriticsUrl;
+            
+            var selectedProductId = productId ? productId : parentProductId;
             
             if (selectedProductId) {
                 $.ajax({
