@@ -1,39 +1,55 @@
 <?php
+ 
+namespace X247Commerce\Nutritics\Console;
 
-namespace X247Commerce\Nutritics\Cron;
+use \Symfony\Component\Console\Command\Command;
+use \Symfony\Component\Console\Input\InputInterface;
+use \Symfony\Component\Console\Output\OutputInterface;
 use X247Commerce\Nutritics\Service\NutriticsApi;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ResourceConnection;
-class Nutritics
+
+class GetNutriticsInfo extends Command
 {
     const TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE = 'nutritics_product_attribute_value';
-	protected $nutriticsApi;
-	protected $productRepository;
-	protected $searchCriteriaBuilder;
-	protected $productCollectionFactory;
+    protected $nutriticsApi;
+    protected $productRepository;
+    protected $searchCriteriaBuilder;
+    protected $productCollectionFactory;
     protected $resource;
     protected $connection;
+
     public function __construct(
-    	ProductRepositoryInterface $productRepository,
-    	SearchCriteriaBuilder $searchCriteriaBuilder,
-    	CollectionFactory $productCollectionFactory,
+        ProductRepositoryInterface $productRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        CollectionFactory $productCollectionFactory,
         NutriticsApi $nutriticsApi,
         ResourceConnection $resource
     ) {
-		$this->productRepository = $productRepository;
-    	$this->searchCriteriaBuilder = $searchCriteriaBuilder;
-    	$this->productCollectionFactory = $productCollectionFactory;
+        parent::__construct();
+        $this->productRepository = $productRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->productCollectionFactory = $productCollectionFactory;
         $this->nutriticsApi = $nutriticsApi;
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
     }
 
-    public function execute()
+    protected function configure()
     {
+        $this->setName('nutritics:fetch')
+             ->setDescription('Fetch Nutritics Info');
+
+        parent::configure();
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('Process take long time, please wait!');
         $productCollection = $this->getProductCollection();
-        // var_dump(count($productCollection));die();
+        
         foreach ($productCollection as $product) {
             $nutricInfo = [];
             // var_dump($product->getIfcCode());
@@ -73,7 +89,7 @@ class Nutritics
                     }
                     if (!empty($nutrics) || !empty($allergens)) {
                         $insertData[] = array_merge($nutrics, $allergens);
-                    }                    
+                    }
                 }
                 
             }
@@ -87,23 +103,14 @@ class Nutritics
 
     public function getNutriticsInfo($ifc) 
     {
-    	$getNutriticsEnergy = $this->getNutriticsEnergy($ifc);
-        // var_dump($getNutriticsEnergy);
+        $getNutriticsEnergy = $this->getNutriticsEnergy($ifc);
         $getNutriticsMacro = $this->getNutriticsMacro($ifc);
-        // var_dump($getNutriticsMacro);
         $getNutriticsCarbohydrates = $this->getNutriticsCarbohydrates($ifc);
-        // var_dump($getNutriticsCarbohydrates);
         $getNutriticsFats = $this->getNutriticsFats($ifc);
-        // var_dump($getNutriticsFats);
         $getNutriticsMinerals = $this->getNutriticsMinerals($ifc);
-        // var_dump($getNutriticsMinerals);
         $getNutriticsVitamins = $this->getNutriticsVitamins($ifc);
-        // var_dump($getNutriticsVitamins);
         $getNutriticsOther = $this->getNutriticsOther($ifc);
-        // var_dump($getNutriticsOther);
         $getNutriticsMiscellaneous = $this->getNutriticsMiscellaneous($ifc);
-        // var_dump($getNutriticsMiscellaneous);
-
         $allInfo = array_merge($getNutriticsEnergy, $getNutriticsMacro, $getNutriticsCarbohydrates, $getNutriticsFats, $getNutriticsMinerals, 
                                 $getNutriticsVitamins, $getNutriticsFats, $getNutriticsMinerals, $getNutriticsVitamins, $getNutriticsOther, $getNutriticsMiscellaneous);
 
@@ -204,33 +211,33 @@ class Nutritics
      * @param 
      * @return array
      */
-	public function getArrayProductCollection()
+    public function getArrayProductCollection()
     {
-		$searchCriteria = $this->searchCriteriaBuilder->addFilter('report_url', true, 'null')->create();
-		$searchResults = $this->productRepository->getList($searchCriteria);
-		$products = $searchResults->getItems();
-		
-		return $products;
-	}
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('report_url', true, 'null')->create();
+        $searchResults = $this->productRepository->getList($searchCriteria);
+        $products = $searchResults->getItems();
+        
+        return $products;
+    }
 
     /**
      * Get Product Collection not set value in nutritics_product_attribute_value
      * @param 
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
-	public function getProductCollection()
+    public function getProductCollection()
     {
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         //Query to get all product id in table nutritics_product_attribute_value
         $productQuery = $this->connection->select()->from(['table1' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['table1.row_id'])->group('table1.row_id');
         $productIds = $this->connection->fetchCol($productQuery);
         
-		$collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
+        $collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
         // $collection->addAttributeToSelect('ifc_code')->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
-		// var_dump($collection->getSelect()->__toString());die();
+        
         return $collection;
-	}
+    }
 }
