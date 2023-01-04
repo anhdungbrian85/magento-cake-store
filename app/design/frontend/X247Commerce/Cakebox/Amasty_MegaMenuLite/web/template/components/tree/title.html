@@ -1,0 +1,74 @@
+<!-- ko scope: 'index = ammenu_tree_wrapper' -->
+<a data-bind="
+        style: {
+            color: $parent.elem().color
+        },
+        attr: {
+            class: 'ammenu-title' + ($parent.elem().elems.length ? ' -parent' : ''),
+            href: $parent.elem().url && (hide_view_all_link || !$parent.elem().elems.length) ? $parent.elem().url : 'javascript:void(0)',
+            tabindex: $parent.elem().url && (hide_view_all_link || !$parent.elem().elems.length) ? '0' : '-1',
+            'role': $parent.elem().url && (hide_view_all_link || !$parent.elem().elems.length) ? 'link' : 'heading'
+        },
+        css: {
+            '-back': $parent.elem().level() > 1,
+            'active': $parent.elem().isSubmenuVisible()
+        },
+        hasFocus: $parent.elem().isFocused,
+        event: {
+            click: setPreviousLevel.bind($data, $parent.elem),
+            mouseenter: onMouseenter.bind($data, $parent.elem()),
+            mouseleave: setCurrentColor.bind($data, $parent.elem(), color_settings.submenu_text)
+        }">
+    <!-- ko if: $parent.elem().level() > 1 -->
+        <!-- ko template: {
+            name: root_templates.icon,
+            data: {
+                icon_template: icons.chevron,
+                color: color_settings.toggle_icon_color,
+                toggle: true,
+                additionalClasses: '-toggle',
+                event: (!hide_view_all_link ? false : {
+                    click: setPreviousLevel.bind($data, $parent.elem),
+                    keypress: setPreviousLevel.bind($data, $parent.elem)
+                })
+            }
+        } -->
+        <!-- /ko -->
+    <!-- /ko -->
+
+    <!-- ko if: $parent.elem().icon -->
+        <!-- ko template: {
+            name: root_templates.item_icon,
+            data: {
+                item: $parent.elem(),
+                color: $parent.elem().color
+            }
+        } -->
+        <!-- /ko-->
+    <!-- /ko-->
+
+    <!-- ko text: $parent.elem().name --><!-- /ko -->
+
+    <!-- ko if: $parent.elem().elems.length > 0 -->
+        <figure
+            data-bind="
+                attr: {
+                    class: 'ammenu-icon-toggle ' + ($parent.additionalClasses ? $parent.additionalClasses : '-icon'),
+                    title: $parent.event && $parent.item ? $t('Toggle item ') + $parent.item.name : '',
+                    role: $parent.event ? 'button' : '',
+                    tabindex: $parent.event ? '0' : '-1',
+                    'aria-controls': $parent.ariaControls ? $parent.ariaControls : '',
+                    'aria-haspopup': $parent.event ? 'menu' : 'false',
+                    'type': $parent.event ? 'button' : ''
+                },
+                style: {
+                    'color': $parent.color ? $parent.color : ''
+                },
+                event: {click: toggleItem.bind(this, $parent.elem())}">
+            <!-- ko template: { name: root_templates.expand, data: { item: $parent.elem() } } --><!-- /ko-->
+        </figure>
+    <!-- /ko-->
+
+    <!-- ko template: { name: root_templates.label, data: { item: $parent.elem() } } --><!-- /ko-->
+</a>
+<!-- /ko -->
