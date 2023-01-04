@@ -61,10 +61,10 @@
 		}
 
 		.swatch-option.text {
-			padding: 8px 15px;
+			padding: 8px 10px;
 			border: 1px solid #B2B2B2;
 			max-width: 86px;
-			min-width: unset;
+			min-width: 86px;
 			margin: 0 5px 5px 0;
 			display: inline-block;
 			overflow: hidden;
@@ -100,6 +100,11 @@
 			display: block;
 			color: #363A40;
 			transition: all .3s;
+
+			& > span {
+				display: inline-flex;
+				font-weight: 700;
+			}
 		}
 
 		.option-label,
