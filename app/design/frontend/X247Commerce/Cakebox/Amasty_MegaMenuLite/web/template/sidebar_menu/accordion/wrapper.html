@@ -1,0 +1,51 @@
+<!--
+    Amasty ammenu_sidebar_wrapper accordion_wrapper template
+
+    @param {Array} elems
+    @param {Number} tab_index
+-->
+
+<!-- ko scope: 'index = ammenu_sidebar_menu_wrapper' -->
+<ul class="ammenu-items -root -accordion"
+    data-bind="
+        visible: activeTab() === $parent.tab_index,
+        fastForEach: $parent.elems
+    ">
+    <li data-bind="
+            attr: {
+                class: 'ammenu-item category-item'
+            },
+            visible: isVisible,
+            css: { '-active': isActive },
+            style: {
+                'background': isActive() ? $parent.color_settings.submenu_background_color : ''
+            }">
+        <!-- ko template: {
+            name: $parent.root_templates.item,
+            data: {
+                item: $data,
+                toggle: $data.isSubmenuVisible(),
+                item: $data,
+                link: $data.isViewAll || !$data.isSubmenuVisible() || $parent.hide_view_all_link,
+                font_weight: $data.mobile_font,
+                additionalClasses: '-mobile',
+                border: true,
+                toggleIconEvent: $data.isSubmenuVisible() ? {
+                    click: $parent.hide_view_all_link ? $parent.toggleItem.bind($parent, $data) : false,
+                    keypress: $parent.hide_view_all_link ? $parent.toggleItem.bind($parent, $data) : false
+                } : false,
+                event: $data.isSubmenuVisible() ? {
+                    click: !$parent.hide_view_all_link ? $parent.toggleItem.bind($parent, $data) : false
+                } : false
+            }
+        } -->
+        <!-- /ko -->
+
+
+            <!-- ko if: $data.isSubmenuVisible -->
+                <!-- ko template: { name: $parent.templates.itemsAccordion, data: { uiClass: $parent, elems: $data.elems } } --><!-- /ko -->
+            <!-- /ko -->
+
+    </li>
+</ul>
+<!-- /ko -->

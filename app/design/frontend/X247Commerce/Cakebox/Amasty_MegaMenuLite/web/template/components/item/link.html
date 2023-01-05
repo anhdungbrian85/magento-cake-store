@@ -1,0 +1,32 @@
+<!--
+    Amasty MegaMenu item type link template
+
+    $data ammenu_wrapper
+    $parent inherit from wrapper
+-->
+
+<a data-bind="
+        style: {
+            'color': $parent.item.color() ? $parent.item.color() : '',
+            'border-bottom-color': $parent.border ? color_settings.border : '',
+            'font-weight': $parent.font_weight
+        },
+        attr: {
+            href: $parent.item.url,
+            class: 'ammenu-link ' + $parent.additionalClasses + ' ' + $parent.item.additionalClasses,
+            'aria-label': $t('Go to ') + $parent.item.name,
+            title: $t('Go to ') + $parent.item.name,
+            'data-post': $parent.item['data-post'] ? $parent.item['data-post'] : false,
+            role: !$parent.item.url ? 'menuitem' : 'link',
+            tabindex: $parent.event || $parent.item.url ? '0' : '-1'
+        },
+        hasFocus: $parent.item.isFocused,
+        event: $parent.event,
+        css: {
+            '-current': $parent.item.current,
+            '-active': $parent.item.isActive,
+            'active': $parent.item.isSubmenuVisible(),
+            '-disabled': !$parent.event && !$parent.item.url
+        }">
+    <!-- ko template: { name: templates.item_content } --><!-- /ko-->
+</a>

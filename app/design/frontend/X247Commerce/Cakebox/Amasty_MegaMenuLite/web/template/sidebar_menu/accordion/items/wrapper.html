@@ -1,0 +1,41 @@
+<!-- ko scope: 'index = ammenu_submenu_mobile' -->
+    <!-- ko template: { name: getTemplate(), data: $parents[1] } --><!-- /ko -->
+<!-- /ko -->
+<ul class="ammenu-items"
+    if="elems.length"
+    data-bind="
+        visible: $parent.isActive,
+        fastForEach: elems">
+    <li class="ammenu-item"
+        data-bind="
+            css: {
+                '-active': $data.isActive
+            },
+            attr: {
+                class: 'ammenu-item category-item'
+            }">
+        <!-- ko template: {
+            name: $parent.uiClass.root_templates.item,
+            data: {
+                item: $data,
+                link: $data.isViewAll || !$data.isSubmenuVisible() || $parent.uiClass.hide_view_all_link,
+                toggle: $data.isSubmenuVisible(),
+                additionalClasses: '-mobile',
+                border: true,
+                toggleIconEvent: $data.isSubmenuVisible() ? {
+                    click: $parent.uiClass.hide_view_all_link ? $parent.uiClass.toggleItem.bind($parent.uiClass, $data) : false,
+                    keypress: $parent.uiClass.hide_view_all_link ? $parent.uiClass.toggleItem.bind($parent.uiClass, $data) : false
+                } : false,
+                event: $data.isSubmenuVisible() ? {
+                    click: !$parent.uiClass.hide_view_all_link ? $parent.uiClass.toggleItem.bind($parent.uiClass, $data) : false
+                } : false
+            }
+        } -->
+        <!-- /ko -->
+
+        <!-- ko if: $data.isSubmenuVisible -->
+            <!-- ko template: { name: $parent.uiClass.templates.itemsAccordion, data: { uiClass: $parent.uiClass, elems: $data.elems } } --><!-- /ko -->
+        <!-- /ko -->
+
+    </li>
+</ul>

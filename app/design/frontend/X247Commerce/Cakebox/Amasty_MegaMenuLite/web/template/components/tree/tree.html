@@ -1,0 +1,93 @@
+<!--
+    Amasty ammenu_tree_wrapper UiComponent
+    { item: current_elem, columns: columns_count, $parent: ammenu_tree_wrapper }
+-->
+
+<div data-bind="
+        attr: {
+            class: 'ammenu-category-tree ammenu-column category-item'
+        },
+        afterRender: $parent.init($data)">
+
+    <!-- ko template: { name: $parent.templates.title, data: { elem: activeLevel } } --><!-- /ko -->
+
+    <ul class="ammenu-list"
+        if="activeLevel().elems.length > 0"
+        data-bind="
+            foreach: activeLevel().elems,
+            class: 'ammenu-list ',
+            css: {
+                'active': activeLevel().isSubmenuVisible()
+            },
+        "
+    >
+        <li data-bind="
+                attr: {
+                    class: 'ammenu-item category-item'
+                }">
+            <!-- ko scope: 'index = ammenu_tree_wrapper' -->
+                <!-- ko template: {
+                    name: root_templates.item,
+                    data: {
+                        item: $parent,
+                        additionalClasses: '-simple',
+                        link: $parent.isViewAll || !$parent.isSubmenuVisible() || hide_view_all_link,
+                        toggle: $parent.isSubmenuVisible(),
+                        event: {
+                            click: !hide_view_all_link && $parent.isSubmenuVisible() ? setNextLevel.bind($data, $parents[1].activeLevel, $parent) : false,
+                            keypress: !hide_view_all_link && $parent.isSubmenuVisible() ? setNextLevel.bind($data, $parents[1].activeLevel, $parent) : false,
+                            mouseenter: onMouseenter.bind($data, $parent),
+                            mouseleave: onMouseleave.bind($data, $parent)
+                        },
+                        toggleIconEvent: hide_view_all_link ? {
+                            click: setNextLevel.bind($data, $parents[1].activeLevel, $parent),
+                            keypress: setNextLevel.bind($data, $parents[1].activeLevel, $parent)
+                        } : false
+                    }
+                } -->
+                <!-- /ko -->
+
+                <!-- ko if: $parent.elems.length > 0 -->
+                    <ul class="ammenu-list"
+                        if="$parent.elems.length > 0"
+                        data-bind="
+                            foreach: $parent.elems,
+                            class: 'ammenu-list ',
+                            css: {
+                                'active': $parent.isSubmenuVisible()
+                            },
+                        "
+                    >
+                        <li data-bind="
+                                attr: {
+                                    class: 'ammenu-item category-item'
+                                }">
+                            <!-- ko scope: 'index = ammenu_tree_wrapper' -->
+                                <!-- ko template: {
+                                    name: root_templates.item,
+                                    data: {
+                                        item: $parent,
+                                        additionalClasses: '-simple',
+                                        link: $parent.isViewAll || !$parent.isSubmenuVisible() || hide_view_all_link,
+                                        toggle: $parent.isSubmenuVisible(),
+                                        event: {
+                                            click: !hide_view_all_link && $parent.isSubmenuVisible() ? setNextLevel.bind($data, $parents[3].activeLevel, $parent) : false,
+                                            keypress: !hide_view_all_link && $parent.isSubmenuVisible() ? setNextLevel.bind($data, $parents[3].activeLevel, $parent) : false,
+                                            mouseenter: onMouseenter.bind($data, $parent),
+                                            mouseleave: onMouseleave.bind($data, $parent)
+                                        },
+                                        toggleIconEvent: hide_view_all_link ? {
+                                            click: setNextLevel.bind($data, $parents[3].activeLevel, $parent),
+                                            keypress: setNextLevel.bind($data, $parents[1].activeLevel, $parent)
+                                        } : false
+                                    }
+                                } -->
+                                <!-- /ko -->
+                            <!-- /ko -->
+                        </li>
+                    </ul>
+                <!-- /ko -->
+            <!-- /ko -->
+        </li>
+    </ul>
+</div>
