@@ -1,0 +1,14 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="data-grid-cell-content" data-bind="class: $col.getPrintedClass($row().print_status)">
+    <div class="current-print-status" data-bind="text: $col.getPrintedLabel($row().print_status)"></div>
+
+    <a href="javascript:void(0);" data-bind="
+            text: $col.getActionLabel($row().print_status)">
+    </a>
+</div>
+
