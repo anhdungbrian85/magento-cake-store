@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Catalog\Model\Product;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 
 class ValidateAddToCart implements ObserverInterface
 {
@@ -26,6 +27,7 @@ class ValidateAddToCart implements ObserverInterface
     protected $request;
     protected $product;
     protected $configurableproduct;
+    protected $locatorSourceResolver;
 
     public function __construct(
         CustomerSession $customerSession,
@@ -36,6 +38,7 @@ class ValidateAddToCart implements ObserverInterface
         LoggerInterface $logger,
         RequestInterface $request,
         Product $product,
+        LocatorSourceResolver $locatorSourceResolver,
         Configurable $configurableproduct
     ) {
         $this->customerSession = $customerSession;
@@ -46,6 +49,7 @@ class ValidateAddToCart implements ObserverInterface
         $this->logger = $logger;
         $this->request = $request;
         $this->product = $product;
+        $this->locatorSourceResolver = $locatorSourceResolver;
         $this->configurableproduct = $configurableproduct;
     }
 
@@ -61,12 +65,11 @@ class ValidateAddToCart implements ObserverInterface
 
             $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
             $searchCriteria = $searchCriteriaBuilder->addFilter('amlocator_store', $locationId, 'in')->create();
-            $sources = $this->sourceRepository->getList($searchCriteria)->getItems();
-            
+            $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
             if ($sources) {
                 $sourceCodes = [];
                 foreach ($sources as $source) {
-                    $sourceCodes[] =  $source->getSourceCode();
+                    $sourceCodes[] =  $source;
                 }
             } else {
                 throw new LocalizedException(__("The product is not available in the selected store."));
@@ -79,14 +82,11 @@ class ValidateAddToCart implements ObserverInterface
                 $attributes = $postValues['super_attribute'];                
                 // $this->logger->log('600', 'Selected attributes '.print_r($attributes, true));
                 $product = $this->configurableproduct->getProductByAttributes($attributes, $addProduct);
-                // $this->logger->log('600', 'Selected product name '.print_r($product->getName(), true));
             } else {
                 $product = $addProduct;
             }
-                // $this->logger->log('600', 'Selected product sku '.print_r($product->getSku(), true));
             $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($product->getSku());
             $sourceList = [];
-                // $this->logger->log('600', 'Selected sourceList '.print_r($productQty, true));
             foreach ($productQty as $pQty) {
                 if (in_array($pQty['source_code'], $sourceCodes)) {
                     $sourceList[] = $pQty;

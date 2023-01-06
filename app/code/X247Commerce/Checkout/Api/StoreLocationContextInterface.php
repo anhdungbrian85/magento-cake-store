@@ -10,7 +10,6 @@ interface StoreLocationContextInterface
 {
 
     public const STORE_LOCATION_ID = 'store_location_id';
-    
 
     /**
      * Set Store localtion id to HttpContext.

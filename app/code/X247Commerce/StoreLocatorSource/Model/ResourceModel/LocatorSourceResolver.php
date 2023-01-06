@@ -11,6 +11,9 @@ use Magento\Framework\App\ResourceConnection;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\AdminSource\CollectionFactory as AdminSourceCollectionFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use X247Commerce\Catalog\Model\ProductSourceAvailability;
 
 class LocatorSourceResolver
 {
@@ -20,12 +23,18 @@ class LocatorSourceResolver
     protected AdminSourceCollectionFactory $sourceLink;
     protected SearchCriteriaBuilder $searchCriteriaBuilder;
     protected SourceRepositoryInterface $sourceRepository;
+    protected $customerSession;
+    protected $searchCriteriaBuilderFactory;
+    protected $productSourceAvailability;
 
     public function __construct(
         ResourceConnection $resource,
         AdminSourceCollectionFactory $sourceLink,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        SourceRepositoryInterface $sourceRepository
+        SourceRepositoryInterface $sourceRepository,
+        CustomerSession $customerSession,
+        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
+        ProductSourceAvailability $productSourceAvailability,
     )
     {        
         $this->resource = $resource;
@@ -33,12 +42,15 @@ class LocatorSourceResolver
         $this->sourceLink = $sourceLink;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sourceRepository = $sourceRepository;
+        $this->customerSession = $customerSession;
+        $this->productSourceAvailability = $productSourceAvailability;
+        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
     }
 
     /**
      * Get amasty_amlocator_location.id
      * @param $sourceCode string
-     * @return string|null
+     * @return array|null
      * 
      **/
 
@@ -219,5 +231,53 @@ class LocatorSourceResolver
         if ($sourceLinkTbl) {
             $this->connection->delete($sourceLinkTbl, $data);
         }
+    }
+    /**
+     * check product available in current store location
+     *
+     * @return bool
+     */
+    public function checkProductAvailableInStore($locationId, $productSku)
+    {
+        
+        if ($locationId) {
+            $sources = $this->getSourceCodeByAmLocator($locationId);
+
+            if ($sources) {
+                $sourceCodes = [];
+                foreach ($sources as $source) {
+                    $sourceCodes[] =  $source;
+                }
+            } else {
+                return false;
+            }
+            
+            $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($productSku);
+            
+            $sourceList = [];
+            foreach ($productQty as $pQty) {
+                if (in_array($pQty['source_code'], $sourceCodes)) {
+                    $sourceList[] = $pQty;
+                }
+            }        
+
+            if ($sourceList) {
+                $inStock = 0;
+                foreach ($sourceList as $qty) {
+                    if ($qty['quantity'] == 0 || !$qty['status']) {
+                        $inStock += 0;
+                    } else {
+                        $inStock += 1;
+                    }
+                }
+
+                if ($inStock == 0) {
+                    return false;
+                }
+            } else {
+                return false;       
+            }
+        }
+        return true;
     }
 }
