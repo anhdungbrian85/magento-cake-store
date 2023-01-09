@@ -29,7 +29,7 @@
         <constraint xsi:type="foreign" referenceId="amasty_amlocator_location_source_link_location" table="amasty_amlocator_location_source_link" column="location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="amasty_amlocator_location_source_link_source" table="amasty_amlocator_location_source_link" column="source_code" referenceTable="inventory_source" referenceColumn="source_code" onDelete="CASCADE"/>
     </table>       
-    <!-- <table name="store_location_asda_link" resource="default" engine="innodb" comment="Amasty Location Asda Link">
+    <table name="store_location_asda_link" resource="default" engine="innodb" comment="Amasty Location Asda Link">
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
         <column name="parent_location_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Main Store Location Id" />
         <column name="asda_location_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Asda Location Id" />
@@ -38,7 +38,7 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="store_location_asda_link_parent" table="store_location_asda_link" column="parent_location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="store_location_asda_link_asda" table="store_location_asda_link" column="asda_location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
-    </table> -->
+    </table>
 
     <table name="amasty_amlocator_location">
         <column xsi:type="int" name="enable_delivery" unsigned="true" nullable="true"

@@ -15,6 +15,22 @@
             </item>
         </argument>
     </field>
+    <field name="amlocator_store" sortOrder="10">
+        <argument name="data" xsi:type="array">
+            <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorStore</item>
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Parent Locator (for ASDA Store only)</item>
+                <item name="formElement" xsi:type="string">select</item>
+                <item name="visible" xsi:type="boolean">true</item>
+                <item name="dataType" xsi:type="string">select</item>
+                <item name="validation" xsi:type="array">
+                    <item name="required-entry" xsi:type="boolean">false</item>
+                </item>
+                <item name="dataScope" xsi:type="string">amlocator_store</item>
+                <item name="disabled" xsi:type="boolean">0</item>
+            </item>
+        </argument>
+    </field>
     <field name="enable_delivery" formElement="select">
         <settings>
             <dataType>int</dataType>
