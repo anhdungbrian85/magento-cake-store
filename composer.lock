@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c07f5ba55c916d4a01ac5f369399843e",
+    "content-hash": "1571b7c5e4dad051ba99647d6ea8b1ea",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -76,31 +76,6 @@
             "description": "Amasty Base"
         },
         {
-            "name": "amasty/cron-schedule-list",
-            "version": "1.0.6",
-            "dist": {
-                "type": "zip",
-                "url": "https://composer.amasty.com/enterprise/packages/amasty/cron-schedule-list-1.0.6-ee.zip"
-            },
-            "require": {
-                "amasty/base": ">=1.13.2",
-                "php": ">=7.3"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Amasty\\CronScheduleList\\": ""
-                }
-            },
-            "license": [
-                "Commercial"
-            ],
-            "description": "Cron Schedule List by Amasty"
-        },
-        {
             "name": "amasty/geoip",
             "version": "1.5.7",
             "dist": {
@@ -157,41 +132,6 @@
                 "Commercial"
             ],
             "description": "Mega Menu By Amasty"
-        },
-        {
-            "name": "amasty/module-delivery-date-manager",
-            "version": "1.0.6",
-            "dist": {
-                "type": "zip",
-                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-delivery-date-manager-1.0.6.zip"
-            },
-            "require": {
-                "amasty/base": ">=1.13.5",
-                "amasty/cron-schedule-list": "*",
-                "magento/framework": ">=102.0.0",
-                "php": ">=7.3"
-            },
-            "conflict": {
-                "amasty/delivery-date": "*"
-            },
-            "suggest": {
-                "amasty/module-delivery-date-manager-mftf-2": "Install module-delivery-date-manager-mftf-2 module to be able to run Delivery Date Manager MFTF tests for Magento 2.3.5+ version.",
-                "amasty/module-delivery-date-manager-mftf-3": "Install module-delivery-date-manager-mftf-3 module to be able to run Delivery Date Manager MFTF tests for Magento 2.4.0+ version.",
-                "amasty/module-mixin-rewrite-patch": "Install mixin rewrite patch if you have a problem with extension on Magento 2.4.2 version on Checkout"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Amasty\\DeliveryDateManager\\": ""
-                }
-            },
-            "license": [
-                "Commercial"
-            ],
-            "description": "Amasty Delivery Date Manager"
         },
         {
             "name": "amasty/module-improved-layered-navigation-page",
