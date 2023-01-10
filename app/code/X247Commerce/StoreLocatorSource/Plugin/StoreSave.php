@@ -12,24 +12,29 @@ class StoreSave
 
 	protected $locationResource;
 
+	protected $locatorSourceResolver;
+
 	public function __construct(
 		\Magento\Inventory\Model\SourceRepository $sourceRepository,
 		\Magento\Inventory\Model\SourceFactory $sourceFactory,
 		\Amasty\Storelocator\Model\LocationFactory $locationFactory,
-		\Amasty\Storelocator\Model\ResourceModel\Location $locationResource
+		\Amasty\Storelocator\Model\ResourceModel\Location $locationResource,
+		\X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver $locatorSourceResolver
 	) {
 		$this->locationFactory = $locationFactory;
 		$this->sourceFactory = $sourceFactory;
 		$this->sourceRepository = $sourceRepository;
-		$this->locationResource =$locationResource;
+		$this->locationResource = $locationResource;
+		$this->locatorSourceResolver = $locatorSourceResolver;
     }
     public function beforeExecute(\Amasty\Storelocator\Controller\Adminhtml\Location\Save $subject)
     {
 		
 		$data = $subject->getRequest()->getPostValue();
+		// var_dump($data);die();
 		$id = (int)$subject->getRequest()->getParam('id');
 
-		$nameSource = $data["amlocator_source"];
+		$nameSource = isset($data["amlocator_source"]) ? $data["amlocator_source"] : false;
 		if ($nameSource) {
 			$soure = $this->sourceRepository->get($nameSource);
 			$idSource = $soure->getId();
@@ -53,6 +58,15 @@ class StoreSave
 			$modelStore = $this->locationFactory->create();
 			$store = $this->locationResource->load($modelStore,$id);
 			$modelStore->setData("amlocator_source",$nameSource)->save();
-		}	
+		}
+		$oldParentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($data["id"]);
+		$newParentLocationId = isset($data["amlocator_store"]) ? $data["amlocator_store"] : '';
+		
+		if ($oldParentLocationId != $newParentLocationId) {
+			$this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent($oldParentLocationId, $data["id"]);
+			if (!empty($newParentLocationId)) {
+				$this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent($newParentLocationId, $data["id"]);
+			}
+		}		
 	}
 }

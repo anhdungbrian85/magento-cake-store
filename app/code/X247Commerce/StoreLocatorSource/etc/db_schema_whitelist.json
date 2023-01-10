@@ -25,5 +25,29 @@
         "index": {
             "AMASTY_AMLOCATOR_LOCATION_ENABLE_DELIVERY": true
         }
+    },
+    "amasty_amlocator_location_source_link": {
+        "column": {
+            "entity_id": true,
+            "location_id": true,
+            "source_code": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_ABE219FB6F8382F475961264EBE2C61C": true,
+            "FK_0B5634864692DC8BC27BF00FCE2FEC7D": true
+        }
+    },
+    "store_location_asda_link": {
+        "column": {
+            "entity_id": true,
+            "parent_location_id": true,
+            "asda_location_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_51D7CEA02AD2DDBE2A189E323B8F4C29": true,
+            "FK_E24D1EEA4523A334E227789D3AB8CD7D": true
+        }
     }
 }

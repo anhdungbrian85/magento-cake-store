@@ -18,6 +18,7 @@ use X247Commerce\Catalog\Model\ProductSourceAvailability;
 class LocatorSourceResolver
 {
     const LOCATION_SOURCE_LINK_TABLE = 'amasty_amlocator_location_source_link';
+    const LOCATION_ASDA_LINK_TABLE = 'store_location_asda_link';
     protected ResourceConnection $resource;
     protected $connection;
     protected AdminSourceCollectionFactory $sourceLink;
@@ -279,5 +280,66 @@ class LocatorSourceResolver
             }
         }
         return true;
+    }
+
+    /**
+     * Get get Child Asda Location Collection of a Parent Location
+     * @param $sourceCode string
+     * @return array|null
+     * 
+     **/
+    public function getChildAsdaLocationCollection($parentLocationId)
+    {
+        $sourceTbl = $this->resource->getTableName(self::LOCATION_ASDA_LINK_TABLE);
+        $sqlQuery = $this->connection->select()
+                ->from($sourceTbl, ['asda_location_id'])
+                ->where("parent_location_id = ?", $parentLocationId);
+        return $this->connection->fetchCol($sqlQuery);
+    }    
+
+    /**
+     * Get Parent Location of a Asda Location
+     * @param $sourceCode string
+     * @return array|null
+     * 
+     **/
+    public function getAsdaLocationParentLocation($asdaLocationId)
+    {
+        $sourceTbl = $this->resource->getTableName(self::LOCATION_ASDA_LINK_TABLE);
+        $sqlQuery = $this->connection->select()
+                ->from($sourceTbl, ['parent_location_id'])
+                ->where("asda_location_id = ?", $asdaLocationId);
+        return $this->connection->fetchOne($sqlQuery);
+    }
+    /**
+     * Assign Amasty Parent Store Location and Asda
+     * @param AmLocation Id, Source Code
+     * @return 
+     * 
+     **/
+    public function assignAsdaAmLocatorStoreToParent($parentLocationId, $asdaLocationId)
+    {
+        $asdaLinkTbl = $this->resource->getTableName(self::LOCATION_ASDA_LINK_TABLE);
+        $data =['parent_location_id' => $parentLocationId, 'asda_location_id' => $asdaLocationId];
+        if ($asdaLinkTbl) {
+            $this->connection->insert($asdaLinkTbl, $data);
+        }
+    }
+    /**
+     * Unassign Amasty Parent Store Location and Asda
+     * @param AmLocation Id, Source Code
+     * @return 
+     * 
+     **/
+    public function unAssignAsdaAmLocatorStoreToParent($parentLocationId, $asdaLocationId)
+    {
+        $asdaLinkTbl = $this->resource->getTableName(self::LOCATION_ASDA_LINK_TABLE);
+        $data = [
+                    $this->connection->quoteInto('parent_location_id = ?', $parentLocationId),
+                    $this->connection->quoteInto('asda_location_id = ?', $asdaLocationId)
+                ];
+        if ($asdaLinkTbl) {
+            $this->connection->delete($asdaLinkTbl, $data);
+        }
     }
 }
