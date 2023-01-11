@@ -10,6 +10,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use X247Commerce\Catalog\Model\ProductSourceAvailability;
 use Magento\Framework\Exception\PaymentException;
+use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 
 class ValidateBeforeOrder implements ObserverInterface
 {
@@ -22,12 +23,14 @@ class ValidateBeforeOrder implements ObserverInterface
     private $searchCriteriaBuilderFactory;
 
     private $productSourceAvailability;
+    protected $locatorSourceResolver;
 
     public function __construct(
         CustomerSession $customerSession,
         SourceRepositoryInterface $sourceRepository,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         ProductSourceAvailability $productSourceAvailability,
+        LocatorSourceResolver $locatorSourceResolver,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->logger = $logger;
@@ -35,6 +38,7 @@ class ValidateBeforeOrder implements ObserverInterface
         $this->sourceRepository = $sourceRepository;
         $this->productSourceAvailability = $productSourceAvailability;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
+        $this->locatorSourceResolver = $locatorSourceResolver;
     }
 
     public function execute(EventObserver $observer)
@@ -42,9 +46,10 @@ class ValidateBeforeOrder implements ObserverInterface
         $locationId = $this->customerSession->getStoreLocationId();
         if ($locationId) {
             // $this->logger->log('600', 'Selected Location '.print_r($locationId, true));
-            $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-            $searchCriteria = $searchCriteriaBuilder->addFilter('amlocator_store', $locationId, 'in')->create();
-            $sources = $this->sourceRepository->getList($searchCriteria)->getItems();
+            // $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+            // $searchCriteria = $searchCriteriaBuilder->addFilter('amlocator_store', $locationId, 'in')->create();
+            // $sources = $this->sourceRepository->getList($searchCriteria)->getItems();
+            $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
             if ($sources) {
                 $sourceCodes = [];
                 foreach ($sources as $source) {
