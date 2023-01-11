@@ -1,0 +1,34 @@
+<!--
+    Amasty MegaMenu item content template
+
+    $data ammenu_wrapper
+    $parent inherit from wrapper
+-->
+
+<!-- ko template: { name: templates.item_icon, data: { item: $parent.item } } --><!-- /ko-->
+
+<p class="ammenu-text-block">
+    <span class="ammenu-text" data-bind="i18n: $parent.item.name"></span>
+    <span class="ammenu-counter" if="$parent.item.counter" data-bind="i18n: $parent.item.counter"></span>
+
+   <!-- ko template: { name: templates.label, data: { item: $parent.item } } --><!-- /ko-->
+</p>
+
+<!-- ko if: $parent.toggle || ( $parent.item.elems.length > 0 && $parent.item.level() <= 3 ) -->
+    <!-- ko template: {
+        name: templates.icon,
+        data: {
+            icon_template: icons.chevron,
+            toggle: true,
+            item: $parent.item,
+            event: $parent.toggleIconEvent,
+            additionalClasses: '-toggle',
+            ariaControls: $parent.item.id,
+            color: $parent.item.isActive() ? color_settings.toggle_icon_color_active : color_settings.toggle_icon_color
+        }
+    } -->
+    <!-- /ko -->
+<!-- /ko -->
+
+
+
