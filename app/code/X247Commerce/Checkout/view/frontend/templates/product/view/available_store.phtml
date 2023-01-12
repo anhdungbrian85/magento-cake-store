@@ -7,8 +7,11 @@ $productSources = $block->getQuantityInformationForProduct($currentProduct->getS
 // var_dump($getAvailableSourceOfProduct);
 $storeId = [];
 foreach ($productSources as $source) {
-	$storeId[] = $block->getAmLocatorBySource($source["source_code"]);	
+	if ($block->getAmLocatorBySource($source["source_code"])) {
+		$storeId[] = $block->getAmLocatorBySource($source["source_code"]);
+	}		
 }
+// var_dump($storeId);die();
 $currentLocationId = $block->getStoreLocationIdByContext();
 $isProductAvailableInCurrentLocation = $block->checkProductAvailableInStore($currentLocationId, $currentProduct->getSku());
 $locations = $block->getAmLocationByLocationId($storeId)->getData();
