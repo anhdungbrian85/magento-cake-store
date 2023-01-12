@@ -7,6 +7,11 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <referenceContainer name="columns.top">
+            <container name="category.header.fullwidth" htmlTag="div" htmlClass="category-header full-width" >
+                <container name="category.page.header" htmlTag="div" htmlClass="category-page-header container" />
+            </container>
+        </referenceContainer>
         <referenceContainer name="footer-container">
             <block class="Magento\Cms\Block\Block" name="trustpilot-carousel" before="-"> 
                 <arguments> 
@@ -14,6 +19,17 @@
                 </arguments> 
             </block> 
         </referenceContainer>
-
+        <move element="page.main.title" destination="category.page.header" before="-" />
+        <move element="breadcrumbs" destination="category.page.header" after="-" />
+        <move element="category.image" destination="category.page.header" after="-" />
+        <referenceContainer name="category.view.container">
+            <block class="Magento\Theme\Block\Html\Title" name="page.main.title.mobile" template="Magento_Theme::html/title.phtml">
+                <arguments>
+                    <argument name="id" xsi:type="string">page-title-heading</argument>
+                    <argument name="add_base_attribute_aria" xsi:type="string">page-title-heading toolbar-amount</argument>
+                </arguments>
+                <block class="Magento\Catalog\Block\Category\Rss\Link" name="rss.link.mobile" template="Magento_Catalog::category/rss.phtml"/>
+            </block>
+        </referenceContainer>
     </body>
 </page>
