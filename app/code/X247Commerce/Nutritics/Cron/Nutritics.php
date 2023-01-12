@@ -1,11 +1,14 @@
 <?php
 
 namespace X247Commerce\Nutritics\Cron;
+
 use X247Commerce\Nutritics\Service\NutriticsApi;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ResourceConnection;
+use X247Commerce\Nutritics\Helper\Config as ConfigHelper;
+
 class Nutritics
 {
     const TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE = 'nutritics_product_attribute_value';
@@ -15,31 +18,41 @@ class Nutritics
 	protected $productCollectionFactory;
     protected $resource;
     protected $connection;
+    protected $configHelper;
+
     public function __construct(
     	ProductRepositoryInterface $productRepository,
     	SearchCriteriaBuilder $searchCriteriaBuilder,
     	CollectionFactory $productCollectionFactory,
         NutriticsApi $nutriticsApi,
-        ResourceConnection $resource
+        ResourceConnection $resource,
+        ConfigHelper $configHelper
     ) {
 		$this->productRepository = $productRepository;
     	$this->searchCriteriaBuilder = $searchCriteriaBuilder;
     	$this->productCollectionFactory = $productCollectionFactory;
         $this->nutriticsApi = $nutriticsApi;
         $this->resource = $resource;
+        $this->configHelper = $configHelper;
         $this->connection = $resource->getConnection();
     }
 
     public function execute()
     {
         $productCollection = $this->getProductCollection();
-        // var_dump(count($productCollection));die();
+        $filterAttr = $this->configHelper->getProductApiAttributeFilter();
+
         foreach ($productCollection as $product) {
             $nutricInfo = [];
-            // var_dump($product->getIfcCode());
-            if ($product->getIfcCode()) {
-                $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+            if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
+                if ($product->getIfcCode()) {
+                    $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+                }
+            }   else {
+                $nutricInfo = $this->getNutriticsInfo($product->getSku());
             }
+
+            
             if ($nutricInfo) {
                 $this->insertNutriticsInfo($product->getEntityId(), $nutricInfo);
             }            
@@ -210,20 +223,6 @@ class Nutritics
     }
 
     /**
-     * Get Product Collection not set value report_url attribute
-     * @param 
-     * @return array
-     */
-	public function getArrayProductCollection()
-    {
-		$searchCriteria = $this->searchCriteriaBuilder->addFilter('report_url', true, 'null')->create();
-		$searchResults = $this->productRepository->getList($searchCriteria);
-		$products = $searchResults->getItems();
-		
-		return $products;
-	}
-
-    /**
      * Get Product Collection not set value in nutritics_product_attribute_value
      * @param 
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
@@ -232,15 +231,13 @@ class Nutritics
     {
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         //Query to get all product id in table nutritics_product_attribute_value
-        $productQuery = $this->connection->select()->from(['table1' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['table1.row_id'])->group('table1.row_id');
+        $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
         $productIds = $this->connection->fetchCol($productQuery);
         
-		$collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
-        // $collection->addAttributeToSelect('ifc_code')->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
+		$collection = $this->productCollectionFactory->create()->addAttributeToSelect('ifc_code');
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
-		// var_dump($collection->getSelect()->__toString());die();
         return $collection;
 	}
 }

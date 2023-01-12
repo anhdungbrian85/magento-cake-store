@@ -7,6 +7,8 @@
 				<password></password>
 				<user_id></user_id>
 				<limit>100</limit>
+				<api_type>2</api_type>
+				<filter_attribute>2</filter_attribute>
 			</api_settings>
 		</nutritics>
 	</default>

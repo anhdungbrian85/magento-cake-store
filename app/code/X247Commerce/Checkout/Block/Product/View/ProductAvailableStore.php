@@ -58,10 +58,10 @@ class ProductAvailableStore extends \Magento\Framework\View\Element\Template
         return $this->_product;
     }
 
-    public function getStockItem($productId)
-    {
-        return $this->_stockItemRepository->get($productId);
-    }
+    // public function getStockItem($productId)
+    // {
+    //     return $this->_stockItemRepository->get($productId);
+    // }
     /**
      * @param $productSku
      * @return array

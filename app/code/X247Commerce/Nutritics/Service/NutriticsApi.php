@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 
 class NutriticsApi
 {    
+    // Example API endpoint: https://[USERNAME]:[PASSWORD]@www.nutritics.com/api/v1.2/LIST/user=314515&recipe=code=abcdex
     const NUTRITICS_API_RESPONSE_CODE_SUCCESS = 200;
     const NUTRITICS_API_RESPONSE_CODE_ERROR = 400;
 
@@ -140,9 +141,15 @@ class NutriticsApi
      * @return string
      */
 
-    public function getFoodProductByIfc($ifc, array $params = [])
+    public function getFoodProductByIfc($filterValue, array $params = [])
     {
-        $apiUriEndpoint = $this->buildApiUri('LIST', 'food=ifc='.$ifc, $params);
+        $objDataType = $this->configHelper->getProductApiType();
+        $objDataType = $objDataType == ConfigHelper::NUTRITICS_CONFIG_API_TYPE_FOOD ? 'food' : 'recipe';
+        
+        $filterAttr = $this->configHelper->getProductApiAttributeFilter();
+        $filterAttr = $filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC ? 'ifc' : 'code';
+
+        $apiUriEndpoint = $this->buildApiUri('LIST', $objDataType.'='.$filterAttr.'='.$filterValue, $params);
 
         $response = $this->doRequest(
             $apiUriEndpoint,
