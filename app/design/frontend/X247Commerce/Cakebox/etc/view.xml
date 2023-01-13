@@ -79,7 +79,7 @@
             <image id="product_page_image_large" type="image"/>
             <image id="product_page_image_medium" type="image">
                 <width>890</width>
-                <height>921</height>
+                <height>750</height>
             </image>
             <image id="product_page_image_small" type="thumbnail">
                 <width>88</width>
@@ -96,11 +96,11 @@
             </image>
             <image id="product_page_main_image" type="image">
                 <width>890</width>
-                <height>921</height>
+                <height>750</height>
             </image>
             <image id="product_page_main_image_default" type="image">
                 <width>890</width>
-                <height>921</height>
+                <height>750</height>
             </image>
             <image id="product_page_more_views" type="thumbnail">
                 <width>88</width>
@@ -207,7 +207,7 @@
             <var name="navtype">slides</var> <!-- Sliding type of thumbnails (slides/thumbs) -->
             <var name="transition">
                 <var name="effect">slide</var> <!-- Sets transition effect for slides changing (slide/crossfade/dissolve) -->
-                <var name="duration">500</var> <!-- Sets transition duration in ms -->
+                <var name="duration">890</var> <!-- Sets transition duration in ms -->
             </var>
             <var name="fullscreen">
                 <var name="nav">dots</var> <!-- Fullscreen navigation style (false/thumbs/dots) -->
