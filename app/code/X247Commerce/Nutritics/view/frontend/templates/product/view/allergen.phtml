@@ -4,12 +4,12 @@
  */
 ?>
 <?php
-$nutritics = $block->getNutriticsInfoFromApi();
-
 $nutriticsInfos = $block->getProductNutriticsInfoInDb();
 ?>
 <div class="allergens-info-wraper">
-
+    <?php if (empty($nutriticsInfos)): ?>
+        <?= __('For allergen information, please select all required options.') ?>
+    <?php else: ?>
     <div class="allergens-info">
         <?php foreach ($nutriticsInfos as $info): ?>
             <?php if ($info['attribute_code'] == 'allergens'): ?>
@@ -43,4 +43,5 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
             <?php endif ?>
         <?php endforeach ?>
     </div>
+    <?php endif ?>
 </div>

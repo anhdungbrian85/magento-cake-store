@@ -90,7 +90,6 @@ class Nutritics
                 }
                 
             }
-            // var_dump($insertData);die();
             if ($insertData) {
                 return $this->connection->insertMultiple($table, $insertData);
             }
@@ -101,21 +100,13 @@ class Nutritics
     public function getNutriticsInfo($ifc) 
     {
     	$getNutriticsEnergy = $this->getNutriticsEnergy($ifc);
-        // var_dump($getNutriticsEnergy);
         $getNutriticsMacro = $this->getNutriticsMacro($ifc);
-        // var_dump($getNutriticsMacro);
         $getNutriticsCarbohydrates = $this->getNutriticsCarbohydrates($ifc);
-        // var_dump($getNutriticsCarbohydrates);
         $getNutriticsFats = $this->getNutriticsFats($ifc);
-        // var_dump($getNutriticsFats);
         $getNutriticsMinerals = $this->getNutriticsMinerals($ifc);
-        // var_dump($getNutriticsMinerals);
         $getNutriticsVitamins = $this->getNutriticsVitamins($ifc);
-        // var_dump($getNutriticsVitamins);
         $getNutriticsOther = $this->getNutriticsOther($ifc);
-        // var_dump($getNutriticsOther);
         $getNutriticsMiscellaneous = $this->getNutriticsMiscellaneous($ifc);
-        // var_dump($getNutriticsMiscellaneous);
 
         $allInfo = array_merge($getNutriticsEnergy, $getNutriticsMacro, $getNutriticsCarbohydrates, $getNutriticsFats, $getNutriticsMinerals, 
                                 $getNutriticsVitamins, $getNutriticsFats, $getNutriticsMinerals, $getNutriticsVitamins, $getNutriticsOther, $getNutriticsMiscellaneous);
@@ -235,8 +226,9 @@ class Nutritics
         $productIds = $this->connection->fetchCol($productQuery);
         
 		$collection = $this->productCollectionFactory->create()->addAttributeToSelect('ifc_code');
+
         if ($productIds) {
-            $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
+            $collection->addFieldToFilter('entity_id', ['nin'=>$productIds]);
         }
         return $collection;
 	}

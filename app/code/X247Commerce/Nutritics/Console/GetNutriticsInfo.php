@@ -238,10 +238,10 @@ class GetNutriticsInfo extends Command
         $productIds = $this->connection->fetchCol($productQuery);
         
         $collection = $this->productCollectionFactory->create()->addAttributeToSelect('ifc_code');
+
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
-        
         return $collection;
     }
 }
