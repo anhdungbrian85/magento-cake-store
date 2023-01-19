@@ -15,6 +15,7 @@ use Amasty\Base\Model\Serializer;
 use Magento\User\Model\UserFactory;
 use X247Commerce\StoreLocatorSource\Helper\User;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use X247Commerce\StoreLocatorSource\Model\AdminSource;
 use Magento\Framework\Event\ManagerInterface as EventManager;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
@@ -38,6 +39,7 @@ class YextAttribute
     protected UserFactory $userFactory;
     protected User $userHelper;
     protected SourceInterface $sourceInterface;
+    protected SourceInterfaceFactory $sourceInterfaceFactory;
     protected AdminSource $adminSource;
     private EventManager $eventManager;
     protected LocatorSourceResolver $locatorSourceResolver;
@@ -57,6 +59,7 @@ class YextAttribute
         UserFactory $userFactory,
         User $userHelper,
         SourceInterface $sourceInterface,
+        SourceInterfaceFactory $sourceInterfaceFactory,
         AdminSource $adminSource,
         EventManager $eventManager,
         LocatorSourceResolver $locatorSourceResolver
@@ -76,6 +79,7 @@ class YextAttribute
         $this->userFactory = $userFactory;
         $this->userHelper = $userHelper;
         $this->sourceInterface = $sourceInterface;
+        $this->sourceInterfaceFactory = $sourceInterfaceFactory;
         $this->adminSource = $adminSource;
         $this->eventManager = $eventManager;
         $this->locatorSourceResolver = $locatorSourceResolver;
@@ -311,21 +315,22 @@ class YextAttribute
                         'yext_data' => $data
 
                     ]);
+                    // We delay inserting admin and source to 2nd save.
 
-                    $newUser = $this->editAdminUser($insert, $locationModel->getId());
-                    $newSource = $this->editSource($insert, $locationModel->getId());
+                    // $newUser = $this->editAdminUser($insert, $locationModel->getId());
+                    // $newSource = $this->editSource($insert, $locationModel->getId());
 
-                    $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
+                    // $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
 
-                    if (!is_null($newSource)) {
-                        $this->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $locationModel->getId());
-                    }
+                    // if (!is_null($newSource)) {
+                    //     $this->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $locationModel->getId());
+                    // }
 
-                    if (!is_null($newUser) && !is_null($newSource)) {
-                        $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
-                        $this->adminSource->save();
-                        $this->locatorSourceResolver->assignAmLocatorStoreToSource($locationModel->getId(), $newSource->getSourceCode());
-                    }
+                    // if (!is_null($newUser) && !is_null($newSource)) {
+                    //     $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
+                    //     $this->adminSource->save();
+                    //     $this->locatorSourceResolver->assignAmLocatorStoreToSource($locationModel->getId(), $newSource->getSourceCode());
+                    // }
                 }
                 return $locationModel;
             } else {
@@ -342,41 +347,71 @@ class YextAttribute
      * 
      * @param $data array from event or response, $yextEntityId: (string) yext_entity_id value
      * 
-     * @return \Amasty\Storelocator\Model\Location
+     * @return \Amasty\Storelocator\Model\Location|null
      */
     public function editLocation($data, $yextEntityId)
     {
+        // $this->logger->log('600', print_r($data, true));
         try {
             
             $insert = $this->responseDataProcess($data['primaryProfile']);
-            $this->logger->log('600', print_r($data, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
+
             if (!$location->getId()) {
-                //location do not exist
-                return '';
+                return null;
             } else {
                 //edit location
                 $location->addData($insert);
-
-                // $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $source->getSourceCode()]);
-                $this->editAdminUser($insert, $location->getId());
                 
                 if (isset($data['primaryProfile']['hours']['holidayHours'])) {
                     $this->editLocationHolidayHours($location, $data['primaryProfile']['hours']['holidayHours']);
                 }
-                // $this->adminSource->save();
                 $location->save();
-                if ($location->getId()) {
-                   $this->insertYextEntityIdValue([$location->getId() => $yextEntityId]);
-                   if (isset($data['primaryProfile']['hours']['reopenDate'])) {                       
-                    $this->insertAttributeValue($location->getId(), 'temporarily_closed', 'Reopen Date: '.$data['primaryProfile']['hours']['reopenDate']);
-                    
-                   } else {
-                    $this->insertAttributeValue($location->getId(), 'temporarily_closed');
-                   }
+
+                $notAsdaFlag = empty($data['primaryProfile']['asda_parent_store']);
+
+                if ($notAsdaFlag) {
+                    $adminUser = $this->editAdminUser($insert, $location->getId());
+                    $storeSource = $this->editSource($insert, $location->getId());
+                    if (!empty($adminUser)) {
+                        $adminUserId = $adminUser->getUserId();
+                    }
+                }   else {
+                    $parentLocationYextEntity = $data['primaryProfile']['asda_parent_store'][0];
+                    $parentLocation = $this->getLocationByYext("'$parentLocationYextEntity'");
+                    $sourceCode = $this->locatorSourceResolver->getSourceCodeByAmLocator($parentLocation->getId());
+                    $storeSource = $this->sourceInterfaceFactory->create()->load($sourceCode);
+                    $adminUser = $this->locatorSourceResolver->getUserBySource($sourceCode);
+                    if (count($adminUser)) {
+                        $adminUserId = $adminUser[0];
+                    }
+
                 }
+                $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
+
+                if (!empty($storeSource) && $notAsdaFlag) {
+                    $this->assignSourceToStock($storeSource->getSourceCode(), $defaultAssignStockId, $location->getId());
+                }
+
+                if (!empty($adminUserId) && !empty($storeSource)) {
+                    $this->locatorSourceResolver->assignUserToSource($adminUserId, $storeSource->getSourceCode());
+                    $this->locatorSourceResolver->assignAmLocatorStoreToSource($location->getId(), $storeSource->getSourceCode());
+                }
+                if (!$notAsdaFlag) {
+                    $this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent(
+                        $parentLocation->getId(), $location->getId()
+                    );
+                }
+                if (isset($data['primaryProfile']['hours']['reopenDate'])) {                       
+                    $this->insertAttributeValue($location->getId(), 'temporarily_closed', 'Reopen Date: '.$data['primaryProfile']['hours']['reopenDate']);
+                } else {
+                    $this->insertAttributeValue($location->getId(), 'temporarily_closed');
+                }
+
                 return $location;
             }
+
+            
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -436,7 +471,7 @@ class YextAttribute
                 } else {
                     $userModel = $this->userFactory->create();
                     $user = $userModel->load($adminInfo['email'], 'email');
-                    // var_dump($user->getUserId());die();
+                    
                     if ($user->getUserId()) {
                         $this->logger->log('600', "Edit User without Yext Store Email");
                         $adminInfo['password']  = 'Cakebox123';
@@ -464,29 +499,7 @@ class YextAttribute
 
                 }
             } 
-            // else {
-            //     $userModel = $this->userFactory->create()->load($userId);
-            //     if ($userModel->getUsername() == $adminInfo['username'] && $userModel->getEmail() == $adminInfo['email']) {
-            //         $this->logger->log('600', "Not Edit User");
-            //         try {
-                        
-            //             $this->yextHelper->sendEmail($adminInfo['username'], $userModel->getPassword(), $adminInfo['email']);                        
-            //         } catch (\Exception $e) {
-            //             $this->logger->error($e->getMessage());
-            //         }
-            //         return $userModel;
-            //     } else {
-            //         $userModel->addData($adminInfo);
-            //         $this->logger->log('600', "Edit User");
-            //         try {
-                        
-            //             $this->yextHelper->sendEmail($adminInfo['username'], $userModel->getPassword(), $adminInfo['email']);                        
-            //         } catch (\Exception $e) {
-            //             $this->logger->error($e->getMessage());
-            //         }
-            //         return $userModel->save();
-            //     }             
-            // }
+            
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -498,48 +511,30 @@ class YextAttribute
      * 
      * @return \Magento\Inventory\Model\Source
      */
-    public function editSource($storeData, $locationId, $sourceCode = null)
-    {
-        $locationName = strtolower(str_replace(['(ASDA)'], [''], trim($storeData['name'])));
+    public function editSource($storeData, $locationId)
+    {   
+        $locationName = trim($storeData['name']);
 
         $sourceData = [
-            'source_code' => strtolower(str_replace([' ', '(', ')', '(ASDA)'], ['_', '', '', ''], trim($locationName))),
+            'source_code' => strtolower(str_replace([' ', '(', ')', '(ASDA)'], ['_', '', '', ''], $locationName)),
             'name' => $storeData['name'],
             'enabled' => 1,
-            'description' => $storeData['description'],
-            'latitude' => $storeData['lat'],
-            'longitude' => $storeData['lng'],
-            'country_id' => $storeData['country'],
-            'postcode' => $storeData['zip'],
+            'description' => empty($storeData['description']) ? '' : $storeData['description'],
+            'latitude' => empty($storeData['lat']) ? '' : $storeData['lat'],
+            'longitude' => empty($storeData['lng']) ? '' : $storeData['lng'],
+            'country_id' => empty($storeData['country']) ? '' : $storeData['country'],
+            'postcode' => empty($storeData['zip']) ? '' : $storeData['zip'],
             'amlocator_store' => $locationId
         ];
-        
-        try {
-            if (!$sourceCode) {
-                $source = $this->sourceInterface->load($sourceData['source_code']);
 
-                if ($source->getSourceCode()) {
-                    return $source;
-                } else {
-                    if (!strpos($storeData['name'], 'ASDA')) 
-                    {
-                        $source = $this->sourceInterface;
-                        $source->setData($sourceData);
-                        return $source->save();
-                    } else {
-                        return null;
-                    }
-                }
-                
-            } else {
-                $source = $this->sourceInterface->load($sourceCode);
-                if ($source->getSourceCode()) {
-                    return $source;
-                } else {
-                    $source->addData($sourceData);
-                    return $source->save();
-                }            
+        try {
+            $source = $this->sourceInterfaceFactory->create()->load($sourceData['source_code']);
+            if (!$source->getSourceCode()) {
+                $source = $this->sourceInterfaceFactory->create();
+                $source->setData($sourceData)->save();
+                return $source;
             }
+            
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -550,15 +545,15 @@ class YextAttribute
      *
      * @return void
      */
-    public function assignSourceToStock($sourceCode, $stockId, $priority = 1)
+    public function assignSourceToStock($sourceCode, $stockId, $priority = 0)
     {
         $connection = $this->resource->getConnection();
-        $stockSourceLinkData = [
+        $stockSourceLinkData = [[
             'source_code' => $sourceCode,
             'stock_id' => $stockId,
             'priority' => $priority,
-        ];
-        $connection->insert($this->resource->getTableName('inventory_source_stock_link'), $stockSourceLinkData);
+        ]];
+        $connection->insertOnDuplicate($this->resource->getTableName('inventory_source_stock_link'), $stockSourceLinkData);
     }
     /**
      * Link location with yext_entity_id in table amasty_amlocator_store_attribute
@@ -602,7 +597,7 @@ class YextAttribute
         $data['attribute_id'] = $attributeId;
         $data['store_id'] = $locationId;
         $data['value'] = $value;
-        var_dump($data);
+
         try {
             $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
             

@@ -1,0 +1,30 @@
+{
+    "amasty_amlocator_holiday_hours": {
+        "column": {
+            "id": true,
+            "store_id": true,
+            "store_name": true,
+            "type": true,
+            "date": true,
+            "open_time": true,
+            "break_start": true,
+            "break_end": true,
+            "close_time": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_3FD153617B6389C6D037D093D7C2BB23": true
+        }
+    },
+    "amasty_amlocator_temporarily_closed": {
+        "column": {
+            "id": true,
+            "store_id": true,
+            "reopen_date": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_C3101E5430BD58DB6106823D4AB4973A": true
+        }
+    }
+}

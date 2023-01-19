@@ -22,26 +22,13 @@ class SourceSave implements ObserverInterface
     public function execute(Observer $observer)
     {
         $data = $observer->getData('request')->getParams();
-        $idStore = $data["general"]['amlocator_store'];
+        $storeIds = $data["general"]['amlocator_store'];
         $sourceCode = $data["general"]['source_code'];
-        $source = $this->sourceRepository->get($sourceCode);
-        $storeOfSource = $this->locatorSourceResolver->getAmLocatorBySource($sourceCode);
-        if (is_array($idStore)) {
-            $newAssignStore = array_diff($idStore, $storeOfSource);
-            $unAssignStore = array_diff($storeOfSource, $idStore);
-            
-            if ($newAssignStore) {
-                foreach ($newAssignStore as $id) {
-                    $this->locatorSourceResolver->assignAmLocatorStoreToSource($id, $sourceCode);
-                }
-            }
-
-            if ($unAssignStore) {
-                foreach ($unAssignStore as $id) {
-                    $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($id, $sourceCode);
-                }
-            }
-           $source->setData("amlocator_store",implode(",",$idStore))->save();
+        try {
+            $this->locatorSourceResolver->reAssignAmLocatorStoresToSource($storeIds, $sourceCode);
+        } catch (\Exception $e) {
+            // echo $e->getMessage();die;
         }
+        
     }
 }

@@ -18,6 +18,11 @@
             <column name="entity_id" />
         </constraint>
         <constraint xsi:type="foreign" referenceId="admin_user_source_link_user_id" table="admin_user_source_link" column="user_id" referenceTable="admin_user" referenceColumn="user_id" onDelete="CASCADE"/>
+
+        <constraint xsi:type="unique" referenceId="ADMIN_USER_SOURCE_LINK_USER_ID_SOUCE_CODE">
+            <column name="user_id"/>
+            <column name="source_code"/>
+        </constraint>
     </table>        
     <table name="amasty_amlocator_location_source_link" resource="default" engine="innodb" comment="Amasty Location Source Link">
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
@@ -38,6 +43,10 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="store_location_asda_link_parent" table="store_location_asda_link" column="parent_location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="store_location_asda_link_asda" table="store_location_asda_link" column="asda_location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="STORE_LOCATION_ASDA_LINK_PARENT_LOCATION_ID_ASDA_LOCATION_ID">
+            <column name="parent_location_id"/>
+            <column name="asda_location_id"/>
+        </constraint>
     </table>
 
     <table name="amasty_amlocator_location">
