@@ -24,6 +24,7 @@
         }
     },
     "require": {
+        "amasty/mega-menu-page-builder": "^1.0",
         "amasty/module-improved-layered-navigation-page": "^2.7",
         "amasty/module-mega-menu-package-pro": "2.4.1",
         "amasty/module-shop-by-base": "^2.16",
