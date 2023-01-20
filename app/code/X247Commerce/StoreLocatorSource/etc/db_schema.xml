@@ -14,11 +14,12 @@
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
         <column name="user_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Admin User Id" />
         <column name="source_code" xsi:type="varchar" nullable="false" comment="Source Code" />
+        
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>
         <constraint xsi:type="foreign" referenceId="admin_user_source_link_user_id" table="admin_user_source_link" column="user_id" referenceTable="admin_user" referenceColumn="user_id" onDelete="CASCADE"/>
-
+        <constraint xsi:type="foreign" referenceId="inventory_source_source_code" table="admin_user_source_link" column="source_code" referenceTable="inventory_source" referenceColumn="source_code" onDelete="CASCADE"/>
         <constraint xsi:type="unique" referenceId="ADMIN_USER_SOURCE_LINK_USER_ID_SOUCE_CODE">
             <column name="user_id"/>
             <column name="source_code"/>

@@ -16,7 +16,8 @@
         "constraint": {
             "PRIMARY": true,
             "ADMIN_USER_SOURCE_LINK_USER_ID_ADMIN_USER_USER_ID": true,
-            "ADMIN_USER_SOURCE_LINK_USER_ID_SOURCE_CODE": true
+            "ADMIN_USER_SOURCE_LINK_USER_ID_SOURCE_CODE": true,
+            "ADMIN_USER_SOURCE_LINK_SOURCE_CODE_INVENTORY_SOURCE_SOURCE_CODE": true
         }
     },
     "amasty_amlocator_location": {

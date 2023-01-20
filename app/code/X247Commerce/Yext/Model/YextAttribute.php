@@ -424,82 +424,42 @@ class YextAttribute
      * 
      * @return \Magento\User\Model\UserFactory
      */
-    public function editAdminUser($data, $locationId, $userId = null, $locationMail = null)
+    public function editAdminUser($data, $locationId)
     {
-        $adminInfo = [
-            'username'  => $data['name'] ? strtolower(str_replace([' ', '(', ')'], ['_', '', ''], trim($data['name']))) : 'cakebox',
-            'firstname' => 'Cake Box',
-            'lastname'    => $data['name'] ? str_replace(['Cake Box ', '(', ')'], '', trim($data['name'])) : 'Cake Box',
-            'email'     => $data['email'] ? $data['email'] : strtolower(str_replace(['cake box', ' ', '(', ')'], '_', trim($data['name']))).'@eggfreecake.co.uk',
-            'interface_locale' => 'en_US',
-            'is_active' => 1
-        ];
-        
         try {
-            if (!$userId) {
-                if ($data['email']) {
-                    $userModel = $this->userFactory->create();
-                    $user = $userModel->load($data['email'], 'email');
-                    if (!$user->getUserId()) {
-                        $user = $userModel->load($adminInfo['email'], 'email');
-                    }
-                    // var_dump($user->getUserId());die();
-                    if ($user->getUserId()) {
-                        $this->logger->log('600', "Edit User with Yext Store Email");
-                        $adminInfo['password']  = 'Cakebox123';
-                        $user->addData($adminInfo);
-                        return $user->save();
-                    } else {
-                        $this->logger->log('600', "Add New User with Yext Store Email");
-                        $adminInfo['password']  = 'Cakebox123';
-                        $this->logger->log('600', print_r($adminInfo, true));
-                        $userModel->setData($adminInfo);
-                        $userModel->setRoleId($this->userHelper->getStaffRole());
-                    
-                        $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']); 
-                        $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
-                        $user = $userModel->save();
-                        if ($sources) {
-                            foreach ($sources as $source)
-                            {
-                                $this->adminSource->setData(['user_id' => $user->getUserId(), 'source_code' => $source]);
-                                $this->adminSource->save();                                
-                            }
-                        }
-                        return $user; 
-                    }
-                } else {
-                    $userModel = $this->userFactory->create();
-                    $user = $userModel->load($adminInfo['email'], 'email');
-                    
-                    if ($user->getUserId()) {
-                        $this->logger->log('600', "Edit User without Yext Store Email");
-                        $adminInfo['password']  = 'Cakebox123';
-                        $user->addData($adminInfo);
-                        return $user->save();
-                    } else {
-                        $this->logger->log('600', "Add New User without Yext Store Email");
-                        $adminInfo['password']  = 'Cakebox123';
-                        $this->logger->log('600', print_r($adminInfo, true));
-                        $userModel->setData($adminInfo);
-                        $userModel->setRoleId($this->userHelper->getStaffRole());
-                    
-                        $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']); 
-                        $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
-                        $user = $userModel->save();
-                        if ($sources) {
-                            foreach ($sources as $source)
-                            {
-                                $this->adminSource->setData(['user_id' => $user->getUserId(), 'source_code' => $source]);
-                                $this->adminSource->save();                                
-                            }
-                        }
-                        return $user; 
-                    }
 
+            $adminInfo = [
+                'username'  => $data['name'] ? strtolower(str_replace([' ', '(', ')'], ['_', '', ''], trim($data['name']))) : 'cakebox',
+                'firstname' => 'Cake Box',
+                'lastname'    => $data['name'] ? str_replace(['Cake Box ', '(', ')'], '', trim($data['name'])) : 'Cake Box',
+                'email'     => $data['email'] ? $data['email'] : strtolower(str_replace(['cake box', ' ', '(', ')'], '_', trim($data['name']))).'@eggfreecake.co.uk',
+                'interface_locale' => 'en_US',
+                'is_active' => 1,
+                'password'  => 'Cakebox123'
+            ];
+            $userId = $this->locatorSourceResolver->getUserByAmLocatorStore($locationId);
+            if (!empty($userId)) {
+                $userId = $userId[0];
+                $user = $this->userFactory->create()->load($userId);
+                if ($adminInfo['email'] != $user->getEmail()) {
+                    //only edit when email was changed
+                    $user->addData($adminInfo)->save();
                 }
-            } 
+            }   else {
+                $user = $this->userFactory->create()->load($adminInfo['email'], 'email');
+                if (!$user->getId()) {
+                    $user = $this->userFactory->create();
+                    $user->addData($adminInfo)->save();
+                }
+            }
+
+            if (!empty($data['email'])) {
+                $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']);
+            }   else {
+                $this->logger->log('600', "Add New User without Yext Store Email");
+            }
             
+            return $user;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
