@@ -1,0 +1,15 @@
+{
+    "customer_inquiry": {
+        "column": {
+            "entity_id": true,
+            "status": true,
+            "customer_name": true,
+            "customer_email": true,
+            "enquiry_type": true,
+            "message": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

@@ -1,0 +1,122 @@
+& when (@media-common = true) {
+
+	html body.account {
+
+		a {
+			color: #992e80;
+		}
+		.page-title-wrapper {
+			display: none;
+		}
+		.block-collapsible-nav .item.current>strong {
+			border-color: #992e80;
+		}
+
+		.sidebar.sidebar-main {
+			.content.block-collapsible-nav-content {
+				padding: 15px 0px 40px;
+			}
+		}
+
+		.actions-toolbar {
+			.action.primary.add {
+				border-radius: 35px;
+			    -webkit-transition: all .3s ease 0s;
+			    color: #fff;
+			    display: inline-block;
+			    margin-bottom: 10px;
+			    margin-top: 0;
+			    text-align: center;
+			    letter-spacing: 1px;
+			    background: #992e80;
+			    font-weight: 700;
+			    border: medium none;
+			    font-size: 15px;
+			    padding: 13px 50px;
+			    text-transform: uppercase;
+			    width: auto;
+			}
+
+			.action.save.primary {
+				border-radius: 35px;
+			    -webkit-transition: all .3s ease 0s;
+			    color: #fff;
+			    display: inline-block;
+			    font-weight: 700;
+			    margin-bottom: 10px;
+			    margin-top: 0;
+			    background: #992e80;
+			    border: 0 none;
+			    letter-spacing: 1px;
+			    text-transform: uppercase;
+			    padding: 11px 0;
+			    text-align: center;
+			    width: 195px;
+			}
+		}
+
+		.sidebar.sidebar-additional {
+			clear: left !important;
+    		margin-top: 0;
+    		.block.block-compare {
+    			margin-top: 21px;
+			    float: left;
+			    width: 100%;
+			    .block-title {
+			    	background: #fff none repeat scroll 0 0;
+				    border-left: 2px solid #992e80;
+				    box-shadow: 0 0 10px #ccc;
+				    -webkit-box-shadow: 0 0 10px #ccc;
+				    float: left;
+				    width: 82%;
+				    padding: 10px 14px;
+				    strong#block-compare-heading {
+				    	float: left;
+					    font-size: 20px;
+					    font-weight: 200;
+					    color: #992e80;
+				    }
+			    }
+			    .empty {
+			    	background: #f5f5f5 none repeat scroll 0 0;
+				    float: left;
+				    margin: -16px 0 0;
+				    padding: 20px 16px;
+				    width: 82%;
+				    text-align: left;
+			    	font-size: 20px;
+				    font-weight: 200;
+			    }
+    		}
+
+    		.block.block-wishlist {
+    			display: none;
+    		}
+
+    		.block.block-reorder {
+    			.actions-toolbar > .primary .action {
+    				background: #992e80;
+				    border: medium none;
+				    border-radius: 35px;
+				    box-shadow: none;
+				    color: #fff;
+				    font-size: 13px;
+				    text-transform: uppercase;
+				    cursor: default;
+				    &:hover {
+				    	background: #995917;
+				    }
+    			}
+    			.product-item-name > a:visited {
+    				color: #992e80;
+    			}
+    		}
+		}
+
+		.form {
+			.fieldset > .field.choice .label {
+				font-weight: 700;
+			}
+		}
+	}
+}
