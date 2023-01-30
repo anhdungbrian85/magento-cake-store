@@ -19,21 +19,22 @@ class Data extends AbstractHelper
     protected $stockItemRepository;
     protected $getQuantityInformationPerSource;
     protected $locationCollectionFactory;
-
+    protected $storeLocationContextInterface;
     public function __construct(
         Context $context,
         ResourceConnection $resource,
         StockItemRepository $stockItemRepository,
         GetQuantityInformationPerSource $getQuantityInformationPerSource,
-        LocationCollectionFactory $locationCollectionFactory
-    ) 
-    {
+        LocationCollectionFactory $locationCollectionFactory,
+        \X247Commerce\Checkout\Api\StoreLocationContextInterface $storeLocationContextInterface
+    ) {
         parent::__construct($context);
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
         $this->stockItemRepository = $stockItemRepository;
         $this->getQuantityInformationPerSource = $getQuantityInformationPerSource;
         $this->locationCollectionFactory = $locationCollectionFactory;
+        $this->storeLocationContextInterface = $storeLocationContextInterface;
     }
 
     public function getAvailableSourceOfProduct($stockId, $productSku)
@@ -70,6 +71,7 @@ class Data extends AbstractHelper
     {
         return $this->getQuantityInformationPerSource->execute($productSku);
     }
+    
     public function getAmLocationByLocationId($id)
     {
         if (is_array($id)) {            
@@ -79,5 +81,10 @@ class Data extends AbstractHelper
             return $this->locationCollectionFactory->create()->addFieldToSelect('*')
                         ->addFieldToFilter('id', $id);
         }
+    }
+
+    public function getSelectedStoreLocatorId()
+    {
+        return $this->storeLocationContextInterface->getStoreLocationId();
     }
 }
