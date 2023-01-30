@@ -33,7 +33,7 @@ class SendEmailToStaffAdmin
         $this->_coreSession->start();
         $orderData = $this->_coreSession->getX247Order()->getData();
         $storeLocationId = $orderData["store_location_id"];
-        if (!empty($storeLocationId)) {
+        if (!empty($storeLocationId) && !empty($result)) {
             $storeCollection = $this->locationFactory->create()->load($storeLocationId);
             $dataLocation = $storeCollection->getData();
             $emailAdmin = $dataLocation["email"];
