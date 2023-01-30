@@ -68,7 +68,7 @@ class LocatorSourceResolver
     /**
      * Get source_code by amlocator_store id
      * @param $locationId
-     * @return [source_code]|null
+     * @return string|null
      * 
      **/
 
@@ -162,7 +162,7 @@ class LocatorSourceResolver
             $sqlGetUser = $this->connection->select()
                 ->from($userTbl, ['user_id'])
                 ->joinLeft(['link' => $sourceLinkTbl], "link.user_id = $userTbl.user_id")
-                ->where("source_code IN (?)", $sources);
+                ->where("source_code = ?", $sources);
             
             $users = $this->connection->fetchAll($sqlGetUser);
             $resultUserIds = [];
@@ -239,12 +239,7 @@ class LocatorSourceResolver
         if ($locationId) {
             $sources = $this->getSourceCodeByAmLocator($locationId);
 
-            if ($sources) {
-                $sourceCodes = [];
-                foreach ($sources as $source) {
-                    $sourceCodes[] =  $source;
-                }
-            } else {
+            if (empty($sources)) {
                 return false;
             }
             
@@ -252,7 +247,7 @@ class LocatorSourceResolver
             
             $sourceList = [];
             foreach ($productQty as $pQty) {
-                if (in_array($pQty['source_code'], $sourceCodes)) {
+                if ($pQty['source_code'] == $sources) {
                     $sourceList[] = $pQty;
                 }
             }        

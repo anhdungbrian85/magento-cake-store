@@ -270,10 +270,10 @@ class YextAttribute
                 }
                 if ($this->yextHelper->getDeleteSourceSyncSetting()) {
                     try {
-                        $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($location->getId());
-                        foreach ($sources as $code)
+                        $sourceCodeByAmLocator = $this->locatorSourceResolver->getSourceCodeByAmLocator($location->getId());
+                        if (!empty($sourceCodeByAmLocator))
                         {                       
-                            $source = $this->sourceInterface->load($code);
+                            $source = $this->sourceInterface->load($sourceCodeByAmLocator);
                             if ($source->getSourceCode()) {
                                 $source->delete();
                             } 

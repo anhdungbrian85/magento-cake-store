@@ -66,12 +66,7 @@ class ValidateAddToCart implements ObserverInterface
             $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
             $searchCriteria = $searchCriteriaBuilder->addFilter('amlocator_store', $locationId, 'in')->create();
             $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
-            if ($sources) {
-                $sourceCodes = [];
-                foreach ($sources as $source) {
-                    $sourceCodes[] =  $source;
-                }
-            } else {
+            if (empty($sources)) {
                 throw new LocalizedException(__("The product is not available in the selected store."));
             }
             
@@ -88,7 +83,7 @@ class ValidateAddToCart implements ObserverInterface
             $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($product->getSku());
             $sourceList = [];
             foreach ($productQty as $pQty) {
-                if (in_array($pQty['source_code'], $sourceCodes)) {
+                if ($pQty['source_code'] == $sources) {
                     $sourceList[] = $pQty;
                 }
             }        
