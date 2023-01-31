@@ -12,7 +12,15 @@ class Config extends AbstractHelper
     const NUTRITICS_CONFIG_PATH_PASSWORD = 'nutritics/api_settings/password';
     const NUTRITICS_CONFIG_PATH_USER_ID = 'nutritics/api_settings/user_id';
     const NUTRITICS_CONFIG_PATH_LIMIT = 'nutritics/api_settings/limit';
-    
+    const NUTRITICS_CONFIG_PATH_DATA_TYPE = 'nutritics/api_settings/api_type';
+    const NUTRITICS_CONFIG_PATH_ATTRIBUTE = 'nutritics/api_settings/filter_attribute';
+
+    const NUTRITICS_CONFIG_API_TYPE_FOOD = 1;
+    const NUTRITICS_CONFIG_API_TYPE_RECIPE = 2;
+
+    const NUTRITICS_CONFIG_API_ATTRIBUTE_IFC = 1;
+    const NUTRITICS_CONFIG_API_ATTRIBUTE_CODE = 2;
+
     const NUTRITICS_ENDPOINT = 'www.nutritics.com/api/v1.2';     
 
     public function __construct(
@@ -69,5 +77,25 @@ class Config extends AbstractHelper
     public function getBaseApiEndPointUrl()
     {   
         return self::NUTRITICS_ENDPOINT;
+    }  
+
+    /**
+     * Get Product API type
+     *
+     * @return string
+     */
+    public function getProductApiType()
+    {   
+        return $this->scopeConfig->getValue(self::NUTRITICS_CONFIG_PATH_DATA_TYPE, ScopeInterface::SCOPE_STORE);
     }   
+
+    /**
+     * Get Product API Filter attribute
+     *
+     * @return string
+     */
+    public function getProductApiAttributeFilter()
+    {   
+        return $this->scopeConfig->getValue(self::NUTRITICS_CONFIG_PATH_ATTRIBUTE, ScopeInterface::SCOPE_STORE);
+    }  
 }

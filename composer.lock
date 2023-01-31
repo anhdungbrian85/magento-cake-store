@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1571b7c5e4dad051ba99647d6ea8b1ea",
+    "content-hash": "19aa9d7fdae9e131cc39f02f88935784",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -132,6 +132,33 @@
                 "Commercial"
             ],
             "description": "Mega Menu By Amasty"
+        },
+        {
+            "name": "amasty/mega-menu-page-builder",
+            "version": "1.0.7",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/mega-menu-page-builder-1.0.7-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.3",
+                "amasty/mega-menu": ">=2.2.1",
+                "magento/module-page-builder": "*",
+                "php": ">=7.3.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\MegaMenuPageBuilder\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Mega Menu Page Builder By Amasty"
         },
         {
             "name": "amasty/module-improved-layered-navigation-page",

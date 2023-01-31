@@ -2,30 +2,40 @@
 
 namespace X247Commerce\StoreLocatorSource\Model;
 
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\CollectionFactory;
+use Amasty\Storelocator\Model\LocationFactory;
+use Magento\Framework\App\Request\Http as HttpRequest;
 class OptionsLocatorStore implements \Magento\Framework\Data\OptionSourceInterface
 {
 
-	protected $locationFactory;
-
-	protected $collectionFactory;
-
+	protected CollectionFactory $collectionFactory;
+	protected LocationFactory $locationFactory;
+	protected HttpRequest $request;
 	
 	public function __construct(
-		\Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\CollectionFactory $collectionFactory,
-		\Amasty\Storelocator\Model\LocationFactory $locationFactory
+		CollectionFactory $collectionFactory,
+		LocationFactory $locationFactory,
+		HttpRequest $request
+
 	) {
 		$this->locationFactory = $locationFactory;	
 		$this->collectionFactory = $collectionFactory;
+		$this->request = $request;
 	}
 
 	public function toOptionArray() {
+
 		$options = [];
 		$locationStore = $this->locationFactory->create()->getCollection()->setOrder('name','ASC');;
-					
+		$currentStoreId = $this->request->getParam('id');	
+
 		foreach ($locationStore as $store) {
+			if ($currentStoreId == $store->getId()) {
+				continue;
+			}
 			$options[] =
 				[	'value' => $store->getId(),
-					'label' =>$store->getName()
+					'label' => $store->getName()
 				];
 		}
 		if (count($options) > 0) {

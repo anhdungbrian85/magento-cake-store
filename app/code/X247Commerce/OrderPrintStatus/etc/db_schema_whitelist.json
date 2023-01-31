@@ -1,0 +1,10 @@
+{
+    "sales_order": {
+        "column": {
+            "print_status": true
+        },
+        "index": {
+            "SALES_ORDER_PRINT_STATUS": true
+        }
+    }
+}

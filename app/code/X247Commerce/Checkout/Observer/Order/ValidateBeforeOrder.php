@@ -45,17 +45,8 @@ class ValidateBeforeOrder implements ObserverInterface
     {
         $locationId = $this->customerSession->getStoreLocationId();
         if ($locationId) {
-            // $this->logger->log('600', 'Selected Location '.print_r($locationId, true));
-            // $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-            // $searchCriteria = $searchCriteriaBuilder->addFilter('amlocator_store', $locationId, 'in')->create();
-            // $sources = $this->sourceRepository->getList($searchCriteria)->getItems();
             $sources = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
-            if ($sources) {
-                $sourceCodes = [];
-                foreach ($sources as $source) {
-                    $sourceCodes[] =  $source->getSourceCode();
-                }
-            } else {
+            if (empty($sources)) {
                 throw new PaymentException(__("Some of the products are not available in the selected store."));
             }
             $order = $observer->getEvent()->getOrder();
@@ -68,7 +59,7 @@ class ValidateBeforeOrder implements ObserverInterface
                 $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($sku);
                 $sourceList = [];
                 foreach ($productQty as $pQty) {
-                    if (in_array($pQty['source_code'], $sourceCodes)) {
+                    if ($pQty['source_code'] == $sources) {
                         $sourceList[] = $pQty;
                     }
                 }        

@@ -31,17 +31,20 @@ class AssignAsdaStoreParentLocator
 
     	$action = $this->request->getFullActionName();
     	$currentLocationId = $result["items"][0]["id"];
-    	
+
     	if ($action == 'amasty_storelocator_location_edit') {
-    		// Only when edit location
-    		if (isset($result["items"][0])) {
-    			$result["items"][0]['amlocator_store'] = $this->getAsdaLocationParentLocation($currentLocationId);
-    		}
-		    if (isset($result[1])) {
-		    	$result[1]['amlocator_store'] = $this->getAsdaLocationParentLocation($currentLocationId);
-		    }		    
+    		if ($parentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($currentLocationId)) {
+	    		// Only when edit location
+	    		if (isset($result["items"][0])) {
+	    			$result["items"][0]['amlocator_store'] = $parentLocationId;
+	    		}
+
+			    if (isset($result[$currentLocationId])) {
+			    	$result[$currentLocationId]['amlocator_store'] = $parentLocationId;
+			    }		 
+		    }   
 	    }
-	    
+
 		return $result;
 	}
 
@@ -51,10 +54,5 @@ class AssignAsdaStoreParentLocator
     	
         return $data;     
     }
-    public function getAsdaLocationParentLocation($asdaLocationId)
-    {
-    	$data = $this->locatorSourceResolver->getAsdaLocationParentLocation($asdaLocationId);
 
-        return $data;     
-    }
 }

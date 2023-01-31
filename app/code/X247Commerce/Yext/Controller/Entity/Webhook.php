@@ -57,8 +57,8 @@ class Webhook extends Action implements ActionInterface
             $location = $this->editLocation($events, $events['entityId']);
         }
 
-        $this->logger->log('600', $body);
-        $this->logger->log('600', print_r($_SERVER, true));
+        // $this->logger->log('600', $body);
+        // $this->logger->log('600', print_r($_SERVER, true));
         $raw = $this->rawFactory->create();
         
         if (!empty($location)) {

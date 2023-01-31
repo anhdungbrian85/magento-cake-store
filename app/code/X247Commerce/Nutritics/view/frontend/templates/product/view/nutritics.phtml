@@ -4,12 +4,12 @@
  */
 ?>
 <?php
-$nutritics = $block->getNutriticsInfoFromApi();
-
 $nutriticsInfos = $block->getProductNutriticsInfoInDb();
 ?>
 <div class="nutritics-info-wraper">
-
+    <?php if (empty($nutriticsInfos)): ?>
+        <?= __('For nutritional information, please select all required options.') ?>
+    <?php else: ?>
     <table class="table-nutritics-info">
         <tr>
             <th><?= __('Nutritionals')?></th>
@@ -28,4 +28,5 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
             <?php endif ?>
         <?php endforeach ?>
     </table>
+    <?php endif ?>
 </div>

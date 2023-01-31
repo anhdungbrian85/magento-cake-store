@@ -139,8 +139,11 @@ class Location extends \Amasty\Storelocator\Block\Location
     {
         $needToPrepareCollection = false;
         $pageNumber = (int)$this->getRequest()->getParam('p') ? (int)$this->getRequest()->getParam('p') : 1;
+        
         if (!$this->locationCollection) {
-            $this->locationCollection = $this->locationCollectionFactory->create()->addFieldToFilter('curbside_enabled',1);
+            $this->locationCollection = $this->locationCollectionFactory->create();
+            $this->locationCollection->applyDefaultFilters();
+            $this->locationCollection->joinScheduleTable();
             $this->locationCollection->joinMainImage();
             $needToPrepareCollection = true;
         }
@@ -151,15 +154,21 @@ class Location extends \Amasty\Storelocator\Block\Location
         }
 
         if ($needToPrepareCollection) {
-            $this->locationCollection->setCurPage(1);
-            $this->locationCollection->setPageSize($this->dataConfig->getPopupTotalStoresResult());
+
+            $this->locationCollection->setCurPage($pageNumber);
+            $this->locationCollection->setPageSize($this->configProvider->getPaginationLimit());
+            if ($this->getRequest()->getPost('delivery-type') == 0) {
+                $this->locationCollection->addFieldToFilter('curbside_enabled',1);
+            }
+            $this->reviewRepository->loadReviewForLocations($this->locationCollection->getAllIds());
+
             foreach ($this->locationCollection as $location) {
-                $data = $location->getData();
+                /** @var LocationModel $location */
                 $location->setRating($this->getRatingHtml($location));
                 $location->setTemplatesHtml();
             }
         }
-        
+
         return $this->locationCollection;
     }
 }

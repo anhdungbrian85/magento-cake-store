@@ -1,17 +1,18 @@
 <?php
+/**
+ * Copyright © 247Commerce, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 $currentProduct = $block->getProduct();
 $id = $currentProduct->getId();
-$productStock = $block->getStockItem($id);
 $productSources = $block->getQuantityInformationForProduct($currentProduct->getSku());
-// $getAvailableSourceOfProduct = $block->getAvailableSourceOfProduct(3, $block->getProduct()->getSku());
-// var_dump($getAvailableSourceOfProduct);
 $storeId = [];
 foreach ($productSources as $source) {
 	if ($block->getAmLocatorBySource($source["source_code"])) {
 		$storeId[] = $block->getAmLocatorBySource($source["source_code"]);
 	}		
 }
-// var_dump($storeId);die();
 $currentLocationId = $block->getStoreLocationIdByContext();
 $isProductAvailableInCurrentLocation = $block->checkProductAvailableInStore($currentLocationId, $currentProduct->getSku());
 $locations = $block->getAmLocationByLocationId($storeId)->getData();
