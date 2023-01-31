@@ -418,6 +418,37 @@
 		}
 
 	}
+
+	.custom-mega-menu {
+		.category-parent-title {
+			a {
+				font-size: 16px;
+				font-weight: 500;
+			}
+		}
+
+		.category-list {
+			padding: 0;
+
+			li {
+				a {
+					color: #333;
+				}
+			}
+
+			ul {
+				padding: 0;
+			}
+
+			ul {
+				& > li {
+					& > ul {
+						display: none;
+					}
+				}
+			}
+		}
+	}
 }
 
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
