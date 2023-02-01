@@ -10,9 +10,10 @@ define([
                 type: 'popup',
                 responsive: true,
                 innerScroll: true,
+                clickableOverlay: false,
                 modalClass: 'custom-delivery-popup-modal',
                 buttons: [{
-                    text: $.mage.__('Close'),
+                    text: $.mage.__('Closexx'),
                     class: '',
                     click: function () {
                         this.closeModal();
