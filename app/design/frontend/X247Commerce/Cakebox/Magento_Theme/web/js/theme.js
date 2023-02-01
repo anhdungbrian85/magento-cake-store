@@ -55,4 +55,20 @@ define([
             }
         }
     });
+
+    $('body').on( 'click', '.item-parent .icon-toggle', function(e) {
+        e.preventDefault();
+        console.log('11111111');
+        var parentItem = $(this).parents('.item-parent'),
+            submenu = parentItem.find('.submenu');
+        if ( submenu.hasClass('show') ) {
+            submenu.slideUp();
+            submenu.removeClass('show');
+            $(this).removeClass('show');
+        } else {
+            submenu.slideDown();
+            submenu.addClass('show');
+            $(this).addClass('show');
+        }
+    } );
 });
