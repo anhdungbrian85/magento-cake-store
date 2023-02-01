@@ -3,6 +3,13 @@
 //  _____________________________________________
 
 & when (@media-common = true) {
+	.custom-mega-menu {
+		.submenu.show {
+			li:first-child {
+				margin-top: 5px;
+			}
+		}
+	}
 
 	.page-header .block-search {
 		::placeholder {
@@ -446,6 +453,27 @@
 						display: none;
 					}
 				}
+			}
+
+			.item-parent {
+				& > a {
+					display: flex;
+
+					.icon-toggle {
+						margin-left: 10px;
+					}
+				}
+			}
+
+			.icon-toggle {
+				transform: rotate(0deg);
+				height: 24px;
+				transition: transform .3s;
+
+				&.show {
+					transform: rotate(180deg);
+				}
+
 			}
 		}
 	}
