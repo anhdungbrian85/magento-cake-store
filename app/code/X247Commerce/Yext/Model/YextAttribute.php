@@ -259,9 +259,15 @@ class YextAttribute
                             foreach ($users as $userId)
                             {
                                 $user = $this->userFactory->create()->load($userId);
-                                if ($user->getId()) {
-                                    $user->delete();
-                                }                        
+                                $sourcesByUser = $this->locatorSourceResolver->getSourcesByUser($user);
+                                foreach ($sourcesByUser as $source) {
+                                    $allLocatorAssignToSource = $this->locatorSourceResolver->getAmLocatorBySource($source);
+                                    if (count($allLocatorAssignToSource) < 2) {                                        
+                                        if ($user->getId()) {
+                                            $user->delete();
+                                        } 
+                                    }
+                                }                       
                             }
                         }
                     } catch (\Exception $e) {
@@ -272,11 +278,14 @@ class YextAttribute
                     try {
                         $sourceCodeByAmLocator = $this->locatorSourceResolver->getSourceCodeByAmLocator($location->getId());
                         if (!empty($sourceCodeByAmLocator))
-                        {                       
-                            $source = $this->sourceInterface->load($sourceCodeByAmLocator);
-                            if ($source->getSourceCode()) {
-                                $source->delete();
-                            } 
+                        {    
+                            $allLocatorAssignToSource = $this->locatorSourceResolver->getAmLocatorBySource($sourceCodeByAmLocator);
+                            if (count($allLocatorAssignToSource) < 2) {
+                                $source = $this->sourceInterface->load($sourceCodeByAmLocator);
+                                if ($source->getSourceCode()) {
+                                    $source->delete();
+                                } 
+                            }
                         }                        
                     } catch (\Exception $e) {
                         $this->logger->error($e->getMessage());
@@ -362,7 +371,6 @@ class YextAttribute
             } else {
                 //edit location
                 $location->addData($insert);
-                
                 if (isset($data['primaryProfile']['hours']['holidayHours'])) {
                     $this->editLocationHolidayHours($location, $data['primaryProfile']['hours']['holidayHours']);
                 }
@@ -371,20 +379,41 @@ class YextAttribute
                 $notAsdaFlag = empty($data['primaryProfile']['asda_parent_store']);
 
                 if ($notAsdaFlag) {
-                    $adminUser = $this->editAdminUser($insert, $location->getId());
-                    $storeSource = $this->editSource($insert, $location->getId());
-                    if (!empty($adminUser)) {
-                        $adminUserId = $adminUser->getUserId();
+                    if ((strpos($insert['name'], 'asda') === false)) {
+                        $this->logger->log('600', print_r(strpos($insert['name'], 'asda'), true));
+                        $adminUser = $this->editAdminUser($insert, $location->getId());
+                        $storeSource = $this->editSource($insert, $location->getId());
+                        if (!empty($adminUser)) {
+                            $adminUserId = $adminUser->getUserId();
+                        }
                     }
-                }   else {
-                    $parentLocationYextEntity = $data['primaryProfile']['asda_parent_store'][0];
-                    $parentLocation = $this->getLocationByYext("'$parentLocationYextEntity'");
-                    $sourceCode = $this->locatorSourceResolver->getSourceCodeByAmLocator($parentLocation->getId());
-                    $storeSource = $this->sourceInterfaceFactory->create()->load($sourceCode);
-                    $adminUser = $this->locatorSourceResolver->getUserBySource($sourceCode);
-                    if (count($adminUser)) {
-                        $adminUserId = $adminUser[0];
-                    }
+                } else {
+                        // $users = $this->locatorSourceResolver->getUserByAmLocatorStore($location->getId());
+                        // if (!empty($users)) {
+                        //     foreach ($users as $userId)
+                        //     {
+                        //         $user = $this->userFactory->create()->load($userId);
+                        //         if ($user->getId()) {
+                        //             $user->delete();
+                        //         }                        
+                        //     }
+                        // }
+                        // $sourceCodeByAmLocator = $this->locatorSourceResolver->getSourceCodeByAmLocator($location->getId());
+                        // if (!empty($sourceCodeByAmLocator))
+                        // {                       
+                        //     $source = $this->sourceInterface->load($sourceCodeByAmLocator);
+                        //     if ($source->getSourceCode()) {
+                        //         $source->delete();
+                        //     } 
+                        // }  
+                        $parentLocationYextEntity = $data['primaryProfile']['asda_parent_store'][0];
+                        $parentLocation = $this->getLocationByYext("'$parentLocationYextEntity'");
+                        $sourceCode = $this->locatorSourceResolver->getSourceCodeByAmLocator($parentLocation->getId());
+                        $storeSource = $this->sourceInterfaceFactory->create()->load($sourceCode);
+                        $adminUser = $this->locatorSourceResolver->getUserBySource($sourceCode);
+                        if ($adminUser) {
+                            $adminUserId = $adminUser[0];
+                        }
 
                 }
                 $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();

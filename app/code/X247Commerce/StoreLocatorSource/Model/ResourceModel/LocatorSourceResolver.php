@@ -162,9 +162,10 @@ class LocatorSourceResolver
             $sqlGetUser = $this->connection->select()
                 ->from($userTbl, ['user_id'])
                 ->joinLeft(['link' => $sourceLinkTbl], "link.user_id = $userTbl.user_id")
-                ->where("source_code = ?", $sources);
+                ->where("link.source_code = ?", $sources);
             
             $users = $this->connection->fetchAll($sqlGetUser);
+            
             $resultUserIds = [];
             foreach($users as $user) {
                 if (!empty($user['user_id'])) {
