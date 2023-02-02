@@ -1,0 +1,36 @@
+<?php
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2022 Amasty (https://www.amasty.com)
+* @package Mega Menu Base for Magento 2
+*/
+?>
+<?php
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Amasty\MegaMenuLite\ViewModel\Store\Menu $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+$item = $block->getData('item');
+$colorSettings = $viewModel->getColorSettings();
+?>
+
+<?php if (isset($item['icon'])): ?>
+    <?php $iconUrl = 'url(' . $item['icon'] . ')' ?>
+
+    <figure class="ammenu-icon-block -icon"
+            style="
+                -webkit-mask-image: <?= $escaper->escapeHtmlAttr($iconUrl) ?>;
+                maskImage: <?= $escaper->escapeHtmlAttr($iconUrl) ?>;
+                background-color: <?= '#' . $escaper->escapeHtmlAttr($colorSettings['main_menu_text']) ?>;
+                background-image: <?= $escaper->escapeHtmlAttr($iconUrl) ?>;
+            "
+            data-bind="
+               style: {
+                    'background-color': item.color() && item.icon ? item.color() : ''
+               }
+           ">
+    </figure>
+<?php endif; ?>
