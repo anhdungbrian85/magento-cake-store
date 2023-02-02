@@ -36,8 +36,7 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean((pickupDataResolver.storeId() && pickup.isPickup()) || 
-                            (window.storeLocationData.store_location_id_selected && pickup.isPickup()));
+            return Boolean(pickupDataResolver.storeId() || window.storeLocationData.store_location_id_selected );
         }),
 
         initialize: function () {
@@ -98,13 +97,13 @@ define([
                     ? datepickerDate
                     : value;
                 pickupDataResolver.dateData(selectedDate);
-                
+
                 details.datePickup(selectedDateFormat.toLocaleDateString("en-US", options));
                 var pickupDateOld = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_date'),
                     pickupTimeOld = registry.get('checkout.sidebar.block-store-locator.0.am_pickup_time');
 
                 secureTime.countDownTimer(pickupDateOld, pickupTimeOld);
-                
+
                 this.getSelectedDay(datepickerDate, value);
                 this.source.trigger('amStorepickup.date.change', {
                     date: value,

@@ -1,0 +1,33 @@
+<!-- ko if: visible -->
+<div class="ampickup-details-container ampickup-details shipping-address-details">
+    <!-- ko if: displayTitle -->
+    <div class="ampickup-title">
+        <h2 data-bind="i18n: 'Shipping Address'"></h2>
+    </div>
+    <!-- /ko -->
+    <div class="store-details">
+        <p>
+            <div class="amlocator-info-popup" bis_skin_checked="1">
+                <h3 class="amlocator-name">
+                    <div class="amlocator-title" bis_skin_checked="1">
+                        <span data-bind="text: shippingAddressDetail().firstname"></span>
+                        <span data-bind="text: shippingAddressDetail().lastname"></span>
+                    </div>
+                </h3>
+                <div class="amlocator-image" bis_skin_checked="1">
+                </div>
+                    <span data-bind="i18n: 'City:'"></span>
+                    <span data-bind="text: shippingAddressDetail().city"></span> <br>
+                    <span data-bind="i18n: 'Zip:'"></span>
+                    <span data-bind="text: shippingAddressDetail().postcode"></span> <br>
+                    Address: 93 Victoria St <br></div>
+        </p>
+        <span data-bind="i18n: 't:'"></span>
+        <span data-bind="text: shippingAddressDetail().telephone"></span>
+    </div>
+    <div class="ampickup-pickup-details">
+        <div class="ampickup-pickup-date" data-bind="text: datePickup"></div>
+        <div class="ampickup-pickup-time" data-bind="text: timePickup"></div>
+    </div>
+</div>
+<!-- /ko -->
