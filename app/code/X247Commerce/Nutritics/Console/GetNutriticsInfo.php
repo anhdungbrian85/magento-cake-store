@@ -236,12 +236,13 @@ class GetNutriticsInfo extends Command
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
         $productIds = $this->connection->fetchCol($productQuery);
-        
-        $collection = $this->productCollectionFactory->create()->addAttributeToSelect('ifc_code');
 
+        $collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addAttributeToFilter('type_id', \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE);
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
+        $collection->getSelect()->limit(10);
         return $collection;
     }
 }
