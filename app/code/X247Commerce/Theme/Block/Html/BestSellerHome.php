@@ -9,6 +9,11 @@ use Magento\Framework\View\Element\Template;
 
 class BestSellerHome extends Template
 {
+
+    protected $productStatus;
+
+    protected $productsFactory;
+
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Catalog\Helper\Image $imageHelper,
@@ -16,6 +21,8 @@ class BestSellerHome extends Template
         \Magento\Framework\Pricing\Helper\Data $priceHelp,
         \Magento\Sales\Model\ResourceModel\Report\Bestsellers\CollectionFactory $bestSellersCollectionFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Catalog\Model\Product\Attribute\Source\Status $productStatus,
+        \Magento\Reports\Model\ResourceModel\Product\CollectionFactory $productsFactory,
         array $data = []
     )
     {    
@@ -24,6 +31,8 @@ class BestSellerHome extends Template
         $this->priceHelp = $priceHelp;
         $this->bestSellersCollectionFactory = $bestSellersCollectionFactory;
         $this->storeManager = $storeManager;
+        $this->productStatus = $productStatus;
+        $this->productsFactory = $productsFactory;
         parent::__construct($context, $data);
     }
 
@@ -37,12 +46,27 @@ class BestSellerHome extends Template
             $productIds[] = $product->getProductId();
         }
 
-        $collection = $this->_productCollectionFactory->create()->addIdFilter($productIds);
-        $collection->addMinimalPrice()
+        $collection = $this->_productCollectionFactory->create();
+        $collection->addIdFilter($productIds)
+            ->addMinimalPrice()
             ->addFinalPrice()
             ->addTaxPercents()
             ->addAttributeToSelect('*')
+            ->addAttributeToFilter('type_id', array('eq' => "configurable"))
+            ->addAttributeToFilter('status', ['in' => $this->productStatus->getVisibleStatusIds()])
             ->addStoreFilter($storeId)->setPageSize(8);
+
+        if ( count( $collection ) > 0 ) {
+            return $collection;
+        }
+
+
+        $collection = $this->_productCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addStoreFilter($storeId)
+            ->addAttributeToFilter('type_id', array('eq' => "configurable"))
+            ->setOrder('created_at','DESC')
+            ->setPageSize(8);
 
         return $collection;
     }
