@@ -30,8 +30,8 @@ define([
         },
 
         visibleComputed: ko.pureComputed(function () {
-            return Boolean((pickupDataResolver.storeId() && pickup.isPickup()) ||
-                            (window.storeLocationData.store_location_id_selected && pickup.isPickup()));
+            return Boolean((pickupDataResolver.storeId()) ||
+                            (window.storeLocationData.store_location_id_selected));
         }),
 
         initialize: function () {
@@ -157,7 +157,7 @@ define([
 
                 pickupDataResolver.timeData(pickupTime);
                 details.timePickup(pickupTimeOption.label);
-                
+
                 if (timePickup) {
                     timePickup.value(pickupTimeOption.value);
                 }

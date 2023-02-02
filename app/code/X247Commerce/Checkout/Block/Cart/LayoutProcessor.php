@@ -53,7 +53,6 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     public function process($jsLayout)
     {
-        $amStorePickup = false;
         $amStorePickup = &$jsLayout['components']['block-store-locator']['children']['amstorepickup'];
         if ($amStorePickup) {
             $this->processDateLayout($amStorePickup);
