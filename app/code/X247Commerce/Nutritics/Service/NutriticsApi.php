@@ -135,13 +135,14 @@ class NutriticsApi
     }
 
     /**
-     * Fetch entity data by ifc (IFC: International Food Code)
+     * Get Nutritics Info data by ifc (IFC: International Food Code) or product sku
+     * @param array || string $filterValue
      * @param array $params 
      * @param $fields
      * @return string
      */
 
-    public function getFoodProductByIfc($filterValue, array $params = [])
+    public function getNutriticsInfo($filterValue, array $params = [])
     {
         $objDataType = $this->configHelper->getProductApiType();
         $objDataType = $objDataType == ConfigHelper::NUTRITICS_CONFIG_API_TYPE_FOOD ? 'food' : 'recipe';
@@ -149,7 +150,15 @@ class NutriticsApi
         $filterAttr = $this->configHelper->getProductApiAttributeFilter();
         $filterAttr = $filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC ? 'ifc' : 'code';
 
-        $apiUriEndpoint = $this->buildApiUri('LIST', $objDataType.'='.$filterAttr.'='.$filterValue, $params);
+        if (!is_array($filterValue)) {
+            $apiUriEndpoint = $this->buildApiUri('LIST', $objDataType.'='.$filterAttr.'='.$filterValue, $params);
+        } else {
+            $request = $objDataType.'=';
+            foreach ($filterValue as $value) {
+                $request .= $filterAttr.'='.$filterValue;
+            }
+            $apiUriEndpoint = $this->buildApiUri('LIST', $request, $params);
+        }        
 
         $response = $this->doRequest(
             $apiUriEndpoint,

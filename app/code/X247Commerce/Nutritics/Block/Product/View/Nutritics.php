@@ -38,7 +38,7 @@ class Nutritics extends \Magento\Framework\View\Element\Template
     {
         $currentPoduct = $this->getCurrentProduct();
         $ifc = $currentPoduct->getIfcCode();
-        return json_decode($this->nutriticsApi->getFoodProductByIfc($ifc), true);
+        return json_decode($this->nutriticsApi->getNutriticsInfo($ifc), true);
     }
 
     /**

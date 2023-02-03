@@ -42,26 +42,42 @@ class Nutritics
         $productCollection = $this->getProductCollection();
         $filterAttr = $this->configHelper->getProductApiAttributeFilter();
 
+        $allNutricInfo = [];
+        $allIfcCode = [];
+        $allSkus = [];
+        $allProductIds = [];
         foreach ($productCollection as $product) {
             $nutricInfo = [];
+            $allProductIds[] = $product->getEntityId();
             if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
                 if ($product->getIfcCode()) {
-                    $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+                    $allIfcCode[] = $product->getIfcCode();
+                    // $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
                 }
             }   else {
-                $nutricInfo = $this->getNutriticsInfo($product->getSku());
+                $allSkus[] = $product->getSku();
+                // $nutricInfo = $this->getNutriticsInfo($product->getSku());
             }
 
-            
-            if ($nutricInfo) {
-                $this->insertNutriticsInfo($product->getEntityId(), $nutricInfo);
-            }            
+            // if ($nutricInfo) {
+            //     $this->insertNutriticsInfo($product->getEntityId(), $nutricInfo);
+            // }            
+        }
+
+        if (!empty($allIfcCode)) {
+            $allNutricInfo = $this->getNutriticsInfo($allIfcCode);
+        }
+        if (!empty($allSkus)) {
+            $allNutricInfo = $this->getNutriticsInfo($allSkus);
+        }
+        if (!empty($allNutricInfo)) {
+            $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
         }
     }
 
     /**
      * Get Insert Product Nutritics Info to table nutritics_product_attribute_value
-     * @param $product id, array $nutricInfo
+     * @param $productId, array $nutricInfo
      * @return 
      */
     public function insertNutriticsInfo($productId, $nutricInfo)
@@ -86,10 +102,11 @@ class Nutritics
                     }
                     if (!empty($nutrics) || !empty($allergens)) {
                         $insertData[] = array_merge($nutrics, $allergens);
-                    }                    
+                    }
                 }
                 
             }
+
             if ($insertData) {
                 return $this->connection->insertMultiple($table, $insertData);
             }
@@ -97,119 +114,190 @@ class Nutritics
         }
     }
 
-    public function getNutriticsInfo($ifc) 
+    /**
+     * Get Insert Product Nutritics Info to table nutritics_product_attribute_value
+     * @param array $productId, array $nutricInfo
+     * @return 
+     */
+    public function insertMultiNutriticsInfo($productId, $nutricInfo)
     {
-    	$getNutriticsEnergy = $this->getNutriticsEnergy($ifc);
-        $getNutriticsMacro = $this->getNutriticsMacro($ifc);
-        $getNutriticsCarbohydrates = $this->getNutriticsCarbohydrates($ifc);
-        $getNutriticsFats = $this->getNutriticsFats($ifc);
-        $getNutriticsMinerals = $this->getNutriticsMinerals($ifc);
-        $getNutriticsVitamins = $this->getNutriticsVitamins($ifc);
-        $getNutriticsOther = $this->getNutriticsOther($ifc);
-        $getNutriticsMiscellaneous = $this->getNutriticsMiscellaneous($ifc);
+        $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
+        for ($i=0; $i < count($productId); $i++)
+        {
+            $insertData = [];
+            foreach ($nutricInfo as $key => $value) {
+                $nutrics = [];
+                $allergens = [];
+                if ($key != 'id') {
+                    if (isset($value[$i + 1]['name'])) {
+                        if ($value[$i + 1]['val']) {
+                            $nutrics = ['row_id' => $productId[$i], 'attribute_code' => $key, 'attribute_name' => $value[$i + 1]['name'], 'value' => $value[$i + 1]['val'], 'attribute_unit' => $value[$i + 1]['unit'], 
+                                        'percent_ri' => $value[$i + 1]['percentRI']];
+                        }
+                        
+                    }
+                    if (isset($value[$i + 1]['contains'])) {
+                        $allergens = ['row_id' => $productId[$i], 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '', 
+                        'percent_ri' => ''];
+                    }
+                    if (!empty($nutrics) || !empty($allergens)) {
+                        $insertData[] = array_merge($nutrics, $allergens);
+                    }
+                }
+                
+            }
 
+            if ($insertData) {
+                return $this->connection->insertMultiple($table, $insertData);
+            }
+            return;
+        }
+    }
+
+    public function getNutriticsInfo($filterCode) 
+    {
+        $getNutriticsEnergy = $this->getNutriticsEnergy($filterCode);
+        $getNutriticsMacro = $this->getNutriticsMacro($filterCode);
+        $getNutriticsCarbohydrates = $this->getNutriticsCarbohydrates($filterCode);
+        $getNutriticsFats = $this->getNutriticsFats($filterCode);
+        $getNutriticsMinerals = $this->getNutriticsMinerals($filterCode);
+        $getNutriticsVitamins = $this->getNutriticsVitamins($filterCode);
+        $getNutriticsOther = $this->getNutriticsOther($filterCode);
+        $getNutriticsMiscellaneous = $this->getNutriticsMiscellaneous($filterCode);
         $allInfo = array_merge($getNutriticsEnergy, $getNutriticsMacro, $getNutriticsCarbohydrates, $getNutriticsFats, $getNutriticsMinerals, 
                                 $getNutriticsVitamins, $getNutriticsFats, $getNutriticsMinerals, $getNutriticsVitamins, $getNutriticsOther, $getNutriticsMiscellaneous);
 
         return $allInfo;
     }
     
-    public function getNutriticsReportUrl($ifc) 
+    public function getNutriticsReportUrl($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc), true);
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode), true);
         $reporturl = $nutriticsInfo[1]['reporturl'];
         return $reporturl;
     }
 
     /**
-     * Get Energy info of Product by product's ifc code
+     * Get Energy info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsEnergy($ifc) 
+    public function getNutriticsEnergy($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['energyKcal', 'energyKj']), true);
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['energyKcal', 'energyKj']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
         return $return;
     }
     /**
-     * Get Macronutrients info of Product by product's ifc code
+     * Get Macronutrients info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsMacro($ifc) 
+    public function getNutriticsMacro($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol']), true);
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         return $return;
     }
     /**
-     * Get Carbohydrates info of Product by product's ifc code
+     * Get Carbohydrates info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsCarbohydrates($ifc) 
+    public function getNutriticsCarbohydrates($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose']), true);
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         return $return;
     }
     /**
-     * Get Fats (Lipid Components) info of Product by product's ifc code
+     * Get Fats (Lipid Components) info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsFats($ifc) 
+    public function getNutriticsFats($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol']), true);
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         return $return;
     }
     /**
-     * Get Minerals and Trace Elements info of Product by product's ifc code
+     * Get Minerals and Trace Elements info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsMinerals($ifc) 
+    public function getNutriticsMinerals($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine']), true);
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         return $return;
     }
     /**
-     * Get Vitamins info of Product by product's ifc code
+     * Get Vitamins info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsVitamins($ifc) 
+    public function getNutriticsVitamins($filterCode) 
     {
-        $nutriticsInfo1 = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv']), true);
-        $nutriticsInfo2 = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc']), true);
-        $return1  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
-        $return2  = isset($nutriticsInfo[2]) ? $nutriticsInfo[2] : [] ;
-        return array_merge($return1, $return2);
+        $nutriticsInfo1 = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv']), true);
+        $nutriticsInfo2 = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc']), true);
+        if (!is_array($filterCode)) {
+            $return1  = isset($nutriticsInfo1[1]) ? $nutriticsInfo1[1] : [] ;
+            $return2  = isset($nutriticsInfo2[1]) ? $nutriticsInfo2[1] : [] ;
+            return array_merge($return1, $return2);
+        } else {
+            return array_merge($nutriticsInfo1, $nutriticsInfo2);
+        }
     }
     /**
-     * Get Other info of Product by product's ifc code
+     * Get Other info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsOther($ifc) 
+    public function getNutriticsOther($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['gi','gl','caffeine']), true);
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['gi','gl','caffeine']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         return $return;
     }
     /**
-     * Get Miscellaneous info of Product by product's ifc code
+     * Get Miscellaneous info of Product by product's ifcCode or productSku
      * @param 
      * @return array
      */
-    public function getNutriticsMiscellaneous($ifc) 
+    public function getNutriticsMiscellaneous($filterCode) 
     {
-        $nutriticsInfo = json_decode($this->nutriticsApi->getFoodProductByIfc($ifc, ['allergens']), true);
-        $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['allergens']), true);
+        if (!is_array($filterCode)) {
+            $return  = isset($nutriticsInfo[1]) ? $nutriticsInfo[1] : [] ;
+        } else {
+            $return = $nutriticsInfo;
+        }
         return $return;
     }
 
@@ -218,18 +306,19 @@ class Nutritics
      * @param 
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
-	public function getProductCollection()
+    public function getProductCollection()
     {
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
-        //Query to get all product id in table nutritics_product_attribute_value
         $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
         $productIds = $this->connection->fetchCol($productQuery);
-        
-		$collection = $this->productCollectionFactory->create()->addAttributeToSelect('ifc_code');
 
+        $collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addAttributeToFilter('type_id', \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE);
+        $collection->setOrder('entity_id','ASC');
         if ($productIds) {
-            $collection->addFieldToFilter('entity_id', ['nin'=>$productIds]);
+            $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
+        $collection->getSelect()->limit(10);
         return $collection;
-	}
+    }
 }
