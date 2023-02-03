@@ -31,6 +31,7 @@
             </item>
         </argument>
     </field>
+
     <field name="enable_delivery" formElement="select">
         <settings>
             <dataType>int</dataType>
@@ -40,16 +41,7 @@
         <formElements>
             <select>
                 <settings>
-                    <options>
-                        <option name="1" xsi:type="array">
-                            <item name="value" xsi:type="string">1</item>
-                            <item name="label" xsi:type="string">Enable</item>
-                        </option>
-                        <option name="0" xsi:type="array">
-                            <item name="value" xsi:type="string">0</item>
-                            <item name="label" xsi:type="string">Disable </item>
-                        </option>
-                    </options>
+                    <options class="\Magento\Config\Model\Config\Source\Yesno"/>
                 </settings>
             </select>
         </formElements>
