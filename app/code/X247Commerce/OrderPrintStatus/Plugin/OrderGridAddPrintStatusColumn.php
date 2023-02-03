@@ -12,7 +12,7 @@ class OrderGridAddPrintStatusColumn
         
         if ($requestName == 'sales_order_grid_data_source') {
             $result->getSelect()
-                    ->joinleft(['so' => 'sales_order'], 'main_table.entity_id=so.entity_id', ['print_status']);
+                    ->joinleft(['opsso' => 'sales_order'], 'main_table.entity_id=opsso.entity_id', ['print_status']);
             return $result;
         }
         

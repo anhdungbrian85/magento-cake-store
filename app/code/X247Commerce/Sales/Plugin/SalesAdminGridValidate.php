@@ -36,16 +36,16 @@ class SalesAdminGridValidate
             if ($requestName == 'sales_order_grid_data_source') {
                 
                 $result->getSelect()
-                        ->joinleft(['so' => 'sales_order'], 'main_table.entity_id=so.entity_id', [])
-                        ->where('so.store_location_id IN (?)', $amLocatorStoresByUser);            
+                        ->joinleft(['slsso' => 'sales_order'], 'main_table.entity_id=slsso.entity_id', [])
+                        ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);            
                 return $result;
                 
             }
             if ($requestName == 'sales_order_invoice_grid_data_source' || $requestName == 'sales_order_shipment_grid_data_source' || $requestName == 'sales_order_creditmemo_grid_data_source')
             {
                 $result->getSelect()
-                        ->joinleft(['so' => 'sales_order'], 'main_table.order_id=so.entity_id', [])
-                        ->where('so.store_location_id IN (?)', $amLocatorStoresByUser);
+                        ->joinleft(['slsso' => 'sales_order'], 'main_table.order_id=slsso.entity_id', [])
+                        ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);
                 return $result;
             }
         }
