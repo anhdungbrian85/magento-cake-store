@@ -59,9 +59,9 @@ define([
                             return this.storeDetails(pickupDataResolver.pickupData().stores[i].details);
                         }
                     }
+                } else {
+                    return this.storeDetails(this.storeDetailsPlaceholder);
                 }
-
-                return this.storeDetails(this.storeDetailsPlaceholder);
             }
         },
 
