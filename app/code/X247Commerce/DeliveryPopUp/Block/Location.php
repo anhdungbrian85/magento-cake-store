@@ -40,6 +40,8 @@ class Location extends \Amasty\Storelocator\Block\Location
     private $reviewRepository;
 
     protected $dataConfig;
+    
+    protected $imageProcessor;
 
 	public function __construct(
         LocationModel $locationModel,
@@ -68,6 +70,7 @@ class Location extends \Amasty\Storelocator\Block\Location
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->reviewRepository = $reviewRepository;
         $this->dataConfig = $dataConfig;
+        $this->imageProcessor = $imageProcessor;
 		parent::__construct(
 			$context, 
 			$coreRegistry,
