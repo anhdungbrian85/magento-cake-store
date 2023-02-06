@@ -11,6 +11,8 @@ interface StoreLocationContextInterface
 
     public const STORE_LOCATION_ID = 'store_location_id';
 
+    public const DELIVERY_TYPE = 'delivery_type';
+
     /**
      * Set Store localtion id to HttpContext.
      *
@@ -28,4 +30,20 @@ interface StoreLocationContextInterface
      */
     public function getStoreLocationId();
 
+    /**
+     * Set Delivery Type to HttpContext.
+     *
+     * @param int $deliveryType
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setDeliveryType($deliveryType);
+
+    /**
+     * Get Delivery Type from HttpContext.
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getDeliveryType();
 }

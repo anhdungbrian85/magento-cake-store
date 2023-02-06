@@ -16,7 +16,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     protected CollectionFactory $locationCollectionFactory;
     protected JsonFactory $resultJsonFactory;
     protected StoreLocationContextInterface $storeLocationContextInterface;
-    
+
     public function __construct(
         CustomerSession $customerSession,
         CollectionFactory $locationCollectionFactory,
@@ -32,9 +32,12 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $this->storeLocationContextInterface = $storeLocationContextInterface;
     }
 
-    
+
     public function execute()
-    {   
+    {
+        $deliveryType = $this->getRequest()->getPost('delivery-type');
+        $this->customerSession->setDeliveryType($deliveryType);
+        $this->storeLocationContextInterface->setDeliveryType($deliveryType);
         if ($this->getRequest()->getPost('delivery-type') == 0) {
             $this->getCloseStoreLocations();
         }   else {
@@ -52,7 +55,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         }
     }
 
-    public function getCloseStoreLocations() 
+    public function getCloseStoreLocations()
     {
         $this->_view->loadLayout();
         $lng = $this->getRequest()->getPost('lng');

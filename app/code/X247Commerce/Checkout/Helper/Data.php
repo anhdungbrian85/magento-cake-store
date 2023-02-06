@@ -58,7 +58,7 @@ class Data extends AbstractHelper
 
         return $connection->fetchAll($select);
     }
-        
+
     public function getStockItem($productId)
     {
         return $this->stockItemRepository->get($productId);
@@ -71,10 +71,10 @@ class Data extends AbstractHelper
     {
         return $this->getQuantityInformationPerSource->execute($productSku);
     }
-    
+
     public function getAmLocationByLocationId($id)
     {
-        if (is_array($id)) {            
+        if (is_array($id)) {
             return $this->locationCollectionFactory->create()->addFieldToSelect('*')
                     ->addFieldToFilter('id', array('in' => $id));
         } else {
@@ -86,5 +86,10 @@ class Data extends AbstractHelper
     public function getSelectedStoreLocatorId()
     {
         return $this->storeLocationContextInterface->getStoreLocationId();
+    }
+
+    public function getDeliveryType()
+    {
+        return $this->storeLocationContextInterface->getDeliveryType();
     }
 }

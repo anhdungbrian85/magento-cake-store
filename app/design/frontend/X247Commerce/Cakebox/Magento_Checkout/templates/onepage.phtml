@@ -28,12 +28,14 @@ $helper = $this->helper('X247Commerce\Checkout\Helper\Data');
     </script>
     <?php $serializedCheckoutConfig = /* @noEscape */ $block->getSerializedCheckoutConfig();
     $selectedStoreLocatorId = /* @noEscape */ $helper->getSelectedStoreLocatorId();
+    $deliveryType = /* @noEscape */ $helper->getDeliveryType();
     $scriptString = <<<script
         window.checkoutConfig = {$serializedCheckoutConfig};
         // Create aliases for customer.js model from customer module
         window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
         window.customerData = window.checkoutConfig.customerData;
         window.selectedStoreLocatorId = {$selectedStoreLocatorId}
+        window.deliveryType = {$deliveryType}
 script;
     ?>
     <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
