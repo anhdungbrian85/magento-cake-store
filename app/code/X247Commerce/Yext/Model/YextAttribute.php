@@ -124,6 +124,24 @@ class YextAttribute
         $data = $this->connection->fetchOne($select);
 
         return $data;
+    }    
+    /**
+     * Get attribute value by Location 
+     *
+     * @param Location Id, attribute_code String
+     * 
+     * @return string||null
+     */
+    public function getAttributeValueByLocationId($locationId, $attributeCode)
+    {
+        //get id of attribute in table
+        $attributeId = $this->getIdOfAttribute($attributeCode);
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $locationId)->where('attribute_id = ?', $attributeId);
+
+        $data = $this->connection->fetchOne($select);
+
+        return $data;
     }
     /**
      * Get Location by yext_entity_id value
@@ -158,6 +176,24 @@ class YextAttribute
         $yextAttributeId = $this->getYextEntityAttributeId();
         $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
         $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $location->getId())->where('attribute_id = ?', $yextAttributeId);
+
+        $data = $this->connection->fetchOne($select);
+
+        return $data;
+    }
+    /**
+     * Get yext_entity_id value by Location Id
+     *
+     * @param Location Id
+     * 
+     * @return string||null
+     */
+    public function getYextEntityIdByLocationId($locationId)
+    {
+        //get id of attribute yext_entity_id in table
+        $yextAttributeId = $this->getYextEntityAttributeId();
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $locationId)->where('attribute_id = ?', $yextAttributeId);
 
         $data = $this->connection->fetchOne($select);
 
