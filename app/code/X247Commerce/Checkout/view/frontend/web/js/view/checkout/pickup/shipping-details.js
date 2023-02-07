@@ -27,15 +27,23 @@ define([
 
             return this;
         },
+
+        onChangeStore: function () {
+            this.selectedStore = pickupDataResolver.getCurrentStoreData();
+            this.updateDetails();
+        },
+
         shippingAddressDetail: function () {
 
             return quote.shippingAddress();
         },
+
         /**
          * @param {Boolean} isActive
          * @returns {void}
          */
         pickupStateObserver: function (isActive) {
+            this.updateDetails();
             this.visible(!isActive);
         },
 
