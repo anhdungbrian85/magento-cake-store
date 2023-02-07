@@ -154,7 +154,6 @@ class YextAttribute
         //get amasty_amlocator_location by attribute yext_entity_id
         $yextAttributeId = $this->getYextEntityAttributeId();
         $attributesData = [$yextAttributeId => [$value]];
-
         $locations = $this->locationCollectionFactory->create();
         $location = $locations->applyAttributeFilters($attributesData)->getFirstItem();
 
@@ -286,7 +285,7 @@ class YextAttribute
     public function deleteLocation($yextEntityId)
     {
         try {
-            $location = $this->getLocationByYext($yextEntityId);
+            $location = $this->getLocationByYext("'$yextEntityId'");
             if ($location) {
                 if ($this->yextHelper->getDeleteAdminSyncSetting()) {
                     try {                        
@@ -329,6 +328,7 @@ class YextAttribute
                         $this->logger->error($e->getMessage());
                     }
                 }
+                
                 $location->delete();
             }            
         } catch (\Exception $e) {
@@ -464,11 +464,13 @@ class YextAttribute
                 }
 
                 if (!empty($adminUserId) && !empty($storeSource)) {
-                    if ($parentLocation->getId()) {
-                        if ($parentLocation->getId() != $currentParentOfLocation) {
-                            $currentParentSource = $this->locatorSourceResolver->getSourceCodeByAmLocator($currentParentOfLocation);
-                            
-                            $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($location->getId(), $currentParentSource);
+                    if (!empty($parentLocation)) {
+                        if (!empty($parentLocation->getId())) {
+                            if ($parentLocation->getId() != $currentParentOfLocation) {
+                                $currentParentSource = $this->locatorSourceResolver->getSourceCodeByAmLocator($currentParentOfLocation);
+                                
+                                $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($location->getId(), $currentParentSource);
+                            }
                         }
                     }
                     $this->locatorSourceResolver->assignUserToSource($adminUserId, $storeSource->getSourceCode());
