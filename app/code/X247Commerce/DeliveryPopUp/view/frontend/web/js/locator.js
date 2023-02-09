@@ -52,13 +52,17 @@ define([
         },
 
         bindSelectLocation: function() {
-            var self = this;
+            let self = this;
             $(document).on('click', '.select-location', function() {
-                var location_id = $(this).data('location-id');
+                const location_id = $(this).data('location-id');
+                const delivery_type = $('[name="delivery-type"]:checked').val()
                 $.ajax({
                 url: self.ajaxSelectUrl,
                     type: 'POST',
-                    data: {'location_id': location_id},
+                    data: {
+                        'location_id': location_id,
+                        'delivery_type': delivery_type
+                    },
                     showLoader: true
                 }).done($.proxy(function (response) {
                     pickupDataResolver.storeId(location_id);
@@ -138,7 +142,7 @@ define([
             var self = this,
                 sortByDistance = sortByDistance || 1;
                 params = this.collectParams(sortByDistance, isReset);
-                
+
             $.ajax({
                 url: self.ajaxCallUrl,
                 type: 'POST',

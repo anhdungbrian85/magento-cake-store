@@ -123,7 +123,7 @@ class YextHelper extends AbstractHelper
                                 "saturday" => $this->convertWeekDay($yextSchedule, "saturday"),
                                 "sunday" => $this->convertWeekDay($yextSchedule, "sunday")
                             ];
-
+    
         return $amastySchedule;
     }
 
@@ -137,9 +137,10 @@ class YextHelper extends AbstractHelper
     public function convertWeekDay($yextSchedule, $day) 
     {
         $amastySchedule = [];
-        if (!isset($yextSchedule[$day]["isClosed"])) {
+        if (empty($yextSchedule[$day]["isClosed"])) {
             $amastySchedule[$day."_status"] = 1;
             $openTime = isset($yextSchedule[$day]["openIntervals"]) ? $yextSchedule[$day]["openIntervals"] : [];
+            
             if ($openTime) {
                 $amastySchedule["from"]["hours"] = explode(':', $openTime[0]["start"])[0];
                 $amastySchedule["from"]["minutes"] = explode(':', $openTime[0]["start"])[1];

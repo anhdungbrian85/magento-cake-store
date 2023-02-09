@@ -27,16 +27,59 @@ define([
 
             return this;
         },
+
+        onChangeStore: function () {
+            this.selectedStore = pickupDataResolver.getCurrentStoreData();
+            this.updateDetails();
+        },
+
         shippingAddressDetail: function () {
 
             return quote.shippingAddress();
         },
+
         /**
          * @param {Boolean} isActive
          * @returns {void}
          */
         pickupStateObserver: function (isActive) {
+            this.updateDetails();
             this.visible(!isActive);
-        }
+        },
+
+        getSeletedStoreData: function () {
+            let locationSelectedPopup = window.storeLocationData.store_location_id_selected;
+
+            if (this.selectedStore) {
+                return this.selectedStore;
+            }
+
+            if (locationSelectedPopup && pickupDataResolver.pickupData().stores) {
+                for (let i = 0; i < pickupDataResolver.pickupData().stores.length; i++) {
+                    if (pickupDataResolver.pickupData().stores[i].id == locationSelectedPopup) {
+                        return pickupDataResolver.pickupData().stores[i];
+                    }
+                }
+            }
+        },
+
+        updateDetails: function () {
+            let pickupData = pickupDataResolver.pickupData();
+            let locationSelectedPopup = window.storeLocationData.store_location_id_selected;
+
+            if (this.selectedStore) {
+                return this.storeDetails(this.selectedStore.details);
+            } else {
+                if (locationSelectedPopup && pickupDataResolver.pickupData().stores) {
+                    for (let i = 0; i < pickupDataResolver.pickupData().stores.length; i++) {
+                        if (pickupDataResolver.pickupData().stores[i].id == locationSelectedPopup) {
+                            return this.storeDetails(pickupDataResolver.pickupData().stores[i].details);
+                        }
+                    }
+                } else {
+                    return this.storeDetails(this.storeDetailsPlaceholder);
+                }
+            }
+        },
     });
 });

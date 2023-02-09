@@ -124,6 +124,24 @@ class YextAttribute
         $data = $this->connection->fetchOne($select);
 
         return $data;
+    }    
+    /**
+     * Get attribute value by Location 
+     *
+     * @param Location Id, attribute_code String
+     * 
+     * @return string||null
+     */
+    public function getAttributeValueByLocationId($locationId, $attributeCode)
+    {
+        //get id of attribute in table
+        $attributeId = $this->getIdOfAttribute($attributeCode);
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $locationId)->where('attribute_id = ?', $attributeId);
+
+        $data = $this->connection->fetchOne($select);
+
+        return $data;
     }
     /**
      * Get Location by yext_entity_id value
@@ -136,7 +154,6 @@ class YextAttribute
         //get amasty_amlocator_location by attribute yext_entity_id
         $yextAttributeId = $this->getYextEntityAttributeId();
         $attributesData = [$yextAttributeId => [$value]];
-
         $locations = $this->locationCollectionFactory->create();
         $location = $locations->applyAttributeFilters($attributesData)->getFirstItem();
 
@@ -158,6 +175,24 @@ class YextAttribute
         $yextAttributeId = $this->getYextEntityAttributeId();
         $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
         $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $location->getId())->where('attribute_id = ?', $yextAttributeId);
+
+        $data = $this->connection->fetchOne($select);
+
+        return $data;
+    }
+    /**
+     * Get yext_entity_id value by Location Id
+     *
+     * @param Location Id
+     * 
+     * @return string||null
+     */
+    public function getYextEntityIdByLocationId($locationId)
+    {
+        //get id of attribute yext_entity_id in table
+        $yextAttributeId = $this->getYextEntityAttributeId();
+        $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $locationId)->where('attribute_id = ?', $yextAttributeId);
 
         $data = $this->connection->fetchOne($select);
 
@@ -250,7 +285,7 @@ class YextAttribute
     public function deleteLocation($yextEntityId)
     {
         try {
-            $location = $this->getLocationByYext($yextEntityId);
+            $location = $this->getLocationByYext("'$yextEntityId'");
             if ($location) {
                 if ($this->yextHelper->getDeleteAdminSyncSetting()) {
                     try {                        
@@ -262,6 +297,7 @@ class YextAttribute
                                 $sourcesByUser = $this->locatorSourceResolver->getSourcesByUser($user);
                                 foreach ($sourcesByUser as $source) {
                                     $allLocatorAssignToSource = $this->locatorSourceResolver->getAmLocatorBySource($source);
+                                    
                                     if (count($allLocatorAssignToSource) < 2) {                                        
                                         if ($user->getId()) {
                                             $user->delete();
@@ -280,6 +316,7 @@ class YextAttribute
                         if (!empty($sourceCodeByAmLocator))
                         {    
                             $allLocatorAssignToSource = $this->locatorSourceResolver->getAmLocatorBySource($sourceCodeByAmLocator);
+                            
                             if (count($allLocatorAssignToSource) < 2) {
                                 $source = $this->sourceInterface->load($sourceCodeByAmLocator);
                                 if ($source->getSourceCode()) {
@@ -291,6 +328,7 @@ class YextAttribute
                         $this->logger->error($e->getMessage());
                     }
                 }
+                
                 $location->delete();
             }            
         } catch (\Exception $e) {
@@ -365,27 +403,27 @@ class YextAttribute
             
             $insert = $this->responseDataProcess($data['primaryProfile']);
             $location = $this->getLocationByYext("'$yextEntityId'");
-
+            
             if (!$location->getId()) {
                 return null;
             } else {
                 //edit location
-                $location->addData($insert);
-                if (isset($data['primaryProfile']['hours']['holidayHours'])) {
-                    $this->editLocationHolidayHours($location, $data['primaryProfile']['hours']['holidayHours']);
-                }
-                $location->save();
 
                 $notAsdaFlag = empty($data['primaryProfile']['asda_parent_store']);
-
+                $currentParentOfLocation = $this->locatorSourceResolver->getAsdaLocationParentLocation($location->getId());
+                
                 if ($notAsdaFlag) {
-                    if ((strpos($insert['name'], 'asda') === false)) {
-                        $this->logger->log('600', print_r(strpos($insert['name'], 'asda'), true));
+                    if ((strpos(strtolower($insert['name']), 'asda') === false)) {
                         $adminUser = $this->editAdminUser($insert, $location->getId());
                         $storeSource = $this->editSource($insert, $location->getId());
                         if (!empty($adminUser)) {
                             $adminUserId = $adminUser->getUserId();
                         }
+                    }
+                    if ($currentParentOfLocation) {
+                        $currentParentSource = $this->locatorSourceResolver->getSourceCodeByAmLocator($currentParentOfLocation);
+                        $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($location->getId(), $currentParentSource);
+                        $this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent($currentParentOfLocation, $location->getId());
                     }
                 } else {
                         // $users = $this->locatorSourceResolver->getUserByAmLocatorStore($location->getId());
@@ -409,8 +447,11 @@ class YextAttribute
                         $parentLocationYextEntity = $data['primaryProfile']['asda_parent_store'][0];
                         $parentLocation = $this->getLocationByYext("'$parentLocationYextEntity'");
                         $sourceCode = $this->locatorSourceResolver->getSourceCodeByAmLocator($parentLocation->getId());
+                        
                         $storeSource = $this->sourceInterfaceFactory->create()->load($sourceCode);
+                        
                         $adminUser = $this->locatorSourceResolver->getUserBySource($sourceCode);
+                        
                         if ($adminUser) {
                             $adminUserId = $adminUser[0];
                         }
@@ -423,19 +464,48 @@ class YextAttribute
                 }
 
                 if (!empty($adminUserId) && !empty($storeSource)) {
+                    if (!empty($parentLocation)) {
+                        if (!empty($parentLocation->getId())) {
+                            if ($parentLocation->getId() != $currentParentOfLocation) {
+                                $currentParentSource = $this->locatorSourceResolver->getSourceCodeByAmLocator($currentParentOfLocation);
+                                
+                                $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($location->getId(), $currentParentSource);
+                            }
+                        }
+                    }
                     $this->locatorSourceResolver->assignUserToSource($adminUserId, $storeSource->getSourceCode());
                     $this->locatorSourceResolver->assignAmLocatorStoreToSource($location->getId(), $storeSource->getSourceCode());
                 }
                 if (!$notAsdaFlag) {
-                    $this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent(
-                        $parentLocation->getId(), $location->getId()
-                    );
+                    
+                    if ($parentLocation->getId() != $currentParentOfLocation) {
+                        $this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent(
+                            $currentParentOfLocation, $location->getId()
+                        );
+                        $this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent(
+                            $parentLocation->getId(), $location->getId()
+                        );
+                    }
                 }
+                
                 if (isset($data['primaryProfile']['hours']['reopenDate'])) {                       
                     $this->insertAttributeValue($location->getId(), 'temporarily_closed', 'Reopen Date: '.$data['primaryProfile']['hours']['reopenDate']);
-                } else {
-                    $this->insertAttributeValue($location->getId(), 'temporarily_closed');
+                } 
+                // else {
+                //     $this->insertAttributeValue($location->getId(), 'temporarily_closed');
+                // }                
+                if (isset($data['primaryProfile']['hours']['holidayHours'])) {
+                    $this->editLocationHolidayHours($location, $data['primaryProfile']['hours']['holidayHours']);
+                } 
+                if (isset($data['primaryProfile']['hours'])) {
+                    // var_dump($data['primaryProfile']['hours']);
+                    $locationSchedule = $this->editLocationSchedule($location, $data['primaryProfile']['hours']);
+                    $insert['schedule'] = $locationSchedule->getId();
+                    var_dump($locationSchedule->getId());
                 }
+                var_dump($insert);
+                $location->addData($insert);
+                $location->save();
 
                 return $location;
             }

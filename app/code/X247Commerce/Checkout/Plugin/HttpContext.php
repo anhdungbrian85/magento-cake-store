@@ -8,7 +8,7 @@ use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Framework\App\Action\AbstractAction;
 use Magento\Framework\App\RequestInterface;
 
-class HttpContext 
+class HttpContext
 {
     protected CustomerSession $customerSession;
     protected $context;
@@ -25,12 +25,19 @@ class HttpContext
     public function beforeDispatch(AbstractAction $subject, RequestInterface $request)
     {
         $storeLocationId = $this->customerSession->getStoreLocationId();
+        $deliveryType = $this->customerSession->getDeliveryType();
         $defaultStoreLocationIdContext = 0;
+        $defaultDeliveryTypeContext = 0;
         // $subject->setValue('store_location_id', $storeLocationId, $defaultStoreLocationIdContext);
         $this->context->setValue(
                 'store_location_id',
                 $storeLocationId,
                 $defaultStoreLocationIdContext
             );
+        $this->context->setValue(
+            'delivery_type',
+            $deliveryType,
+            $defaultDeliveryTypeContext
+        );
     }
 }

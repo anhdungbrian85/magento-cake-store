@@ -11,8 +11,8 @@ use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 
 class StoreLocationContext implements StoreLocationContextInterface
 {
-    
-    protected HttpContext $httpContext;    
+
+    protected HttpContext $httpContext;
 
     public function __construct(
         HttpContext $httpContext
@@ -23,7 +23,7 @@ class StoreLocationContext implements StoreLocationContextInterface
     /**
      * @inheritdoc
      */
-    public function setStoreLocationId($storeLocationId) 
+    public function setStoreLocationId($storeLocationId)
     {
         $this->httpContext->setValue(StoreLocationContextInterface::STORE_LOCATION_ID, $storeLocationId, 0);
     }
@@ -35,5 +35,21 @@ class StoreLocationContext implements StoreLocationContextInterface
     {
         return $this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID);
     }
-    
+
+    /**
+     * @inheritdoc
+     */
+    public function setDeliveryType($deliveryType)
+    {
+        $this->httpContext->setValue(StoreLocationContextInterface::DELIVERY_TYPE, $deliveryType, 0);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDeliveryType()
+    {
+        return $this->httpContext->getValue(StoreLocationContextInterface::DELIVERY_TYPE);
+    }
+
 }

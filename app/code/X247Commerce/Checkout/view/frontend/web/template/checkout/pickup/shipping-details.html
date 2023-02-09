@@ -2,28 +2,21 @@
 <div class="ampickup-details-container ampickup-details shipping-address-details">
     <!-- ko if: displayTitle -->
     <div class="ampickup-title">
-        <h2 data-bind="i18n: 'Shipping Address'"></h2>
+        <h2 data-bind="i18n: 'Delivery Address'"></h2>
     </div>
     <!-- /ko -->
     <div class="store-details">
         <p>
-            <div class="amlocator-info-popup" bis_skin_checked="1">
-                <h3 class="amlocator-name">
-                    <div class="amlocator-title" bis_skin_checked="1">
-                        <span data-bind="text: shippingAddressDetail().firstname"></span>
-                        <span data-bind="text: shippingAddressDetail().lastname"></span>
-                    </div>
-                </h3>
-                <div class="amlocator-image" bis_skin_checked="1">
-                </div>
-                    <span data-bind="i18n: 'City:'"></span>
-                    <span data-bind="text: shippingAddressDetail().city"></span> <br>
-                    <span data-bind="i18n: 'Zip:'"></span>
-                    <span data-bind="text: shippingAddressDetail().postcode"></span> <br>
-                    Address: 93 Victoria St <br></div>
+            <span data-bind="i18n: 'Delivering to'"></span> <span data-bind="text: shippingAddressDetail().postcode"></span>
         </p>
-        <span data-bind="i18n: 't:'"></span>
-        <span data-bind="text: shippingAddressDetail().telephone"></span>
+        <p data-bind="i18n: 'This order will be delivered from'"></p>
+        <div class="store-details">
+            <p html="storeDetails()"></p>
+            <!-- ko if: getSeletedStoreData() -->
+            <span data-bind="i18n: 't:'"></span>
+            <span data-bind="text: getSeletedStoreData().phone"></span>
+            <!-- /ko -->
+        </div>
     </div>
     <div class="ampickup-pickup-details">
         <div class="ampickup-pickup-date" data-bind="text: datePickup"></div>
