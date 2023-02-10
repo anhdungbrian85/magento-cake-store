@@ -12,6 +12,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ResourceConnection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Input\InputArgument;
 
 class GetNutriticsInfo extends Command
 {
@@ -51,13 +52,16 @@ class GetNutriticsInfo extends Command
         $this->setName('nutritics:fetch')
              ->setDescription('Fetch Nutritics Info');
 
+        $this->addArgument('sku', InputArgument::OPTIONAL, __('Type a product sku'));     
+
         parent::configure();
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('This process might take long time, please wait!');
-        $productCollection = $this->getProductCollection();
+        $sku = $input->getArgument('sku');
+        $productCollection = $this->getProductCollection($sku);
         $filterAttr = $this->configHelper->getProductApiAttributeFilter();
 
         $allNutricInfo = [];
@@ -99,7 +103,7 @@ class GetNutriticsInfo extends Command
      * @return 
      */
     public function insertNutriticsInfo($productId, $nutricInfo)
-    { var_dump($productId);var_dump($nutricInfo);
+    { 
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         if ($productId && $nutricInfo) {
             $insertData = [];
@@ -333,7 +337,7 @@ class GetNutriticsInfo extends Command
      * @param 
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
-    public function getProductCollection()
+    public function getProductCollection($sku = null)
     {
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
@@ -342,6 +346,10 @@ class GetNutriticsInfo extends Command
         $collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
         $collection->addAttributeToFilter('type_id', \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE);
         $collection->setOrder('entity_id','ASC');
+
+        if ($sku) {
+            $collection->addAttributeToFilter('sku', $sku);
+        }
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
