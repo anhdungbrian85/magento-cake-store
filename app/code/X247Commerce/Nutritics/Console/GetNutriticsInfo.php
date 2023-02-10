@@ -70,7 +70,7 @@ class GetNutriticsInfo extends Command
         $allProductIds = [];
         foreach ($productCollection as $product) {
             $nutricInfo = [];
-            $allProductIds[] = $product->getEntityId();
+            $allProductIds[] = $product->getRowId();
             if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
                 if ($product->getIfcCode()) {
                     $allIfcCode[] = $product->getIfcCode();
@@ -82,7 +82,7 @@ class GetNutriticsInfo extends Command
             }
 
             if ($nutricInfo) {
-                $this->insertNutriticsInfo($product->getEntityId(), $nutricInfo);
+                $this->insertNutriticsInfo($product->getRowId(), $nutricInfo);
             }            
         }
 
