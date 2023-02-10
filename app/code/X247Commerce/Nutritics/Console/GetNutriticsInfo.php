@@ -11,6 +11,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ResourceConnection;
+use Psr\Log\LoggerInterface;
 
 class GetNutriticsInfo extends Command
 {
@@ -23,6 +24,7 @@ class GetNutriticsInfo extends Command
     protected $resource;
     protected $connection;
     protected $configHelper;
+    protected $logger;
 
     public function __construct(
         ProductRepositoryInterface $productRepository,
@@ -30,6 +32,7 @@ class GetNutriticsInfo extends Command
         CollectionFactory $productCollectionFactory,
         NutriticsApi $nutriticsApi,
         ResourceConnection $resource,
+        LoggerInterface $logger,
         ConfigHelper $configHelper
     ) {
         parent::__construct();
@@ -39,6 +42,7 @@ class GetNutriticsInfo extends Command
         $this->nutriticsApi = $nutriticsApi;
         $this->resource = $resource;
         $this->configHelper = $configHelper;
+        $this->logger = $logger;
         $this->connection = $resource->getConnection();
     }
 
@@ -66,27 +70,27 @@ class GetNutriticsInfo extends Command
             if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
                 if ($product->getIfcCode()) {
                     $allIfcCode[] = $product->getIfcCode();
-                    // $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+                    $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
                 }
             }   else {
                 $allSkus[] = $product->getSku();
-                // $nutricInfo = $this->getNutriticsInfo($product->getSku());
+                $nutricInfo = $this->getNutriticsInfo($product->getSku());
             }
 
-            // if ($nutricInfo) {
-            //     $this->insertNutriticsInfo($product->getEntityId(), $nutricInfo);
-            // }            
+            if ($nutricInfo) {
+                $this->insertNutriticsInfo($product->getEntityId(), $nutricInfo);
+            }            
         }
 
-        if (!empty($allIfcCode)) {
-            $allNutricInfo = $this->getNutriticsInfo($allIfcCode);
-        }
-        if (!empty($allSkus)) {
-            $allNutricInfo = $this->getNutriticsInfo($allSkus);
-        }
-        if (!empty($allNutricInfo)) {
-            $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
-        }
+        // if (!empty($allIfcCode)) {
+        //     $allNutricInfo = $this->getNutriticsInfo($allIfcCode);
+        // }
+        // if (!empty($allSkus)) {
+        //     $allNutricInfo = $this->getNutriticsInfo($allSkus);
+        // }
+        // if (!empty($allNutricInfo)) {
+        //     $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
+        // }
     }
 
     /**
@@ -135,37 +139,43 @@ class GetNutriticsInfo extends Command
      */
     public function insertMultiNutriticsInfo($productId, $nutricInfo)
     {
-        $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
-        for ($i=0; $i < count($productId); $i++)
-        {
-            $insertData = [];
-            foreach ($nutricInfo as $key => $value) {
-                $nutrics = [];
-                $allergens = [];
-                if ($key != 'id') {
-                    if (isset($value[$i + 1]['name'])) {
-                        if ($value[$i + 1]['val']) {
-                            $nutrics = ['row_id' => $productId[$i], 'attribute_code' => $key, 'attribute_name' => $value[$i + 1]['name'], 'value' => $value[$i + 1]['val'], 'attribute_unit' => $value[$i + 1]['unit'], 
-                                        'percent_ri' => $value[$i + 1]['percentRI']];
+        try {
+            $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
+            var_dump($productId);var_dump($nutricInfo);
+            for ($i=0; $i < count($productId); $i++)
+            {
+                $insertData = [];
+                foreach ($nutricInfo as $key => $value) {
+                    $nutrics = [];
+                    $allergens = [];
+                    if ($key != 'id') {
+                        if (isset($value[$i]['name'])) {
+                            if ($value[$i]['val']) {
+                                $nutrics = ['row_id' => $productId[$i], 'attribute_code' => $key, 'attribute_name' => $value[$i]['name'], 'value' => $value[$i]['val'], 'attribute_unit' => $value[$i]['unit'], 
+                                            'percent_ri' => $value[$i]['percentRI']];
+                            }
+                            
                         }
-                        
+                        if (isset($value[$i + 1]['contains'])) {
+                            $allergens = ['row_id' => $productId[$i], 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '', 
+                            'percent_ri' => ''];
+                        }
+                        if (!empty($nutrics) || !empty($allergens)) {
+                            $insertData[] = array_merge($nutrics, $allergens);
+                        }
                     }
-                    if (isset($value[$i + 1]['contains'])) {
-                        $allergens = ['row_id' => $productId[$i], 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '', 
-                        'percent_ri' => ''];
-                    }
-                    if (!empty($nutrics) || !empty($allergens)) {
-                        $insertData[] = array_merge($nutrics, $allergens);
-                    }
+                    
                 }
-                
+                var_dump($productId[$i]);var_dump($insertData);
+                if ($insertData) {
+                    return $this->connection->insertMultiple($table, $insertData);
+                }
+                return null;
             }
-
-            if ($insertData) {
-                return $this->connection->insertMultiple($table, $insertData);
-            }
-            return;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
+        
     }
 
     public function getNutriticsInfo($filterCode) 
@@ -275,12 +285,15 @@ class GetNutriticsInfo extends Command
     public function getNutriticsVitamins($filterCode) 
     {
         $nutriticsInfo1 = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv']), true);
+        
         $nutriticsInfo2 = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc']), true);
         if (!is_array($filterCode)) {
             $return1  = isset($nutriticsInfo1[1]) ? $nutriticsInfo1[1] : [] ;
             $return2  = isset($nutriticsInfo2[1]) ? $nutriticsInfo2[1] : [] ;
+            
             return array_merge($return1, $return2);
         } else {
+            
             return array_merge($nutriticsInfo1, $nutriticsInfo2);
         }
     }
