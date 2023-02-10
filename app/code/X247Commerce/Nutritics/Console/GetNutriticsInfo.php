@@ -141,7 +141,7 @@ class GetNutriticsInfo extends Command
     {
         try {
             $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
-            var_dump($productId);var_dump($nutricInfo);
+            
             for ($i=0; $i < count($productId); $i++)
             {
                 $insertData = [];
@@ -166,7 +166,7 @@ class GetNutriticsInfo extends Command
                     }
                     
                 }
-                var_dump($productId[$i]);var_dump($insertData);
+                
                 if ($insertData) {
                     return $this->connection->insertMultiple($table, $insertData);
                 }
@@ -345,7 +345,7 @@ class GetNutriticsInfo extends Command
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
-        $collection->getSelect()->limit(10);
+        // $collection->getSelect()->limit(10);
         return $collection;
     }
 }
