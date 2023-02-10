@@ -7,6 +7,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Catalog\Model\ProductFactory;
 use Psr\Log\LoggerInterface;
 use X247Commerce\Nutritics\Service\NutriticsApi;
 use X247Commerce\Nutritics\Model\ResourceModel\NutriticsValue\CollectionFactory;
@@ -18,6 +19,7 @@ class GetNutriticsInfo extends Action
     protected $productRepository;
     protected $nutriticsApi;
     protected $nutriticsValueCollection;
+    protected ProductFactory $productFactory;
 
     public function __construct(
         Context $context,
@@ -25,7 +27,8 @@ class GetNutriticsInfo extends Action
         LoggerInterface $logger,
         ProductRepository $productRepository,
         NutriticsApi $nutriticsApi,
-        CollectionFactory $nutriticsValueCollection
+        CollectionFactory $nutriticsValueCollection,
+        ProductFactory $productFactory
     ) {
         parent::__construct($context);
         $this->resultFactory = $resultFactory;
@@ -33,6 +36,7 @@ class GetNutriticsInfo extends Action
         $this->productRepository = $productRepository;
         $this->nutriticsApi = $nutriticsApi;
         $this->nutriticsValueCollection = $nutriticsValueCollection;
+        $this->productFactory = $productFactory;
     }
 
     /**
@@ -42,9 +46,10 @@ class GetNutriticsInfo extends Action
     {
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $productId = $this->getRequest()->getParam('selectedProductId');
-        
+        $product = $this->productFactory->create()->load($productId);
+
         if ($productId) {
-            $nutriticsInfo = $this->nutriticsValueCollection->create()->addFieldToSelect('*')->addFieldToFilter('row_id', $productId);            
+            $nutriticsInfo = $this->nutriticsValueCollection->create()->addFieldToSelect('*')->addFieldToFilter('row_id', $product->getRowId());            
             $resultData = [];
             if ($nutriticsInfo) {
                 $nutriticsInfoHtml = $this->getNutriticsInfoHtml($nutriticsInfo->getData());

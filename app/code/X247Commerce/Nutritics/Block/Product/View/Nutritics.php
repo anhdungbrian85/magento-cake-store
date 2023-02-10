@@ -50,7 +50,7 @@ class Nutritics extends \Magento\Framework\View\Element\Template
     public function getProductNutriticsInfoInDb() 
     {
         $currentPoduct = $this->getCurrentProduct();
-        $nutriticsInfo = $this->nutriticsValueCollection->create()->addFieldToSelect('*')->addFieldToFilter('row_id', $currentPoduct->getId());
+        $nutriticsInfo = $this->nutriticsValueCollection->create()->addFieldToSelect('*')->addFieldToFilter('row_id', $currentPoduct->getRowId());
         // var_dump($nutriticsInfo->getData());die();
         return $nutriticsInfo->getData();
     }
