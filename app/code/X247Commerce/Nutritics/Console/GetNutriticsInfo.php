@@ -99,7 +99,7 @@ class GetNutriticsInfo extends Command
      * @return 
      */
     public function insertNutriticsInfo($productId, $nutricInfo)
-    {
+    { var_dump($productId);var_dump($nutricInfo);
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         if ($productId && $nutricInfo) {
             $insertData = [];
@@ -345,7 +345,7 @@ class GetNutriticsInfo extends Command
         if ($productIds) {
             $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
         }
-        // $collection->getSelect()->limit(10);
+        $collection->getSelect()->limit(10);
         return $collection;
     }
 }
