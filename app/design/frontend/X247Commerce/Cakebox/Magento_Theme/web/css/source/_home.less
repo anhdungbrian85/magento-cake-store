@@ -29,7 +29,6 @@
 
 				.best-seller-content {
 					.best-seller-list {
-						margin-top: 67px;
 						list-style: none;
 						padding: 0;
 						display: flex;
@@ -227,10 +226,16 @@
 
 			display: none;
 		}
+
+		.best-seller-content {
+			.best-seller-list {
+				margin-top: 67px;
+			}
+		}
 	}
 
 	.hidden-desktop {
-		display: none;
+		display: none !important;
 	}
 
 	.section-trustpilot-carousel {
@@ -286,6 +291,7 @@
 	}
 
 	.category-block {
+
 		.category-block-title {
 			font-size: 46px;
 			color: #282828;
@@ -307,14 +313,13 @@
 				margin-left: 20px;
 				padding-top: 35px;
 				max-width: 100%;
-				
-				.best-seller-title {
 
+				.best-seller-title {
 					display: flex;
 					justify-content: space-between;
+					margin: 0 0 15px;
 
 					.best-seller-title-mobile {
-
 						color: #282828;
 						font-size: 18px;
 						font-weight: 600;
@@ -333,7 +338,6 @@
 				}
 
 				.best-seller-content .best-seller-list {
-					
 					flex-wrap: nowrap;
 					overflow: scroll;
 					margin-bottom: 0;
@@ -364,8 +368,8 @@
 					max-width: 100%;
 				}
 
-				[data-content-type='row'][data-appearance='contained'] {					
-					
+				[data-content-type='row'][data-appearance='contained'] {
+
 					order: -1;
 
 					.block-shop-now {
@@ -421,7 +425,7 @@
 						max-height: inherit;
 
 						.pagebuilder-slide-wrapper {
-							
+
 							min-height: 161px;
 							max-height: 161px;
 							background-size: cover;
@@ -434,7 +438,7 @@
 								padding: 25px 5px 5px 20px;
 
 								.pagebuilder-poster-content {
-									
+
 									padding: 0;
 
 									[data-element="content"] {
@@ -464,16 +468,35 @@
 					}
 
 					.slick-dots {
+						margin-top: 10px;
+						position: unset;
 
-						bottom: unset;
-						top: 95%;
+						li {
+							height: 9px;
+							width: 9px;
+							transition: all .3s;
+							margin: 0;
 
-						li button {
+							button {
+								background-color: rgba(47, 76, 117, 0.13);
+								border: none;
+								width: 100%;
+								height: 100%;
+								transition: all .3s;
+							}
 
-							height: 14px;
-							width: 14px;
-							background-color: rgba(47, 76, 117, 0.13);
-							border: none;
+							&:not(:last-child) {
+								margin-right: 2px;
+							}
+
+							&.slick-active {
+								width: 13px;
+								height: 13px;
+
+								button {
+									background: #992E80;
+								}
+							}
 						}
 					}
 
@@ -513,6 +536,10 @@
 		}
 	}
 
+	.hidden-mobile {
+		display: none !important;
+	}
+
 
 	.section-trustpilot-carousel {
 		width: 100%;
@@ -543,6 +570,7 @@
 
 	.category-block {
 		padding: 0 20px;
+		margin-bottom: 20px;
 
 		.category-block-title {
 			font-size: 18px;
