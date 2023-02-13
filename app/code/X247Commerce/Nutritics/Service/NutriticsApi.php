@@ -155,11 +155,11 @@ class NutriticsApi
         } else {
             $request = $objDataType.'=';
             foreach ($filterValue as $value) {
-                $request .= $filterAttr.'='.$filterValue;
+                $request .= ' '.$filterAttr.'='.$value;
             }
             $apiUriEndpoint = $this->buildApiUri('LIST', $request, $params);
         }        
-
+        
         $response = $this->doRequest(
             $apiUriEndpoint,
             // [], // all params is already included in endpoint with GET method
