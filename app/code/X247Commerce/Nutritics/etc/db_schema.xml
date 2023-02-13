@@ -9,14 +9,17 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="attribute_id"/>
         </constraint>
-        <index referenceId="nutritics_attribute_attribute_code" indexType="btree">
+        <!-- <index referenceId="nutritics_attribute_attribute_code" indexType="btree">
             <column name="attribute_code"/>
-        </index>
-        <!-- <constraint xsi:type="foreign" referenceId="nutritics_attribute_attribute_group"
+        </index> -->
+        <constraint xsi:type="foreign" referenceId="nutritics_attribute_attribute_group"
                     table="nutritics_attribute" 
-                    column="group_id" referenceTable="nutritics_attribute_group"
-                    referenceColumn="group_id"
-        /> --> 
+                    column="group_code" referenceTable="nutritics_attribute_group"
+                    referenceColumn="group_code" onDelete="SET NULL"
+        />
+        <constraint xsi:type="unique" referenceId="attribute_code_unique">
+            <column name="attribute_code"/>
+        </constraint>
 	</table>
 
     <table name="nutritics_attribute_group" resource="default" engine="innodb" comment="Nutritics Attribute Group">
@@ -26,6 +29,9 @@
         <column xsi:type="varchar" name="group_name" nullable="true" length="255" comment="Group Name"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="group_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="group_code_unique">
+            <column name="group_code"/>
         </constraint>
     </table>
 
