@@ -83,24 +83,24 @@ class LocatorSourceResolver
     }
 
     /**
-     * Get all source code by user
-     * @param $user Magento\User\Model\User
+     * Get all source code by user or user id
+     * @param $user Magento\User\Model\User or user Id
      * @return [source_code]
      * 
      **/
     public function getSourcesByUser($user)
-    {
-        if ($user) {
-            $userId = $user->getId();
-            if ($userId) {
-                $sourcesCol = $this->sourceLink->create()->addFieldToFilter('user_id', $userId);
-                $result = [];
-                foreach($sourcesCol as $sourceUser) {
-                    $result[] = $sourceUser->getData('source_code');
-                }
-                return $result ? : false;
+    { 
+        $userId = (gettype($user) == 'object') ? $user->getId() : $user;
+        $result = [];
+        if (!empty($userId)) {
+            $sourcesCol = $this->sourceLink->create()->addFieldToFilter('user_id', $userId);
+            
+            foreach($sourcesCol as $sourceUser) {
+                $result[] = $sourceUser->getData('source_code');
             }
         }
+
+        return $result ? : false;
     }
 
     /**
@@ -120,8 +120,8 @@ class LocatorSourceResolver
     }
 
     /**
-     * Get all store locations by User
-     * @param $user Magento\User\Model\User
+     * Get all store locations by User or User Id
+     * @param $user Magento\User\Model\User or UserId
      * @return [amasty_amlocator_location.id]|false
      * 
      **/
@@ -229,12 +229,13 @@ class LocatorSourceResolver
             $this->connection->delete($sourceLinkTbl, $data);
         }
     }
+
     /**
      * check product available in current store location
      *
      * @return bool
      */
-    public function checkProductAvailableInStore($locationId, $productSku)
+    public function checkProductAvailableInStore($locationId, $product)
     {
         
         if ($locationId) {
@@ -243,33 +244,58 @@ class LocatorSourceResolver
             if (empty($sources)) {
                 return false;
             }
-            
-            $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($productSku);
-            
-            $sourceList = [];
-            foreach ($productQty as $pQty) {
-                if ($pQty['source_code'] == $sources) {
-                    $sourceList[] = $pQty;
-                }
-            }        
 
-            if ($sourceList) {
-                $inStock = 0;
-                foreach ($sourceList as $qty) {
-                    if ($qty['quantity'] == 0 || !$qty['status']) {
-                        $inStock += 0;
-                    } else {
-                        $inStock += 1;
+            $itemCheck = false;
+            if($product->getTypeId() === "configurable") {
+                $childProducts = $product->getTypeInstance()->getUsedProducts($product);
+                foreach ($childProducts as $child){
+                    $itemCheck = $this->checkProductItemAvailableInStore($child->getSku(), $sources);
+                    if($itemCheck) {
+                        break;
                     }
                 }
-
-                if ($inStock == 0) {
-                    return false;
-                }
             } else {
-                return false;       
+                $itemCheck = $this->checkProductItemAvailableInStore($product->getSku(), $sources);
             }
+            
+            return $itemCheck;
         }
+        return true;
+    }
+
+
+    /**
+     * check product available in current store location
+     *
+     * @return bool
+     */
+    public function checkProductItemAvailableInStore($productSku, $sources) {
+        $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($productSku);
+            
+        $sourceList = [];
+        foreach ($productQty as $pQty) {
+            if ($pQty['source_code'] == $sources) {
+                $sourceList[] = $pQty;
+            }
+        }        
+
+        if ($sourceList) {
+            $inStock = 0;
+            foreach ($sourceList as $qty) {
+                if ($qty['quantity'] == 0 || !$qty['status']) {
+                    $inStock += 0;
+                } else {
+                    $inStock += 1;
+                }
+            }
+
+            if ($inStock == 0) {
+                return false;
+            }
+        } else {
+            return false;       
+        }
+
         return true;
     }
 

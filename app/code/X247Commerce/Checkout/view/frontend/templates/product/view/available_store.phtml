@@ -14,7 +14,7 @@ foreach ($productSources as $source) {
 	}		
 }
 $currentLocationId = $block->getStoreLocationIdByContext();
-$isProductAvailableInCurrentLocation = $block->checkProductAvailableInStore($currentLocationId, $currentProduct->getSku());
+$isProductAvailableInCurrentLocation = $block->checkProductAvailableInStore($currentLocationId, $currentProduct);
 $locations = $block->getAmLocationByLocationId($storeId)->getData();
 ?>
 <?php if ($locations && !$isProductAvailableInCurrentLocation) : ?>
