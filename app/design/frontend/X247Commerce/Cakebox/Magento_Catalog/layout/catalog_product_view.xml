@@ -42,7 +42,7 @@
                     <argument name="at_code" xsi:type="string">allergen_information</argument>
                     <argument name="css_class" xsi:type="string">allergen_information</argument>
                     <argument name="at_label" xsi:type="string">none</argument>
-                    <argument translate="true" name="title" xsi:type="string">Allergen Information</argument>
+                    <argument translate="true" name="title" xsi:type="string">Ingredients &amp; Allergy Advice</argument>
                     <argument name="sort_order" xsi:type="string">15</argument>
                 </arguments>
             </block>
