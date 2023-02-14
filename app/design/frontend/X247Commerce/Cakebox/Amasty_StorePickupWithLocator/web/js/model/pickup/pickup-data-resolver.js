@@ -129,11 +129,12 @@ define([
          */
         getTimeIntervalsByScheduleId: function (scheduleId) {
             var intervals = locationsData().schedule_data.intervals;
-
+            console.log('getTimeIntervalsByScheduleId scheduleId', scheduleId);
+            console.log('getTimeIntervalsByScheduleId intervals before intervals.default', intervals);
             if (!scheduleId || !intervals[scheduleId]) {
                 return intervals.default;
             }
-
+            console.log('getTimeIntervalsByScheduleId intervals after intervals.default', intervals);
             return intervals[scheduleId];
         },
 
