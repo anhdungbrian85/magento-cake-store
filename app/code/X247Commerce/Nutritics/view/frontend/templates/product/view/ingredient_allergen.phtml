@@ -43,7 +43,7 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
             <?php endif ?>
             <?php if ($info['attribute_code'] == 'quid'): ?>
                     <div class="ingredient-info-detail">
-                        <?= __('Ingredients') ?>: <?php $info['value'] ?>
+                        <span class="ingredients-title"><?= __('Ingredients') ?>: </span> <?php $info['value'] ?>
                     </div>
             <?php endif ?>
         <?php endforeach ?>

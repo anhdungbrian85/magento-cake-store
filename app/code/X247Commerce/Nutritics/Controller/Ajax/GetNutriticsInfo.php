@@ -137,7 +137,7 @@ class GetNutriticsInfo extends Action
 
             if ($info['attribute_code'] == 'quid')
                 {
-                    $htmlIngredient .= "<div class='ingredient-info-detail'>Ingredients: ".$info['value']."</div>"  ;                      
+                    $htmlIngredient .= "<div class='ingredient-info-detail'><span class='ingredients-title'>Ingredients: </span>".$info['value']."</div>"  ;                      
                 }
         }
         $htmlAll .= $html.$htmlIngredient;
