@@ -111,6 +111,7 @@ class GetNutriticsInfo extends Command
             foreach ($nutricInfo as $key => $value) {
                 $nutrics = [];
                 $allergens = [];
+                $ingredients = [];
                 if ($key != 'id') {
                     if (isset($value['name'])) {
                         if ($value['val']) {
@@ -123,8 +124,12 @@ class GetNutriticsInfo extends Command
                         $allergens = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '', 
                         'percent_ri' => ''];
                     }
-                    if (!empty($nutrics) || !empty($allergens)) {
-                        $insertData[] = array_merge($nutrics, $allergens);
+                    if ($key == 'quid' && isset($nutricInfo[$key])) {
+                        $ingredients = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $key, 'value' => $value, 'attribute_unit' => '', 
+                        'percent_ri' => ''];
+                    }
+                    if (!empty($nutrics) || !empty($allergens) || !empty($ingredients)) {
+                        $insertData[] = array_merge($nutrics, $allergens, $ingredients);
                     }
                 }
                 
@@ -200,7 +205,7 @@ class GetNutriticsInfo extends Command
         // $return = array_merge($getNutriticsEnergy, $getNutriticsMacro, $getNutriticsCarbohydrates, $getNutriticsFats, $getNutriticsMinerals, 
         //                         $getNutriticsVitamins, $getNutriticsFats, $getNutriticsMinerals, $getNutriticsVitamins, $getNutriticsOther, $getNutriticsMiscellaneous);
 
-        $params = ['energyKcal', 'energyKj', 'carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol', 'starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose', 'satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol', 'sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine', 'vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv', 'niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc', 'gi','gl','caffeine', 'allergens'];
+        $params = ['energyKcal', 'energyKj', 'carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol', 'starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose', 'satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol', 'sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine', 'vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv', 'niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc', 'gi','gl','caffeine', 'allergens', 'quid'];
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, $params), true);
         // var_dump($nutriticsInfo);die();
         if (!is_array($filterCode)) {
@@ -364,7 +369,7 @@ class GetNutriticsInfo extends Command
             $collection->addAttributeToFilter('sku', $sku);
         }
         if ($productIds) {
-            $collection->addAttributeToFilter('entity_id', ['nin'=>$productIds]);
+            $collection->addAttributeToFilter('row_id', ['nin'=>$productIds]);
         }
         $collection->getSelect()->limit(10);
         return $collection;
