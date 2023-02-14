@@ -10,7 +10,7 @@
             </block>
             <block class="X247Commerce\Nutritics\Block\Product\View\Nutritics" name="product.info.allergen" as="product.allergen" template="X247Commerce_Nutritics::product/view/allergen.phtml" group="detailed_info">
                 <arguments>
-                    <argument translate="true" name="title" xsi:type="string">Allergen Information</argument>
+                    <argument translate="true" name="title" xsi:type="string">Ingredients &amp; Allergy Advice</argument>
                 </arguments>
             </block>
         </referenceBlock>
