@@ -783,8 +783,9 @@ define([
                     },
                     success: function(response) {     
                         var newHtmls = $.parseJSON(response);
+                        console.log(newHtmls);
                         $(".nutritics-info-wraper").replaceWith(newHtmls['nutriticsHtml']);
-                        $(".allergens-info-wraper").replaceWith(newHtmls['allergensHtml']);
+                        $(".ingredient-allergen-info-wraper").replaceWith(newHtmls['ingredientsAllergensHtml']);
                     },
                     error: function (xhr, status, errorThrown) {
                         console.log('Error happens. Try again.');
