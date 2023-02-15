@@ -81,15 +81,17 @@ define([
                 oldValue = this.value(),
                 isOldTimeValid,
                 isCachedTimeValid;
-
+            console.log('selectedStore', selectedStore);
             if (data.date && selectedStore) {
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStore.schedule_id);
-
+                console.log('timeIntervals before timeIntervals[this.selectedDayByName]', timeIntervals);
                 if (this.storeScheduleSelected || data.store.schedule_id) {
                     timeIntervals = timeIntervals[this.selectedDayByName];
                 }
-
+                console.log('timeIntervals after timeIntervals[this.selectedDayByName]', timeIntervals);
                 if (timeIntervals) {
+                    // console.log(this.restrictTimeIntervals(timeIntervals));
+                    // console.log(timeIntervals);
                     this.options(this.isTodaySelected
                         ? this.restrictTimeIntervals(timeIntervals)
                         : timeIntervals);
