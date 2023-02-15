@@ -61,41 +61,60 @@ class GetNutriticsInfo extends Command
     {
         $output->writeln('This process might take long time, please wait!');
         $sku = $input->getArgument('sku');
-        $productCollection = $this->getProductCollection($sku);
-        $filterAttr = $this->configHelper->getProductApiAttributeFilter();
+        try {            
+            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/nutricscli.log');
+            $logger = new \Zend_Log();
+            $logger->addWriter($writer);
 
-        $allNutricInfo = [];
-        $allIfcCode = [];
-        $allSkus = [];
-        $allProductIds = [];
+            $i = 1;
+            while(true) {
+                $products = $this->getProductCollection($i, $sku);
+                
+                if ($products->getSize() > ($i - 1)*100) {
+                    $filterAttr = $this->configHelper->getProductApiAttributeFilter();
 
-        foreach ($productCollection as $product) {
-            $nutricInfo = [];
-            $allProductIds[] = $product->getRowId();
-            if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
-                if ($product->getIfcCode()) {
-                    $allIfcCode[] = $product->getIfcCode();
-                    // $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+                    $allNutricInfo = [];
+                    $allIfcCode = [];
+                    $allSkus = [];
+                    $allProductIds = [];
+
+                    foreach ($products as $product) {
+                        $nutricInfo = [];
+                        $allProductIds[] = $product->getRowId();
+                        if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
+                            if ($product->getIfcCode()) {
+                                $allIfcCode[] = $product->getIfcCode();
+                                $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+                            }
+                        }   else {
+                            $allSkus[] = $product->getSku();
+                            $logger->info($product->getSku());
+                            $nutricInfo = $this->getNutriticsInfo($product->getSku());
+                        }
+
+                        if ($nutricInfo) {
+                            $this->insertNutriticsInfo($product->getRowId(), $nutricInfo);
+                        }
+                    }
+
+                    // if (!empty($allIfcCode)) {
+                    //     $allNutricInfo = $this->getNutriticsInfo($allIfcCode);
+                    // }
+                    // if (!empty($allSkus)) {
+                    //     $allNutricInfo = $this->getNutriticsInfo($allSkus);
+                    // }
+                    // if (!empty($allNutricInfo)) {
+                    //     $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
+                    // }
+                } else {
+                    break;
                 }
-            }   else {
-                $allSkus[] = $product->getSku();
-                $nutricInfo = $this->getNutriticsInfo($product->getSku());
-            }
 
-            if ($nutricInfo) {
-                $this->insertNutriticsInfo($product->getRowId(), $nutricInfo);
-            }
+                $i++;
+            }        
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
-
-        // if (!empty($allIfcCode)) {
-        //     $allNutricInfo = $this->getNutriticsInfo($allIfcCode);
-        // }
-        // if (!empty($allSkus)) {
-        //     $allNutricInfo = $this->getNutriticsInfo($allSkus);
-        // }
-        // if (!empty($allNutricInfo)) {
-        //     $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
-        // }
     }
 
     /**
@@ -355,7 +374,7 @@ class GetNutriticsInfo extends Command
      * @param 
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
-    public function getProductCollection($sku = null)
+    public function getProductCollection($page, $sku = null)
     {
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
@@ -371,7 +390,8 @@ class GetNutriticsInfo extends Command
         if ($productIds) {
             $collection->addAttributeToFilter('row_id', ['nin'=>$productIds]);
         }
-        $collection->getSelect()->limit(10);
+        $collection->setPageSize(100);
+        $collection->setCurPage($page);
         return $collection;
     }
 }
