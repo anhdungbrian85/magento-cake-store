@@ -43,7 +43,7 @@ class AssignProductAfterSourceAdd implements ObserverInterface
                 $products = $this->getProductCollection($i);
                 if ($object->getData() && $products->getSize() > ($i - 1)*100) {
                     foreach ($products as $product) {
-                        if($product->getTypeId === \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE) {
+                        if($product->getTypeId() === \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE) {
                             $this->saveSourceItem([$product->getSku()], $object->getData('source_code'));
                         }
                     }
