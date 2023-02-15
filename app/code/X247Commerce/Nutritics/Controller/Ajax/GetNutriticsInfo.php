@@ -53,13 +53,9 @@ class GetNutriticsInfo extends Action
             $resultData = [];
             if ($nutriticsInfo) {
                 $nutriticsInfoHtml = $this->getNutriticsInfoHtml($nutriticsInfo->getData());
-                $allergensHtml = $this->getAllergensHtml($nutriticsInfo->getData());
-                // foreach ($nutriticsInfo->getData() as $info) {
-                //     if ($info['value'] || $info['attribute_code'] == 'allergens') {                        
-                //         $resultData[] = $info;
-                //     } 
-                // }
-                $resultData = ['nutriticsHtml' => $nutriticsInfoHtml, 'allergensHtml' => $allergensHtml];
+                $ingredientsAllergensHtml = $this->getIngredientsAllergensHtml($nutriticsInfo->getData());
+                
+                $resultData = ['nutriticsHtml' => $nutriticsInfoHtml, 'ingredientsAllergensHtml' => $ingredientsAllergensHtml];
             }
 
             return $result->setData(json_encode($resultData));
@@ -68,6 +64,7 @@ class GetNutriticsInfo extends Action
 
     public function getNutriticsInfoHtml($nutriticsInfo)
     {
+        $nutritics = ['Energy Kcal', 'Energy Kj', 'Energy', 'Carbohydrate', 'Sugars', 'Fat', 'Saturated Fat', 'Protein', 'Fibre', 'Sodium (Na)'];
         $html = "<div class='nutritics-info-wraper'>        
                     <table class='table-nutritics-info'>
                     <tr>
@@ -78,7 +75,7 @@ class GetNutriticsInfo extends Action
                     </tr>";
        foreach ($nutriticsInfo as $info) 
        {
-            if ($info['value'] && $info['attribute_code'] != 'allergens')
+            if ($info['value'] && $info['attribute_code'] != 'allergens' && $info['attribute_code'] != 'quid' && (array_search($info['attribute_name'], $nutritics) !== false))
             {
                 $html .= "<tr class='nutritics-info-detail'>
                             <td class='attribute_name'>". $info['attribute_name'] ."</td>
@@ -93,14 +90,18 @@ class GetNutriticsInfo extends Action
         return $html;
     }
 
-    public function getAllergensHtml($nutriticsInfo)
+    public function getIngredientsAllergensHtml($nutriticsInfo)
     {
-        $html = "<div class='allergens-info-wraper'>
-                    <div class='allergens-info'>";
+        $htmlAll = "<div class='ingredient-allergen-info-wraper'>
+                    <div class='ingredient-allergen-info'>";
+        $html = '';
+        $htmlIngredient = '';
+
        foreach ($nutriticsInfo as $info) 
        {
             if ($info['attribute_code'] == 'allergens')
             {
+
                 $allergens = json_decode($info['value'], true);
                 $html .= "<div class='allergens-info-detail'>";
                         if ($allergens['contains'])
@@ -133,9 +134,14 @@ class GetNutriticsInfo extends Action
                         };
                 $html .= "</div>";
             }
-        }
 
-        $html .= "</div></div>";
-        return $html;
+            if ($info['attribute_code'] == 'quid')
+                {
+                    $htmlIngredient .= "<div class='ingredient-info-detail'><span class='ingredients-title'>Ingredients: </span>".$info['value']."</div>"  ;                      
+                }
+        }
+        $htmlAll .= $html.$htmlIngredient;
+        $htmlAll .= "</div></div>";
+        return $htmlAll;
     }
 }

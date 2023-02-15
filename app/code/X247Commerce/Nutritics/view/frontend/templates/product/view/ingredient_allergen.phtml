@@ -6,11 +6,11 @@
 <?php
 $nutriticsInfos = $block->getProductNutriticsInfoInDb();
 ?>
-<div class="allergens-info-wraper">
+<div class="ingredient-allergen-info-wraper">
     <?php if (empty($nutriticsInfos)): ?>
-        <?= __('For allergen information, please select all required options.') ?>
+        <?= __('For ingredients and allergen information, please select all required options') ?>.
     <?php else: ?>
-    <div class="allergens-info">
+    <div class="ingredient-allergen-info">
         <?php foreach ($nutriticsInfos as $info): ?>
             <?php if ($info['attribute_code'] == 'allergens'): ?>
                     <div class="allergens-info-detail">
@@ -39,6 +39,11 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
                                 <span class="allergens-detail suitablefor"><?= implode(', ', $allergens['suitablefor']) ?></span>
                             </p>
                         <?php endif?>
+                    </div>
+            <?php endif ?>
+            <?php if ($info['attribute_code'] == 'quid'): ?>
+                    <div class="ingredient-info-detail">
+                        <span class="ingredients-title"><?= __('Ingredients') ?>: </span> <?php $info['value'] ?>
                     </div>
             <?php endif ?>
         <?php endforeach ?>

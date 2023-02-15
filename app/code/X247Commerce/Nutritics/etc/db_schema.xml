@@ -42,9 +42,9 @@
         <!-- <column xsi:type="int" name="attribute_id" nullable="false" comment="Attribute Id"/> -->
         <column xsi:type="varchar" name="attribute_code" nullable="true" length="255" comment="Attribute Code"/>
         <column xsi:type="varchar" name="attribute_name" nullable="true" length="255" comment="Attribute Name"/>
-        <column xsi:type="varchar" name="value" nullable="false" length="255" comment="Attribute Value"/>
+        <column xsi:type="text" name="value" nullable="true" comment="Attribute Value"/>
         <column xsi:type="varchar" name="attribute_unit" nullable="true" length="255" comment="Attribute Unit"/>
-        <column xsi:type="float" name="percent_ri" nullable="false" comment="Percent Reference Intake"/>
+        <column xsi:type="float" name="percent_ri" nullable="true" comment="Percent Reference Intake"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
