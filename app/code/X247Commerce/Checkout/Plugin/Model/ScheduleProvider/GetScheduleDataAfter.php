@@ -34,12 +34,14 @@ class GetScheduleDataAfter
         $timeIntervals = [
             'default' => $this->timeHandler->generate(
                 \X247Commerce\Checkout\Model\TimeHandler::START_TIME,
-                \X247Commerce\Checkout\Model\TimeHandler::END_TIME
+                \X247Commerce\Checkout\Model\TimeHandler::END_TIME,
+                60 * 60
             )
         ];
         foreach ($collection->getData() as &$scheduleData) {
             $schedule = $this->serializer->unserialize($scheduleData['schedule']);
-            $timeIntervals[$scheduleData['id']] = $this->timeHandler->execute($schedule, 60);
+            $interval = ($scheduleData['interval']) ? $scheduleData['interval'] * 60 : 60 * 60;
+            $timeIntervals[$scheduleData['id']] = $this->timeHandler->execute($schedule, $interval);
         }
         $result['intervals'] = $timeIntervals;
         return $result;
