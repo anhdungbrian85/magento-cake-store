@@ -580,6 +580,19 @@
 		}
 	}
 
+	.custom-topmenu-mobile {
+		.category-item.first {
+			.ui-menu-icon {
+				display: none;
+
+				&:before,
+				&:after {
+					display: none;
+				}
+			}
+		}
+	}
+
 }
 
 .media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__s) {
