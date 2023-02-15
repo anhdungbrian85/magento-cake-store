@@ -55,19 +55,14 @@ class AssignAllProductToAllSource extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom111.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
 		$sourceList = $this->getSourcesList();
 		$i = 1;
         while(true) {
             $products = $this->getProductCollection($i);
-            $products->load();
-            $logger->info($products->getSelect()->__toString());
             if (!empty($sourceList) && $products->getSize() > ($i - 1)*100) {
-              //   foreach ($products as $product) {
-		            // $this->saveSourceItem([$product->getSku()], $sourceList);
-              //   }
+                foreach ($products as $product) {
+		            $this->saveSourceItem([$product->getSku()], $sourceList);
+                }
             } else {
                 break;
             }
