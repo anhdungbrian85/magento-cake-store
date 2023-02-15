@@ -57,6 +57,10 @@
                     table="nutritics_product_attribute_value" 
                     column="row_id" referenceTable="catalog_product_entity"
                     referenceColumn="row_id"
-        /> 
+        />
+        <constraint xsi:type="unique" referenceId="NUTRITICS_PRODUCT_ATTRIBUTE_VALUE_ROW_ID_ATTRIBUTE_CODE">
+            <column name="attribute_code"/>
+            <column name="row_id"/>
+        </constraint>
     </table>
 </schema>
