@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_catalog_product_save_entity_after"> 
+    	<observer name="process_source_items" disabled="true" />
+        <observer name="x247_update_product_source_after_save" instance="X247Commerce\Products\Observer\Product\UpdateSoureProductAfterSave" /> 
+    </event>
+    <event name="catalog_product_import_bunch_save_after"> 
+        <observer name="x247_update_product_source_after_import" instance="X247Commerce\Products\Observer\Product\UpdateSoureProductAfterImport" />
+    </event>
+</config>

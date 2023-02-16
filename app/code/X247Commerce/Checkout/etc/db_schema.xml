@@ -8,4 +8,7 @@
         <column xsi:type="int" name="store_location_id" nullable="true" comment="Store Location ID"/>
         <column xsi:type="int" name="sms_reminder" nullable="true" comment="Sms Reminder Status"/>
     </table>
+    <table name="amasty_amlocator_schedule" resource="default" engine="innodb" comment="amasty_amlocator_schedule">
+        <column xsi:type="varchar" name="interval" nullable="false" default="60" length="255" comment="Schedule Interval"/>
+    </table>
 </schema>
