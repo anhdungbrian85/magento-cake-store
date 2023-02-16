@@ -5,6 +5,7 @@ namespace X247Commerce\Nutritics\Console;
 use \Symfony\Component\Console\Command\Command;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use X247Commerce\Nutritics\Service\NutriticsApi;
 use X247Commerce\Nutritics\Helper\Config as ConfigHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -52,7 +53,19 @@ class GetNutriticsInfo extends Command
         $this->setName('nutritics:fetch')
              ->setDescription('Fetch Nutritics Info');
 
-        $this->addArgument('sku', InputArgument::OPTIONAL, __('Type a product sku'));     
+        $this->addArgument('sku', InputArgument::OPTIONAL, __('Type a product sku'));
+        $this->addOption(
+                'min-id',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Min Id'
+            );
+        $this->addOption(
+                'max-id',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Max Id'
+            );
 
         parent::configure();
     }
@@ -61,8 +74,86 @@ class GetNutriticsInfo extends Command
     {
         $output->writeln('This process might take long time, please wait!');
         $sku = $input->getArgument('sku');
+        $minId = $input->getOption('min-id');
+        $maxId = $input->getOption('max-id');
+
+        if ($minId && $maxId) {
+            
+            $this->processWithRangeProductId($minId, $maxId);
+        } else {
+            
+            $this->processWithProductSku($sku);            
+        }
+
+    }
+
+     /**
+     * Process Product Nutritic In Range Product Id not set value in nutritics_product_attribute_value
+     * @param 
+     * @return Magento\Catalog\Model\ResourceModel\Product\Collection
+     */
+    public function processWithRangeProductId($minId, $maxId)
+    {
         try {            
-            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/nutricscli.log');
+            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/nutricsclirangid.log');
+            $logger = new \Zend_Log();
+            $logger->addWriter($writer);
+
+            
+            $products = $this->getProductCollectionInRangeProductId($minId, $maxId);
+                
+            if ($products->getSize() > 0) {
+                $filterAttr = $this->configHelper->getProductApiAttributeFilter();
+
+                $allNutricInfo = [];
+                $allIfcCode = [];
+                $allSkus = [];
+                $allProductIds = [];
+
+                foreach ($products as $product) {
+                    $nutricInfo = [];
+                    $allProductIds[] = $product->getRowId();
+                    if ($filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC) {
+                        if ($product->getIfcCode()) {
+                            $allIfcCode[] = $product->getIfcCode();
+                            $nutricInfo = $this->getNutriticsInfo($product->getIfcCode());
+                        }
+                    }   else {
+                        $allSkus[] = $product->getSku();
+                        $logger->info($product->getSku());
+                        $nutricInfo = $this->getNutriticsInfo($product->getSku());
+                    }
+
+                    if ($nutricInfo) {
+                        $this->insertNutriticsInfo($product->getRowId(), $nutricInfo);
+                    }
+                }
+
+                // if (!empty($allIfcCode)) {
+                //     $allNutricInfo = $this->getNutriticsInfo($allIfcCode);
+                // }
+                // if (!empty($allSkus)) {
+                //     $allNutricInfo = $this->getNutriticsInfo($allSkus);
+                // }
+                // if (!empty($allNutricInfo)) {
+                //     $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
+                // }
+            }      
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+
+     /**
+     * Process Product Nutritic with given sku or All product not set value in nutritics_product_attribute_value
+     * @param 
+     * @return Magento\Catalog\Model\ResourceModel\Product\Collection
+     */
+    public function processWithProductSku($sku = null)
+    {
+
+        try {            
+            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/nutricsclisku.log');
             $logger = new \Zend_Log();
             $logger->addWriter($writer);
 
@@ -392,6 +483,28 @@ class GetNutriticsInfo extends Command
         }
         $collection->setPageSize(100);
         $collection->setCurPage($page);
+        return $collection;
+    }
+    /**
+     * Get Product Collection In Range Product Id not set value in nutritics_product_attribute_value
+     * @param 
+     * @return Magento\Catalog\Model\ResourceModel\Product\Collection
+     */
+    public function getProductCollectionInRangeProductId($minId, $maxId)
+    {
+        $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
+        $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
+        $productIds = $this->connection->fetchCol($productQuery);
+
+        $collection = $this->productCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addAttributeToFilter('type_id', \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE);
+        $collection->addAttributeToFilter('entity_id', array('from' => $minId, 'to' => $maxId));
+        $collection->setOrder('row_id','ASC');
+
+        if ($productIds) {
+            $collection->addAttributeToFilter('row_id', ['nin'=>$productIds]);
+        }
+
         return $collection;
     }
 }
