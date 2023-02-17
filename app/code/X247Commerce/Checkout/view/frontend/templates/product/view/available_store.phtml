@@ -6,55 +6,52 @@
 
 $currentProduct = $block->getProduct();
 $id = $currentProduct->getId();
-$productSources = $block->getQuantityInformationForProduct($currentProduct->getSku());
 $storeId = [];
-foreach ($productSources as $source) {
-	if ($block->getAmLocatorBySource($source["source_code"])) {
-		$storeId[] = $block->getAmLocatorBySource($source["source_code"]);
-	}		
-}
 $currentLocationId = $block->getStoreLocationIdByContext();
-$isProductAvailableInCurrentLocation = $block->checkProductAvailableInStore($currentLocationId, $currentProduct);
-$locations = $block->getAmLocationByLocationId($storeId)->getData();
-?>
-<?php if ($locations && !$isProductAvailableInCurrentLocation) : ?>
-	<?php if ($currentLocationId): ?>
+
+if ($currentLocationId):
+	
+	$isProductAvailableInCurrentLocation = $block->checkProductAvailableInStore($currentLocationId, $currentProduct);
+	$locations = $block->getAmLocationByLocationId($storeId)->getData();
+	?>
+	<?php if ($locations && !$isProductAvailableInCurrentLocation) : ?>
 		<p class="product-not-available"><?= __('Product is not available in selected store') ?>! </p>
+		<p class="title"><?= __('Please choose another store location') ?>: </p>
+		<div class="available-location-list">		
+			<?php foreach ($locations as $location) : ?>
+				<?php if ($location['id'] != $currentLocationId): ?>
+					<p>
+						<a href="#" class="store-location-<?= $location['id'] ?>"><?= $location['name'] ?></a>
+						<span class="location-<?= $location['id'] ?>" style="display: none;"><?= $location['id'] ?></span>
+					</p>
+					<script type="text/javascript">
+						require([
+						    'jquery'
+						], function($) {
+							$('.store-location-<?= $location['id'] ?>').on('click', function(event){
+							
+					        $.ajax({
+				                url: "x247checkout/cart/ajax",
+				                type: "POST",
+				                dataType: "json",
+				                data: {
+				                    locationId:  <?= $location['id'] ?>
+				                },
+				            	complete: function(response) {
+				            		location.reload();  
+				                	console.log(response);
+				                },
+				                error: function (xhr, status, errorThrown) {
+				                    console.log('Error happens. Try again.');
+				                }
+				            });
+					      });
+						});
+					</script>
+				<?php endif ?>
+			<?php endforeach ?>
+		</div>
 	<?php endif ?>
-	<p class="title"><?= __('Please choose another store location') ?>: </p>
-	<div class="available-location-list">		
-		<?php foreach ($locations as $location) : ?>
-			<?php if ($location['id'] != $currentLocationId): ?>
-				<p>
-					<a href="#" class="store-location-<?= $location['id'] ?>"><?= $location['name'] ?></a>
-					<span class="location-<?= $location['id'] ?>" style="display: none;"><?= $location['id'] ?></span>
-				</p>
-				<script type="text/javascript">
-					require([
-					    'jquery'
-					], function($) {
-						$('.store-location-<?= $location['id'] ?>').on('click', function(event){
-						
-				        $.ajax({
-			                url: "x247checkout/cart/ajax",
-			                type: "POST",
-			                dataType: "json",
-			                data: {
-			                    locationId:  <?= $location['id'] ?>
-			                },
-			            	complete: function(response) {
-			            		location.reload();  
-			                	console.log(response);
-			                },
-			                error: function (xhr, status, errorThrown) {
-			                    console.log('Error happens. Try again.');
-			                }
-			            });
-				      });
-					});
-				</script>
-			<?php endif ?>
-		<?php endforeach ?>
-	</div>
 <?php endif ?>
+
 
