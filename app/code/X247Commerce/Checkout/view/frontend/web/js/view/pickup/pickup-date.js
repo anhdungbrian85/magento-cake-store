@@ -40,7 +40,7 @@ define([
 
         initialize: function () {
             this._super();
-
+            console.log('zxczxc');
             if (pickupDataResolver.storeId() != undefined) {
                 this.onChangeStore(pickupDataResolver.storeId());
                 this.getDataFromCache = true;
@@ -199,7 +199,7 @@ define([
         getFirstPickupDate: function (store) {
             var minPickupDate = this.minPickupDateTime.asDateTimeObject,
                 index;
-                
+
             if (!store.schedule_id) {
                 this.storeScheduleSelected(false);
 
