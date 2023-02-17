@@ -23,4 +23,12 @@
         <plugin name="assign_source_to_order" type="X247Commerce\StoreLocatorSource\Plugin\AssignSourceToOrder"/>
     </type>
 
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="AssignSourceToLocation" xsi:type="object">X247Commerce\StoreLocatorSource\Console\Command\AssignSourceToLocation</item>
+            </argument>
+        </arguments>
+    </type>
+    
 </config>
