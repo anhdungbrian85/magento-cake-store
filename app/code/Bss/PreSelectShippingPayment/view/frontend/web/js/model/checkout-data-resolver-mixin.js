@@ -43,7 +43,7 @@ define([
                 ) {
                     var defaultShipping = checkoutConfig.bssAspConfig.shipping.default,
                         positionShipping = checkoutConfig.bssAspConfig.shipping.position;
-                    if (window.deliveryType && window.deliveryType === 0) {
+                    if (window.deliveryType !== undefined && window.deliveryType === 0) {
                         defaultShipping = 'amstorepickup_amstorepickup';
                     }
                     this._autoSelect(defaultShipping, positionShipping, ratesData, 'shipping');
