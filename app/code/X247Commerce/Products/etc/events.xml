@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="model_save_after"> 
+        <observer name="assign_product_source_add_after" instance="X247Commerce\Products\Observer\Product\AssignProductAfterSourceAdd" /> 
+    </event>
+</config>

@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    
+
     <table name="inventory_source">
         <column xsi:type="varchar" name="amlocator_store" nullable="true"
                 comment="amlocator store ids" />
         <index referenceId="INVENTORY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="amlocator_store"/>
-        </index>        
+        </index>
     </table>
-        
+
     <table name="admin_user_source_link" resource="default" engine="innodb" comment="Admin User Source Link">
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
         <column name="user_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Admin User Id" />
         <column name="source_code" xsi:type="varchar" nullable="false" comment="Source Code" />
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>
@@ -24,7 +24,7 @@
             <column name="user_id"/>
             <column name="source_code"/>
         </constraint>
-    </table>        
+    </table>
     <table name="amasty_amlocator_location_source_link" resource="default" engine="innodb" comment="Amasty Location Source Link">
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
         <column name="location_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Location Id" />
@@ -34,7 +34,7 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="amasty_amlocator_location_source_link_location" table="amasty_amlocator_location_source_link" column="location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="amasty_amlocator_location_source_link_source" table="amasty_amlocator_location_source_link" column="source_code" referenceTable="inventory_source" referenceColumn="source_code" onDelete="CASCADE"/>
-    </table>       
+    </table>
     <table name="store_location_asda_link" resource="default" engine="innodb" comment="Amasty Location Asda Link">
         <column name="entity_id" xsi:type="int" nullable="false" identity="true" comment="Link ID" />
         <column name="parent_location_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Main Store Location Id" />
@@ -51,10 +51,9 @@
     </table>
 
     <table name="amasty_amlocator_location">
-        <column xsi:type="int" name="enable_delivery" unsigned="true" nullable="true"
-                comment="amlocator store active" />
+        <column xsi:type="int" name="enable_delivery" unsigned="true" nullable="true" default="0" comment="amlocator store active" />
         <index referenceId="DELIVERY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="enable_delivery"/>
-        </index>        
+        </index>
     </table>
 </schema>

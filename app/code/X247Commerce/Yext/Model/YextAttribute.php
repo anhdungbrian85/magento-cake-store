@@ -272,7 +272,12 @@ class YextAttribute
                 $data['photoGallery'][] = $image["image"]["url"];
             }
         }
-
+        if (isset($input['pickupAndDeliveryServices'])) {
+            $data['enable_delivery'] = in_array("DELIVERY", $input['pickupAndDeliveryServices']) ? 1 : 0;
+        } else {
+            $data['enable_delivery'] = 0;
+        }
+        
         return $data;
     }
 
@@ -498,12 +503,9 @@ class YextAttribute
                     $this->editLocationHolidayHours($location, $data['primaryProfile']['hours']['holidayHours']);
                 } 
                 if (isset($data['primaryProfile']['hours'])) {
-                    // var_dump($data['primaryProfile']['hours']);
                     $locationSchedule = $this->editLocationSchedule($location, $data['primaryProfile']['hours']);
                     $insert['schedule'] = $locationSchedule->getId();
-                    var_dump($locationSchedule->getId());
                 }
-                var_dump($insert);
                 $location->addData($insert);
                 $location->save();
 
@@ -571,7 +573,8 @@ class YextAttribute
      * @return \Magento\Inventory\Model\Source
      */
     public function editSource($storeData, $locationId)
-    {   
+    {  
+
         $locationName = trim($storeData['name']);
 
         $sourceData = [
@@ -591,6 +594,9 @@ class YextAttribute
             if (!$source->getSourceCode()) {
                 $source = $this->sourceInterfaceFactory->create();
                 $source->setData($sourceData)->save();
+                $this->eventManager->dispatch('yext_webhook_inventory_source_add_after', [
+                    'source' => $source
+                ]);
                 return $source;
             }
             
