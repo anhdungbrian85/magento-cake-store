@@ -5,6 +5,7 @@
 ?>
 <?php
 $nutriticsInfos = $block->getProductNutriticsInfoInDb();
+$nutritics = ['Energy Kcal', 'Energy Kj', 'Energy', 'Carbohydrate', 'Sugars', 'Fat', 'Saturated Fat', 'Protein', 'Fibre', 'Sodium (Na)'];
 ?>
 <div class="nutritics-info-wraper">
     <?php if (empty($nutriticsInfos)): ?>
@@ -18,7 +19,7 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
             <th><?= __('Percent RI')?></th>
         </tr>
         <?php foreach ($nutriticsInfos as $info): ?>
-            <?php if ($info['value'] && $info['attribute_code'] != 'allergens'): ?>
+            <?php if ($info['value'] && $info['attribute_code'] != 'allergens' && $info['attribute_code'] != 'quid' && (array_search($info['attribute_name'], $nutritics) !== false)): ?>
                     <tr class="nutritics-info-detail">
                         <td class="attribute_name"><?= $info['attribute_name'] ?></td>
                         <td class="value"><?= $info['value'] ?></td>

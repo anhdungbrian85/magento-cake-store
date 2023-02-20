@@ -8,6 +8,7 @@ use Amasty\Storelocator\Model\ResourceModel\Location\Collection as LocationColle
 use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory;
 use Magento\Framework\Controller\Result\JsonFactory;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
+use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
 
 class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
 {
@@ -16,12 +17,14 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     protected CollectionFactory $locationCollectionFactory;
     protected JsonFactory $resultJsonFactory;
     protected StoreLocationContextInterface $storeLocationContextInterface;
+    protected DeliveryAreaHelper $deliveryAreaHelper;
 
     public function __construct(
         CustomerSession $customerSession,
         CollectionFactory $locationCollectionFactory,
         JsonFactory $resultJsonFactory,
         StoreLocationContextInterface $storeLocationContextInterface,
+        DeliveryAreaHelper $deliveryAreaHelper,
         Context $context
     )
     {
@@ -30,6 +33,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $this->customerSession = $customerSession;
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->storeLocationContextInterface = $storeLocationContextInterface;
+        $this->deliveryAreaHelper = $deliveryAreaHelper;
     }
 
 
@@ -38,19 +42,31 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $deliveryType = $this->getRequest()->getPost('delivery-type');
         $this->customerSession->setDeliveryType($deliveryType);
         $this->storeLocationContextInterface->setDeliveryType($deliveryType);
+        $destCode = $this->getRequest()->getParam('dest');
+
+        $deliveryStatus = $this->deliveryAreaHelper->checkInputPostcode($destCode);
+        $resultJson = $this->resultJsonFactory->create();
         if ($this->getRequest()->getPost('delivery-type') == 0) {
             $this->getCloseStoreLocations();
-        }   else {
-            $location = $this->getClosestStoreLocation();
-            if ($location->getId()) {
+        } else {
+            if ($deliveryStatus) {
+                $location = $this->getClosestStoreLocation();
+                if ($location->getId()) {
+                    if ($location->getEnableDelivery() == 0) {
+                        return $resultJson->setData(['enable_delivery' => 0]);
+                    }
 
-                $this->customerSession->setStoreLocationId($location->getId());
-                $this->storeLocationContextInterface->setStoreLocationId($location->getId());
+                    $this->customerSession->setStoreLocationId($location->getId());
+                    $this->storeLocationContextInterface->setStoreLocationId($location->getId());
 
-                $resultJson = $this->resultJsonFactory->create();
-                return $resultJson->setData(['store_location_id' => $location->getId()]);
-            }   else {
+                    return $resultJson->setData(['store_location_id' => $location->getId()]);
+                }   else {
+                    $this->getCloseStoreLocations();
+                }
+            } else {
+            
                 $this->getCloseStoreLocations();
+                // return $resultJson->setData(['delivery_status' => false]);
             }
         }
     }
@@ -65,7 +81,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $block = $this->_view->getLayout()->getBlock('amlocator_ajax');
         $block->setData('lng', $lng);
         $block->setData('lat', $lat);
-        $this->getResponse()->setBody($block->getJsonLocations());
+        return $this->getResponse()->setBody($block->getJsonLocations());
     }
 
     public function getClosestStoreLocation()
