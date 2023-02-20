@@ -183,7 +183,7 @@ class YextAttribute
     /**
      * Get yext_entity_id value by Location Id
      *
-     * @param Location Id
+     * @param Location Id || array Location Id
      * 
      * @return string||null
      */
@@ -192,9 +192,15 @@ class YextAttribute
         //get id of attribute yext_entity_id in table
         $yextAttributeId = $this->getYextEntityAttributeId();
         $tableName = $this->resource->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
-        $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $locationId)->where('attribute_id = ?', $yextAttributeId);
+        if (is_array($locationId)) {
+            $select = $this->connection->select()->from($tableName, ['value'])->where('store_id in (?)', $locationId)->where('attribute_id = ?', $yextAttributeId)->__toString();
 
-        $data = $this->connection->fetchOne($select);
+            $data = $this->connection->fetchCol($select);
+        } else {
+            $select = $this->connection->select()->from($tableName, ['value'])->where('store_id = ?', (int) $locationId)->where('attribute_id = ?', $yextAttributeId);
+
+            $data = $this->connection->fetchOne($select);
+        }
 
         return $data;
     }
