@@ -13,11 +13,12 @@
 $columnsLimit = $block->getColumnsLimit() ?: 0;
 $_menuHtml = $block->getHtml('level-top', 'submenu', $columnsLimit)
 ?>
-
-<h2 class="label-menu-mobile"><?= __('Categories')?></h2>
-<nav class="navigation" data-action="navigation">
-    <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
-        <?= /* @noEscape */ $_menuHtml?>
-        <?= $block->getChildHtml() ?>
-    </ul>
-</nav>
+<div class="category-top">
+    <h2 class="label-menu-mobile"><?= __('Categories')?></h2>
+    <nav class="navigation" data-action="navigation">
+        <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+            <?= /* @noEscape */ $_menuHtml?>
+            <?= $block->getChildHtml() ?>
+        </ul>
+    </nav>
+</div>
