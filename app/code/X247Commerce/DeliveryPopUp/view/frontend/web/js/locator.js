@@ -1,5 +1,6 @@
 define([
     'jquery',
+    'mage/url',
     'Amasty_Storelocator/js/model/states-storage',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'mage/translate',
@@ -9,7 +10,7 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery/jquery-ui',
     'jquery-ui-modules/slider'
-], function ($, statesStorage, pickupDataResolver) {
+], function ($, url, statesStorage, pickupDataResolver) {
     $.widget('mage.amLocator', {
         options: {},
         url: null,
@@ -53,6 +54,9 @@ define([
 
         bindSelectLocation: function() {
             let self = this;
+            url.setBaseUrl(BASE_URL);
+            var redirectUrl = url.build('elebration-cakes/by-flavour-theme/click-collect-1-hour.html');
+
             $(document).on('click', '.select-location', function() {
                 const location_id = $(this).data('location-id');
                 const delivery_type = $('[name="delivery-type"]:checked').val()
@@ -65,8 +69,13 @@ define([
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
-                    pickupDataResolver.storeId(location_id);
-                    window.location.reload();
+                    
+                    if (delivery_type != 2) {
+                        pickupDataResolver.storeId(location_id);
+                        window.location.reload();
+                    } else {
+                        window.location.href = redirectUrl;
+                    }
                 }));
             })
         },
@@ -78,6 +87,7 @@ define([
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
+                    
                     if (!self.mapContainer.find('.amlocator-text').val()) {
                         self.latitude = position.coords.latitude;
                         self.longitude = position.coords.longitude;
@@ -156,9 +166,9 @@ define([
             }).done($.proxy(function (response) {
                 
                 if (response.store_location_id) {
-                window.location.reload();
-                }   else {
-                    if ($('[name="delivery-type"]:checked').val() != 0) {
+                    window.location.reload();
+                } else {
+                    if ($('[name="delivery-type"]:checked').val() == 1) {
                         $('.delivery-popup.text').append(errorMessage);
                     }
                     

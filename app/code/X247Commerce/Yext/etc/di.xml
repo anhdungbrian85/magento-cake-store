@@ -4,6 +4,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="import_yext_entity_id" xsi:type="object">X247Commerce\Yext\Console\ImportYextEntityId</item>
+                <item name="sync_delivery_status" xsi:type="object">X247Commerce\Yext\Console\SyncDeliveryStatusFromYext</item>
             </argument>
         </arguments>
     </type>

@@ -46,9 +46,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
 
         $deliveryStatus = $this->deliveryAreaHelper->checkInputPostcode($destCode);
         $resultJson = $this->resultJsonFactory->create();
-        if ($this->getRequest()->getPost('delivery-type') == 0) {
-            $this->getCloseStoreLocations();
-        } else {
+        if ($this->getRequest()->getPost('delivery-type') == 1) {
             if ($deliveryStatus) {
                 $location = $this->getClosestStoreLocation();
                 if ($location->getId()) {
@@ -68,6 +66,8 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
                 $this->getCloseStoreLocations();
                 // return $resultJson->setData(['delivery_status' => false]);
             }
+        } else {
+            $this->getCloseStoreLocations();
         }
     }
 
