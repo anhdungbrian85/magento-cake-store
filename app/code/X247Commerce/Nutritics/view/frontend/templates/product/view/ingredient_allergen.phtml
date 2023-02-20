@@ -5,6 +5,9 @@
 ?>
 <?php
 $nutriticsInfos = $block->getProductNutriticsInfoInDb();
+$htmlIngredients = '';
+$htmlAllergens = '';
+$html = '';
 ?>
 <div class="ingredient-allergen-info-wraper">
     <?php if (empty($nutriticsInfos)): ?>
@@ -16,37 +19,33 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
                     <div class="allergens-info-detail">
                         <?php $allergens = json_decode($info['value'], true) ?>
                         <?php if ($allergens['contains']) : ?>
-                            <p>
-                                <span class="allergens-title"><?= __('This product contains the following allergens') ?>: </span>
-                                <span class="allergens-detail contains"><?= implode(', ', $allergens['contains']) ?></span>
-                            </p>
+                            <?php $htmlAllergens .= '<p> 
+                                <span class="allergens-title">' . __('This product contains the following allergens') . ': </span>
+                                <span class="allergens-detail contains">' . implode(', ', $allergens['contains']) . '</span></p>'; ?>
                         <?php endif?>
                         <?php if ($allergens['maycontain']) : ?>
-                            <p>
-                                <span class="allergens-title"><?= __('This product may contains the following allergens') ?>: </span>
-                                <span class="allergens-detail maycontain"><?= implode(', ', $allergens['maycontain']) ?></span>
-                            </p>
+                            <?php $htmlAllergens .= '<p>
+                                <span class="allergens-title">'. __('This product may contains the following allergens') .': </span>
+                                <span class="allergens-detail maycontain">'. implode(', ', $allergens['maycontain']) .'</span></p>'; ?>
                         <?php endif?>
                         <?php if ($allergens['freefrom']) : ?>
-                            <p>
-                                <span class="allergens-title"><?= __('This product free from the following allergens') ?>: </span>
-                                <span class="allergens-detail freefrom"><?= implode(', ', $allergens['freefrom']) ?></span>
-                            </p>
+                            <?php $htmlAllergens .= '<p>
+                                <span class="allergens-title">'. __('This product free from the following allergens') .': </span>
+                                <span class="allergens-detail freefrom">'. implode(', ', $allergens['freefrom']) .'</span></p>'; ?>
                         <?php endif?>
                         <?php if ($allergens['suitablefor']) : ?>
-                            <p>
-                                <span class="allergens-title"><?= __('This product suitablefor the following') ?>: </span>
-                                <span class="allergens-detail suitablefor"><?= implode(', ', $allergens['suitablefor']) ?></span>
-                            </p>
+                            <?php $htmlAllergens .= '<p>
+                                <span class="allergens-title">'. __('This product suitablefor the following') .': </span>
+                                <span class="allergens-detail suitablefor">'. implode(', ', $allergens['suitablefor']) .'</span></p>'; ?>
                         <?php endif?>
                     </div>
             <?php endif ?>
             <?php if ($info['attribute_code'] == 'quid'): ?>
-                    <div class="ingredient-info-detail">
-                        <span class="ingredients-title"><?= __('Ingredients') ?>: </span> <?php $info['value'] ?>
-                    </div>
+                <?php $htmlIngredients .= '<div class="ingredient-info-detail"> <span class="ingredients-title">' . __('Ingredients') 
+                                            . ': </span>' . $info['value'] . '</div>'; ?>
             <?php endif ?>
         <?php endforeach ?>
+        <?= $html .= $htmlAllergens.$htmlIngredients ?>
     </div>
     <?php endif ?>
 </div>

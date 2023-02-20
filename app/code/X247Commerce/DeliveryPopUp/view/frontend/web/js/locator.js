@@ -100,6 +100,7 @@ define([
         },
 
         collectParams: function (sortByDistance, isReset) {
+            var self = this;
             return {
                 'lat': this.latitude,
                 'lng': this.longitude,
@@ -108,8 +109,8 @@ define([
                 'category': this.options.categoryId,
                 'attributes': this.mapContainer.find(this.selectors.attributeForm).serializeArray(),
                 'sortByDistance': sortByDistance,
-                'delivery-type': $('[name="delivery-type"]:checked').val()
-
+                'delivery-type': $('[name="delivery-type"]:checked').val(),
+                'dest': $(self.selectors.addressSelector).val()
             };
         },
 
@@ -142,21 +143,31 @@ define([
             var self = this,
                 sortByDistance = sortByDistance || 1;
                 params = this.collectParams(sortByDistance, isReset);
+            var errorMessage = "<div class='results-no-delivery'><span>There is no delivery available for the requested postcode. Please try again with a different postcode or choose the Collect in Store option.</span></div>";
 
+            if ($('.results-no-delivery').length) {
+                $('.results-no-delivery').remove();
+            }
             $.ajax({
                 url: self.ajaxCallUrl,
                 type: 'POST',
                 data: params,
                 showLoader: true
             }).done($.proxy(function (response) {
+                
                 if (response.store_location_id) {
-                    window.location.reload();
+                window.location.reload();
                 }   else {
+                    if ($('[name="delivery-type"]:checked').val() != 0) {
+                        $('.delivery-popup.text').append(errorMessage);
+                    }
+                    
                     response = JSON.parse(response);
                     self.options.jsonLocations = response;
                     self.getIdentifiers();
                     self.Amastyload();
                 }
+                
             }));
         },
 
