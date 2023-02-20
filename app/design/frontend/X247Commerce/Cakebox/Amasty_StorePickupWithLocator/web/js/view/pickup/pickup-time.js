@@ -7,16 +7,19 @@ define([
     'jquery',
     'Magento_Ui/js/form/element/select',
     'Magento_Customer/js/customer-data',
+    'Magento_Checkout/js/checkout-data',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'X247Commerce_Checkout/js/model/secure-time',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (registry, ko, $, Component, customerData, pickup, pickupDataResolver, secureTime) {
+], function (registry, ko, $, Component, customerData, checkoutData, pickup, pickupDataResolver, secureTime) {
     'use strict';
 
     return Component.extend({
         defaults: {
+            elementTmpl: 'X247Commerce_Checkout/pickup/time',
             options: [],
+            caption: "Select time",
             imports: {
                 cartProductsDelay: '${$.parentName}.am_pickup_date:cartProductsDelay',
                 selectedDayByName: '${$.parentName}.am_pickup_date:selectedDayByName',
@@ -37,8 +40,14 @@ define([
         initialize: function () {
             var dateData;
 
-            this._super();
+            var selectedShippingRate = checkoutData.getSelectedShippingRate();
 
+            this._super();
+            if (selectedShippingRate === 'amstorepickup_amstorepickup') {
+                this.caption('Select Collection Time');
+            } else {
+                this.caption('Select Delivery Time');
+            }
             dateData = pickupDataResolver.dateData();
 
             if (dateData) {

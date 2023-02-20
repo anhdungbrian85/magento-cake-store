@@ -14,6 +14,8 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use X247Commerce\Catalog\Model\ProductSourceAvailability;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class LocatorSourceResolver
 {
@@ -29,6 +31,7 @@ class LocatorSourceResolver
     protected $customerSession;
     protected $searchCriteriaBuilderFactory;
     protected $productSourceAvailability;
+    protected ScopeConfigInterface $scopeConfig;
 
     public function __construct(
         ResourceConnection $resource,
@@ -38,6 +41,7 @@ class LocatorSourceResolver
         CustomerSession $customerSession,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         ProductSourceAvailability $productSourceAvailability,
+        ScopeConfigInterface $scopeConfig
     )
     {        
         $this->resource = $resource;
@@ -48,6 +52,7 @@ class LocatorSourceResolver
         $this->customerSession = $customerSession;
         $this->productSourceAvailability = $productSourceAvailability;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -79,6 +84,7 @@ class LocatorSourceResolver
                 ->from($sourceTbl, ['source_code'])
                 ->where("location_id = ?", $locationId);
         $result = $this->connection->fetchOne($sqlQuery);
+
         return $result;
     }
 
@@ -260,7 +266,7 @@ class LocatorSourceResolver
             
             return $itemCheck;
         }
-        return true;
+        return false;
     }
 
 
@@ -269,34 +275,27 @@ class LocatorSourceResolver
      *
      * @return bool
      */
-    public function checkProductItemAvailableInStore($productSku, $sources) {
-        $productQty = $this->productSourceAvailability->getQuantityInformationForProduct($productSku);
+    public function checkProductItemAvailableInStore($productSku, $sources, $qtyCheck = false, $qty = 0) {
+        $inventoryConfig = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock', ScopeInterface::SCOPE_STORE);
+        
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $inventoryData = $this->connection->fetchRow(
+            $this->connection->select()
+            ->from($inventorySourceItemTbl)
+            ->where("source_code = '$sources' AND sku='$productSku'")
+        );
+        if (!$inventoryConfig) {
+            return (bool) $inventoryData['status'];
+        }   else {
+            // @todo add inventory reservation calculation
+            if ($qtyCheck) {
+                return $inventoryData['status'] && $inventoryData['quantity'] >= $qty;
+            }   else {
+                return $inventoryData['status'] && $inventoryData['quantity'];
+            }
             
-        $sourceList = [];
-        foreach ($productQty as $pQty) {
-            if ($pQty['source_code'] == $sources) {
-                $sourceList[] = $pQty;
-            }
-        }        
-
-        if ($sourceList) {
-            $inStock = 0;
-            foreach ($sourceList as $qty) {
-                if ($qty['quantity'] == 0 || !$qty['status']) {
-                    $inStock += 0;
-                } else {
-                    $inStock += 1;
-                }
-            }
-
-            if ($inStock == 0) {
-                return false;
-            }
-        } else {
-            return false;       
-        }
-
-        return true;
+        }      
+    
     }
 
     /**

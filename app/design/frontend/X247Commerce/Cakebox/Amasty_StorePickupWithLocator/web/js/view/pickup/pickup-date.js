@@ -8,12 +8,13 @@ define([
     'jquery',
     'underscore',
     'Magento_Ui/js/form/element/date',
+    'Magento_Checkout/js/checkout-data',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'X247Commerce_Checkout/js/model/secure-time',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-store',
     'mage/calendar'
-], function (customerData, registry, ko, $, _, Component, pickup, pickupDataResolver, secureTime) {
+], function (customerData, registry, ko, $, _, Component, checkoutData,pickup, pickupDataResolver, secureTime) {
     'use strict';
 
     return Component.extend({
@@ -40,7 +41,13 @@ define([
         }),
 
         initialize: function () {
+            var selectedShippingRate = checkoutData.getSelectedShippingRate();
             this._super();
+            if (selectedShippingRate === 'amstorepickup_amstorepickup') {
+                this.placeholder = 'Select Collection Date';
+            } else {
+                this.placeholder = 'Select Delivery Date';
+            }
             if (pickupDataResolver.storeId()) {
                 this.onChangeStore(pickupDataResolver.storeId());
                 this.getDataFromCache = true;
@@ -129,7 +136,6 @@ define([
 
             if (this.selectedStore) {
                 this.initStoreDateTimeOptions(this.selectedStore);
-                this.setDateToFirstPickupDate(this.selectedStore);
                 if (storeDetails) {
                     storeDetails.chooseStore(true);
                     storeDetails.store(this.selectedStore);
