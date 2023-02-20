@@ -772,7 +772,7 @@ define([
             
             var nutriticsUrl = this.options.getNutriticsUrl;
             
-            var selectedProductId = productId ? productId : parentProductId;
+            var selectedProductId = productId;
             
             if (selectedProductId) {
                 $.ajax({
@@ -783,7 +783,7 @@ define([
                     },
                     success: function(response) {     
                         var newHtmls = $.parseJSON(response);
-                        console.log(newHtmls);
+                        
                         $(".nutritics-info-wraper").replaceWith(newHtmls['nutriticsHtml']);
                         $(".ingredient-allergen-info-wraper").replaceWith(newHtmls['ingredientsAllergensHtml']);
                     },

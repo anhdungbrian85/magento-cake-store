@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">storelocator_location_delivery_area_form.storelocator_location_delivery_area_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">General Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="array">
+                <item name="name" xsi:type="string">back</item>
+                <item name="label" xsi:type="string" translate="true">Back</item>
+                <item name="class" xsi:type="string">back</item>
+                <item name="url" xsi:type="string">deliveryarea/deliveryarea/index</item>
+            </item>
+            <item name="save" xsi:type="array">
+                <item name="name" xsi:type="string">save</item>
+                <item name="label" xsi:type="string" translate="true">Save</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">deliveryarea/deliveryarea/save</item>
+            </item>
+            <item name="delete" xsi:type="string">X247Commerce\StoreLocator\Block\Adminhtml\Location\Edit\DeleteButton</item>
+        </item>
+    </argument>
+    <settings>
+        <namespace>storelocator_location_delivery_area_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>storelocator_location_delivery_area_form.storelocator_location_delivery_area_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="storelocator_location_delivery_area_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="deliveryarea/deliveryarea/save"/>
+        </settings>
+        <dataProvider class="X247Commerce\StoreLocator\UiComponent\DataProvider\DataProvider"
+                      name="storelocator_location_delivery_area_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="delivery_area_information">
+        <settings>
+            <collapsible>false</collapsible>
+            <label translate="true">Delivery Area Information</label>
+        </settings>
+        <field name="id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">delivery_area</item>
+                    <item name="dataScope" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </field>
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Name</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">delivery_area</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="dataScope" xsi:type="string">name</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="postcode">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Post Code</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">delivery_area</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="dataScope" xsi:type="string">postcode</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="status" sortOrder="40">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocator\UiComponent\Form\AreaStatus</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="dataScope" xsi:type="string">status</item>
+                    <item name="disabled" xsi:type="boolean">0</item>
+                </item>
+            </argument>
+        </field>
+        <field name="matching_strategy" sortOrder="50">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocator\UiComponent\Form\MatchingStrategy</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Matching Strategy</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="dataScope" xsi:type="string">matching_strategy</item>
+                    <item name="disabled" xsi:type="boolean">0</item>
+                </item>
+            </argument>
+        </field>
+        <field name="store_id" component="X247Commerce_StoreLocator/js/components/select-store">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocator\UiComponent\Form\StoreList</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Assigned to Store</item>
+                    <item name="source" xsi:type="string">delivery_area</item>
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="multiple" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="number">90</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                    <item name="dataScope" xsi:type="string">store_id</item>
+                    <item name="componentType" xsi:type="string">field</item>
+                </item>
+            </argument>
+            <settings>
+                <listens>
+                    <link name="${ $.namespace }.${ $.namespace }:responseData">setParsed</link>
+                </listens>
+            </settings>
+        </field>
+    </fieldset>
+</form>
