@@ -4,8 +4,9 @@ define([
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/checkout-data',
     'mage/translate'
-], function ($, Element, pickup, pickupDataResolver, quote) {
+], function ($, Element, pickup, pickupDataResolver, quote, checkoutData) {
     'use strict';
 
     return Element.extend({
@@ -22,6 +23,10 @@ define([
             this._super()
                 .observe('visible datePickup timePickup')
                 .observe({ storeDetails: this.storeDetailsPlaceholder });
+            let selectedShippingRate = checkoutData.getSelectedShippingRate()
+            if (selectedShippingRate != 'amstorepickup_amstorepickup') {
+                this.visible(true);
+            }
 
             pickup.isPickup.subscribe(this.pickupStateObserver, this);
 
