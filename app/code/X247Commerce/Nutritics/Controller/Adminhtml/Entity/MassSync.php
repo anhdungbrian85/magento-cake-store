@@ -56,12 +56,12 @@ class MassSync extends Action
     public function execute()
     {
         $selectedProducts = $this->filter->getCollection($this->prodCollFactory->create());
-        $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
-        $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
-        $productIds = $this->connection->fetchCol($productQuery);
-        if ($productIds) {
-            $selectedProducts->addAttributeToFilter('row_id', ['nin'=>$productIds]);
-        }
+        // $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
+        // $productQuery = $this->connection->select()->from(['nut_tbl' => self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE],['nut_tbl.row_id'])->group('nut_tbl.row_id');
+        // $productIds = $this->connection->fetchCol($productQuery);
+        // if ($productIds) {
+        //     $selectedProducts->addAttributeToFilter('row_id', ['nin'=>$productIds]);
+        // }
         
         if (count($selectedProducts) > 0) {
             foreach ($selectedProducts as $product)
@@ -118,7 +118,7 @@ class MassSync extends Action
             }
             
             if ($insertData) {
-                return $this->connection->insertMultiple($table, $insertData);
+                return $this->connection->insertOnDuplicate($table, $insertData);
             }
             return;
         }

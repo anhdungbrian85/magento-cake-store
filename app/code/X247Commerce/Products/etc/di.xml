@@ -3,4 +3,11 @@
     <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
         <plugin name="configurable_character_limit" type="X247Commerce\Products\Plugin\ConfigurableProduct" sortOrder="1" />
     </type>
+    <type name="Magento\Framework\Console\CommandList">
+       <arguments>
+           <argument name="commands" xsi:type="array">
+               <item name="assign_all_product_to_all_source" xsi:type="object">X247Commerce\Products\Console\AssignAllProductToAllSource</item>
+           </argument>
+       </arguments>
+   </type>
 </config>

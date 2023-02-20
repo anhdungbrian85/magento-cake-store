@@ -55,7 +55,7 @@ class TimeHandler
                 $to = ($storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::HOURS] - 1)
                     . ':' . $storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::MINUTES];
 
-                $result[$day] = $this->getTimeRange($from, $breakFrom, $breakTo, $to);
+                $result[$day] = $this->getTimeRange($from, $breakFrom, $breakTo, $to, $interval);
             }
         }
 
@@ -69,20 +69,20 @@ class TimeHandler
      * @param string $to
      * @return array
      */
-    private function getTimeRange($from, $breakFrom, $breakTo, $to)
+    private function getTimeRange($from, $breakFrom, $breakTo, $to, $interval)
     {
         $firstSegment = [];
         $secondSegment = [];
 
         if ($breakFrom == $breakTo && $breakFrom == self::START_TIME) {
-            return $this->generate($from, $to);
+            return $this->generate($from, $to, $interval);
         } else {
             for ($i = 0; $i < 2; $i++) {
                 if (!$this->isFirstSegmentDone) {
-                    $firstSegment = $this->generate($from, $breakFrom);
+                    $firstSegment = $this->generate($from, $breakFrom, $interval);
                     $this->isFirstSegmentDone = true;
                 } else {
-                    $secondSegment = $this->generate($breakTo, $to);
+                    $secondSegment = $this->generate($breakTo, $to, $interval);
                     $this->isFirstSegmentDone = false;
                 }
             }
@@ -96,7 +96,7 @@ class TimeHandler
      * @param string $endTime
      * @return array
      */
-    public function generate($startTime, $endTime)
+    public function generate($startTime, $endTime, $interval)
     {
         $arrayOfTimes = [];
         $step = 0;
@@ -105,12 +105,12 @@ class TimeHandler
         $endTime = strtotime($this->getDate() . ' ' . $endTime);
         $endTime = $endTime > $startTime ? $endTime : strtotime($this->getDate() . ' ' . self::END_TIME);
 
-        while ($startTime + self::DURATION_IN_SEC <= $endTime) {
+        while ($startTime + $interval <= $endTime) {
             $arrayOfTimes[$step]['fromInUnix'] = $startTime;
             $arrayOfTimes[$step]['label'] =
-                $this->convertTime($startTime) . ' - ' . $this->convertTime($startTime + self::DURATION_IN_SEC);
-            $arrayOfTimes[$step]['value'] = $startTime . '|' . ($startTime + self::DURATION_IN_SEC);
-            $startTime += self::DURATION_IN_SEC;
+                $this->convertTime($startTime) . ' - ' . $this->convertTime($startTime + $interval);
+            $arrayOfTimes[$step]['value'] = $startTime . '|' . ($startTime + $interval);
+            $startTime += $interval;
             $arrayOfTimes[$step]['toInUnix'] = $startTime;
             $step++;
         }
