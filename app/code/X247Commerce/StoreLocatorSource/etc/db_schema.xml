@@ -32,6 +32,11 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>
+        <constraint xsi:type="unique" referenceId="AMASTY_AMLOCATOR_LOCATION_SOURCE_LINK_LOCATION_ID_SOURCE_CODE">
+            <column name="location_id"/>
+            <column name="source_code"/>
+        </constraint>
+
         <constraint xsi:type="foreign" referenceId="amasty_amlocator_location_source_link_location" table="amasty_amlocator_location_source_link" column="location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="amasty_amlocator_location_source_link_source" table="amasty_amlocator_location_source_link" column="source_code" referenceTable="inventory_source" referenceColumn="source_code" onDelete="CASCADE"/>
     </table>

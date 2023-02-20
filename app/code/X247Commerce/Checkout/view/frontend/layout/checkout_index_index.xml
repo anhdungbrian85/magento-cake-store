@@ -32,6 +32,21 @@
                                     </item>
                                     <item name="steps" xsi:type="array">
                                         <item name="children" xsi:type="array">
+                                            <item name="shipping-step" xsi:type="array">
+                                                <item name="children" xsi:type="array">
+                                                    <item name="shippingAddress" xsi:type="array">
+                                                        <item name="amstorepickup" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="am_pickup_options" xsi:type="array">
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="componentDisabled" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
                                             <item name="billing-step" xsi:type="array">
                                                 <item name="children" xsi:type="array">
                                                     <item name="payment" xsi:type="array">
