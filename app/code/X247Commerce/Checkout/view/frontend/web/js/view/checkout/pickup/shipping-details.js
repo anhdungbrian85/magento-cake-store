@@ -39,8 +39,7 @@ define([
         },
 
         shippingAddressDetail: function () {
-
-            return quote.shippingAddress();
+            return checkoutData.getShippingAddressFromData();
         },
 
         /**

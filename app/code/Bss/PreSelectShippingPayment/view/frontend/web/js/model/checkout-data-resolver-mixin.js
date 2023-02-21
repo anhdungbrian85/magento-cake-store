@@ -43,10 +43,16 @@ define([
                 ) {
                     var defaultShipping = checkoutConfig.bssAspConfig.shipping.default,
                         positionShipping = checkoutConfig.bssAspConfig.shipping.position;
+
                     if (window.deliveryType !== undefined && window.deliveryType === 0) {
-                        defaultShipping = 'amstorepickup_amstorepickup';
+                        console.log('amstorepickup_amstorepickup');
+                        this._autoSelect('amstorepickup_amstorepickup', positionShipping, ratesData, 'shipping');
+                    } else {
+                        console.log('Not amstorepickup_amstorepickup');
+                        this._autoSelect('amstorepickup_amstorepickup', positionShipping, ratesData, 'shipping');
+                        this._autoSelect(defaultShipping, positionShipping, ratesData, 'shipping');
                     }
-                    this._autoSelect(defaultShipping, positionShipping, ratesData, 'shipping');
+
                 }
                 return checkoutDataResolverShipping.apply(this, arguments);
             },
