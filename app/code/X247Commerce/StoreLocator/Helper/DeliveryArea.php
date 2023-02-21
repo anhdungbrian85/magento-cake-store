@@ -51,16 +51,25 @@ class DeliveryArea extends AbstractHelper
         $listDeliveryArea = $this->getListDeliveryArea();
 
         foreach ($listDeliveryArea as $deliArea) {
-            $patternCode = '/'.$deliArea['postcode'].' /';
-            // echo $patternCode;
-            if (preg_match($patternCode, $inputCode) && $deliArea['status'] == 1){
-                if ($deliArea['matching_strategy'] == 'Match Prefix') {
+            if ($deliArea['status'] == 1 && !empty($deliArea['postcode'])) {
+                if ($inputCode === $deliArea['postcode']) {
+                    
                     return true;
                 } else {
-                    if ($inputCode == $deliArea['postcode']) {
-                        return true;
+                    $patternCode = '/'.$deliArea['postcode'].' /';
+                    
+                    if (preg_match($patternCode, $inputCode)){
+                        if ($deliArea['matching_strategy'] == 'Match Prefix') {
+                            
+                            return true;
+                        } else {
+                            if ($inputCode == $deliArea['postcode']) {
+                                
+                                return true;
+                            }
+                        }                
                     }
-                }                
+                }
             }
         }
         return false;

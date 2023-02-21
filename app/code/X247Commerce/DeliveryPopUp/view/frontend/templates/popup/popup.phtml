@@ -67,7 +67,7 @@
         'mage/loader',
         'https://maps.googleapis.com/maps/api/js?libraries=places&key=<?= $block->escapeHtml(
             $block->configProvider->getApiKey()
-        ); ?>'
+        ); ?>&callback=Function.prototype'
     ], function ($) {
         var mapId =  "<?= '#' . $block->escapeHtml($block->getMapId()); ?>",
             $body = $('body'),

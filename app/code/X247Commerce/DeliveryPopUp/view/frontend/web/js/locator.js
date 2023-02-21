@@ -38,6 +38,7 @@ define([
         hiddenState: '-hidden',
         latitude: 0,
         longitude: 0,
+        postcode: '',
 
         _create: function () {
             this.ajaxCallUrl = this.options.ajaxCallUrl;
@@ -120,7 +121,7 @@ define([
                 'attributes': this.mapContainer.find(this.selectors.attributeForm).serializeArray(),
                 'sortByDistance': sortByDistance,
                 'delivery-type': $('[name="delivery-type"]:checked').val(),
-                'dest': $(self.selectors.addressSelector).val()
+                'dest': self.postcode
             };
         },
 
@@ -242,7 +243,7 @@ define([
                 var address = self.mapContainer.find('.amlocator-text')[0],
                     autocompleteOptions = {
                         componentRestrictions: { country: self.options.allowedCountries },
-                        fields: [ 'geometry.location' ]
+                        fields: [ 'geometry.location', 'address_components' ]
                     },
                     autocomplete = new google.maps.places.Autocomplete(address, autocompleteOptions);
 
@@ -252,6 +253,16 @@ define([
                     if (place.geometry != null) {
                         self.latitude = place.geometry.location.lat();
                         self.longitude = place.geometry.location.lng();
+
+                        if (place.address_components != null) {
+                            for (var i = 0; i < place.address_components.length; i++) {
+                                for (var j = 0; j < place.address_components[i].types.length; j++) {
+                                    if (place.address_components[i].types[j] == 'postal_code') {
+                                        self.postcode = place.address_components[i].long_name;
+                                    }
+                                }
+                            }
+                        }
 
                         if (self.options.enableSuggestionClickSearch) {
                             self.makeAjaxCall();
@@ -310,7 +321,7 @@ define([
 
             self.mapContainer.find(this.selectors.searchSelector).on('click', self.searchLocations.bind(this));
             self.mapContainer.find(this.selectors.addressSelector).on('keydown', function (e) {
-                console.log(e.keyCode);
+                
                 if (e.keyCode !== 13) {
                     return;
                 }
