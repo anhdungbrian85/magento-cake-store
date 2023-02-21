@@ -29,6 +29,7 @@ define([
         var checkoutDataResolverShipping = checkoutDataResolver.resolveShippingRates,
             checkoutDataResolverPayment = checkoutDataResolver.resolvePaymentMethod,
             checkoutConfig = window.checkoutConfig;
+        var picked = false;
         return _.extend(checkoutDataResolver, {
             /**
              * @inheritdoc
@@ -39,14 +40,23 @@ define([
                     !_.isUndefined(checkoutConfig.bssAspConfig.shipping) &&
                     !selectedShippingRate &&
                     ratesData &&
-                    ratesData.length > 1
+                    ratesData.length > 1 &&
+                    !picked
                 ) {
                     var defaultShipping = checkoutConfig.bssAspConfig.shipping.default,
                         positionShipping = checkoutConfig.bssAspConfig.shipping.position;
+
                     if (window.deliveryType !== undefined && window.deliveryType === 0) {
-                        defaultShipping = 'amstorepickup_amstorepickup';
+                        console.log('amstorepickup_amstorepickup');
+                        this._autoSelect('amstorepickup_amstorepickup', positionShipping, ratesData, 'shipping');
+                        picked = true;
+                    } else {
+                        console.log('Not amstorepickup_amstorepickup');
+                        this._autoSelect('amstorepickup_amstorepickup', positionShipping, ratesData, 'shipping');
+                        this._autoSelect(defaultShipping, positionShipping, ratesData, 'shipping');
+                        picked = true;
                     }
-                    this._autoSelect(defaultShipping, positionShipping, ratesData, 'shipping');
+
                 }
                 return checkoutDataResolverShipping.apply(this, arguments);
             },

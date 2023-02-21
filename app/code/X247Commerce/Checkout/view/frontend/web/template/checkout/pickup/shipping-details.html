@@ -7,7 +7,10 @@
     <!-- /ko -->
     <div class="store-details">
         <p>
-            <span data-bind="i18n: 'Delivering to'"></span> <span data-bind="text: shippingAddressDetail().postcode"></span>
+            <span data-bind="i18n: 'Delivering to'"></span>
+            <!-- ko if: shippingAddressDetail() -->
+                <span data-bind="text: shippingAddressDetail().postcode"></span>
+            <!-- /ko -->
         </p>
         <p data-bind="i18n: 'This order will be delivered from'"></p>
         <div class="store-details">
