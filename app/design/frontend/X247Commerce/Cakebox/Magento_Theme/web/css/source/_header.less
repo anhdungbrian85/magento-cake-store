@@ -288,20 +288,88 @@
 		}
 	}
 
-	.action.showcart,
-	.authorization-link a {
+	.action.showcart {
 		color: #fff;
 	}
 
-	.authorization-link a {
-		display: flex;
 
-		&:before {
-			content: url('../images/icon-account.png');
-			filter: brightness(1) invert(1);
-			padding-right: 8px;
+	.header-account {
+		position: relative;
+		order: 1;
+		margin-right: 15px;
+
+		.icon-user {
+			&:before {
+				content: url(../images/icon-account.png);
+				filter: brightness(1) invert(1);
+				padding-right: 8px;
+			}
+		}
+
+		.label {
+			a {
+				color: #fff;
+				font-size: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+
+		.links {
+			position: absolute;
+			width: 180px;
+			right: -8px;
+			z-index: 9;
+			transition: .3s all;
+			padding-top: 15px;
+			transition-delay: .5s;
+			visibility: hidden;
+			z-index: -1;
+			opacity: 0;
+		}
+
+		.account-links {
+			list-style: none;
+			margin: 0;
+			padding: 15px;
+			background: #fff;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+			transition: .3s all;
+
+			li {
+				float: unset;
+				display: block;
+
+				a {
+					color: #992e80;
+					font-size: 16px;
+				}
+			}
+
+			&:before {
+				content: "";
+				display: block;
+				width: 15px;
+				height: 15px;
+				background: #fff;
+				transform: rotate(45deg) translateX(-50%);
+				top: 15px;
+				position: absolute;
+				right: 6px;
+				z-index: -1;
+			}
+		}
+
+		&:hover {
+			.links {
+				visibility: visible;
+				opacity: 1;
+				z-index: 9;
+			}
 		}
 	}
+
 }
 
 .media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
@@ -476,6 +544,7 @@
 			}
 		}
 	}
+
 }
 
 .media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
@@ -518,13 +587,14 @@
 
 			.ammenu-button.-hamburger,
 			.minicart-wrapper,
-			.authorization-link {
+			.header-account {
 				position: absolute;
 				top: ~'calc( ( 100% - 60px )/2 )';
 				transform: translateY(-50%);
 			}
 
-			.authorization-link {
+
+			.header-account {
 				right: 15px;
 				margin: 0;
 			}
@@ -555,6 +625,18 @@
 			justify-content: center;
 			border-top: 1px solid rgba(112, 112, 112, 0.06);
 			border-bottom: 1px solid rgba(112, 112, 112, 0.06);
+		}
+	}
+
+	.header-account {
+		.label {
+			.text {
+				display: none;
+			}
+		}
+
+		.links {
+			display: none;
 		}
 	}
 }

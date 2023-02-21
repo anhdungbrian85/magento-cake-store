@@ -49,18 +49,25 @@ class DeliveryArea extends AbstractHelper
     public function checkInputPostcode($inputCode)
     {
         $listDeliveryArea = $this->getListDeliveryArea();
-
+        $inputCode = mb_strtoupper($inputCode);
         foreach ($listDeliveryArea as $deliArea) {
-            $patternCode = '/'.$deliArea['postcode'].' /';
-            // echo $patternCode;
-            if (preg_match($patternCode, $inputCode) && $deliArea['status'] == 1){
-                if ($deliArea['matching_strategy'] == 'Match Prefix') {
+            if ($deliArea['status'] == 1 && !empty($deliArea['postcode'])) {
+                $checkCode = mb_strtoupper($deliArea['postcode']);
+                if ($inputCode === $checkCode) {                    
                     return true;
                 } else {
-                    if ($inputCode == $deliArea['postcode']) {
-                        return true;
+                    $patternCode = '/'.$checkCode.' /';
+                    
+                    if (preg_match($patternCode, $inputCode)){
+                        if ($deliArea['matching_strategy'] == 'Match Prefix') {                            
+                            return true;
+                        } else {
+                            if ($inputCode == $checkCode) {                                
+                                return true;
+                            }
+                        }                
                     }
-                }                
+                }
             }
         }
         return false;
