@@ -8,7 +8,7 @@
         <observer name="sms_reminder_order_place_before_action" instance="X247Commerce\Checkout\Observer\Order\UpdateSmsReminder"/>
     </event>
     <event name="checkout_cart_product_add_before">
-        <observer name="x247_validate_before_add_to_cart" instance="X247Commerce\Checkout\Observer\Cart\ValidateAddToCart" />
+        <observer name="x247_validate_before_add_to_cart" instance="X247Commerce\Checkout\Observer\Cart\ValidateAddToCart" disabled="true"/>
     </event>
     <event name="sales_order_place_before">
         <observer name="x247_validate_product_before_order" instance="X247Commerce\Checkout\Observer\Order\ValidateBeforeOrder" />
