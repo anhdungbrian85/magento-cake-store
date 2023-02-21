@@ -12,7 +12,7 @@
             data-bind="i18n: 'My billing and shipping address are the same'"></span></label>
     </div>
     <render args="detailsTemplate"></render>
-    <fieldset class="fieldset">
+    <fieldset class="fieldset" data-bind="visible: !isAddressDetailsVisible()">
         <each args="getRegion('billing-address-list')" render=""></each>
         <div data-bind="fadeVisible: isAddressFormVisible">
             <render args="formTemplate"></render>
