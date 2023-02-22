@@ -79,7 +79,7 @@
             <image id="product_page_image_large" type="image"/>
             <image id="product_page_image_medium" type="image">
                 <width>890</width>
-                <height>750</height>
+                <height>650</height>
             </image>
             <image id="product_page_image_small" type="thumbnail">
                 <width>88</width>
@@ -96,7 +96,7 @@
             </image>
             <image id="product_page_main_image" type="image">
                 <width>890</width>
-                <height>750</height>
+                <height>650</height>
             </image>
             <image id="product_page_main_image_default" type="image">
                 <width>890</width>
@@ -189,6 +189,10 @@
             <image id="wishlist_thumbnail" type="small_image">
                 <width>240</width>
                 <height>300</height>
+            </image>
+            <image id="product_more_to_add" type="small_image">
+                <width>60</width>
+                <height>60</height>
             </image>
         </images>
     </media>
