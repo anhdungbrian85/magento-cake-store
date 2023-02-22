@@ -52,8 +52,8 @@ class SyncDeliveryStatusFromYext extends Command
 
     protected function configure()
     {
-        $this->setName('yext:delivery')
-             ->setDescription('Fetch Location Delivery Status Info from Yext');
+        $this->setName('yext:pickupdelivery')
+             ->setDescription('Sync Location Pickup and Delivery Status Info from Yext add "--min-id=x --max-id=y" to limit range store location id from x to y');
 
         $this->addArgument('locationid', InputArgument::OPTIONAL, __('Type a Location Id'));
         $this->addOption(
@@ -112,16 +112,22 @@ class SyncDeliveryStatusFromYext extends Command
             $tableName = $this->resource->getTableName('amasty_amlocator_location');
             
             foreach ($listResponse['response']['entities'] as $locationData) {
-                $updateData = ['enable_delivery' => 0]; 
+                $delivery = ['enable_delivery' => 0];
+                $inStorePickup = ['curbside_enabled' => 0];
                 $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);  
                 echo 'Location id: ',$locationId,"\n";      
                 echo 'Location yext_entity_id: '.$locationData['meta']['id']."\n";      
                 if (isset($locationData['pickupAndDeliveryServices'])) {
                     if (in_array('DELIVERY', $locationData['pickupAndDeliveryServices'])) {
-                        $updateData = ['enable_delivery' => 1];
+                        $delivery = ['enable_delivery' => 1];
+                    } 
+                    if (in_array('IN_STORE_PICKUP', $locationData['pickupAndDeliveryServices'])) {
+                        $inStorePickup = ['curbside_enabled' => 1];
                     }                  
                 }
-                echo $updateData['enable_delivery'] ? "Enable Delivery"."\n" : "Disable Delivery"."\n";
+                $updateData = array_merge($delivery, $inStorePickup);
+                echo $updateData['enable_delivery'] ? "Enable DELIVERY"."\n" : "Disable DELIVERY"."\n";
+                echo $updateData['curbside_enabled'] ? "Enable IN_STORE_PICKUP"."\n" : "Disable IN_STORE_PICKUP"."\n";
                 echo "\n";
                 $query = $this->connection->update($tableName, $updateData, ['id = ?' => (int)$locationId]);
             }
