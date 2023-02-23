@@ -280,8 +280,10 @@ class YextAttribute
         }
         if (isset($input['pickupAndDeliveryServices'])) {
             $data['enable_delivery'] = in_array("DELIVERY", $input['pickupAndDeliveryServices']) ? 1 : 0;
+            $data['curbside_enabled'] = in_array("IN_STORE_PICKUP", $input['pickupAndDeliveryServices']) ? 1 : 0;
         } else {
             $data['enable_delivery'] = 0;
+            $data['curbside_enabled'] = 0;
         }
         
         return $data;
@@ -358,6 +360,7 @@ class YextAttribute
     {
         try {
             $insert = $this->responseDataProcess($data['primaryProfile']);
+            $insert['curbside_enabled'] = 1;
             // $this->logger->log('600', print_r($insert, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
             if (!$location->getId()) {
