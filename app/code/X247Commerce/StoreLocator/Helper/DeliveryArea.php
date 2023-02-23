@@ -61,7 +61,7 @@ class DeliveryArea extends AbstractHelper
                         
                         if ($deliArea['status'] == 1) {
                             return true;
-                        } else {var_dump('NOOOO');
+                        } else {
                             return false;
                         }
                     }
