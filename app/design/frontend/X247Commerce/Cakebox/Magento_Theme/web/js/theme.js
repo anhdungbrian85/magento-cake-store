@@ -35,10 +35,10 @@ define([
         center: true,
         responsive:{
             0:{
-                items: 4,
+                items: 3,
                 nav: false,
                 dots: false,
-                margin: 15
+                margin: 10
             },
             768:{
                 items: 3,

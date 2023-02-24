@@ -1,3 +1,23 @@
+.catalog-product-view .product-info-main .product-info-stock-sku{
+	float: unset;
+	padding-left: 0;
+	text-align: left;
+
+	.stock.available {
+		display: none;
+	}
+
+	.sku {
+		.type {
+			display: none;
+		}
+
+		.value {
+			font-weight: 600;
+			margin: 0 0 15px 15px;
+		}
+	}
+}
 & when (@media-common = true) {
 	.swatch-option {
 		&.text {
@@ -85,6 +105,7 @@
 		.product-reviews-summary {
 			display: flex;
 			align-items: center;
+			float: unset;
 		}
 
 		.product-info-price {
@@ -245,8 +266,7 @@
 	}
 
 	.block {
-		&.related,
-		&.upsell {
+		&.related {
 			margin-top: 25px;
 
 			.block-title {

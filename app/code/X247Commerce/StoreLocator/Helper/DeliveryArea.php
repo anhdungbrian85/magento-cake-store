@@ -40,7 +40,7 @@ class DeliveryArea extends AbstractHelper
     public function getListDeliveryArea()
     {
     	$tableName = $this->resource->getTableName(self::STORE_LOCATION_DELIVERY_AREA);
-        $select = $this->connection->select()->from($tableName, ['*'])->__toString();
+        $select = $this->connection->select()->from($tableName, ['*'])->order('matching_strategy asc')->__toString();
         $data = $this->connection->fetchAll($select);
         // var_dump($data);
         return $data;
@@ -49,24 +49,33 @@ class DeliveryArea extends AbstractHelper
     public function checkInputPostcode($inputCode)
     {
         $listDeliveryArea = $this->getListDeliveryArea();
+        $areaMatchExac = [];
+        $areaMatchPrefix = [];
         $inputCode = mb_strtoupper($inputCode);
         foreach ($listDeliveryArea as $deliArea) {
-            if ($deliArea['status'] == 1 && !empty($deliArea['postcode'])) {
+            if (!empty($deliArea['postcode'])) {
                 $checkCode = mb_strtoupper($deliArea['postcode']);
-                if ($inputCode === $checkCode) {                    
-                    return true;
-                } else {
-                    $patternCode = '/'.$checkCode.' /';
-                    
-                    if (preg_match($patternCode, $inputCode)){
-                        if ($deliArea['matching_strategy'] == 'Match Prefix') {                            
+                $patternCode = '/'.$checkCode.' /';
+                if ($deliArea['matching_strategy'] == 'Match Exact') {                    
+                    if ($inputCode === $checkCode) {
+                        
+                        if ($deliArea['status'] == 1) {
                             return true;
                         } else {
-                            if ($inputCode == $checkCode) {                                
-                                return true;
-                            }
-                        }                
+                            return false;
+                        }
                     }
+                    $areaMatchExac[] = $deliArea;
+                } else {
+                    if (preg_match($patternCode, $inputCode)) {
+                        
+                        if ($deliArea['status'] == 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    $areaMatchPrefix[] = $deliArea;
                 }
             }
         }
