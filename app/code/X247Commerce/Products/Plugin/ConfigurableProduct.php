@@ -22,6 +22,11 @@ class ConfigurableProduct
         \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable $subject, $result
     ) {
         $resultArr = json_decode($result, true);
+
+        $resultArr['skus'] = [];
+        foreach ($subject->getAllowProducts() as $simpleProduct) {
+            $resultArr['skus'][$simpleProduct->getId()] = $simpleProduct->getSku();
+        }
         $characterLimit = [];
         foreach ($subject->getAllowProducts() as $product) {
             if ($product->getCharacterLimit()) {

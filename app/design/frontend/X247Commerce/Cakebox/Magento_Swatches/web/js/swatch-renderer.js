@@ -744,7 +744,8 @@ define([
             if (selectedProductId) {
                 if ($("textarea.product-custom-option").length !== 0) {
                     var clone = $("textarea.product-custom-option").clone();
-                    var characterLimit = this.options.jsonConfig.character_limit[selectedProductId];
+                    var characterLimit = (this.options.jsonConfig.character_limit != undefined && this.options.jsonConfig.character_limit[selectedProductId] !== undefined) 
+                        ? this.options.jsonConfig.character_limit[selectedProductId] : '256';
                     var newValue = '{"required": false,"maxlength":"' + characterLimit + '","validate-no-utf8mb4-characters": true}';
                     var note = "<p class='note character-limit-note'>You can if you want add a personalised message. This can be " + characterLimit + " characters long including spaces.</p>";
                     clone.attr("data-validate", newValue); 
