@@ -360,6 +360,7 @@ class YextAttribute
     {
         try {
             $insert = $this->responseDataProcess($data['primaryProfile']);
+            $insert['curbside_enabled'] = 1;
             // $this->logger->log('600', print_r($insert, true));
             $location = $this->getLocationByYext("'$yextEntityId'");
             if (!$location->getId()) {

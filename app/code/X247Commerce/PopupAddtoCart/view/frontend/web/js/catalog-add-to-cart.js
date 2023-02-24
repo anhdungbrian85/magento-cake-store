@@ -303,3 +303,4 @@ define([
 
     return $.mage.catalogAddToCart;
 });
+

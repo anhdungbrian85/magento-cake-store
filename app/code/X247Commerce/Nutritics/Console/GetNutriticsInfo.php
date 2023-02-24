@@ -51,7 +51,7 @@ class GetNutriticsInfo extends Command
     protected function configure()
     {
         $this->setName('nutritics:fetch')
-             ->setDescription('Fetch Nutritics Info');
+             ->setDescription('Fetch Nutritics Info: add "--min-id=x --max-id=y" to limit range product id from x to y');
 
         $this->addArgument('sku', InputArgument::OPTIONAL, __('Type a product sku'));
         $this->addOption(
@@ -120,7 +120,7 @@ class GetNutriticsInfo extends Command
                         }
                     }   else {
                         $allSkus[] = $product->getSku();
-                        $logger->info($product->getSku());
+                        // $logger->info($product->getSku());
                         $nutricInfo = $this->getNutriticsInfo($product->getSku());
                     }
 
@@ -179,7 +179,7 @@ class GetNutriticsInfo extends Command
                             }
                         }   else {
                             $allSkus[] = $product->getSku();
-                            $logger->info($product->getSku());
+                            // $logger->info($product->getSku());
                             $nutricInfo = $this->getNutriticsInfo($product->getSku());
                         }
 
@@ -263,9 +263,7 @@ class GetNutriticsInfo extends Command
             $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
 
             $insertData = [];
-            if (is_array()) {
-                // code...
-            }
+            
             for ($i=0; $i < count($productRowIds); $i++)
             {                
                 
