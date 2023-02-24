@@ -189,33 +189,35 @@ define([
                             success: function (res) {
                                 console.log(res);
                                 $('#addmore-sidebar').html(res.output);
-                                $('#addmore-sidebar .product-tab:first-child()').addClass('active');
-                                $('#addmore-sidebar .product-tab:first-child() .tab-content').slideDown();
-                                var options = {
-                                    type: 'popup',
-                                    responsive: true,
-                                    title: $t('More To Add'),
-                                    modalClass: 'popup-more-to-add',
-                                    buttons: [{
-                                        text: $t('Ok'),
-                                        class: '',
-                                        click: function () {
-                                            this.closeModal();
-                                        }
-                                    }]
-                                };
-                                var popup = modal(options, $('#add-more-product'));
-                                $('#add-more-product').modal('openModal');
 
-                                $('.tab-title').on('click', function(e) {
-                                    if ( $(this).parent().hasClass('active') ) {
-                                        $(this).parent().removeClass('active');
-                                        $(this).siblings('.tab-content').slideUp();
-                                    } else {
-                                        $(this).parent().addClass('active');
-                                        $(this).siblings('.tab-content').slideDown();
-                                    }
-                                });
+                                    $('#addmore-sidebar .product-tab:first-child()').addClass('active');
+                                    $('#addmore-sidebar .product-tab:first-child() .tab-content').slideDown();
+                                    var options = {
+                                        type: 'popup',
+                                        responsive: true,
+                                        title: $t('More To Add'),
+                                        modalClass: 'popup-more-to-add',
+                                        buttons: [{
+                                            text: $t('Ok'),
+                                            class: '',
+                                            click: function () {
+                                                this.closeModal();
+                                            }
+                                        }]
+                                    };
+                                    var popup = modal(options, $('#add-more-product'));
+                                    $('#add-more-product').modal('openModal');
+
+                                    $('.tab-title').on('click', function(e) {
+                                        if ( $(this).parent().hasClass('active') ) {
+                                            $(this).parent().removeClass('active');
+                                            $(this).siblings('.tab-content').slideUp();
+                                        } else {
+                                            $(this).parent().addClass('active');
+                                            $(this).siblings('.tab-content').slideDown();
+                                        }
+                                    });
+
                             },
 
                             /** @inheritdoc */
@@ -303,4 +305,3 @@ define([
 
     return $.mage.catalogAddToCart;
 });
-

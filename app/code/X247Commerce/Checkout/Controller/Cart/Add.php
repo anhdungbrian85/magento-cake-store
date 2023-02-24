@@ -269,6 +269,6 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
     {
         $locationId = $this->customerSession->getStoreLocationId();
         $product = $this->_initProduct();
-        return $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $product->getSku());
+        return $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $product);
     }
 }
