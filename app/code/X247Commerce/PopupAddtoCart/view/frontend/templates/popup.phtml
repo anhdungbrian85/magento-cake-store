@@ -14,7 +14,7 @@ $productData = [
 	],
 ];
 ?>
-<?php if ( count( $block->getProduct()->getCrossSellProductCollection() ) > 0 || count( $block->getProduct()->getUpSellProductCollection() ) > 0 || count( $block->getProduct()->getCrossSellProductCollection() ) > 0 ): ?>
+<?php if ( count( $block->getProduct()->getCrossSellProductCollection() ) > 0 || count( $block->getProduct()->getUpSellProductCollection() ) > 0 || count( $block->getProduct()->getRelatedProductCollection() ) > 0 ): ?>
 	<div class="addtocart-sidebar">
 		<div class="addedtocart-wrapper">
 			<div class="suggest-products">
