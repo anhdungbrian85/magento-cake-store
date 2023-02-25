@@ -37,7 +37,8 @@
         "constraint": {
             "PRIMARY": true,
             "FK_ABE219FB6F8382F475961264EBE2C61C": true,
-            "FK_0B5634864692DC8BC27BF00FCE2FEC7D": true
+            "FK_0B5634864692DC8BC27BF00FCE2FEC7D": true,
+            "AMASTY_AMLOCATOR_LOCATION_SOURCE_LINK_LOCATION_ID_SOURCE_CODE": true
         }
     },
     "store_location_asda_link": {

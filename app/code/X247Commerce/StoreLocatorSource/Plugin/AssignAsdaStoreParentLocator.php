@@ -30,20 +30,22 @@ class AssignAsdaStoreParentLocator
     ) {
 
     	$action = $this->request->getFullActionName();
-    	$currentLocationId = $result["items"][0]["id"];
+    	if (isset($result["items"][0])) {
+	    	$currentLocationId = $result["items"][0]["id"];
 
-    	if ($action == 'amasty_storelocator_location_edit') {
-    		if ($parentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($currentLocationId)) {
-	    		// Only when edit location
-	    		if (isset($result["items"][0])) {
-	    			$result["items"][0]['amlocator_store'] = $parentLocationId;
-	    		}
+	    	if ($action == 'amasty_storelocator_location_edit') {
+	    		if ($parentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($currentLocationId)) {
+		    		// Only when edit location
+		    		if (isset($result["items"][0])) {
+		    			$result["items"][0]['amlocator_store'] = $parentLocationId;
+		    		}
 
-			    if (isset($result[$currentLocationId])) {
-			    	$result[$currentLocationId]['amlocator_store'] = $parentLocationId;
-			    }		 
-		    }   
-	    }
+				    if (isset($result[$currentLocationId])) {
+				    	$result[$currentLocationId]['amlocator_store'] = $parentLocationId;
+				    }		 
+			    }   
+		    }
+    	}
 
 		return $result;
 	}
