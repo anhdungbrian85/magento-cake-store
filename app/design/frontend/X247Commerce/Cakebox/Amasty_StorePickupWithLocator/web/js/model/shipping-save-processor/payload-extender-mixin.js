@@ -12,21 +12,18 @@ define([
             var payloadOriginal = original(payload),
                 payloadWithPickupInfo = payloadOriginal,
                 pickupInfo;
+            pickupInfo = registry.get('checkoutProvider').get('block-store-locator').amstorepickup;
+            if (pickupInfo && pickupInfo['am_pickup_store'] && pickupInfo['am_pickup_store'].id) {
+                pickupInfo['am_pickup_store'] = pickupInfo['am_pickup_store'].id;
+            }
 
-            if (pickup.isPickup()) {
-                pickupInfo = registry.get('checkoutProvider').get('block-store-locator').amstorepickup;
-                if (pickupInfo && pickupInfo['am_pickup_store'] && pickupInfo['am_pickup_store'].id) {
-                    pickupInfo['am_pickup_store'] = pickupInfo['am_pickup_store'].id;
-                }
+            if (_.isUndefined(payloadWithPickupInfo.addressInformation.extension_attributes)) {
+                payloadWithPickupInfo.addressInformation.extension_attributes = {};
+            }
 
-                if (_.isUndefined(payloadWithPickupInfo.addressInformation.extension_attributes)) {
-                    payloadWithPickupInfo.addressInformation.extension_attributes = {};
-                }
-
-                if (pickupInfo) {
-                    pickupInfo = { am_pickup: dataPreparer.prepareData(pickupInfo)};
-                    _.extend(payloadWithPickupInfo.addressInformation.extension_attributes, pickupInfo);
-                }
+            if (pickupInfo) {
+                pickupInfo = { am_pickup: dataPreparer.prepareData(pickupInfo)};
+                _.extend(payloadWithPickupInfo.addressInformation.extension_attributes, pickupInfo);
             }
 
             return payloadWithPickupInfo;

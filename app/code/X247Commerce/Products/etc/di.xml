@@ -10,4 +10,8 @@
            </argument>
        </arguments>
    </type>
+ 
+    <type name="Magento\Swatches\Block\Product\Renderer\Configurable">
+        <plugin name="x247commerce_products_configurableskuswitch_plugin_magento_swatches_block_product_renderer_configurable" type="X247Commerce\Products\Plugin\Swatches\Block\Product\Renderer\Configurable"/>
+    </type>
 </config>
