@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
-
 <page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <!--
+        @todo: do after going live
         <referenceBlock name="product.info.main">
             <container name="product.available.store" after="-">
                 <block class="X247Commerce\Checkout\Block\Product\View\ProductAvailableStore" name="available-store" template="X247Commerce_Checkout::product/view/available_store.phtml">
                 </block>
             </container>
-        </referenceBlock>
+        </referenceBlock> -->
     </body>
 
 </page>

@@ -1,12 +1,17 @@
 {
-  "sales_order": {
-    "column": {
-      "store_location_id": true
+    "sales_order": {
+        "column": {
+            "store_location_id": true
+        }
+    },
+    "quote": {
+        "column": {
+            "store_location_id": true
+        }
+    },
+    "amasty_amlocator_schedule": {
+        "column": {
+            "interval": true
+        }
     }
-  },
-  "quote": {
-    "column": {
-      "store_location_id": true
-    }
-  }
 }

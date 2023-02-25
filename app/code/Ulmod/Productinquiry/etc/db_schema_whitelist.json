@@ -14,8 +14,8 @@
             "extra_field_one": true,
             "extra_field_two": true,
             "extra_field_three": true,
-            "extra_field_four": true,        
-            "extra_field_five": true,  
+            "extra_field_four": true,
+            "extra_field_five": true,
             "image": true,
             "product_sku": true,
             "product_id": true,
@@ -24,14 +24,14 @@
             "product_img": true,
             "address": true,
             "job_position": true,
-            "company": true,        
+            "company": true,
             "website": true
         },
         "index": {
             "ULMOD_PRODUCTINQUIRY_DATA_NAME": true,
             "ULMOD_PRODUCTINQUIRY_DATA_EMAIL": true,
             "ULMOD_PRODUCTINQUIRY_DATA_MESSAGE": true
-        },        
+        },
         "constraint": {
             "PRIMARY": true
         }
@@ -43,7 +43,12 @@
         },
         "constraint": {
             "ULMOD_PRODUCTINQUIRY_STORE_ULMOD_PRODUCTINQUIRY_DATA_INQUIRY_ID": true,
-            "ULMOD_PRODUCTINQUIRY_STORE_STORE_STORE_ID": true
+            "ULMOD_PRODUCTINQUIRY_STORE_STORE_STORE_ID": true,
+            "FK_C855AE55097A1EBA9BED968EA31E2CCE": true,
+            "ULMOD_PRODUCTINQUIRY_STORE_STORE_ID_STORE_STORE_ID": true
+        },
+        "index": {
+            "ULMOD_PRODUCTINQUIRY_STORE_STORE_ID": true
         }
     }
 }
