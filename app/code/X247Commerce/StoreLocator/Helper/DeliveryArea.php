@@ -51,7 +51,11 @@ class DeliveryArea extends AbstractHelper
         $listDeliveryArea = $this->getListDeliveryArea();
         $areaMatchExac = [];
         $areaMatchPrefix = [];
-        $inputCode = mb_strtoupper($inputCode);
+        if ($inputCode) {
+            $inputCode = mb_strtoupper($inputCode);
+        } else {
+            $inputCode = '';
+        }
         foreach ($listDeliveryArea as $deliArea) {
             if (!empty($deliArea['postcode'])) {
                 $checkCode = mb_strtoupper($deliArea['postcode']);
