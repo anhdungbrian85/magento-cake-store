@@ -291,6 +291,9 @@ class LocatorSourceResolver
             if ($qtyCheck) {
                 return $inventoryData['status'] && $inventoryData['quantity'] >= $qty;
             }   else {
+                if (empty($inventoryData)) {
+                    return false;
+                }
                 return $inventoryData['status'] && $inventoryData['quantity'];
             }
             

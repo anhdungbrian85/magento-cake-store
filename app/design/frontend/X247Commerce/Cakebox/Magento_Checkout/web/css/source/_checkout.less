@@ -45,9 +45,11 @@
 				}
 
 				.ampickup-pickup-details {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
+					margin-top: 15px;
+
+					> div {
+						margin-bottom: 5px;
+					}
 				}
 			}
 		}
@@ -256,6 +258,23 @@
 			.form-shipping-address,
 			.form-login {
 				max-width: 100%;
+			}
+
+			.form-login {
+				padding-bottom: 25px;
+
+				.fieldset {
+					margin-bottom: 0;
+				}
+
+				.actions-toolbar {
+					display: flex;
+					align-items: center;
+
+					.secondary {
+						margin-left: 10px;
+					}
+				}
 			}
 		}
 
