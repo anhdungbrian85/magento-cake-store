@@ -6,13 +6,10 @@ class ChangeOrderStatus
 {
 
 	protected $orderCollectionFactory;
-
 	protected $amsOrderRepository;
-
 	protected $invoiceService;
-
 	protected $convertOrder;
-
+	protected $changeOrderStatusHelper;
 	protected $transaction;
 
 	public function __construct(
@@ -20,12 +17,14 @@ class ChangeOrderStatus
 		\Amasty\StorePickupWithLocator\Model\OrderRepository $amsOrderRepository,
 		\Magento\Sales\Model\Service\InvoiceService $invoiceService,
 		\Magento\Sales\Model\Convert\Order $convertOrder,
+		\X247Commerce\ChangeOrderStatus\Helper\Data $changeOrderStatusHelper,
 		\Magento\Framework\DB\Transaction $transaction
 	) {
 		$this->orderCollectionFactory = $orderCollectionFactory;
 		$this->amsOrderRepository = $amsOrderRepository;
 		$this->invoiceService = $invoiceService;
 		$this->convertOrder = $convertOrder;
+		$this->changeOrderStatusHelper = $changeOrderStatusHelper;
 		$this->transaction = $transaction;
 	}
 
@@ -37,20 +36,21 @@ class ChangeOrderStatus
 		$collection = $this->orderCollectionFactory->create()
 			->addFieldToSelect('*')
 			->addFieldToFilter('status', ['in' => $statuses] );
-
+		$dayToChangeOrder = (int) $this->changeOrderStatusHelper->getNumberDayChangeStatus();
+		
 		foreach ($collection as $order) {
-			$pickupDate = $this->amsOrderRepository->getByOrderId($order->getId());
+			$orderData = $this->amsOrderRepository->getByOrderId($order->getId());
 			$createdAt = $order->getCreatedAt();
-			$date = $pickupDate->getDate();
+			$date = $orderData->getDate();
+			
 			if ( $date ) {
 				$today = date('Y-m-d');
 				$today = strtotime($today);
 				$converted = strtotime($date);
-
-				if ( ( $today - $converted ) > 0 && ($today- $converted)/86400 >= 3 ) {
+				
+				if ( ( $today - $converted ) > 0 && ($today- $converted)/86400 >= $dayToChangeOrder ) {
 					$order->setStatus(\Magento\Sales\Model\Order::STATE_COMPLETE);
 					$order->save();
-
 
 					if($order->canInvoice()) {
 						$invoice = $this->invoiceService->prepareInvoice($order);
