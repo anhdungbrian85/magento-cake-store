@@ -1,4 +1,4 @@
-<if args="pickupData().stores && pickupData().stores.length">
+<if args="pickupData().stores && pickupData().stores.length && isShippingStep()">
     <form class="ampickup-store-container -checkout fieldset">
         <each args="data:elems(), as: 'element'">
             <!-- ko template: getTemplate() --><!-- /ko -->
