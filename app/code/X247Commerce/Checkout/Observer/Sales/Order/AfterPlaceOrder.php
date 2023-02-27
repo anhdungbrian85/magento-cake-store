@@ -60,19 +60,13 @@ class AfterPlaceOrder implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/x247_pickup.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info('Start execute');
         /** @var \Magento\Sales\Model\Order $order */
         if (!$order = $observer->getEvent()->getOrder()) {
             return $this;
         }
-        $logger->info('After checking order');
         $this->searchCriteriaBuilder->addFilter(QuoteInterface::QUOTE_ID, $order->getQuoteId());
         $searchCriteria = $this->searchCriteriaBuilder->create();
         $quoteList = $this->quoteRepository->getList($searchCriteria);
-        $logger->info('Check $quoteList ');
         /** @var Quote $quote */
         foreach ($quoteList->getItems() as $quote) {
             /** @var OrderInterface $orderEntity */
@@ -84,7 +78,7 @@ class AfterPlaceOrder implements ObserverInterface
                 OrderInterface::STORE_ID => $quote->getStoreId(),
                 OrderInterface::DATE => $quote->getDate(),
                 OrderInterface::TIME_FROM => $quote->getTimeFrom(),
-                OrderInterface::TIME_TO => $quote->getTimeTo(),
+                    OrderInterface::TIME_TO => $quote->getTimeTo(),
                 OrderInterface::IS_CURBSIDE_PICKUP => $quote->getIsCurbsidePickup(),
                 OrderInterface::CURBSIDE_PICKUP_COMMENT => $quote->getCurbsidePickupComment()
             ];

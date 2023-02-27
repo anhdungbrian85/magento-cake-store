@@ -1,0 +1,16 @@
+{
+    "store_location_delivery_area": {
+        "column": {
+            "id": true,
+            "name": true,
+            "postcode": true,
+            "status": true,
+            "matching_strategy": true,
+            "store_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_09AB4A2B91DCF0CAC6520658A0D138D9": true
+        }
+    }
+}
