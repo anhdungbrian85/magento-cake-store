@@ -51,7 +51,7 @@ class ChangeIncrementIdPrefix implements ObserverInterface
         $yextEntityIdOfLocation = $this->yextAttribute->getYextEntityIdByLocationId($locationId);        
         $yextPrefix = $yextEntityIdOfLocation ? substr($yextEntityIdOfLocation, -3, 3).'-' : '';
 
-        if ($shippingMethod  = 'amstorepickup_amstorepickup') {
+        if ($shippingMethod == 'amstorepickup_amstorepickup') {
             $deliPrefix = 'COL';
         } else {
             $deliPrefix = 'DEL';
