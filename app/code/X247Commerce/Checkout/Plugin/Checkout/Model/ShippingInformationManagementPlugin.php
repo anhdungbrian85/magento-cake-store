@@ -89,32 +89,10 @@ class ShippingInformationManagementPlugin
         $cartId,
         ShippingInformationInterface $addressInformation
     ) {
-        if ($addressInformation->getShippingCarrierCode() !== Shipping::SHIPPING_METHOD_CODE) {
-            return null;
-        }
-
         $pickupQuoteData = $addressInformation->getExtensionAttributes()->getAmPickup();
 
-        $addressId = $this->shippingAddressManagement->get($cartId)->getId();
-        $quoteEntity = $this->quoteRepository->getByAddressId($addressId);
-
-        $quoteMage = $this->quoteMageRepository->getActive($cartId);
-        // var_dump($cartId);die();
-        // var_dump($quoteMage->getStoreLocationId());die();
-        // var_dump($quoteEntity->getStoreId());die();
         if ($pickupQuoteData instanceof QuoteInterface) {
-            // var_dump($pickupQuoteData->getStoreId());
-            // var_dump($quoteMage->getStoreLocationId());
-            $storeValue = !empty($pickupQuoteData->getStoreId()) ? (int)$pickupQuoteData->getStoreId() : (int)$quoteMage->getStoreId();
-
-            // var_dump($storeValue);die();
-            // var_dump($cartId);die();
-            // // $quote = $this->quoteRepository->get($cartId);
-            // var_dump($quote->getData('store_location_id'));die();
-            // var_dump($this->storeLocationContextInterface->getStoreLocationId());die();
-            // var_dump(empty($storeValue));die();
-            // var_dump(get_class_methods($pickupQuoteData));die();
-            // var_dump($pickupQuoteData->getStoredData());die();
+            $storeValue = (int)$pickupQuoteData->getStoreId();
 
             if (!$storeValue) {
                 throw new InputException(__('Store ID is not specified. Please, choose a store for pickup.'));
@@ -158,9 +136,7 @@ class ShippingInformationManagementPlugin
     ) {
         $pickupQuoteData = $addressInformation->getExtensionAttributes()->getAmPickup();
 
-        if ($addressInformation->getShippingCarrierCode() !== Shipping::SHIPPING_METHOD_CODE
-            || !($pickupQuoteData instanceof QuoteInterface)
-        ) {
+        if (!($pickupQuoteData instanceof QuoteInterface)) {
             return $paymentDetails;
         }
 
