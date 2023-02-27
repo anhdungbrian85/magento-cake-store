@@ -280,7 +280,7 @@ define([
          */
         setShippingInformation: function () {
             if (this.validateShippingInformation()) {
-                quote.billingAddress(null);
+                // quote.billingAddress(null);
                 checkoutDataResolver.resolveBillingAddress();
                 registry.async('checkoutProvider')(function (checkoutProvider) {
                     var shippingAddressData = checkoutData.getShippingAddressFromData();

@@ -59,11 +59,11 @@ define([
                 shippingService.isLoading.subscribe(function (isLoading) {
                     if (!isLoading) {
                         this.dispose();
-                        selectShippingAddress(this.nonStoreAddress);
+                        selectShippingAddress(storeAddressAsShipping);
                     }
                 });
             } else {
-                selectShippingAddress(this.nonStoreAddress);
+                selectShippingAddress(storeAddressAsShipping);
             }
         },
 
