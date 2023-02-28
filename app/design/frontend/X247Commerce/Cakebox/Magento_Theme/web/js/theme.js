@@ -29,7 +29,7 @@ define([
     keyboardHandler.apply();
 
     $('.shop-now-block').addClass('owl-carousel').owlCarousel({
-        stagePadding: 50,
+        stagePadding: 30,
         loop: true,
         margin: 15,
         responsiveClass:true,
