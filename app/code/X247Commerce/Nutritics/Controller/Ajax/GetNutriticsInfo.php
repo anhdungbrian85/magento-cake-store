@@ -72,7 +72,7 @@ class GetNutriticsInfo extends Action
                     <tr>
                         <th>".__('Nutritionals')."</th>
                         <th>".__('Value/100g')."</th>
-                        <th>".__('Percent RI')."</th>
+                        <th>".__('% RI')."</th>
                     </tr>";
        foreach ($nutriticsInfo as $info) 
        {
@@ -92,7 +92,7 @@ class GetNutriticsInfo extends Action
             }
         }
 
-        $html .= "</table></div>";
+        $html .= "</table><small class='notice'>*The average adult needs 2000 kcals per day</small></div>";
         return $html;
     }
 

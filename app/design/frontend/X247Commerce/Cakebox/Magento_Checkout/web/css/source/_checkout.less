@@ -1,3 +1,6 @@
+.checkout-onepage-success #maincontent{
+	font-family: 'TiemposHeadline-Black';
+}
 & when (@media-common = true) {
 	.checkout-index-index {
 		.ampickup-details-container {
@@ -376,6 +379,33 @@
 			}
 		}
 	}
+
+	.checkout-onepage-success {
+		.data-item td {
+			&:first-child {
+				width: 50%;
+			}
+
+			&:last-child {
+				width: 17%;
+			}
+		}
+
+		.page-title-wrapper {
+			border-bottom: 1px solid #333;
+			margin-bottom: 45px;
+
+			.base {
+				font-weight: bold;
+				font-size: 48px;
+				letter-spacing: -0.96px;
+			}
+
+			.page-title {
+				margin: 42px 0 20px 0;
+			}
+		}
+	}
 }
 
 .media-width(@extremum, @break) when (@extremum ='min') and (@break = @screen__m) {
@@ -415,6 +445,38 @@
 
 		.step-title {
 			font-size: 28px;
+		}
+	}
+
+	.checkout-onepage-success {
+		.show-order {
+			.data-item {
+				display: flex;
+				flex-wrap: wrap;
+
+				td {
+					&:first-child {
+						order: -1;
+					}
+		
+					&:last-child {
+						width: 30%;
+						order: 1;
+					}
+
+					&:not(:first-child, :last-child) {
+						order: 2;
+					}
+				}
+			}
+
+			tfoot {
+				display: block;
+	
+				tr:not(.delivery) td {
+					padding-left: 25%;
+				}
+			}
 		}
 	}
 }
