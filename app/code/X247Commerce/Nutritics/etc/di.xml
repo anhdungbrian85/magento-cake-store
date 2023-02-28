@@ -7,4 +7,17 @@
 			</argument>
 		</arguments>
 	</type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="nutritic_listing_index_data_source" xsi:type="string">X247Commerce\Nutritics\Model\ResourceModel\NutriticsValue\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- <virtualType name="nutritic_listing_index" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">nutritics_product_attribute_value</argument>
+            <argument name="resourceModel" xsi:type="string">X247Commerce\Nutritics\Model\ResourceModel\NutriticsValue</argument>
+        </arguments>
+    </virtualType> -->
 </config>
