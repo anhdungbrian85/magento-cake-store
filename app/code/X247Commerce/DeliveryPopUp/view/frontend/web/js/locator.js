@@ -167,7 +167,12 @@ define([
             }).done($.proxy(function (response) {
                 
                 if (response.store_location_id) {
-                    window.location.reload();
+                    if (response.redirect_url) {
+                        window.location.href = response.redirect_url;
+                    }   else {
+                        window.location.reload();
+                    }
+                    
                 } else {
                     if ($('[name="delivery-type"]:checked').val() == 1) {
                         $('.delivery-popup.text').append(errorMessage);

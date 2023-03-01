@@ -1,27 +1,4 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="X247Commerce\Checkout\Api\StoreLocationContextInterface" type="X247Commerce\Checkout\Service\StoreLocationContext"/>
-    <preference for="Magento\Checkout\Controller\Cart\Add" type="X247Commerce\Checkout\Controller\Cart\Add"/>
-    <!-- <preference for="Amasty\StorePickupWithLocator\Plugin\Checkout\Model\ShippingInformationManagementPlugin"
-                type="X247Commerce\Checkout\Plugin\Checkout\Model\ShippingInformationManagementPlugin"/> -->
-    <type name="Amasty\StorePickupWithLocator\Model\ScheduleProvider">
-        <plugin name="X247Commerce_schedule_provider" type="X247Commerce\Checkout\Plugin\Model\ScheduleProvider\GetScheduleDataAfter" />
-    </type>
-    <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="Amasty_StorePickupWithLocator::ShippingInformationManagementPlugin" disabled="true" />
-    </type>
-    <!-- <type name="Magento\Checkout\Controller\Cart\Add">
-        <plugin name="X247Commerce_Checkout::CartAdd" type="X247Commerce\Checkout\Plugin\Checkout\Cart\CartAddPlugin"/>
-    </type> -->
-
-    <!-- for save store pickup data -->
-    <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="X247Commerce_Checkout::ShippingInformationManagementPlugin" type="X247Commerce\Checkout\Plugin\Checkout\Model\ShippingInformationManagementPlugin"/>
-    </type>
 </config>

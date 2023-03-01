@@ -8,7 +8,7 @@ use Magento\Framework\View\Result\PageFactory;
 use \Magento\Framework\Controller\Result\RedirectFactory;
 
 class Popup extends Action
-{ 
+{
     protected $_resultPageFactory;
 
     protected $_resultJsonFactory;
@@ -21,7 +21,7 @@ class Popup extends Action
         JsonFactory $resultJsonFactory,
         RedirectFactory $resultRedirectFactory
     )
-    { 
+    {
         $this->_resultPageFactory = $resultPageFactory;
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->resultRedirectFactory = $resultRedirectFactory;
