@@ -1,20 +1,20 @@
 <?php
 $productData = [
-	'releated' => [
-		'products' => $block->getProduct()->getRelatedProductCollection()->addAttributeToSelect('*'),
-		'label' => __('Releated Product')
-	],
-	'upsell' => [
-		'products' => $block->getProduct()->getUpSellProductCollection()->addAttributeToSelect('*'),
-		'label' => __('UpSell Product')
-	],
 	'crosssell' => [
 		'products' => $block->getProduct()->getCrossSellProductCollection()->addAttributeToSelect('*'),
 		'label' => __('CrossSell Product')
 	],
+	'candles' => [
+		'products' => $block->getProductByCategoriesName('Candles'),
+		'label' => __('Candles')
+	],
+	'balloons' => [
+		'products' => $block->getProductByCategoriesName('Balloons'),
+		'label' => __('Balloons')
+	]
 ];
 ?>
-<?php if ( count( $block->getProduct()->getCrossSellProductCollection() ) > 0 || count( $block->getProduct()->getUpSellProductCollection() ) > 0 || count( $block->getProduct()->getRelatedProductCollection() ) > 0 ): ?>
+<?php if ( count( $productData['crosssell']['products']) > 0 || count( $productData['candles']['products'] ) > 0 || count( $productData['balloons']['products'] ) > 0): ?>
 	<div class="addtocart-sidebar">
 		<div class="addedtocart-wrapper">
 			<div class="suggest-products">
@@ -45,14 +45,14 @@ $productData = [
 													<?php echo $product->getName(); ?>
 												</a>
 												<div class="product-price">
-													<?= /* @noEscape */ $block->getProductPrice($product) ?>
+													<?= $product->getTypeId() == 'simple' ? $block->getPrice($product->getFinalPrice()) :  $block->getProductPrice($product)?>
 												</div>
 											</div>
 										</div>
 											<div class="item-action">
 													<?php $postParams = $block->getAddToCartPostParams($product); ?>
 													<form data-role="tocart-form"
-														  data-product-sku="<?= $product->getSku() ?>"
+														  data-product-sku='<?= $product->getSku() ?>'
 														  action="<?= $postParams['action'] ?>"
 														  method="post"
 														  class="popup-tocart tocart-form tocart-<?= $product->getId() ?>">
@@ -98,4 +98,6 @@ $productData = [
 			</div>
 		</div>
 	</div>
+<?php else :?>
+	<div><span><?= __('Noting in here.') ?></span></div>
 <?php endif ?>
