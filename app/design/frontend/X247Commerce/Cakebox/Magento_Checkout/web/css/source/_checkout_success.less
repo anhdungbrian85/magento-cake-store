@@ -1,0 +1,70 @@
+& when (@media-common = true) {
+	.checkout-onepage-success {
+		.data-item td {
+			&:first-child {
+				width: 50%;
+			}
+
+			&:last-child {
+				width: 17%;
+			}
+		}
+
+		.page-title-wrapper {
+			border-bottom: 1px solid #333;
+			margin-bottom: 45px;
+
+			.base {
+				font-weight: bold;
+				font-size: 48px;
+				letter-spacing: -0.96px;
+				font-family: 'TiemposHeadline-Black';
+			}
+
+			.page-title {
+				margin: 42px 0 20px 0;
+			}
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break = @screen__m) {
+	.checkout-onepage-success {
+		.show-order {
+			.data-item {
+				display: flex;
+				flex-wrap: wrap;
+
+				td {
+					&:first-child {
+						order: -1;
+					}
+		
+					&:last-child {
+						width: 30%;
+						order: 1;
+					}
+
+					&:not(:first-child, :last-child) {
+						order: 2;
+					}
+				}
+			}
+
+			tfoot {
+				display: block;
+	
+				tr {
+					display: flex;
+					justify-content: space-between;
+					max-width: 100%;
+					min-width: 85%;
+
+					td {
+						padding-right: 10%;
+					}
+				}
+			}
+		}
+	}
+}
