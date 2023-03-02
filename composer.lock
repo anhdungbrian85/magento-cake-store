@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2dc9b3ea780e91cedb890adaeb896d77",
+    "content-hash": "455b33af3b34fefb204711a0c9c361c2",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -3328,46 +3328,6 @@
                 "source": "https://github.com/laravel/framework"
             },
             "time": "2021-11-16T13:57:03+00:00"
-        },
-        {
-            "name": "iwd/opc",
-            "version": "5.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hi-iwd/dominate-open-source.git",
-                "reference": "e3a3e4e958f7453d96e66e6daa33aa917db68450"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hi-iwd/dominate-open-source/zipball/e3a3e4e958f7453d96e66e6daa33aa917db68450",
-                "reference": "e3a3e4e958f7453d96e66e6daa33aa917db68450",
-                "shasum": ""
-            },
-            "require": {
-                "magento/module-checkout": "100.*|101.*|102.*|103.*",
-                "magento/module-payment": "100.*|101.*|102.*|103.*",
-                "magento/module-quote": "100.*|101.*|102.*|103.*",
-                "magento/module-sales": "100.*|101.*|102.*|103.*"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "IWD\\Opc\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "description": "IWD One Step Checkout",
-            "support": {
-                "issues": "https://github.com/hi-iwd/dominate-open-source/issues",
-                "source": "https://github.com/hi-iwd/dominate-open-source/tree/5.0.0"
-            },
-            "time": "2022-06-16T08:04:44+00:00"
         },
         {
             "name": "justinrainbow/json-schema",

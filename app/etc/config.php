@@ -471,7 +471,6 @@ return [
         'Amasty_StorelocatorIndexer' => 1,
         'Ebizmarts_MailChimp' => 1,
         'Fastly_Cdn' => 1,
-        'IWD_Opc' => 1,
         'Klaviyo_Reclaim' => 1,
         'Klevu_Logger' => 1,
         'Klevu_Registry' => 1,

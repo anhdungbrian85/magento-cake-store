@@ -3,4 +3,12 @@
     <type name="Magento\Framework\App\Action\AbstractAction">
         <plugin name="x247_http_context_before_get_vary_string" type="X247Commerce\Checkout\Plugin\HttpContext" sortOrder="1"/>
     </type>
+    
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+       <arguments>
+           <argument name="configProviders" xsi:type="array">
+               <item name="additional_provider" xsi:type="object">X247Commerce\Checkout\Model\CheckoutLocationParams</item>
+           </argument>
+       </arguments>
+    </type>
 </config>
