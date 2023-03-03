@@ -44,7 +44,6 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     public function execute()
     {
         $deliveryType = $this->getRequest()->getPost('delivery-type');
-        $this->customerSession->setDeliveryType($deliveryType);
         $this->storeLocationContextInterface->setDeliveryType($deliveryType);
         $destCode = $this->getRequest()->getParam('dest');
 
@@ -58,7 +57,6 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
                         return $resultJson->setData(['enable_delivery' => 0]);
                     }
 
-                    $this->customerSession->setStoreLocationId($location->getId());
                     $this->storeLocationContextInterface->setStoreLocationId($location->getId());
 
                     return $resultJson->setData([
