@@ -6,7 +6,6 @@ use Magento\Catalog\Model\Product;
 use Magento\Framework\Pricing\Render;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\App\ActionInterface;
-use Magento\Framework\Url\Helper\Data;
 
 class Popup extends Template
 {
@@ -27,15 +26,42 @@ class Popup extends Template
 		\Magento\Catalog\Block\Product\ImageBuilder $imageBuilder,
 		\Magento\Framework\Url\Helper\Data $urlHelper,
 		\Magento\Catalog\ViewModel\Product\OptionsData $optionsData,
+		\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
+		\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
 		\Magento\Checkout\Helper\Cart $cartHelper,
+		\Magento\Framework\Pricing\Helper\Data $priceHelper,
 		array $data = []
 	) {
 		parent::__construct($context, $data);
 		$this->productRepository = $productRepository;
 		$this->imageBuilder = $imageBuilder;
+		$this->priceHelper = $priceHelper;
 		$this->urlHelper = $urlHelper;
 		$this->optionsData = $optionsData;
+		$this->categoryCollectionFactory = $categoryCollectionFactory;
+		$this->_productCollectionFactory = $productCollectionFactory;
 		$this->cartHelper = $cartHelper;
+	}
+
+	public function getProductByCategoriesName($name)
+	{	
+	   	$categoryCollection = $this->categoryCollectionFactory->create();
+		$categories = $categoryCollection->addAttributeToFilter('name', $name)->getData();
+		if ($categories) {
+			$productOutPut = $this->_productCollectionFactory->create()
+				->addAttributeToSelect('*')
+				->addCategoriesFilter(['eq' => $categories[0]['entity_id']])
+				->addFieldToFilter('entity_id', array('neq' => $this->getData()['productId']))
+				->addAttributeToFilter('visibility', array('neq' => '1'))
+				->addAttributeToFilter('type_id', array('in' => ['configurable','simple']))
+				->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
+				->setPageSize(5)
+				->load();
+	
+			return $productOutPut;
+		}
+
+		return null;
 	}
 
 	public function getProduct()
@@ -49,6 +75,10 @@ class Popup extends Template
 		return $this->optionsData;
 	}
 
+	public function getPrice($value)
+	{
+		return $this->priceHelper->currency($value,true,false);
+	}
 
 	/**
 	 * Get product price.

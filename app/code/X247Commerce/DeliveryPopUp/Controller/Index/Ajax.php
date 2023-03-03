@@ -9,6 +9,7 @@ use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory;
 use Magento\Framework\Controller\Result\JsonFactory;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
 {
@@ -18,6 +19,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     protected JsonFactory $resultJsonFactory;
     protected StoreLocationContextInterface $storeLocationContextInterface;
     protected DeliveryAreaHelper $deliveryAreaHelper;
+    protected StoreManagerInterface $storeManager;
 
     public function __construct(
         CustomerSession $customerSession,
@@ -25,6 +27,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         JsonFactory $resultJsonFactory,
         StoreLocationContextInterface $storeLocationContextInterface,
         DeliveryAreaHelper $deliveryAreaHelper,
+        StoreManagerInterface $storeManager,
         Context $context
     )
     {
@@ -34,38 +37,40 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->storeLocationContextInterface = $storeLocationContextInterface;
         $this->deliveryAreaHelper = $deliveryAreaHelper;
+        $this->storeManager = $storeManager;
     }
 
 
     public function execute()
     {
         $deliveryType = $this->getRequest()->getPost('delivery-type');
-        $this->customerSession->setDeliveryType($deliveryType);
         $this->storeLocationContextInterface->setDeliveryType($deliveryType);
         $destCode = $this->getRequest()->getParam('dest');
 
-        $deliveryStatus = $this->deliveryAreaHelper->checkInputPostcode($destCode);
+        // $deliveryStatus = $this->deliveryAreaHelper->checkInputPostcode($destCode);
         $resultJson = $this->resultJsonFactory->create();
-        if ($this->getRequest()->getPost('delivery-type') == 1) {
-            if ($deliveryStatus) {
+        if ($deliveryType == 1 || $deliveryType == 2) {
+            // if ($deliveryStatus) {
                 $location = $this->getClosestStoreLocation();
                 if ($location->getId()) {
                     if ($location->getEnableDelivery() == 0) {
                         return $resultJson->setData(['enable_delivery' => 0]);
                     }
 
-                    $this->customerSession->setStoreLocationId($location->getId());
                     $this->storeLocationContextInterface->setStoreLocationId($location->getId());
 
-                    return $resultJson->setData(['store_location_id' => $location->getId()]);
+                    return $resultJson->setData([
+                            'store_location_id' => $location->getId(),
+                            'redirect_url' => $deliveryType == 2 ? $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB) . 'celebration-cakes/click-collect-1-hour.html'  : null
+                        ]);
                 }   else {
                     $this->getCloseStoreLocations();
                 }
-            } else {
+            // } else {
             
-                $this->getCloseStoreLocations();
-                // return $resultJson->setData(['delivery_status' => false]);
-            }
+            //     $this->getCloseStoreLocations();
+            //     // return $resultJson->setData(['delivery_status' => false]);
+            // }
         } else {
             $this->getCloseStoreLocations();
         }

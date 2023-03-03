@@ -1,0 +1,37 @@
+<?php if ($bottomDescription = $block->getCurrentCategory()->getBottomDescription()): ?>
+    <div class="category-bottom-description">
+        <?= /* @escapeNotVerified */ $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute(
+            $block->getCurrentCategory(), $bottomDescription, 'bottom_description'
+        ) ?>
+    </div>
+    <style>
+        .bottom-description-read-more {
+            display: none;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+    <script>
+        var bottomDescriptionContentElement = document.getElementById("bottom-description-content");
+        var bottomDescriptionReadMoreLink = document.querySelector(".bottom-description-read-more");
+        var bottomDescriptionLineHeight = parseInt(getComputedStyle(bottomDescriptionContentElement).lineHeight);
+
+        if (bottomDescriptionContentElement.clientHeight > bottomDescriptionLineHeight * 3) {
+            bottomDescriptionReadMoreLink.style.display = "block";
+            bottomDescriptionContentElement.style.overflow = "hidden";
+            bottomDescriptionContentElement.style.maxHeight = bottomDescriptionLineHeight * 3 + "px";
+        }
+
+        bottomDescriptionReadMoreLink.addEventListener("click", function(event) {
+            event.preventDefault();
+            if (bottomDescriptionReadMoreLink.textContent === "Read More") {
+                bottomDescriptionReadMoreLink.textContent = "Read Less";
+                bottomDescriptionContentElement.style.maxHeight = "none";
+            } else {
+                bottomDescriptionReadMoreLink.textContent = "Read More";
+                bottomDescriptionContentElement.style.maxHeight = bottomDescriptionLineHeight * 3 + "px";
+            }
+        });
+    </script>
+<?php endif; ?>
