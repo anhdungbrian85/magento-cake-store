@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="store_schedule">
+        <container name="holiday_hours_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/dynamic-rows/dynamic-rows</item>
+                    <item name="template" xsi:type="string">ui/dynamic-rows/templates/default</item>
+                    <item name="componentType" xsi:type="string">dynamicRows</item>
+                    <item name="recordTemplate" xsi:type="string">record</item>
+                    <item name="addButtonLabel" xsi:type="string">Add Holiday Hours</item>
+                    <item name="deleteProperty" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+            <container name="record">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Close Dates of Store</item>
+                        <item name="component" xsi:type="string" translate="true">Magento_Ui/js/dynamic-rows/record</item>
+                        <item name="isTemplate" xsi:type="boolean">true</item>
+                        <item name="is_collection" xsi:type="boolean">true</item>
+                        <item name="showFallbackReset" xsi:type="boolean">false</item>
+                    </item>
+                </argument>
+                <field name="row_id">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="label" xsi:type="string" translate="true">ID</item>
+                            <item name="visible" xsi:type="boolean">false</item>
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="dataScope" xsi:type="string">row_id</item>
+                        </item>
+                    </argument>
+                </field>
+                <field name="holiday_hour_date">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="filter" xsi:type="string">dateRange</item>
+                            <item name="dataType" xsi:type="string">date</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="component" xsi:type="string">Magento_Ui/js/form/element/date</item>
+                            <item name="label" xsi:type="string" translate="true">Date</item>
+                            <item name="dataScope" xsi:type="string">holiday_hour_date</item>
+                            <item name="disabled" xsi:type="boolean">false</item>
+                            <item name="options" xsi:type="array">
+                                <item name="dateFormat" xsi:type="string">dd-MM-y</item>
+                            </item>
+                            <item name="sortOrder" xsi:type="string">10</item>
+                        </item>
+                    </argument>
+                </field>
+<!--                <field name="holiday_hour_type">-->
+<!--                    <argument name="data" xsi:type="array">-->
+<!--                        <item name="options" xsi:type="object">X247Commerce\HolidayOpeningTime\Model\Source\HolidayHour\Type</item>-->
+<!--                        <item name="config" xsi:type="array">-->
+<!--                            <item name="dataType" xsi:type="string">text</item>-->
+<!--                            <item name="formElement" xsi:type="string">select</item>-->
+<!--                            <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>-->
+<!--                            <item name="label" xsi:type="string" translate="true">Type</item>-->
+<!--                            <item name="dataScope" xsi:type="string">holiday_hour_type</item>-->
+<!--                            <item name="default" xsi:type="string">0</item>-->
+<!--                            <item name="disabled" xsi:type="boolean">false</item>-->
+<!--                            <item name="showFallbackReset" xsi:type="boolean">false</item>-->
+<!--                            <item name="sortOrder" xsi:type="string">20</item>-->
+<!--                        </item>-->
+<!--                    </argument>-->
+<!--                </field>-->
+                <field name="holiday_hour_time_range">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Time Range</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="dataScope" xsi:type="string">holiday_hour_time_range</item>
+                            <item name="showFallbackReset" xsi:type="boolean">false</item>
+                            <item name="sortOrder" xsi:type="string">30</item>
+                        </item>
+                    </argument>
+                </field>
+                <actionDelete>
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="componentType" xsi:type="string">actionDelete</item>
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="fit" xsi:type="boolean">false</item>
+                            <item name="label" xsi:type="string">Actions</item>
+                            <item name="additionalClasses" xsi:type="string">data-grid-actions-cell</item>
+                            <item name="template" xsi:type="string">Magento_Backend/dynamic-rows/cells/action-delete</item>
+                        </item>
+                    </argument>
+                </actionDelete>
+            </container>
+        </container>
+    </fieldset>
+</form>

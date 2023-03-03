@@ -33,7 +33,7 @@
                         $product = $helper->getProductById($item->getProductId());
                         $options = $item->getProductOptions();
                         $imageBlock = $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
-                        $productImage = $imageBlock->getImage($product, 'category_page_list');
+                        $productImage = $imageBlock->getImage($product, 'mini_cart_product_thumbnail');
                         ?>
                         <tr class="data-item">
                             <td>
