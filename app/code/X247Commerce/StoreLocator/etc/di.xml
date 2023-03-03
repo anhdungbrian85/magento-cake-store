@@ -29,4 +29,12 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="import_delivery_management" xsi:type="object">X247Commerce\StoreLocator\Console\ImportDeliveryPostcode</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
