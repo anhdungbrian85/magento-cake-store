@@ -11,19 +11,17 @@ use Amasty\StorePickupWithLocator\Model\QuoteRepository;
 use Amasty\StorePickupWithLocator\Model\TimeHandler;
 use Magento\Checkout\Api\Data\PaymentDetailsInterface;
 use Magento\Checkout\Api\Data\ShippingInformationInterface;
-use Magento\Checkout\Model\ShippingInformationManagement;
-use Magento\Checkout\Api\ShippingInformationManagementInterface;
+use Magento\Checkout\Api\GuestShippingInformationManagementInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Quote\Model\ShippingAddressManagementInterface;
 use Magento\Quote\Model\QuoteRepository as QuoteMageRepository;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 
-
 /**
- * Class ShippingInformationManagementPlugin for save store pickup data
+ * Class GuestShippingInformationManagementPlugin for save store pickup data
  * @todo encapsulate logic
  */
-class ShippingInformationManagementPlugin
+class GuestShippingInformationManagementPlugin
 {
     /**
      * @var QuoteRepository
@@ -54,7 +52,9 @@ class ShippingInformationManagementPlugin
      * @var TimeHandler
      */
     private $timeHandler;
+
     protected $storeLocationContextInterface;
+
     protected $quoteMageRepository;
     protected $storeLocationContext;
 
@@ -81,7 +81,7 @@ class ShippingInformationManagementPlugin
     /**
      * Save pickup data
      *
-     * @param ShippingInformationManagementInterface $subject
+     * @param ShippingInformationManagement $subject
      * @param PaymentDetailsInterface $paymentDetails
      * @param string|int $cartId
      * @param ShippingInformationInterface $addressInformation
@@ -89,7 +89,7 @@ class ShippingInformationManagementPlugin
      * @return PaymentDetailsInterface
      */
     public function afterSaveAddressInformation(
-        ShippingInformationManagementInterface $subject,
+        GuestShippingInformationManagementInterface $subject,
         $paymentDetails,
         $cartId,
         ShippingInformationInterface $addressInformation
@@ -111,11 +111,10 @@ class ShippingInformationManagementPlugin
         
         $shippingMethod = $addressInformation->getShippingCarrierCode();
         if ($shippingMethod == 'amstorepickup') {
-            $this->storeLocationContext->setDeliveryType(0);
-        }   else {
-            $this->storeLocationContext->setDeliveryType(1);
+        	$this->storeLocationContext->setDeliveryType(0);
+        }	else {
+        	$this->storeLocationContext->setDeliveryType(1);
         }
-
         return $paymentDetails;
     }
 }
