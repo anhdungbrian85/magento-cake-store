@@ -4,6 +4,7 @@
 		<sequence>
 			<module name="Magento_Checkout" />
 			<module name="Amasty_StorePickupWithLocator" />
+			<module name="Amasty_CheckoutCore" />
 		</sequence>
 	</module>
 </config>
