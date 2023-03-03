@@ -8,16 +8,20 @@ namespace X247Commerce\Checkout\Service;
 
 use Magento\Framework\App\Http\Context as HttpContext;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
 
 class StoreLocationContext implements StoreLocationContextInterface
 {
 
     protected HttpContext $httpContext;
+    protected CheckoutSession $checkoutSession;
 
     public function __construct(
-        HttpContext $httpContext
+        HttpContext $httpContext,
+        CheckoutSession $checkoutSession
     ) {
         $this->httpContext = $httpContext;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -26,6 +30,7 @@ class StoreLocationContext implements StoreLocationContextInterface
     public function setStoreLocationId($storeLocationId)
     {
         $this->httpContext->setValue(StoreLocationContextInterface::STORE_LOCATION_ID, $storeLocationId, 0);
+        $this->checkoutSession->setStoreLocationId($storeLocationId);
     }
 
     /**
@@ -42,6 +47,7 @@ class StoreLocationContext implements StoreLocationContextInterface
     public function setDeliveryType($deliveryType)
     {
         $this->httpContext->setValue(StoreLocationContextInterface::DELIVERY_TYPE, $deliveryType, 0);
+        $this->checkoutSession->setDeliveryType($deliveryType);
     }
 
     /**

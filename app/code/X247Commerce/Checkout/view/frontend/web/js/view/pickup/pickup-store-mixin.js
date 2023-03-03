@@ -5,19 +5,26 @@
 define([
 	'jquery',
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+    'locationContext',
 	'mage/translate'
 ], function (
 	$,
-	pickupDataResolver
+	pickupDataResolver,
+    locationContext
 ) {
     'use strict';
 
     var mixin = {
  
         preselectStoreLocationPickup: function() {
-            if (checkoutConfig.deliveryType == 0 && checkoutConfig.storeLocationId) {
-                pickupDataResolver.storeId(checkoutConfig.storeLocationId)
+            if (locationContext.deliveryType() == 0 && locationContext.storeLocationId()) {
+                pickupDataResolver.storeId(locationContext.storeLocationId())
             }
+        },
+        onChangeStore: function (storeId) {
+            pickupDataResolver.storeId(storeId);
+            // as we need Store Location Id data even using other delivery methods
+            locationContext.storeLocationId(storeId)
         },
 
     };

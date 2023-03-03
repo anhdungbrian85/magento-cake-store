@@ -2,7 +2,7 @@
 
 namespace X247Commerce\Checkout\Plugin;
 
-use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Http\Context;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Framework\App\Action\AbstractAction;
@@ -10,22 +10,22 @@ use Magento\Framework\App\RequestInterface;
 
 class HttpContext
 {
-    protected CustomerSession $customerSession;
+    protected CheckoutSession $checkoutSession;
     protected $context;
 
     public function __construct(
-        CustomerSession $customerSession,
+        CheckoutSession $checkoutSession,
         Context $context
     )
     {
-        $this->customerSession = $customerSession;
+        $this->checkoutSession = $checkoutSession;
         $this->context = $context;
     }
 
     public function beforeDispatch(AbstractAction $subject, RequestInterface $request)
     {
-        $storeLocationId = $this->customerSession->getStoreLocationId();
-        $deliveryType = $this->customerSession->getDeliveryType();
+        $storeLocationId = $this->checkoutSession->getStoreLocationId();
+        $deliveryType = $this->checkoutSession->getDeliveryType();
         $defaultStoreLocationIdContext = 0;
         $defaultDeliveryTypeContext = 0;
         // $subject->setValue('store_location_id', $storeLocationId, $defaultStoreLocationIdContext);

@@ -37,7 +37,6 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     {   
         if ($this->getRequest()->getPost('locationId')) {
             $locationId = $this->getRequest()->getPost('locationId');
-            $this->customerSession->setStoreLocationId($locationId);
             $this->storeLocationContextInterface->setStoreLocationId($locationId);
             $resultJson = $this->resultJsonFactory->create();
             return $resultJson->setData(['store_location_id' => $locationId]);
