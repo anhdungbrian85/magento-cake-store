@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <referenceContainer name="content">
+            <container name="customer.login.container" label="Customer Login Container" htmlTag="div" htmlClass="login-container">
+                <container name="customer.login.container.wrapper"  label="Customer Login Container Wrapper" htmlTag="div" htmlClass="login-container-wrapper">
+                    <block class="Magento\Customer\Block\Form\Login" name="customer_tab_login" template="Magento_Customer::tab-register.phtml" before="-" />
+                    <container name="customer.login.content" label="Customer Login Container Wrapper" htmlTag="div" htmlClass="login-tab-content" >
+                    </container>
+                </container>
+            </container>
+        </referenceContainer>
+        <referenceBlock name="page.main.title" remove="true" />
+
+        <move element="customer_form_register" destination="customer.login.content" />
+        <container name="page.wrapper">
+            <container name="page.main.content" after="columns.top" htmlTag="main" htmlId="pagemaincontent" htmlClass="page-main-content" />
+        </container>
+
+        <move element="main.content" destination="page.main.content" />
+        <move element="social-login-popup-authentication-social-create" destination="customer.login.content" />
+        <move element="customer.login.am-social-below_login" destination="customer.login.content" />
+        <move element="customer.create.am-social-below_registration" destination="customer.login.content" />
+    </body>
+</page>

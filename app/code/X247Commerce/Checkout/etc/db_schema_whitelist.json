@@ -1,0 +1,12 @@
+{
+  "sales_order": {
+    "column": {
+      "store_location_id": true
+    }
+  },
+  "quote": {
+    "column": {
+      "store_location_id": true
+    }
+  }
+}

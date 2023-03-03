@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\Action\AbstractAction">
+        <plugin name="x247_http_context_before_get_vary_string" type="X247Commerce\Checkout\Plugin\HttpContext" sortOrder="1"/>
+    </type>
+    <type name="Amasty\StorePickupWithLocator\Block\Cart\LayoutProcessor">
+        <plugin name="x247_remove_amasty_store_pickup_block" type="X247Commerce\Checkout\Plugin\Block\Cart\LayoutProcessor" sortOrder="1"/>
+    </type>
+    <type name="X247Commerce\Checkout\Block\Cart\StoreLocator">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="storeLocationPickup" xsi:type="object">X247Commerce\Checkout\Block\Cart\LayoutProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

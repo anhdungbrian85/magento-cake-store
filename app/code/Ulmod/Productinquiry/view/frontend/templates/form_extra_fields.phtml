@@ -1,0 +1,167 @@
+<?php
+/*** Copyright © Ulmod. All rights reserved. **/
+?> 
+<?php
+/**
+ * @var $block Ulmod\Productinquiry\Block\ProductinquiryForm
+ */
+?>
+<?php // Extra fields  ?> 
+<?php if ($block->isExtraFieldOneEnabled() == 1): ?>
+  <div class="field-extra-one um-field um-inline">
+        <?php if ($block->getExtraFieldOneType() == 'text'): ?>
+        <label class="label" for="extra_field_one">
+            <span><?= $block->escapeHtml($block->getExtraFieldOneLabel()) ?></span>
+        </label>                
+        <div class="control">
+            <input name="extra_field_one" id="extra_field_one" 
+                title="<?= $block->escapeHtml($block->getExtraFieldOneLabel()); ?>" 
+                value="<?= $block->escapeHtml($block->getExtraFieldOne()) ?>"
+                class="input-text" type="text" data-validate="{required:false}"/>
+        </div>
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldOneType() == 'checkbox'): ?>
+       <div class="control um-checkbox-control">
+          <input name="extra_field_one" id="extra_field_checkbox" 
+            title="<?= $block->escapeHtml($block->getExtraFieldOneLabel()) ?>" 
+              value="No"
+              class="input-checkbox" type="checkbox" data-validate="{required:false}"/>
+      </div>
+      <label class="label" for="extra_field_one">
+          <span><?= $block->escapeHtml($block->getExtraFieldOneLabel()) ?></span>
+      </label>              
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldOneType() == 'textarea'): ?>
+            <?php $extraFieldOne = $block->getExtraFieldOne(); ?>  
+      <label class="label" for="extra_field_one">
+          <span><?= $block->escapeHtml($block->getExtraFieldOneLabel()) ?></span>
+      </label>                             
+      <div class="control">
+          <textarea name="extra_field_one" id="extra_field_one" 
+            title="<?= $block->escapeHtml($block->getExtraFieldOneLabel()) ?>" 
+             class="input-text" cols="5" rows="5"
+             data-validate="{required:false}"><?= $block->escapeHtml($extraFieldOne) ?></textarea>
+      </div>
+        <?php endif; ?>
+  </div> 
+<?php endif; ?>
+<?php if ($block->isExtraFieldTwoEnabled() == 1): ?>
+  <div class="field-extra-two um-field um-inline">
+        <?php if ($block->getExtraFieldTwoType() == 'text'): ?>
+      <label class="label" for="extra_field_two">
+          <span><?= $block->escapeHtml($block->getExtraFieldTwoLabel()) ?></span>
+      </label>                
+        <div class="control">
+            <input name="extra_field_two" id="extra_field_two" 
+                title="<?= $block->escapeHtml($block->getExtraFieldTwoLabel()); ?>" 
+                value="<?= $block->escapeHtml($block->getExtraFieldTwo()) ?>"
+                class="input-text" type="text" data-validate="{required:false}"/>
+        </div>
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldTwoType() == 'checkbox'): ?>
+       <div class="control um-checkbox-control">
+          <input name="extra_field_two" id="extra_field_checkbox" 
+            title="<?= $block->escapeHtml($block->getExtraFieldTwoLabel()) ?>" 
+            value="No"
+            class="input-checkbox" type="checkbox" data-validate="{required:false}"/>
+      </div>
+      <label class="label" for="extra_field_two">
+          <span><?= $block->escapeHtml($block->getExtraFieldTwoLabel()) ?></span>
+      </label>              
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldTwoType() == 'textarea'): ?>
+            <?php
+            $extraFieldTwo = $block->getExtraFieldTwo();
+            ?>    
+      <label class="label" for="extra_field_two">
+          <span><?= $block->escapeHtml($block->getExtraFieldTwoLabel()) ?></span>
+      </label>                           
+      <div class="control">
+          <textarea name="extra_field_two" id="extra_field_two" 
+            title="<?= $block->escapeHtml($block->getExtraFieldTwoLabel()) ?>" 
+             class="input-text" cols="5" rows="5"
+             data-validate="{required:false}"><?= $block->escapeHtml($extraFieldTwo) ?></textarea>
+      </div>
+        <?php endif; ?>
+  </div> 
+<?php endif; ?>
+<?php if ($block->isExtraFieldThreeEnabled() == 1): ?>
+  <div class="field-extra-three um-field um-inline">
+        <?php if ($block->getExtraFieldThreeType() == 'text'): ?>
+        <label class="label" for="extra_field_three">
+            <span><?= $block->escapeHtml($block->getExtraFieldThreeLabel()) ?></span>
+        </label>                
+        <div class="control">
+            <input name="extra_field_three" id="extra_field_three" 
+                title="<?= $block->escapeHtml($block->getExtraFieldThreeLabel()); ?>" 
+                value="<?= $block->escapeHtml($block->getExtraFieldThree()) ?>"
+                class="input-text" type="text" data-validate="{required:false}"/>
+        </div>
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldThreeType() == 'checkbox'): ?>
+       <div class="control um-checkbox-control">
+          <input name="extra_field_three" id="extra_field_checkbox" 
+            title="<?= $block->escapeHtml($block->getExtraFieldThreeLabel()) ?>" 
+              value="No"
+              class="input-checkbox" type="checkbox" data-validate="{required:false}"/>
+      </div>
+      <label class="label" for="extra_field_three">
+          <span><?= $block->escapeHtml($block->getExtraFieldThreeLabel()) ?></span>
+      </label>              
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldThreeType() == 'textarea'): ?>
+            <?php
+            $extraFieldThree = $block->getExtraFieldThree();
+            ?>  
+      <label class="label" for="extra_field_three">
+          <span><?= $block->escapeHtml($block->getExtraFieldThreeLabel()) ?></span>
+      </label>                             
+      <div class="control">
+          <textarea name="extra_field_three" id="extra_field_three" 
+            title="<?= $block->escapeHtml($block->getExtraFieldThreeLabel()) ?>" 
+              class="input-text" cols="5" rows="5"
+              data-validate="{required:false}"><?= $block->escapeHtml($extraFieldThree) ?></textarea>
+      </div>
+        <?php endif; ?>
+  </div> 
+<?php endif; ?>
+<?php if ($block->isExtraFieldFourEnabled() == 1): ?>
+  <div class="field-extra-four um-field um-inline">
+        <?php if ($block->getExtraFieldFourType() == 'text'): ?>
+        <label class="label" for="extra_field_four">
+            <span><?= $block->escapeHtml($block->getExtraFieldFourLabel()) ?></span>
+        </label>                
+        <div class="control">
+            <input name="extra_field_four" id="extra_field_four" 
+                title="<?= $block->escapeHtml($block->getExtraFieldFourLabel()); ?>" 
+                value="<?= $block->escapeHtml($block->getExtraFieldFour()) ?>"
+                class="input-text" type="text" data-validate="{required:false}"/>
+        </div>
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldFourType() == 'checkbox'): ?>
+       <div class="control um-checkbox-control">
+          <input name="extra_field_four" id="extra_field_checkbox" 
+            title="<?= $block->escapeHtml($block->getExtraFieldFourLabel()) ?>" 
+              value="No"
+              class="input-checkbox" type="checkbox" data-validate="{required:false}"/>
+      </div>
+      <label class="label" for="extra_field_four">
+          <span><?= $block->escapeHtml($block->getExtraFieldFourLabel()) ?></span>
+      </label>              
+        <?php endif; ?>
+        <?php if ($block->getExtraFieldFourType() == 'textarea'): ?>
+            <?php
+            $extraFieldFour = $block->getExtraFieldFour();
+            ?>  
+      <label class="label" for="extra_field_four">
+          <span><?= $block->escapeHtml($block->getExtraFieldFourLabel()) ?></span>
+      </label>                             
+      <div class="control">
+          <textarea name="extra_field_four" id="extra_field_four" 
+            title="<?= $block->escapeHtml($block->getExtraFieldFourLabel()) ?>" 
+              class="input-text" cols="5" rows="5"
+              data-validate="{required:false}"><?= $block->escapeHtml($extraFieldFour) ?></textarea>
+      </div>
+        <?php endif; ?>
+  </div> 
+<?php endif; ?>

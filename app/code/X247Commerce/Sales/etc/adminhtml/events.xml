@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_predispatch">
+        <observer name="x247commerce_sales_user_management_validation_dispatch" instance="X247Commerce\Sales\Observer\Backend\SalesManagementValidation" />
+    </event>
+</config>

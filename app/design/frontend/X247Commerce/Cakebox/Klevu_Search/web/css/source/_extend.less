@@ -1,0 +1,415 @@
+& when (@media-common = true) {
+	.full-width {
+		margin-left: ~'calc(-100vw/2 + 100%/2)';
+		margin-right: ~'calc(-100vw/2 + 100%/2)';
+		max-width: 100vw;
+		width: auto;
+	}
+
+	.page-header-title {
+		background: #992E80;
+
+		.breadcrumbs {
+			padding: 0;
+		}
+
+		.page-title {
+			color: #fff;
+		}
+	}
+
+	.kuContainer {
+		.kuResultList {
+			.kuProductContent {
+				.kuNameDesc {
+					.kuName {
+						a {
+							color: #262626;
+						}
+					}
+				}
+
+				.kuGridView ul li {
+					padding: 0;
+					border: none;
+					border-radius: 0;
+
+					.kuPrice,
+					.kuSalePrice {
+						font-weight: normal;
+					}
+
+					img {
+						max-height: unset !important;
+					}
+
+					.klevu-variants {
+						display: none;
+					}
+
+					.kuStarsSmall {
+						display: none;
+					}
+
+					&:hover {
+						box-shadow: unset;
+					}
+				}
+			}
+		}
+
+		.kuFilters {
+			ul li a {
+				font-size: 14px;
+			}
+
+			.kuFilterHead {
+				font-size: 18px;
+				font-weight: 500;
+				border-bottom: 0;
+			}
+		}
+
+		.kuFilterBox {
+			.kuPS-connect {
+				background: #992E80;
+			}
+		}
+
+		.kuBottomPagi {
+			margin-top: 30px;
+			border: none;
+
+			.kuPerPage {
+				display: none;
+			}
+
+			.kuPagination {
+				width: 100%;
+				float: unset;
+				margin-top: 5px;
+				text-align: center;
+
+				a {
+					display: inline-flex;
+					box-sizing: border-box;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__m) {
+
+	.page-header-title {
+		.page-title {
+			font-size: 46px;
+		}
+
+		.page-header-wrapper {
+			padding: 55px 0 70px;
+		}
+
+		.breadcrumbs {
+			.item {
+				color: #ffffff;
+				font-size: 12px;
+
+				a,
+				strong {
+					color: #ffffff;
+				}
+			}
+		}
+	}
+
+
+	.klevuLanding {
+		.kuContainer {
+			.kuTabs {
+				border: none;
+				text-align: left;
+
+				.kuTabDeactive {
+					display: none;
+				}
+
+				.kuTabSelected {
+					display: block;
+					font-size: 29px;
+					color: #363A40;
+					border-bottom: 0;
+				}
+			}
+
+
+			.kuResultWrap {
+
+			}
+		}
+	}
+
+	.kuSortHeader {
+		.kuSortingOpt {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+
+			.kuSortby,
+			.kuPerPage,
+			.kuView {
+				width: auto;
+				float: unset;
+				color: #282828;
+				font-size: 16px;
+				margin-left: 20px;
+
+				select {
+					font-size: 16px;
+					height: 40px !important;
+				}
+			}
+
+			.kuPerPage {
+				order: 0;
+			}
+
+			.kuSortby {
+				order: 1;
+			}
+
+			.kuView {
+				order: 2;
+			}
+		}
+
+		.kuResultList {
+			.kuTotResults {
+				font-size: 29px;
+				font-weight: 500;
+			}
+		}
+
+		.kuView {
+			.kuGridviewBtn,
+			.kuListviewBtn {
+				background: unset;
+				opacity: 0.7;
+				height: 16px;
+				height: 16px;
+
+				&.kuCurrent {
+					opacity: 1;
+				}
+
+				.icon-gridview,
+				.icon-listview {
+					display: block;
+					width: 100%;
+					height: 100%;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: center;
+				}
+			}
+
+			.icon-gridview {
+				background-image: url(../images/icon_grid.png);
+			}
+
+			.icon-listview {
+				background-image: url(../images/icon_list.png);
+			}
+		}
+	}
+
+	.kuContainer {
+		.kuResultList {
+			.kuProductContent {
+				.kuNameDesc {
+					margin-top: 20px;
+
+					.kuName {
+						a {
+							font-size: 16px;
+						}
+					}
+				}
+
+				.kuGridView ul li {
+					width: ~'calc( (100% - 90px)/4 )';
+					margin-right: 30px;
+
+					&:nth-child(4n) {
+						margin-right: 0;
+					}
+
+					.kuPrice,
+					.kuSalePrice {
+						font-size: 18px;
+
+						.priceGreyText {
+							font-size: 12px;
+						}
+					}
+
+					.klevuImgWrap {
+						height: 300px !important;
+					}
+				}
+			}
+		}
+
+		.kuBottomPagi {
+			margin-top: 30px;
+
+			.kuPerPage {
+				display: none;
+			}
+
+			.kuPagination {
+				width: 100%;
+				float: unset;
+				margin-top: 5px;
+				text-align: center;
+
+				a {
+					width: 50px;
+					height: 50px;
+					font-size: 16px;
+					color: #282828;
+					transition: all .3s;
+					font-weight: normal;
+
+					&.kuCurrent,
+					&:hover {
+						background: #992E80;
+						color: #fff;
+					}
+				}
+
+			}
+		}
+
+		.kuTotResults {
+			font-size: 29px;
+			font-weight: 500;
+
+			strong {
+				font-weight: 500;
+			}
+		}
+
+		.kuResultInfo {
+			border-bottom: none;
+		}
+	}
+
+}
+
+
+//
+//  Tablet
+//  _____________________________________________
+
+// This will add styles for tablet devices. When using native media-queries, we recommend wrapping your media-queries with media-width mixins or media-target
+& when (@media-target = 'desktop'), (@media-target = 'all') {
+	@media only screen and (min-width: @screen__m) and (max-width: (@screen__l - 1)) {
+		.kuContainer {
+			.kuResultList {
+				.kuProductContent {
+					.kuGridView ul li {
+						width: ~'calc( (100% - 20px)/2 )';
+						margin-right: 20px;
+
+						&:nth-child(2n) {
+							margin-right: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__m) {
+	.page-header-title {
+		.page-title {
+			font-size: 24px;
+			margin-bottom: 0;
+		}
+
+		.page-header-wrapper {
+			padding: 18px 15px;
+		}
+
+		.breadcrumbs {
+			display: none !important;
+		}
+	}
+
+	.kuTabs {
+		.kuTab {
+			display: none;
+		}
+	}
+
+	.kuTabSelected {
+		display: block;
+	}
+
+	.swatch-option-tooltip {
+		display: none;
+	}
+
+	.kuContainer {
+		.kuResultList {
+			.kuProductContent {
+				.kuNameDesc {
+					margin-top: 20px;
+
+					.kuName {
+						a {
+							font-size: 14px;
+						}
+					}
+				}
+
+				.kuGridView ul li {
+					width: ~'calc( (100% - 20px)/2 )';
+					margin: 0 20px 25px 0;
+					min-height: 270px;
+
+
+					&:nth-child(2n) {
+						margin-right: 0;
+					}
+
+					.kuPrice,
+					.kuSalePrice {
+						font-size: 17px;
+					}
+
+					.klevuImgWrap {
+						min-height: 165px !important;
+					}
+				}
+			}
+		}
+
+		.kuResultInfo {
+			display: none;
+		}
+	}
+}

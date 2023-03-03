@@ -1,0 +1,33 @@
+<?php 
+	$products = $block->getProductCollection();
+?>
+
+<?php if($products && count($products) > 0): ?>
+	<div class="best-seller-container">
+		<div class="container">
+			<div class="best-seller-title">
+				<div class="best-seller-title-desktop"><?= __('Popular Products')?></div>
+				<div class="best-seller-title-mobile"><?= __('Best Sellers')?></div>
+				<div class="best-seller-label-see-more"><?= __('See more')?></div>
+			</div>
+			<div class="best-seller-content">
+				<ul class="best-seller-list">
+					<?php foreach($products as $item):?>
+						<li class="best-seller-item">
+							<a href="<?= $item->getProductUrl()?>">
+								<div class="best-seller-item-detail">
+									<div class="best-seller-item-detail-image"><img src="<?= $block->getImageUrl($item)?>" /></div>
+									<div class="best-seller-item-detail-information">
+										<div class="best-seller-item-detail-information-name"><span><?= $item->getName();?></span></div>
+										<div class="best-seller-item-detail-information-size"><span><?= __('8"')?>&nbsp;</span></div>
+										<div class="best-seller-item-detail-information-price"><?= __('from')?>&nbsp;&nbsp;<span class="price"><?= $block->priceFormat(number_format($item->getFinalPrice(), 2))?></span></div>
+									</div>
+								</div>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+	</div>
+<?php endif;?>

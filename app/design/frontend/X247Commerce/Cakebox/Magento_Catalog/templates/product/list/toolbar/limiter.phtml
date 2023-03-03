@@ -1,0 +1,31 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @var \Magento\Catalog\Block\Product\ProductList\Toolbar $block
+ * @var \Magento\Framework\Locale\LocaleFormatter $localeFormatter
+ */
+?>
+<div class="field limiter">
+    <div class="control">
+        <select id="limiter" data-role="limiter" class="limiter-options">
+            <?php foreach ($block->getAvailableLimit() as $_key => $_limit):?>
+                <option value="<?= $block->escapeHtmlAttr($_key) ?>"
+                    <?php if ($block->isLimitCurrent($_key)): ?>
+                        selected="selected"
+                    <?php endif ?>>
+                    <?= $block->escapeHtml($localeFormatter->formatNumber((int) $_limit)) . ' items' ?>
+                    <?php if($block->isLimitCurrent($_key)): ?>
+                        <?= __(' per page') ?>
+                    <?php endif ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>   
+</div>

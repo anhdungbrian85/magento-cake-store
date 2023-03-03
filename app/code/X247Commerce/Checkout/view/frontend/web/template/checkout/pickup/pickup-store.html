@@ -1,0 +1,10 @@
+<div id="pickup-store-container" class="pickup-store-container">
+	<div id="pickup-store-wrapper" class="pickup-store-wrapper" data-bind="visible: visible"></div>
+	<div data-bind="afterRender: moveMapContainerDelivery"></div>
+	<!-- ko foreach: getRegion('x247_pickup_store_details') -->
+	    <!-- ko template: getTemplate() --><!-- /ko -->
+	<!--/ko-->
+	<!-- ko foreach: getRegion('shippingAdditional') -->
+	    <!-- ko template: getTemplate() --><!-- /ko -->
+	<!--/ko-->
+</div>

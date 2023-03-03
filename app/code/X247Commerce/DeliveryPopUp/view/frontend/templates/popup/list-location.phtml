@@ -1,0 +1,63 @@
+<?php
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2022 Amasty (https://www.amasty.com)
+* @package Store Locator for Magento 2
+*/
+?>
+<?php
+/**
+ * @var \Amasty\Storelocator\Block\Location $block
+ * @var \Amasty\Storelocator\Model\Location $location
+ */
+$locations = $block->getLocationCollection();
+$customerLng = (float) $block->getData('lng');
+$customerLat = (float) $block->getData('lat');
+$deliveryHelper = $this->helper('X247Commerce\DeliveryPopUp\Helper\Data');
+$unitSetting = $deliveryHelper->getDistanceUnitSetting();
+?>
+<div class="amlocator-wrapper">
+    <div class="amlocator-stores-wrapper">
+        <?php foreach ($locations as $location): ?> 
+            <?php $loLng = (float) $location->getLng() ?>
+            <?php $loLat = (float) $location->getLat() ?>
+            <div class="amlocator-store-desc " name="leftLocation"
+                 data-mapid="<?= $block->escapeHtml($block->getMapId()); ?>"
+                 data-amid="<?= (int)$location['id']; ?>">
+
+                <div class="amlocator-block">
+                    <?php if ($baseImage = $block->getLocationImage($location)):?>
+                        <div class="amlocator-image"
+                             style="background-image:
+                                     url('<?= $block->escapeUrl($baseImage) ?>')">
+                        </div>
+                    <?php endif;?>
+                    <div  class="amasty_distance"
+                         id="amasty_distance_<?= (int)$location['id'] ?>">
+                        <img src="<?php echo $this->getViewFileUrl('X247Commerce_DeliveryPopUp::images/temporary_for_store_image.jpg'); ?>">
+                        <div class="distance store location">
+                            <span class="amasty_distance_number"><?= $deliveryHelper->calculateDistance($customerLat, $customerLng, $loLat, $loLng, $unitSetting) ?></span>
+                        </div>
+                    </div>
+                    <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>   
+                    </div>
+                </div>
+                <?=
+                $block->getLayout()
+                    ->createBlock(\Amasty\Storelocator\Block\View\Schedule::class)
+                    ->setData('location', $location)
+                    ->toHtml();
+                ?>
+                <div class="select store lacation">
+	                <button class="select-location" data-location-id="<?= $location->getId() ?>">
+	                    <?= __('Select') ?>
+	                </button>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if ($pager = $block->getPagerHtml()): ?>
+        <div class="amlocator-pager-container"><?= /** @escapeNotVerified */ $pager; ?></div>
+    <?php endif; ?>
+</div>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbf6a2131fd0f0459fac5be33c6a2e87",
+    "content-hash": "7d4d5b9cbf62b13b064dfc3398a95b09",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -76,6 +76,31 @@
             "description": "Amasty Base"
         },
         {
+            "name": "amasty/cron-schedule-list",
+            "version": "1.0.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/cron-schedule-list-1.0.6-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.2",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CronScheduleList\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Cron Schedule List by Amasty"
+        },
+        {
             "name": "amasty/geoip",
             "version": "1.5.7",
             "dist": {
@@ -99,6 +124,239 @@
                 "Commercial"
             ],
             "description": "Amasty Geoip Data"
+        },
+        {
+            "name": "amasty/mega-menu",
+            "version": "2.4.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/mega-menu-2.4.1.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/module-mega-menu-lite": ">=1.4.0",
+                "magento/module-review": "*",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/mega-menu-graphql": "Install mega-menu-graphql module to activate GraphQl and Mega Menu integration.",
+                "amasty/mega-menu-page-builder": "Install mega-menu-page-builder module to activate PageBuilder and Mega Menu integration.",
+                "amasty/module-mega-menu-mftf-2": "Install mega-menu-mftf-2 module to be able to run Mega Menu MFTF tests for Magento 2.3.5+ version",
+                "amasty/module-mega-menu-mftf-3": "Install mega-menu-mftf-3 module to be able to run Mega Menu MFTF tests for Magento 2.4.0+ version"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\MegaMenu\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Mega Menu By Amasty"
+        },
+        {
+            "name": "amasty/module-delivery-date-manager",
+            "version": "1.0.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-delivery-date-manager-1.0.6.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.5",
+                "amasty/cron-schedule-list": "*",
+                "magento/framework": ">=102.0.0",
+                "php": ">=7.3"
+            },
+            "conflict": {
+                "amasty/delivery-date": "*"
+            },
+            "suggest": {
+                "amasty/module-delivery-date-manager-mftf-2": "Install module-delivery-date-manager-mftf-2 module to be able to run Delivery Date Manager MFTF tests for Magento 2.3.5+ version.",
+                "amasty/module-delivery-date-manager-mftf-3": "Install module-delivery-date-manager-mftf-3 module to be able to run Delivery Date Manager MFTF tests for Magento 2.4.0+ version.",
+                "amasty/module-mixin-rewrite-patch": "Install mixin rewrite patch if you have a problem with extension on Magento 2.4.2 version on Checkout"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\DeliveryDateManager\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Amasty Delivery Date Manager"
+        },
+        {
+            "name": "amasty/module-improved-layered-navigation-page",
+            "version": "2.7.16",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-improved-layered-navigation-page-2.7.16.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/module-shop-by-base": ">=2.16.2",
+                "php": ">=7.3.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\ShopbyPage\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Improved Layered Navigation by Amasty - Page sub-module"
+        },
+        {
+            "name": "amasty/module-mega-menu-lite",
+            "version": "1.4.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-mega-menu-lite-1.4.1.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "magento/module-catalog": "*",
+                "php": ">=7.3.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\MegaMenuLite\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Mega Menu Lite by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-mega-menu-package-pro",
+            "version": "2.4.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-mega-menu-package-pro-2.4.1.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/mega-menu": ">=2.4.0",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\MegaMenuPackagePro\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Mega Menu Pro by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-shop-by-base",
+            "version": "2.16.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-shop-by-base-2.16.3.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "mobiledetect/mobiledetectlib": "We recommend using the 3rd-party library to improve the mobile detection algorithm."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\ShopbyBase\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Base Improved Layered Navigation by Amasty"
+        },
+        {
+            "name": "amasty/module-shop-by-brand",
+            "version": "2.13.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-shop-by-brand-2.13.1.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/module-shop-by-base": ">=2.16.2",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/module-shop-by-brand-graphql": "Install module-shop-by-brand-graphql module to activate GraphQl and Shop By Brand integration.",
+                "amasty/module-shopby-livesearch-root-category": "Install ShopbyLivesearchRootCategory module to activate LiveSearch and Shop By Brand integration."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\ShopbyBrand\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Shop by Brand by Amasty"
+        },
+        {
+            "name": "amasty/module-social-login-lite",
+            "version": "1.10.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-social-login-lite-1.10.5.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.5",
+                "amasty/social-login": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\SocialLoginLite\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Social Login Lite by Amasty",
+            "homepage": "https://amasty.com/"
         },
         {
             "name": "amasty/module-store-locator",
@@ -185,6 +443,131 @@
                 "Commercial"
             ],
             "description": "Store Pickup with Locator by Amasty"
+        },
+        {
+            "name": "amasty/module-store-pickup-with-locator-msi",
+            "version": "1.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-store-pickup-with-locator-msi-1.0.5-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.3",
+                "amasty/module-store-pickup-with-locator": ">=2.5.5",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\StorePickupWithLocatorMSI\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Store Pickup with Locator MSI by Amasty"
+        },
+        {
+            "name": "amasty/shopby",
+            "version": "2.19.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/shopby-2.19.3.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/module-improved-layered-navigation-page": ">=2.7.16",
+                "amasty/module-shop-by-base": ">=2.16.3",
+                "amasty/module-shop-by-brand": ">=2.13.1",
+                "amasty/shopby-seo": ">=2.13.3",
+                "magento/module-catalog-search": ">=101.0.2",
+                "magento/module-layered-navigation": ">=100.2.0",
+                "magento/module-swatches": ">=100.2.0",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/module-grouped-options": "Install module-grouped-options module to activate Grouped Options integration.",
+                "amasty/module-mage-2.4.5-fix": "Install module-mage-2.4.5-fix to fix bugs with Product Collection Changes that were added in 2.4.5 version.",
+                "amasty/module-shop-by-live-search": "Install ShopByLiveSearch module to activate LiveSearch and Shop By Brand integration.",
+                "amasty/module-shopby-livesearch-root-category": "Install ShopbyLivesearchRootCategory module to activate LiveSearch for all Products Page and Shop By Brand integration.",
+                "amasty/module-shopby-mftf-2": "Install module-shopby-mftf-2 module to implement mftf-tests for Magento 2.3.6+ versions.",
+                "amasty/module-shopby-mftf-3": "Install module-shopby-mftf-3 module to implement mftf-tests for Magento 2.4.1+ versions.",
+                "amasty/shopby-graphql": "Install shopby-graph-ql module to activate GraphQl and Shopby integration."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\Shopby\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Improved Layered Navigation by Amasty"
+        },
+        {
+            "name": "amasty/shopby-seo",
+            "version": "2.13.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/shopby-seo-2.13.3.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.6",
+                "amasty/module-shop-by-base": ">=2.16.2",
+                "php": ">=7.3.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\ShopbySeo\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Improved Layered Navigation by Amasty - SEO sub-module"
+        },
+        {
+            "name": "amasty/social-login",
+            "version": "1.10.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/social-login-1.10.5.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.5",
+                "hybridauth/hybridauth": "~3.8.0",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/aminvisiblecaptcha": "*",
+                "amasty/module-social-login-recaptcha": "Install amasty/module-social-login-recaptcha module to activate Google ReCaptcha and Social Login integration.",
+                "amasty/module-social-to-builder": "Install Amasty_SocialToBuilder module to activate the integration with Custom Reports Builder extension and create valuable reports about your Social Networks.",
+                "amasty/social-login-graphql": "Install amasty/social-login-graphql module to activate Graphql and Social Login integration."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\SocialLogin\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Social Login by Amasty"
         },
         {
             "name": "astock/stock-api-libphp",
@@ -2828,6 +3211,41 @@
                 "source": "https://github.com/justinrainbow/json-schema/tree/5.2.12"
             },
             "time": "2022-04-13T08:02:27+00:00"
+        },
+        {
+            "name": "klaviyo/magento2-extension",
+            "version": "4.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klaviyo/magento2-klaviyo.git",
+                "reference": "ede96acac5da82f4bbbf333e5353e7002a4eb3e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klaviyo/magento2-klaviyo/zipball/ede96acac5da82f4bbbf333e5353e7002a4eb3e4",
+                "reference": "ede96acac5da82f4bbbf333e5353e7002a4eb3e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "magento/module-quote": ">=101.1.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Klaviyo\\Reclaim\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Klaviyo extension for Magento 2. Allows pushing newsletters to Klaviyo's platform and more.",
+            "support": {
+                "issues": "https://github.com/klaviyo/magento2-klaviyo/issues",
+                "source": "https://github.com/klaviyo/magento2-klaviyo/tree/4.0.8"
+            },
+            "time": "2022-11-10T20:09:52+00:00"
         },
         {
             "name": "klevu/module-addtocart",
@@ -22558,74 +22976,6 @@
             "time": "2022-06-21T01:22:39+00:00"
         },
         {
-            "name": "mageplaza/magento-2-social-login",
-            "version": "4.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mageplaza/magento-2-social-login.git",
-                "reference": "72a0dd25284d8f107b85f9c37b7b86f2f7570000"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mageplaza/magento-2-social-login/zipball/72a0dd25284d8f107b85f9c37b7b86f2f7570000",
-                "reference": "72a0dd25284d8f107b85f9c37b7b86f2f7570000",
-                "shasum": ""
-            },
-            "require": {
-                "hybridauth/hybridauth": "^3.8.2",
-                "mageplaza/module-core": "^1.4.12"
-            },
-            "require-dev": {
-                "roave/security-advisories": "dev-master"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Mageplaza\\SocialLogin\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Mageplaza",
-                    "email": "support@mageplaza.com",
-                    "homepage": "https://www.mageplaza.com",
-                    "role": "Technical Support"
-                }
-            ],
-            "description": "Magento 2 Social Login extension is designed for quick login to your Magento 2 store without procesing complex register steps",
-            "keywords": [
-                "Amazon Login",
-                "Facebook login",
-                "FourSquare Login",
-                "Google login",
-                "LinkedIn Login",
-                "Microsoft Live Login",
-                "Social Login",
-                "Twitter login",
-                "Yahoo Login",
-                "facebook",
-                "google",
-                "login",
-                "magento 2",
-                "magento 2 social login",
-                "mageplaza",
-                "social proof",
-                "twitter"
-            ],
-            "support": {
-                "issues": "https://github.com/mageplaza/magento-2-social-login/issues",
-                "source": "https://github.com/mageplaza/magento-2-social-login/tree/v4.1.6"
-            },
-            "time": "2022-09-30T08:22:37+00:00"
-        },
-        {
             "name": "mageplaza/module-core",
             "version": "1.4.12",
             "source": {
@@ -27737,52 +28087,6 @@
                 "source": "https://github.com/thecodingmachine/safe/tree/v1.3.3"
             },
             "time": "2020-10-28T17:51:34+00:00"
-        },
-        {
-            "name": "trustpilot/module-reviews",
-            "version": "2.6.572",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/trustpilot/plugin-magento2.git",
-                "reference": "4af52e07ce4bf6e7acccb4a74b3fec64808a07e3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/trustpilot/plugin-magento2/zipball/4af52e07ce4bf6e7acccb4a74b3fec64808a07e3",
-                "reference": "4af52e07ce4bf6e7acccb4a74b3fec64808a07e3",
-                "shasum": ""
-            },
-            "require": {
-                "magento/framework": ">=100.0.20",
-                "magento/module-admin-notification": ">=100.0.7",
-                "magento/module-backend": ">=100.0.12",
-                "magento/module-catalog": ">=100.0.17",
-                "magento/module-checkout": ">=100.0.16",
-                "magento/module-configurable-product": ">=100.0.12",
-                "magento/module-eav": ">=100.0.12",
-                "magento/module-sales": ">=100.0.16",
-                "magento/module-store": ">=100.0.9",
-                "psr/log": ">=1.0.0"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Trustpilot\\Reviews\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "description": "The Trustpilot Review extension makes it simple and easy for merchants to collect reviews from their customers to power their marketing efforts, increase sales conversion, build their online reputation and draw business insights.",
-            "support": {
-                "issues": "https://github.com/trustpilot/plugin-magento2/issues",
-                "source": "https://github.com/trustpilot/plugin-magento2/tree/2.6.572"
-            },
-            "time": "2022-05-13T10:53:45+00:00"
         },
         {
             "name": "tubalmartin/cssmin",

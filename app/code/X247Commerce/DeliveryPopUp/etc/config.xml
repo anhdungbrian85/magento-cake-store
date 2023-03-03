@@ -4,6 +4,8 @@
         <deliverypopup>
             <general>
                 <enable>1</enable>
+                <search_radius>5</search_radius>
+                <total_records>3</total_records>
             </general>
         </deliverypopup>
     </default>

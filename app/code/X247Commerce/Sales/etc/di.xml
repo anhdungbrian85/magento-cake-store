@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <plugin name="sales_admin_grid_validate" type="X247Commerce\Sales\Plugin\SalesAdminGridValidate" sortOrder="10" disabled="false" />
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Container\OrderIdentity">
+        <plugin name="send_email_order_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\SendEmailToStaffAdmin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Container\InvoiceIdentity">
+        <plugin name="send_email_invoice_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\SendEmailIvoiceToStaffAdmin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Container\ShipmentIdentity">
+        <plugin name="send_email_Shipment_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\SendEmailShipmentToStaffAdmin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\OrderSender">
+        <plugin name="before_send_email_order_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\BeforeSendEmailOrder"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\ShipmentSender">
+        <plugin name="before_send_email_shipment_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\BeforeSendEmailshipment"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\InvoiceSender">
+        <plugin name="before_send_email_invoice_for_admin_in_sale_mail" type="X247Commerce\Sales\Plugin\BeforeSendEmailInvoice"/>
+    </type>
+</config>

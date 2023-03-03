@@ -1,0 +1,13 @@
+"OpenSSL unable to sign data","OpenSSL unable to sign data"
+"Api Secret Key has been sucessfully generated.","Api Secret Key has been sucessfully generated."
+"Error during Api Secret generation occurred.","Error during Api Secret generation occurred."
+"We have removed key file to improve security.","We have removed key file to improve security."
+"Apple ID","Apple ID"
+Enabled,Enabled
+"See how to configure app <a target=""_blank"" href=""https://amasty.com/docs/doku.php?id=magento_2:social_login#apple_id"">here</a>.","See how to configure app <a target=""_blank"" href=""https://amasty.com/docs/doku.php?id=magento_2:social_login#apple_id"">here</a>."
+"Apple Team ID","Apple Team ID"
+"Client ID","Client ID"
+"Key ID","Key ID"
+"Key(*.p8 file)","Key(*.p8 file)"
+"Valid Redirect URI","Valid Redirect URI"
+"Sort Order","Sort Order"

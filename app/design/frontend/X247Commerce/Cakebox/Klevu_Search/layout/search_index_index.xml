@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="columns.top">
+            <container name="page.title.head" before="-" htmlTag="div" htmlClass="full-width page-header-title" >
+                <container name="page.title.head.wrapper" htmlTag="div" htmlClass="page-header-wrapper top-container" >
+                </container>
+            </container>
+        </referenceContainer>
+
+        <move element="page.main.title" destination="page.title.head.wrapper" before="-"/>
+        <move element="breadcrumbs" destination="page.title.head.wrapper" after="-" />
+    </body>
+</page>

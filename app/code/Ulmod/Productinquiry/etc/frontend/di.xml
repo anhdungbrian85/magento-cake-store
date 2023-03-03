@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Block\Product\ListProduct">
+        <plugin name="um_productinquiry_listproduct" 
+			type="Ulmod\Productinquiry\Plugin\Block\Product\ListProduct"/>
+    </type>
+    <virtualType name="Magento\CatalogSearch\Block\SearchResult\ListProduct">
+        <plugin name="um_productinquiry_listproduct_search"
+			type="Ulmod\Productinquiry\Plugin\Block\Product\ListProduct" />
+    </virtualType>
+</config>

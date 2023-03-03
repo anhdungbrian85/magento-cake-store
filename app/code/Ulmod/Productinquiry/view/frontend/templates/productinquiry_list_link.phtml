@@ -1,0 +1,41 @@
+<?php
+/*** Copyright © Ulmod. All rights reserved. **/
+?> 
+<?php
+/**
+ * @var $block Ulmod\Productinquiry\Block\ProductinquiryList
+ */
+?>
+<?php
+$product = $block->getProduct();
+$linkText = $block->getLinkText($product);
+$imageUrl = $block->getItemImage($product->getId());
+$configData = $block->getConfigData();
+?>
+<?php if ($block->isExtensionEnabled()
+    && $configData->isCategoryOrCatalogSearchPages()
+    && $block->isProductAllowed($product)): ?>
+    <div id="umprodinquiry_<?= $block->escapeHtml($product->getId()); ?>" 
+        class="umprodinquiry-container umprodinquiry-catpage um-inquiry-link">
+        <input type="hidden" name="product" value="<?= $block->escapeHtml($product->getId()); ?>">
+        <input type="hidden" name="product_name" value="<?= $block->escapeHtml($product->getName()); ?>">
+        <input type="hidden" name="product_sku" value="<?= $block->escapeHtml($product->getSku()); ?>">      
+        <img src="<?= $block->escapeUrl($imageUrl); ?>" 
+            alt="<?= $block->escapeHtml(__('Product image')) ?>" 
+            style="display: none;" 
+            id="product_img_<?= $block->escapeHtml($product->getId()); ?>">   
+        <a class="umprodinquiry_clickme um-prodinlink um-submit-new 
+            <?= $block->escapeHtml($block->getFormTypeClass()); ?> action primary" 
+            id="um-prodinq-link"          
+            <?php if ($block->isNewPageForm()): ?> 
+            href="<?= $block->escapeUrl($block->getLink($product->getId())) ?>"
+            target="_blank"
+            <?php endif; ?>           
+            alt="<?= $block->escapeHtml($linkText) ?>"
+            title="<?= $block->escapeHtml($linkText) ?>">
+            <?= $block->escapeHtml($linkText) ?>  
+        </a>
+    </div>  
+<?php else: ?>          
+    <div class="um-prodinq-disabled um-umprodinquiry-button callback-button"></div>     
+<?php endif; ?>

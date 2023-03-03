@@ -1,0 +1,21 @@
+<!-- ko if: visible -->
+<div class="ampickup-details-container ampickup-details shipping-address-details">
+    <!-- ko if: displayTitle -->
+    <div class="ampickup-title">
+	    <h2 data-bind="i18n: 'Collection Details'"></h2>
+	    <a class="ampickup-collect-button" data-bind="i18n: 'Click and Collect'"></a>
+    </div>
+    <!-- /ko -->
+    <div class="store-details">
+        <p html="storeDetails()"></p>
+        <!-- ko if: getSeletedStoreData() -->
+        <span data-bind="i18n: 't:'"></span>
+        <span data-bind="text: getSeletedStoreData().phone"></span>
+        <!-- /ko -->
+    </div>
+    <div class="ampickup-pickup-details">
+    	<div class="ampickup-pickup-date" data-bind="text: datePickup"></div>
+    	<div class="ampickup-pickup-time" data-bind="text: timePickup"></div>
+    </div>
+</div>
+<!-- /ko -->

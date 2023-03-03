@@ -1,0 +1,116 @@
+& when (@media-common = true) {
+	.sidebar.sidebar-main .filter.block{
+		padding-left:20px;
+	}
+	button.action.apply-filter {
+		background: #992E80;
+		color: #FFF;
+		width: 100%;
+		display: block;
+		text-align: center;
+		height: 52px;
+		border-radius: 5px;
+		margin-bottom:10px;
+	}
+	.clear .action.clear-filter {
+		background: #FFF;
+		border:1px solid #992E80;
+		color: #992E80;
+		display: block;
+		text-align: center;
+		height: 52px;
+		line-height: 52px;
+		border-radius: 5px;
+		margin-bottom: 10px
+	}
+	.action.filter-sidebar {
+		margin-top:34px
+	}
+}
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+	.catalogsearch-result-index .page-main .sidebar.sidebar-main,
+ 	.catalog-category-view .page-main .sidebar.sidebar-main {
+	 	display: block;
+        position: fixed;
+	    height: 100%;
+	    right: 0px;
+	    width: 400px;
+	    margin-right: -400px;
+	    z-index: 99;
+	    background: #fff;
+		top:0;
+		overflow: auto;
+		padding-right: 20px;
+ 	}
+
+ 	.page-products {
+    	.page-main .toolbar .limiter {
+    		display: block;
+
+    		select {
+    			border: 1px solid #cccccc;
+    		}
+    	}
+
+    	.toolbar-products {
+    		&:last-child {
+    			.limiter {
+    				display: none;
+    			}
+    		}
+    	}
+
+    	.amasty-catalog-topnav {
+    		display: none;
+    	}
+    }
+
+ 	.close-desktop {
+		border-radius:5px;
+		background: #992E80;
+        color:#FFF;
+		width:29px;
+		height:29px;
+		float:right;
+		text-align:center;
+        margin:3px;
+ 		&:after {
+		    font-weight:bold;
+            color:#FFF;
+			line-height:29px;
+		    content: '\e616';
+		    font-family: 'luma-icons';
+		    font-weight: normal;
+ 		}
+ 	}
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+	.close-desktop {
+		display: none;
+	}
+
+	.page-products {
+		.am_shopby_apply_filters {
+			display: none;
+		}
+
+		.filter-options-content {
+			a {
+				&:hover {
+					.swatch-option.text {
+						border-color: #0000004D;
+    					background: #FFF;
+					    color: #686868;
+
+					    &.selected {
+				    	    border-color: #992E80;
+						    background: #992E80;
+						    color: #FFF;
+					    }
+					}
+				}
+			}
+		}
+	}
+}

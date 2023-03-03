@@ -1,0 +1,53 @@
+<?php
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2022 Amasty (https://www.amasty.com)
+* @package Social Login Base for Magento 2
+*/
+?>
+<?php
+/** @var \Amasty\SocialLogin\Block\Social $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$enabledSocials = $block->getEnabledSocials();
+$socialButtonsType = $block->getButtonShapeClass();
+$enabledLabels = $block->getButtonLabelState();
+?>
+<?php if (count($enabledSocials)): ?>
+    <span class="amsl-separator">
+        <span class="amsl-icon"><?= $escaper->escapeHtml(__('or'))?></span>
+    </span>
+    <div class="amsl-social-wrapper">
+        <div class="amsl-social-login <?= ($enabledLabels && $socialButtonsType) ? '-labeled-buttons' : ''?>">
+            <p class="amsl-error -social" data-am-js="am-social-error"></p>
+            <span class="amsl-title"><?= $escaper->escapeHtml(__('Or continue')) ?></span>
+            <span class="amsl-title -short"><?= $escaper->escapeHtml(__('Login with')) ?></span>
+            <div class="amsl-buttons" data-amslogin="button-wrap">
+                <?php foreach ($enabledSocials as $social): ?>
+                    <div class="amsl-button-wrapper
+                        <?= $escaper->escapeHtmlAttr($socialButtonsType) ?>
+                        <?= $escaper->escapeHtmlAttr($enabledLabels ? 'with-label' : '') ?>">
+                        <a class="amsl-button -<?= $escaper->escapeHtml($social['type']) ?>"
+                           href="<?= $escaper->escapeUrl($social['url']) ?>"
+                           <?= $block->isPopupEnabled() ? 'data-am-js="amsl-button"' : '' ?>
+                           title="<?= $escaper->escapeHtml(__('Sign in with %1', $social['label'])) ?>">
+                            <span class="amsl-social-icon"></span>
+                        </a>
+                        <div class="amsl-text">
+                            <?= $escaper->escapeHtml(__('%1', $social['label'])) ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php // phpcs:disable ?>
+    <script type="text/x-magento-init">
+        {
+            "*" : {
+                "Amasty_SocialLogin/js/am-social-login": {}
+            }
+        }
+    </script>
+    <?php // phpcs:enable ?>
+<?php endif; ?>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/*** Copyright © Ulmod. All rights reserved. **/
+--> 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+        <template 
+			id="productinquiry_inquiry_notification_inquiry_template" 
+			label="Ulmod Product Inquiry Notifications" 
+			file="inquiry_notification.html" type="html" 
+			module="Ulmod_Productinquiry" area="frontend"
+		/>
+        <template 
+			id="productinquiry_inquiry_notification_autoreply_template" 
+			label="Ulmod Product Inquiry Auto Reply" 
+			file="inquiry_autoreply.html" type="html" 
+			module="Ulmod_Productinquiry" area="frontend"
+		/>		
+</config>
