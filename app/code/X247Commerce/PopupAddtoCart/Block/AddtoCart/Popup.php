@@ -10,7 +10,6 @@ use Magento\Framework\App\ResourceConnection;
 
 class Popup extends Template
 {
-
 	protected $productRepository;
 
 	protected $imageBuilder;
@@ -31,6 +30,7 @@ class Popup extends Template
 		\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
 		\Magento\Checkout\Helper\Cart $cartHelper,
 		\Magento\Framework\Pricing\Helper\Data $priceHelper,
+		\Magento\Catalog\Helper\Product $productHelper,
 		array $data = []
 	) {
 		parent::__construct($context, $data);
@@ -39,9 +39,15 @@ class Popup extends Template
 		$this->imageBuilder = $imageBuilder;
 		$this->priceHelper = $priceHelper;
 		$this->urlHelper = $urlHelper;
+		$this->productHelper = $productHelper;
 		$this->optionsData = $optionsData;
 		$this->categoryCollectionFactory = $categoryCollectionFactory;
 		$this->cartHelper = $cartHelper;
+	}
+
+	public function getProductImageUrl($product)
+	{
+		return $this->productHelper->getThumbnailUrl($product);
 	}
 
 	public function getProductById($productId)
