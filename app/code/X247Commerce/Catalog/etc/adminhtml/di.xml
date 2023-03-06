@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Save">
+        <plugin name="custom_data_category_show_in_popup_crossell_save"
+                type="X247Commerce\Catalog\Plugin\Adminhtml\Product\Save" sortOrder="10" />
+    </type>
+</config>

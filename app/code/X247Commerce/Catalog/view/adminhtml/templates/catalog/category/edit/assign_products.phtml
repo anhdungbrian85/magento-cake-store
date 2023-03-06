@@ -1,0 +1,27 @@
+<?php
+/** @var \X247Commerce\Catalog\Block\Adminhtml\Category\AssignProducts $block */
+/** @var \X247Commerce\Catalog\Block\Adminhtml\Category\Tab\Product $blockGrid */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+
+$blockGrid = $block->getBlockGrid();
+$gridJsObjectName = $blockGrid->getJsObjectName();
+?>
+<?= $block->getGridHtml() ?>
+<input type="hidden" name="category_products_popup" id="in_category_products_popup" data-form-part="category_form" value="" />
+<style>
+    #catalog_category_products_popup .col-position{
+        display: none;
+    }
+</style>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "X247Commerce_Catalog/catalog/category/assign-products": {
+                "selectedProducts": <?= /* @noEscape */ $block->getProductsJson() ?>,
+                "gridJsObjectName": <?= /* @noEscape */ '"' . $gridJsObjectName . '"' ?: '{}' ?>
+            }
+        }
+    }
+</script>
+<!-- @todo remove when "UI components" will support such initialization -->
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], "require('mage/apply/main').apply();", false) ?>
