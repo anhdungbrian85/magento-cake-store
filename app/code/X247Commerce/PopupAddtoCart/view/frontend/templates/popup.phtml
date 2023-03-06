@@ -9,7 +9,7 @@
 					<?php $productShowPopupOfCategory = $block->getProductShowPopupOfCategory($category->getId());?>
 					<div class="tab product-tab">
 						<div class="tab-title">
-							<?php echo $category->getName(); ?>
+							<?= $category->getTitleShowInPopupCrossell() != '' ? $category->getTitleShowInPopupCrossell() : $category->getName() ?>
 						</div>
 						<div class="tab-content" style="display: none;">
 							<?php if ( count( $productShowPopupOfCategory ) > 0 ): ?>
