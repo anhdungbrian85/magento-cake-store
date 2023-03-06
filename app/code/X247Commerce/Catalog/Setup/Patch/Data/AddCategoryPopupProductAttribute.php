@@ -13,7 +13,6 @@ use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
 class AddCategoryPopupProductAttribute implements DataPatchInterface, PatchRevertableInterface
 {
-
     /**
      * ModuleDataSetupInterface
      *
@@ -29,15 +28,24 @@ class AddCategoryPopupProductAttribute implements DataPatchInterface, PatchRever
     private $eavSetupFactory;
 
     /**
+     * CollectionFactory
+     *
+     * @var categoryCollectionFactory
+     */
+    private $categoryCollectionFactory;
+
+    /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param EavSetupFactory          $eavSetupFactory
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        EavSetupFactory $eavSetupFactory
+        EavSetupFactory $eavSetupFactory,
+        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->eavSetupFactory = $eavSetupFactory;
+        $this->categoryCollectionFactory = $categoryCollectionFactory;
     }
 
     /**
@@ -45,8 +53,6 @@ class AddCategoryPopupProductAttribute implements DataPatchInterface, PatchRever
      */
     public function apply() 
     {
-        $this->moduleDataSetup->getConnection()->startSetup();
-
         /** @var EavSetup $eavSetup */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
 
@@ -65,7 +71,7 @@ class AddCategoryPopupProductAttribute implements DataPatchInterface, PatchRever
             'visible' => true,
             'required' => false,
             'user_defined' => true,
-            'default' => '',
+            'default' => $this->getDefaultCategory(),
             'visible_on_front' => false,
             'used_in_product_listing' => true,
             'group' => 'General',
@@ -98,5 +104,23 @@ class AddCategoryPopupProductAttribute implements DataPatchInterface, PatchRever
     public static function getDependencies()
     {
         return [];
+    }
+
+    public function getDefaultCategory()
+    {
+        $categoryCollection = $this->categoryCollectionFactory->create();
+        $categories = $categoryCollection->addAttributeToFilter('name', ['in', ['Candles','Balloons']]);
+        $categoryIds = '';
+
+		if (count($categories) > 0) {
+			foreach ($categories as $item) {
+				$categoryIds .= $item->getId() . ",";
+			}
+
+			$categoryIds = rtrim($categoryIds, ",");
+            return $categoryIds;
+		}
+
+        return '';
     }
 }
