@@ -21,7 +21,10 @@ class Data extends AbstractHelper
 
     protected $catalogProductTypeConfigurable;
 
+    protected $storeManager;
+
     public function __construct(
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Helper\Image $catalogImageHelper,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable $catalogProductTypeConfigurable,
@@ -37,6 +40,7 @@ class Data extends AbstractHelper
         $this->catalogProductTypeConfigurable = $catalogProductTypeConfigurable;
         $this->productRepository = $productRepository;
         $this->catalogImageHelper = $catalogImageHelper;
+        $this->storeManager = $storeManager;
     }
 
     public function createOrderPdf($order,$_fileFactory)
@@ -47,7 +51,9 @@ class Data extends AbstractHelper
            return;
        }
        $orderItemsDetailHtml = '';
-       if(isset($itemsData) && $itemsData!=null) {
+       $orderNoteDetailHtml = '';
+       $currencySymbol = $this->storeManager->getStore()->getBaseCurrency()->getCurrencySymbol();
+        if(isset($itemsData) && $itemsData!=null) {
            foreach ($itemsData as $item) {
                 $product = $this->productRepository->get($item->getSku());
                 $parentByChild = $this->catalogProductTypeConfigurable->getParentIdsByChild($product->getId());
@@ -84,8 +90,54 @@ class Data extends AbstractHelper
                         </tr>
                     </table>";
                 $orderItemsDetailHtml .= $itemHtml;
+                $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
+                $orderPath = [];
+                $orderPath['message'] = $orderPath['photo']='';
+                if (isset($options['options']) && !empty($options['options'])) {
+                   foreach ($options['options'] as $option) {
+                       $response = $this->isJson(''.$option['option_value'] . '',true);
+                       if (!empty($response) && !empty($response->order_path)) {
+                           $orderPath['photo'] =  $response->order_path;
+                       } else {
+                           $orderPath['message']  = $option['option_value'];
+                       }
+                   }
+               }
+               $itemMessageHtml = "<div class='message-container'>
+                    <div class='message-title'>Message</div>
+                    <div class='message-content'>{$orderPath['message']}</div>
+                </div>";
+               $orderItemsDetailHtml .= $itemMessageHtml;
+               $itemPhotoHtml = "<div class='photo-container'>
+                    <div class='photo-title'>Customer's Photo</div>
+                    <div class='photo-content'><img style='vertical-align: top' src='{$orderPath['photo']}?t=jpg'/></div>
+                </div>";
+               $orderItemsDetailHtml .= $itemPhotoHtml;
            }
        }
+
+        $orderNoteDetailHtml = "<div class='note-container'>
+            <div class='note-title'>Notes:</div>
+            <div class='note-content'></div>
+        </div>";
+       $orderBillingDetailHtml = "
+            <table>
+               <tr>
+                    <td>
+                        Received as per order<br/>
+                        Print Name: -----------<br/>
+                        Signature:  -----------<br/>
+                        Date:       -----------<br/>
+                    </td>
+                    <td>
+                        Made By:    -----------<br/>
+                        Serve By:   -----------<br/>
+                        {$currencySymbol}{$orderData['grand_total']} Order<br/>
+                        {$currencySymbol}{$orderData['grand_total']} Paid Online<br/>
+                    </td>
+                </tr>
+            </table>
+       ";
        $html = "
             <style>
             table { border-collapse: collapse; margin-top: 0; }
@@ -106,6 +158,8 @@ class Data extends AbstractHelper
                 </tr>
             </table>
             {$orderItemsDetailHtml}
+            {$orderNoteDetailHtml}
+            {$orderBillingDetailHtml}
             <br />
         ";
 
@@ -153,7 +207,7 @@ class Data extends AbstractHelper
         return $orderItems;
     }
 
-    public function is_json($string,$return_data = false) {
+    public function isJson($string,$return_data = false) {
         $data = json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE) ? ($return_data ? $data : TRUE) : FALSE;
     }
