@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <container name="add.more.product" htmlTag="div" htmlId="add-more-product" htmlClass="add-more-product" before="-">
+                <container name="add.more" htmlId="add-more" htmlTag="div" htmlClass="add-more-content" >
+                    <block class="Magento\Framework\View\Element\Template" name="add.more.popup" template="X247Commerce_PopupAddtoCart::addedtocart/popup.phtml" />
+                </container>
+            </container>
+        </referenceContainer>
+    </body>
+</page>

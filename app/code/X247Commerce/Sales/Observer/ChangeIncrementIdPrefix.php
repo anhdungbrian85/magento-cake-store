@@ -40,33 +40,27 @@ class ChangeIncrementIdPrefix implements ObserverInterface
 
     public function getPrefix($order = null)
     {
+        $shippingMethod  = '';
         if ($order) {
-            $locationId = empty($order->getStoreLocationId()) ? $order->getStoreLocationId() : $this->customerSession->getStoreLocationId();
+            $locationId = !empty($order->getStoreLocationId()) ? $order->getStoreLocationId() : $this->customerSession->getStoreLocationId();        
+            $shippingMethod  = $order->getShippingMethod();
         } else {
             $locationId = $this->customerSession->getStoreLocationId();
         }
         
         $yextEntityIdOfLocation = $this->yextAttribute->getYextEntityIdByLocationId($locationId);        
         $yextPrefix = $yextEntityIdOfLocation ? substr($yextEntityIdOfLocation, -3, 3).'-' : '';
-        $deliveryType = $this->customerSession->getDeliveryType();
-        switch ($deliveryType) {
-            case 0:
-            case 2:
-                $deliPrefix = 'COL';
-                break;
-            case 1:
-                $deliPrefix = 'DEL';
-                break;
-            
-            default:
-                $deliPrefix = 'COL';
-                break;
+
+        if ($shippingMethod == 'amstorepickup_amstorepickup') {
+            $deliPrefix = 'COL';
+        } else {
+            $deliPrefix = 'DEL';
         }
         if (strpos($yextEntityIdOfLocation, 'CBK') !== false) {
             $deliPrefix = 'KIO';
         }
         $prefix = $yextPrefix.$deliPrefix.'-';
-        // var_dump($locationId);var_dump($deliveryType);var_dump($yextPrefix);die();
+        
         return $prefix;
     }
 }

@@ -64,29 +64,35 @@ class GetNutriticsInfo extends Action
 
     public function getNutriticsInfoHtml($nutriticsInfo)
     {
+        $tmp = array_keys(array_column($nutriticsInfo, 'attribute_name'), 'Energy');        
+        $cnt = count($tmp);
         $nutritics = ['Energy Kcal', 'Energy Kj', 'Energy', 'Carbohydrate', 'Sugars', 'Fat', 'Saturated Fat', 'Protein', 'Fibre', 'Sodium (Na)'];
         $html = "<div class='nutritics-info-wraper'>        
                     <table class='table-nutritics-info'>
                     <tr>
                         <th>".__('Nutritionals')."</th>
-                        <th>".__('Value')."</th>
-                        <th>".__('Unit')."</th>
-                        <th>".__('Percent RI')."</th>
+                        <th>".__('Value/100g')."</th>
+                        <th>".__('% RI')."</th>
                     </tr>";
        foreach ($nutriticsInfo as $info) 
        {
             if ($info['value'] && $info['attribute_code'] != 'allergens' && $info['attribute_code'] != 'quid' && (array_search($info['attribute_name'], $nutritics) !== false))
             {
+                if ($cnt > 1 && $info['attribute_unit'] == 'kJ') {
+                    $attribute_name = '';
+                } else {
+                    $attribute_name = $info['attribute_name'];
+                }
+                $value = round($info['value'], 1);
                 $html .= "<tr class='nutritics-info-detail'>
-                            <td class='attribute_name'>". $info['attribute_name'] ."</td>
-                            <td class='value'>". $info['value'] ."</td>
-                            <td class='attribute_unit'>". $info['attribute_unit'] ."</td>
+                            <td class='attribute_name'>". $attribute_name ."</td>
+                            <td class='value'>". $value . $info['attribute_unit'] ."</td>
                             <td class='percent_ri'>". $info['percent_ri'] ."</td>
                         </tr>"  ;                      
             }
         }
 
-        $html .= "</table></div>";
+        $html .= "</table><small class='notice'>*The average adult needs 2000 kcals per day</small></div>";
         return $html;
     }
 

@@ -50,13 +50,13 @@
                 </div>
                 <div class="date-area">
                     <div class="label date"><span><?= __('Date')?></span></div>
-                    <select name="month" id="month">
-                        <option value="">Select Month</option>
-                    </select>
                     <select name="day" id="day">
-                        <option value="">Select Day</option>
+                        <option value=""><?= __('Select Day')?></option>
                     </select>
-                    <input type="number" name="year" id="year" min="<?= $yearPresent ?>" max="<?= ((int)$yearPresent + 50) ?>"/>
+                    <select name="month" id="month">
+                        <option value=""><?= __('Select Month')?></option>
+                    </select>
+                    <input type="number" name="year" id="year" min="<?= ((int)$yearPresent - 50) ?>" max="<?= $yearPresent ?>"/>
                 </div>
                 <div class="occassion-area">
                     <div class="label occassion"><span><?= __('Occassion')?></span></div>

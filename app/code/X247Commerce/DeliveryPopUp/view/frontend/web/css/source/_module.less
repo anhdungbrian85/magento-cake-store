@@ -130,7 +130,14 @@
 					font-size: 16px;
 					text-align: center;
 					color: white;
-				}	
+				}
+				.results-no-delivery {
+					span {
+						display: block;
+						color: red;
+						font-weight: 600;
+					}
+				}
 			}
 
 			.postcode {
@@ -236,7 +243,7 @@
 			}
 
 			.amlocator-block {
-				width: 70%;
+				width: 100%;
 				align-items: center;
 			}
 
@@ -270,6 +277,9 @@
 				font-size: 24px;
 			}
 			.select-collection {
+				max-height: 110px;
+				height: auto;
+
 				.label {
 					font-size: 22px;
 					padding: 20px 15px 15px;
@@ -288,8 +298,15 @@
 		margin: auto;
 	}
 	.custom-delivery-popup-modal {
+		.amlocator-wrapper .amlocator-block {
+			margin: 15px 4px 15px 0;
+		}
+
 		.delivery-popup {
 			.select-collection {
+				max-height: 110px;
+				height: auto;
+
 				.label {
 					font-size: 14px;
 				}
@@ -338,7 +355,7 @@
 				}
 			}
 			.amasty_distance {
-				width: 65%;
+				margin-right: 0;
 
 				img {
 					height: 56px;

@@ -20,7 +20,6 @@ class Edit extends \Magento\Framework\App\Action\Action
 		$data = $this->request->getParams();
 		
 		try {
-			
 			$array['occasion'] = $data['occasion'];
 			$array['their_name'] = $data['name'];
 			$array['date'] =  $data['year'] . '-' . $data['month'] . '-' . $data['day'];
@@ -36,15 +35,13 @@ class Edit extends \Magento\Framework\App\Action\Action
 					$eventFactory->setData($array)->save();
 				}
 
-				$this->messageManager->addSuccessMessage(__('Save event successful'));
+				$this->messageManager->addSuccessMessage(__('Save Event successful'));
 			} else {
 				$this->messageManager->addErrorMessage(__('The Event was unable to be Save. Please try again.'));
 			}
 		} catch (\Exception $e) {
-			$this->messageManager->addErrorMessage(__('The Event was unable to be Save. Please try again.'));
-			$this->_logger->error($e->getMessage()); 
+			$this->messageManager->addErrorMessage(__('Please choose the Event to Edit.'));
 		}
-		
 
 		return $this->resultRedirectFactory->create()->setPath('*/*/');
 	}

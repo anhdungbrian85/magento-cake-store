@@ -31,8 +31,6 @@ class SelectLocation extends \Amasty\Storelocator\Controller\Index\Ajax
         if (!empty($data["location_id"])) {
             $locationId = $data["location_id"];
             $deliveryType = $data["delivery_type"];
-            $this->customerSession->setStoreLocationId($locationId);
-            $this->customerSession->setDeliveryType($deliveryType);
             $this->storeLocationContextInterface->setStoreLocationId($locationId);
             $this->storeLocationContextInterface->setDeliveryType($deliveryType);
             $resultJson = $this->resultJsonFactory->create();

@@ -67,7 +67,7 @@
         'mage/loader',
         'https://maps.googleapis.com/maps/api/js?libraries=places&key=<?= $block->escapeHtml(
             $block->configProvider->getApiKey()
-        ); ?>'
+        ); ?>&callback=Function.prototype'
     ], function ($) {
         var mapId =  "<?= '#' . $block->escapeHtml($block->getMapId()); ?>",
             $body = $('body'),
@@ -88,7 +88,7 @@
             $(mapId).amLocator({
                 amMediaUrl :"<?= $block->escapeHtml($block->getAmStoreMediaUrl()); ?>",
                 mapZoom: <?= $block->escapeHtml($block->getMapZoom()); ?>,
-                automaticLocate: "<?= (bool)$block->getAutomaticLocate(); ?>",
+                automaticLocate: 0, // disable geo location
                 enableClustering: 0,
                 enableSuggestionClickSearch: "<?= (bool)$block->getSuggestionClickSearch(); ?>",
                 enableCountingDistance: "<?= (bool)$block->getCountingDistance(); ?>",

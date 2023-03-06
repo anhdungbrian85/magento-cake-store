@@ -18,7 +18,7 @@
         <referenceContainer name="copyright" remove="true"/>
         <referenceBlock name="header.panel.wrapper" remove="true" />
         <referenceBlock name="form.subscribe" remove="true" />
-        <move element="authorization-link-login" destination="header-wrapper" after="minicart"/>       
+        <!-- <move element="authorization-link-login" destination="header-wrapper" after="minicart"/>        -->
         <referenceContainer name="footer">
           <block class="Magento\Cms\Block\Block" name="footer_links_block">
             <arguments>

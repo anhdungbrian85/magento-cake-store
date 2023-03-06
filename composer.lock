@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19aa9d7fdae9e131cc39f02f88935784",
+    "content-hash": "455b33af3b34fefb204711a0c9c361c2",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -161,6 +161,167 @@
             "description": "Mega Menu Page Builder By Amasty"
         },
         {
+            "name": "amasty/module-checkout-delivery-date",
+            "version": "1.0.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-checkout-delivery-date-1.0.3.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.14.1",
+                "amasty/module-one-step-checkout-core": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CheckoutDeliveryDate\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Delivery Date by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-checkout-gift-wrap",
+            "version": "1.0.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-checkout-gift-wrap-1.0.2.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.4",
+                "amasty/module-one-step-checkout-core": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CheckoutGiftWrap\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Gift Wrap by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-checkout-layout-builder",
+            "version": "1.0.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-checkout-layout-builder-1.0.2-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.2",
+                "amasty/module-one-step-checkout-core": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CheckoutLayoutBuilder\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Layout Builder by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-checkout-style-switcher",
+            "version": "1.1.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-checkout-style-switcher-1.1.3.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.4",
+                "amasty/module-one-step-checkout-core": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CheckoutStyleSwitcher\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Style Switcher by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-checkout-thank-you-page",
+            "version": "1.1.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-checkout-thank-you-page-1.1.1-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.2",
+                "amasty/module-one-step-checkout-core": "*",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CheckoutThankYouPage\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Thank You Page by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
+            "name": "amasty/module-google-address-autocomplete",
+            "version": "1.0.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-google-address-autocomplete-1.0.2-ee.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.13.2",
+                "php": ">=7.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\GoogleAddressAutocomplete\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "Google Address Autocomplete By Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
             "name": "amasty/module-improved-layered-navigation-page",
             "version": "2.7.17",
             "dist": {
@@ -241,6 +402,68 @@
             "homepage": "https://amasty.com/"
         },
         {
+            "name": "amasty/module-one-step-checkout-core",
+            "version": "1.2.8",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-one-step-checkout-core-1.2.8.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.14.1",
+                "amasty/geoip": ">=1.3.6",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/checkout-graph-ql": "Install checkout-graph-ql module to be able to use One Step Checkout GraphQL queries.",
+                "amasty/module-mixin-rewrite-patch": "Install mixin rewrite patch if you have a problem with extension on Magento 2.4.2 version on Checkout"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\CheckoutCore\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Core by Amasty"
+        },
+        {
+            "name": "amasty/module-one-step-checkout-pro-subscription-package",
+            "version": "2.3.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-one-step-checkout-pro-subscription-package-2.3.0.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.14.2",
+                "amasty/module-single-step-checkout": "*",
+                "php": ">=7.3"
+            },
+            "suggest": {
+                "amasty/module-checkout-delivery-date-hyva-compatibility": "Install this package to insure Amasty Checkout Delivery Date extension works with Hyvä Theme.",
+                "amasty/module-checkout-gift-wrap-hyva-compatibility": "Install this package to insure Amasty Checkout Gift Wrap extension works with Hyvä Theme.",
+                "amasty/module-checkout-thank-you-page-hyva-compatibility": "Install this package to insure Amasty Checkout Thank You Page extension works with Hyvä Theme."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\OneStepCheckoutProSubscriptionPackage\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout Pro Subscription Package by Amasty",
+            "homepage": "https://amasty.com/"
+        },
+        {
             "name": "amasty/module-shop-by-base",
             "version": "2.16.4",
             "dist": {
@@ -296,6 +519,42 @@
                 "Commercial"
             ],
             "description": "Shop by Brand by Amasty"
+        },
+        {
+            "name": "amasty/module-single-step-checkout",
+            "version": "4.2.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.amasty.com/enterprise/packages/amasty/module-single-step-checkout-4.2.0.zip"
+            },
+            "require": {
+                "amasty/base": ">=1.14.1",
+                "amasty/geoip": ">=1.3.6",
+                "amasty/module-checkout-delivery-date": "*",
+                "amasty/module-checkout-gift-wrap": "*",
+                "amasty/module-checkout-layout-builder": "*",
+                "amasty/module-checkout-style-switcher": "*",
+                "amasty/module-checkout-thank-you-page": "*",
+                "amasty/module-google-address-autocomplete": "*",
+                "amasty/module-one-step-checkout-core": "*",
+                "php": ">=7.3.0"
+            },
+            "suggest": {
+                "amasty/module-single-step-checkout-mftf-3": "Install module-single-step-checkout-mftf-3 module to be able to run One Step Checkout MFTF tests for Magento 2.4.0+ version."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Amasty\\Checkout\\": ""
+                }
+            },
+            "license": [
+                "Commercial"
+            ],
+            "description": "One Step Checkout by Amasty"
         },
         {
             "name": "amasty/module-social-login-lite",
@@ -3069,46 +3328,6 @@
                 "source": "https://github.com/laravel/framework"
             },
             "time": "2021-11-16T13:57:03+00:00"
-        },
-        {
-            "name": "iwd/opc",
-            "version": "5.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hi-iwd/dominate-open-source.git",
-                "reference": "e3a3e4e958f7453d96e66e6daa33aa917db68450"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hi-iwd/dominate-open-source/zipball/e3a3e4e958f7453d96e66e6daa33aa917db68450",
-                "reference": "e3a3e4e958f7453d96e66e6daa33aa917db68450",
-                "shasum": ""
-            },
-            "require": {
-                "magento/module-checkout": "100.*|101.*|102.*|103.*",
-                "magento/module-payment": "100.*|101.*|102.*|103.*",
-                "magento/module-quote": "100.*|101.*|102.*|103.*",
-                "magento/module-sales": "100.*|101.*|102.*|103.*"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "IWD\\Opc\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "description": "IWD One Step Checkout",
-            "support": {
-                "issues": "https://github.com/hi-iwd/dominate-open-source/issues",
-                "source": "https://github.com/hi-iwd/dominate-open-source/tree/5.0.0"
-            },
-            "time": "2022-06-16T08:04:44+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -28096,6 +28315,52 @@
                 "source": "https://github.com/thecodingmachine/safe/tree/v1.3.3"
             },
             "time": "2020-10-28T17:51:34+00:00"
+        },
+        {
+            "name": "trustpilot/module-reviews",
+            "version": "2.6.580",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/trustpilot/plugin-magento2.git",
+                "reference": "82711801a4e449674677d73223a502409b1f6434"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/trustpilot/plugin-magento2/zipball/82711801a4e449674677d73223a502409b1f6434",
+                "reference": "82711801a4e449674677d73223a502409b1f6434",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": ">=100.0.20",
+                "magento/module-admin-notification": ">=100.0.7",
+                "magento/module-backend": ">=100.0.12",
+                "magento/module-catalog": ">=100.0.17",
+                "magento/module-checkout": ">=100.0.16",
+                "magento/module-configurable-product": ">=100.0.12",
+                "magento/module-eav": ">=100.0.12",
+                "magento/module-sales": ">=100.0.16",
+                "magento/module-store": ">=100.0.9",
+                "psr/log": ">=1.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Trustpilot\\Reviews\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0"
+            ],
+            "description": "The Trustpilot Review extension makes it simple and easy for merchants to collect reviews from their customers to power their marketing efforts, increase sales conversion, build their online reputation and draw business insights.",
+            "support": {
+                "issues": "https://github.com/trustpilot/plugin-magento2/issues",
+                "source": "https://github.com/trustpilot/plugin-magento2/tree/2.6.580"
+            },
+            "time": "2023-01-18T09:08:04+00:00"
         },
         {
             "name": "tubalmartin/cssmin",

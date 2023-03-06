@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="X247Commerce_Nutritics::nutritics_menu"
+             title="Nutritics"
+             translate="title"
+             module="X247Commerce_Nutritics"
+             sortOrder="30"
+             parent="Magento_Catalog::catalog"
+             resource="X247Commerce_Nutritics::sync"/>
+        <add id="X247Commerce_Nutritics::nutritics_list"
+             title="Products Nutritics Infomation"
+             translate="title"
+             module="X247Commerce_Nutritics"
+             sortOrder="20"
+             parent="X247Commerce_Nutritics::nutritics_menu"
+             dependsOnModule="X247Commerce_Nutritics"
+             action="nutritics/nutritics/index"
+             resource="X247Commerce_Nutritics::nutritics_grid"/>
+    </menu>
+</config>

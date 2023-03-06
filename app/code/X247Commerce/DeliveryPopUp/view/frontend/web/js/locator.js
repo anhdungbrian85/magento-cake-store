@@ -1,5 +1,6 @@
 define([
     'jquery',
+    'mage/url',
     'Amasty_Storelocator/js/model/states-storage',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'mage/translate',
@@ -9,7 +10,7 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery/jquery-ui',
     'jquery-ui-modules/slider'
-], function ($, statesStorage, pickupDataResolver) {
+], function ($, url, statesStorage, pickupDataResolver) {
     $.widget('mage.amLocator', {
         options: {},
         url: null,
@@ -37,6 +38,7 @@ define([
         hiddenState: '-hidden',
         latitude: 0,
         longitude: 0,
+        postcode: '',
 
         _create: function () {
             this.ajaxCallUrl = this.options.ajaxCallUrl;
@@ -53,6 +55,9 @@ define([
 
         bindSelectLocation: function() {
             let self = this;
+            url.setBaseUrl(BASE_URL);
+            var redirectUrl = url.build('elebration-cakes/by-flavour-theme/click-collect-1-hour.html');
+
             $(document).on('click', '.select-location', function() {
                 const location_id = $(this).data('location-id');
                 const delivery_type = $('[name="delivery-type"]:checked').val()
@@ -65,8 +70,13 @@ define([
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
-                    pickupDataResolver.storeId(location_id);
-                    window.location.reload();
+                    
+                    if (delivery_type != 2) {
+                        pickupDataResolver.storeId(location_id);
+                        window.location.reload();
+                    } else {
+                        window.location.href = redirectUrl;
+                    }
                 }));
             })
         },
@@ -78,6 +88,7 @@ define([
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
+                    
                     if (!self.mapContainer.find('.amlocator-text').val()) {
                         self.latitude = position.coords.latitude;
                         self.longitude = position.coords.longitude;
@@ -100,6 +111,7 @@ define([
         },
 
         collectParams: function (sortByDistance, isReset) {
+            var self = this;
             return {
                 'lat': this.latitude,
                 'lng': this.longitude,
@@ -108,8 +120,8 @@ define([
                 'category': this.options.categoryId,
                 'attributes': this.mapContainer.find(this.selectors.attributeForm).serializeArray(),
                 'sortByDistance': sortByDistance,
-                'delivery-type': $('[name="delivery-type"]:checked').val()
-
+                'delivery-type': $('[name="delivery-type"]:checked').val(),
+                'dest': self.postcode
             };
         },
 
@@ -142,21 +154,36 @@ define([
             var self = this,
                 sortByDistance = sortByDistance || 1;
                 params = this.collectParams(sortByDistance, isReset);
+            var errorMessage = "<div class='results-no-delivery'><span>There is no delivery available for the requested postcode. Please try again with a different postcode or choose the Collect in Store option.</span></div>";
 
+            if ($('.results-no-delivery').length) {
+                $('.results-no-delivery').remove();
+            }
             $.ajax({
                 url: self.ajaxCallUrl,
                 type: 'POST',
                 data: params,
                 showLoader: true
             }).done($.proxy(function (response) {
+                
                 if (response.store_location_id) {
-                    window.location.reload();
-                }   else {
+                    if (response.redirect_url) {
+                        window.location.href = response.redirect_url;
+                    }   else {
+                        window.location.reload();
+                    }
+                    
+                } else {
+                    if ($('[name="delivery-type"]:checked').val() == 1) {
+                        $('.delivery-popup.text').append(errorMessage);
+                    }
+                    
                     response = JSON.parse(response);
                     self.options.jsonLocations = response;
                     self.getIdentifiers();
                     self.Amastyload();
                 }
+                
             }));
         },
 
@@ -221,7 +248,7 @@ define([
                 var address = self.mapContainer.find('.amlocator-text')[0],
                     autocompleteOptions = {
                         componentRestrictions: { country: self.options.allowedCountries },
-                        fields: [ 'geometry.location' ]
+                        fields: [ 'geometry.location', 'address_components' ]
                     },
                     autocomplete = new google.maps.places.Autocomplete(address, autocompleteOptions);
 
@@ -231,6 +258,16 @@ define([
                     if (place.geometry != null) {
                         self.latitude = place.geometry.location.lat();
                         self.longitude = place.geometry.location.lng();
+
+                        if (place.address_components != null) {
+                            for (var i = 0; i < place.address_components.length; i++) {
+                                for (var j = 0; j < place.address_components[i].types.length; j++) {
+                                    if (place.address_components[i].types[j] == 'postal_code') {
+                                        self.postcode = place.address_components[i].long_name;
+                                    }
+                                }
+                            }
+                        }
 
                         if (self.options.enableSuggestionClickSearch) {
                             self.makeAjaxCall();
@@ -289,7 +326,7 @@ define([
 
             self.mapContainer.find(this.selectors.searchSelector).on('click', self.searchLocations.bind(this));
             self.mapContainer.find(this.selectors.addressSelector).on('keydown', function (e) {
-                console.log(e.keyCode);
+                
                 if (e.keyCode !== 13) {
                     return;
                 }

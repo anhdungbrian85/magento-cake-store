@@ -29,16 +29,16 @@ define([
     keyboardHandler.apply();
 
     $('.shop-now-block').addClass('owl-carousel').owlCarousel({
+        stagePadding: 30,
         loop: true,
         margin: 15,
         responsiveClass:true,
-        center: true,
         responsive:{
             0:{
-                items: 4,
+                items: 2,
                 nav: false,
                 dots: false,
-                margin: 15
+                margin: 10
             },
             768:{
                 items: 3,
@@ -58,7 +58,6 @@ define([
 
     $('body').on( 'click', '.item-parent .icon-toggle', function(e) {
         e.preventDefault();
-        console.log('11111111');
         var parentItem = $(this).parents('.item-parent'),
             submenu = parentItem.find('.submenu');
         if ( submenu.hasClass('show') ) {

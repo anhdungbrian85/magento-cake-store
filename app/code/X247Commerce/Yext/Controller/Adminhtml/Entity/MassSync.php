@@ -1,9 +1,9 @@
 <?php
- 
+
 namespace X247Commerce\Yext\Controller\Adminhtml\Entity;
 
 use Magento\Framework\Controller\ResultFactory;
- 
+
 class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
 {
     protected $filter;
@@ -54,7 +54,7 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         $this->yextHelper = $yextHelper;
     }
 
- 
+
     /**
      * Execute action
      *
@@ -63,7 +63,7 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
      */
     public function execute()
     {
-                   
+
         $locationsCollection = $this->filter->getCollection($this->locationCollection);
         $collectionSize = $locationsCollection->getSize();
 
@@ -81,25 +81,25 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
         foreach ($yextEntityIds as $id) {
             $filterParams['$or'][] = ['entityId' => ['$eq' => $id]];
         }
-        
-        
+
+
         $listResponse = json_decode($this->yextApi->getList(['filter'=> json_encode($filterParams)]), true);
 
         foreach ($listResponse['response']['entities'] as $locationData) {
-                    
+
             $syncData = [];
             if (in_array($locationData['meta']['id'], $allYextEntityIdValue)) {
-                // try {                        
+                // try {
                     $locationId = (int) array_search($locationData['meta']['id'], $allYextEntityIdValue);
-                    
+
                     $location = $this->locationModel->load($locationId);
-                    $syncData = $this->yextAttribute->responseDataProcess($locationData);                    
+                    $syncData = $this->yextAttribute->responseDataProcess($locationData);
                     $locationAdmin = $this->yextAttribute->editAdminUser($syncData, $location->getId());
                     $locationSourceCodes = $this->yextHelper->getSourceCodeByAmastyLocationId($location->getId());
-                    
+
                     if (!$locationSourceCodes) {
                         $newSource = $this->yextAttribute->editSource($syncData, $location->getId());
-                    
+
                         $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
 
                         if (!is_null($newSource)) {
@@ -136,7 +136,7 @@ class MassSync extends \Amasty\Storelocator\Controller\Adminhtml\Location
                     // foreach ($syncData['photoGallery'] as $imageUrl) {
                         //download image from Yext to sever
                         // $img = $this->yextAttribute->downloadLocationImageToLocal($imageUrl, $locationId);
-                        // if ($img) {                            
+                        // if ($img) {
                         //     $data["gallery_image"][] = ['name' => $img,
                         //                'full_path' => $img,
                         //                'type' => "image/jpeg",

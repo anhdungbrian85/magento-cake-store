@@ -5,6 +5,9 @@
 ?>
 <?php
 $nutriticsInfos = $block->getProductNutriticsInfoInDb();
+$nutritics = ['Energy Kcal', 'Energy Kj', 'Energy', 'Carbohydrate', 'Sugars', 'Fat', 'Saturated Fat', 'Protein', 'Fibre', 'Sodium (Na)'];
+$tmp = array_keys(array_column($nutriticsInfos, 'attribute_name'), 'Energy');        
+$cnt = count($tmp);
 ?>
 <div class="nutritics-info-wraper">
     <?php if (empty($nutriticsInfos)): ?>
@@ -13,20 +16,24 @@ $nutriticsInfos = $block->getProductNutriticsInfoInDb();
     <table class="table-nutritics-info">
         <tr>
             <th><?= __('Nutritionals')?></th>
-            <th><?= __('Value')?></th>
-            <th><?= __('Unit')?></th>
-            <th><?= __('Percent RI')?></th>
+            <th><?= __('Value/100g')?></th>
+            <th><?= __('% RI')?></th>
         </tr>
         <?php foreach ($nutriticsInfos as $info): ?>
-            <?php if ($info['value'] && $info['attribute_code'] != 'allergens'): ?>
+            <?php if ($info['value'] && $info['attribute_code'] != 'allergens' && $info['attribute_code'] != 'quid' && (array_search($info['attribute_name'], $nutritics) !== false)): ?>
                     <tr class="nutritics-info-detail">
-                        <td class="attribute_name"><?= $info['attribute_name'] ?></td>
-                        <td class="value"><?= $info['value'] ?></td>
-                        <td class="attribute_unit"><?= $info['attribute_unit'] ?></td>
+                        <?php if ($cnt > 1 && $info['attribute_unit'] == 'kJ'): ?>
+                            <td class="attribute_name"></td>
+                        <?php else: ?>
+                            <td class="attribute_name"><?= $info['attribute_name'] ?></td>
+                        <?php endif ?>
+                        <?php $value = round($info['value'], 1); ?>
+                        <td class="value"><?= $value ?><?= $info['attribute_unit'] ?></td>
                         <td class="percent_ri"><?= $info['percent_ri'] ?></td>
                     </tr>
             <?php endif ?>
         <?php endforeach ?>
     </table>
+    <small class="notice">*<?= __('The average adult needs 2000 kcals per day') ?></small>
     <?php endif ?>
 </div>
