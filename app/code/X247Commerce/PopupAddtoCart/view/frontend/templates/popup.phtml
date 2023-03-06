@@ -26,7 +26,10 @@
 													<a href="<?= $product->getProductUrl() ?>"
 														class="product photo product-item-photo"
 														tabindex="-1">
-														<?= $productImage->toHtml() ?>
+														<span class="product-image-container product-image-container" style="width: 40px;">
+														<span class="product-image-wrapper" style="padding-bottom: 100%;">
+															<img class="product-image-photo" src="<?= $block->getProductImageUrl($product) ?>" loading="lazy" alt="<?php echo $product->getName(); ?>"></span>
+														</span>
 													</a>
 												</div>
 												<div class="item-name">
@@ -94,9 +97,9 @@
 <?php endif ?>
 <div class="block-action" >
 	<div class="block-action-continue-cta">
-		<a type="button" class="btn-action-continue-cta" href="#" data-role="closeBtn"><?= __('Continue Shopping CTA')?></a>
+		<button type="button" class="btn-action-continue-cta" title="<?= __('Continue Shopping CTA')?>" href="#" data-role="closeBtn"><?= __('Continue Shopping CTA')?></button>
 	</div>
 	<div class="block-action-view-cart-cta">
-		<a type="button" class="btn-action-view-cart-cta" href="<?= $this->getUrl('checkout/cart/')?>"><?= __('View Basket CTA')?></a>
+		<button type="button" class="btn-action-view-cart-cta" title="<?= __('View Basket CTA')?>" href="<?= $this->getUrl('checkout/cart/')?>"><?= __('View Basket CTA')?></button>
 	</div>
 </div>
