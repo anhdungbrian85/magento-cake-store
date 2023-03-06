@@ -6,7 +6,7 @@
         <plugin name="x247checkout_edit_checkout_location_context" type="X247Commerce\Checkout\Plugin\Checkout\Model\ShippingInformationManagementPlugin" sortOrder="20" disabled="false" />
     </type>
     
-    <type name="Magento\Checkout\Api\GuestShippingInformationManagementInterface">
+    <!-- <type name="Magento\Checkout\Api\GuestShippingInformationManagementInterface">
         <plugin name="x247checkout_edit_checkout_guest_location_context" type="X247Commerce\Checkout\Plugin\Checkout\Model\GuestShippingInformationManagementPlugin" sortOrder="20" disabled="false" />
-    </type>
+    </type> -->
 </config>
