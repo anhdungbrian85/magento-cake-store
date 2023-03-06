@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="assign_products_popup" sortOrder="50">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Products in Category show in Popup</label>
+        </settings>
+        <container name="assign_products_container_popup" sortOrder="170">
+            <htmlContent name="html_content">
+                <block name="gallery_popup" class="X247Commerce\Catalog\Block\Adminhtml\Category\AssignProducts"/>
+            </htmlContent>
+        </container>
+    </fieldset>
+</form>

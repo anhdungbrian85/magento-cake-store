@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+ 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Catalog\Model\ResourceModel\Category" type="X247Commerce\Catalog\Model\ResourceModel\Category" />
+    <preference for="Magento\Catalog\Model\Category" type="X247Commerce\Catalog\Model\Category" />
+    <preference for="Magento\Catalog\Controller\Adminhtml\Category\Save" type="X247Commerce\Catalog\Controller\Adminhtml\Category\Save" />
+</config>
