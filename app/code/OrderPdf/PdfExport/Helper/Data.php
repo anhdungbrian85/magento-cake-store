@@ -9,6 +9,8 @@ use Amasty\StorePickupWithLocator\Model\TimeHandler;
 
 class Data extends AbstractHelper
 {
+
+    protected $directory;
     protected $catalogImageHelper;
 
     protected $productRepository;
@@ -28,6 +30,7 @@ class Data extends AbstractHelper
     protected $assetRepo;
 
     public function __construct(
+        \Magento\Framework\Filesystem\DirectoryList $directory,
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider $deliveryDateProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -49,6 +52,7 @@ class Data extends AbstractHelper
         $this->storeManager = $storeManager;
         $this->deliveryDateProvider = $deliveryDateProvider;
         $this->assetRepo = $assetRepo;
+        $this->directory = $directory;
     }
 
     public function createOrderPdf($order,$_fileFactory)
@@ -207,6 +211,7 @@ class Data extends AbstractHelper
             <br />
         ";
        $mpdf = new \Mpdf\Mpdf([
+           'tempDir' =>  $this->directory->getPath('media') . '/tmp/mpdf',
            'margin_left' => 20,
            'margin_right' => 15,
            'margin_top' => 25,
