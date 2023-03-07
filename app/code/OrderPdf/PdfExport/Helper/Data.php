@@ -85,7 +85,7 @@ class Data extends AbstractHelper
                 $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
                 $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):" ";
                 $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_page_image_small')
-                                ->setImageFile($product->getSmallImage()) // image,small_image,thumbnail
+                                ->setImageFile($product->getImage()) // image,small_image,thumbnail
                                 ->resize(380)
                                 ->getUrl();
                $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
