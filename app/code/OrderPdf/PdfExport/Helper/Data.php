@@ -84,7 +84,7 @@ class Data extends AbstractHelper
                 $base  = substr($sponge, 0, 1);//position,count V
                 $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
                 $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):" ";
-                $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl()
+                $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl();
                $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
                $orderPath = [];
                $orderPath['message'] = '';
