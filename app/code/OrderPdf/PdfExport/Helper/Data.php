@@ -23,7 +23,13 @@ class Data extends AbstractHelper
 
     protected $storeManager;
 
+    protected $deliveryDateProvider;
+
+    protected $assetRepo;
+
     public function __construct(
+        \Magento\Framework\View\Asset\Repository $assetRepo,
+        \Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider $deliveryDateProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Helper\Image $catalogImageHelper,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
@@ -41,6 +47,8 @@ class Data extends AbstractHelper
         $this->productRepository = $productRepository;
         $this->catalogImageHelper = $catalogImageHelper;
         $this->storeManager = $storeManager;
+        $this->deliveryDateProvider = $deliveryDateProvider;
+        $this->assetRepo = $assetRepo;
     }
 
     public function createOrderPdf($order,$_fileFactory)
@@ -53,56 +61,83 @@ class Data extends AbstractHelper
        $orderItemsDetailHtml = '';
        $orderNoteDetailHtml = '';
        $currencySymbol = $this->storeManager->getStore()->getBaseCurrency()->getCurrencySymbol();
+        $mediaUrl = $this->storeManager->getStore()->getBaseUrl(
+                \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+            );
         if(isset($itemsData) && $itemsData!=null) {
            foreach ($itemsData as $item) {
                 $product = $this->productRepository->get($item->getSku());
                 $parentByChild = $this->catalogProductTypeConfigurable->getParentIdsByChild($product->getId());
                 $sku = $item->getSku();
                 if (isset($parentByChild[0])) {
-                    $sku = $this->productRepository->getById($parentByChild[0])->getSku();
+                    $parentProduct = $this->productRepository->getById($parentByChild[0]);
+                    $sku = $parentProduct->getSku();
                 }
                 $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape'):" ";
+                $iconShape = "OrderPdf_PdfExport::{$shape}.png";
                 $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge'):" ";
                 $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings'):" ";
                 $base  = substr($sponge, 0, 1);//position,count V
                 $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
-                $imageUrl = $this->catalogImageHelper->init($product, 'product_page_image_small')
+                $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):" ";
+                $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_page_image_small')
                                 ->setImageFile($product->getSmallImage()) // image,small_image,thumbnail
                                 ->resize(380)
                                 ->getUrl();
-                $itemHtml = "
-                        <table>
-                            <tr>
-                            <td>Ref</td>
-                            <td>Image</td>
-                            <td>Base</td>
-                            <td>Shape</td>
-                            <td>Size</td>
-                            <td>Bar Code</td>
-                        </tr>
-                            <tr>
-                            <td>{$sku}</td>
-                            <td><img style='vertical-align: top' src='{$imageUrl}?t=jpg' width='80' /></td>
-                            <td>{$base}</td>
-                            <td>{$shape}</td>
-                            <td>{$size}</td>
-                            <td><barcode code='{$product->getBarcode()}' text='1' class='' /></td>
-                        </tr>
-                    </table>";
-                $orderItemsDetailHtml .= $itemHtml;
-                $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
-                $orderPath = [];
-                $orderPath['message'] = $orderPath['photo']='';
-                if (isset($options['options']) && !empty($options['options'])) {
+               $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
+               $orderPath = [];
+               $orderPath['message'] = '';
+               $orderPath['photo'] = '';
+               $orderPath['number_shape'] = '';
+               $orderPath['number'] = '';
+               if (isset($options['options']) && !empty($options['options'])) {
                    foreach ($options['options'] as $option) {
-                       $response = $this->isJson(''.$option['option_value'] . '',true);
+                       $response = $this->isJson(''.$option['option_value'] . '', true);
                        if (!empty($response) && !empty($response->order_path)) {
-                           $orderPath['photo'] =  $response->order_path;
+                           $orderPath['photo'] =  $mediaUrl. $response->order_path . '.png';
+
                        } else {
-                           $orderPath['message']  = $option['option_value'];
+                           if ($option['label'] == 'Personalised Message On Cake') {
+                               $orderPath['message']  = $option['option_value'];
+                           } else {
+                               if ($option['label'] == 'Number') {
+                                   $orderPath['number']  = $option['value'];
+                               } else {
+                                   if ($option['label'] == 'Number Shape') {
+                                       $orderPath['number_shape']  = $option['value'];
+                                   }
+                               }
+                           }
+
                        }
                    }
                }
+                $itemHtml = "
+                    <table>
+                        <tr>
+                        <td>Ref</td>
+                        <td>Image</td>
+                        <td>Base</td>
+                        <td>Shape</td>
+                        <td>Size</td>
+                        <td>Colour</td>
+                        <td>Number Shape</td>
+                        <td>Number</td>
+                    </tr>
+                        <tr>
+                        <td>{$sku}</td>
+                        <td><img style='vertical-align: top' src='{$imageUrl}?t=jpg' width='80' /></td>
+                        <td>{$base}</td>
+                        <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /></td>
+                        <td>{$size}</td>
+                        <td>{$colour}</td>
+                        <td>{$orderPath['number_shape']}</td>
+                        <td>{$orderPath['number']}</td>
+                    </tr>
+                </table>";
+                $orderItemsDetailHtml .= $itemHtml;
+
+
                $itemMessageHtml = "<div class='message-container'>
                     <div class='message-title'>Message</div>
                     <div class='message-content'>{$orderPath['message']}</div>
@@ -113,13 +148,22 @@ class Data extends AbstractHelper
                     <div class='photo-content'><img style='vertical-align: top' src='{$orderPath['photo']}?t=jpg'/></div>
                 </div>";
                $orderItemsDetailHtml .= $itemPhotoHtml;
+               $itemBarCodeHtml = "<div class='barcode-container'>
+                    <div class='barcode-title'>Bar Code</div>
+                    <div class='barcode-content'><barcode code='{$product->getBarcode()}' text='1' class='' /></div>
+                </div>";
+               $orderItemsDetailHtml .= $itemBarCodeHtml;
            }
        }
 
-        $orderNoteDetailHtml = "<div class='note-container'>
-            <div class='note-title'>Notes:</div>
-            <div class='note-content'></div>
-        </div>";
+        $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
+        if ($delivery->getId()) {
+            $orderNoteDetailHtml = "<div class='note-container'>
+                <div class='note-title'>Notes:</div>
+                <div class='note-content'>{$delivery->getData('comment')}</div>
+            </div>";
+        }
+
        $orderBillingDetailHtml = "
             <table>
                <tr>
@@ -162,7 +206,6 @@ class Data extends AbstractHelper
             {$orderBillingDetailHtml}
             <br />
         ";
-
        $mpdf = new \Mpdf\Mpdf([
            'margin_left' => 20,
            'margin_right' => 15,
@@ -180,10 +223,28 @@ class Data extends AbstractHelper
        $mpdf->Output();
     }
 
+    protected function getItemOptions($item)
+    {
+        $options = $item->getProductOptions() ? $item->getProductOptions() : " ";
+        if ($options) {
+            if (isset($options['options'])) {
+                $result[] = $options['options'];
+            }
+            if (isset($options['additional_options'])) {
+                $result[] = $options['additional_options'];
+            }
+            if (isset($options['attributes_info'])) {
+                $result[] = $options['attributes_info'];
+            }
+        }
+        return array_merge([], ...$result);
+    }
+
     public function getOrderData($orderobj)
     {
         $amastyOrderEntity = $this->orderRepository->getByOrderId($orderobj->getId());
         $orderDetails = [
+            'order_id' => $orderobj->getId(),
             'order_no'=>$orderobj->getData('increment_id'),
             'date_time'=>$orderobj->getData('created_at'),
             'firstname'=>$orderobj->getData('customer_firstname'),
