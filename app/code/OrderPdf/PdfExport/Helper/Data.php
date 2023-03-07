@@ -25,7 +25,10 @@ class Data extends AbstractHelper
 
     protected $deliveryDateProvider;
 
+    protected $assetRepo;
+
     public function __construct(
+        \Magento\Framework\View\Asset\Repository $assetRepo,
         \Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider $deliveryDateProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Helper\Image $catalogImageHelper,
@@ -45,6 +48,7 @@ class Data extends AbstractHelper
         $this->catalogImageHelper = $catalogImageHelper;
         $this->storeManager = $storeManager;
         $this->deliveryDateProvider = $deliveryDateProvider;
+        $this->assetRepo = $assetRepo;
     }
 
     public function createOrderPdf($order,$_fileFactory)
@@ -70,6 +74,7 @@ class Data extends AbstractHelper
                     $sku = $parentProduct->getSku();
                 }
                 $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape'):" ";
+                $iconShape = "OrderPdf_PdfExport::{$shape}.png";
                 $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge'):" ";
                 $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings'):" ";
                 $base  = substr($sponge, 0, 1);//position,count V
@@ -90,7 +95,7 @@ class Data extends AbstractHelper
                        $response = $this->isJson(''.$option['option_value'] . '', true);
                        if (!empty($response) && !empty($response->order_path)) {
                            $orderPath['photo'] =  $mediaUrl. $response->order_path . '.png';
-                         
+
                        } else {
                            if ($option['label'] == 'Personalised Message On Cake') {
                                $orderPath['message']  = $option['option_value'];
@@ -123,7 +128,7 @@ class Data extends AbstractHelper
                         <td>{$sku}</td>
                         <td><img style='vertical-align: top' src='{$imageUrl}?t=jpg' width='80' /></td>
                         <td>{$base}</td>
-                        <td>{$shape}</td>
+                        <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /></td>
                         <td>{$size}</td>
                         <td>{$colour}</td>
                         <td>{$orderPath['number_shape']}</td>
