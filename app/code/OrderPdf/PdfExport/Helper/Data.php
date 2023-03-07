@@ -220,6 +220,7 @@ class Data extends AbstractHelper
            'margin_footer' => 10,
            'showBarcodeNumbers' => FALSE
        ]);
+        $mpdf->showImageErrors = true;
        try {
            $mpdf->WriteHTML($html);
        } catch (\Mpdf\MpdfException $e) {
