@@ -9,7 +9,7 @@
 					<?php $productShowPopupOfCategory = $block->getProductShowPopupOfCategory($category->getId());?>
 					<div class="tab product-tab">
 						<div class="tab-title">
-							<?php echo $category->getName(); ?>
+							<?= $category->getTitleShowInPopupCrossell() != '' ? $category->getTitleShowInPopupCrossell() : $category->getName() ?>
 						</div>
 						<div class="tab-content" style="display: none;">
 							<?php if ( count( $productShowPopupOfCategory ) > 0 ): ?>
@@ -26,7 +26,10 @@
 													<a href="<?= $product->getProductUrl() ?>"
 														class="product photo product-item-photo"
 														tabindex="-1">
-														<?= $productImage->toHtml() ?>
+														<span class="product-image-container product-image-container" style="width: 40px;">
+														<span class="product-image-wrapper" style="padding-bottom: 100%;">
+															<img class="product-image-photo" src="<?= $block->getProductImageUrl($product) ?>" loading="lazy" alt="<?php echo $product->getName(); ?>"></span>
+														</span>
 													</a>
 												</div>
 												<div class="item-name">
@@ -93,10 +96,10 @@
 	<div><span><?= __('Nothing in here.') ?></span></div>
 <?php endif ?>
 <div class="block-action" >
-	<div class="block-action-continue-cta">
-		<a type="button" class="btn-action-continue-cta" href="#" data-role="closeBtn"><?= __('Continue Shopping CTA')?></a>
+	<div class="block-action-continue">
+		<button type="button" class="btn-action-continue" title="<?= __('Continue Shopping')?>" href="#" data-role="closeBtn"><?= __('Continue Shopping')?></button>
 	</div>
-	<div class="block-action-view-cart-cta">
-		<a type="button" class="btn-action-view-cart-cta" href="<?= $this->getUrl('checkout/cart/')?>"><?= __('View Basket CTA')?></a>
+	<div class="block-action-view-cart">
+		<a type="button" class="btn-action-view-cart" title="<?= __('View Basket')?>" href="<?= $this->getUrl('checkout/cart/')?>"><?= __('View Basket')?></a>
 	</div>
 </div>
