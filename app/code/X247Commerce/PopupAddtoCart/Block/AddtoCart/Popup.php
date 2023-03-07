@@ -6,10 +6,10 @@ use Magento\Catalog\Model\Product;
 use Magento\Framework\Pricing\Render;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\ResourceConnection;
 
 class Popup extends Template
 {
-
 	protected $productRepository;
 
 	protected $imageBuilder;
@@ -22,51 +22,94 @@ class Popup extends Template
 
 	public function __construct(
 		Template\Context $context,
+		ResourceConnection $resourceConnection,
 		\Magento\Catalog\Model\ProductRepository $productRepository,
 		\Magento\Catalog\Block\Product\ImageBuilder $imageBuilder,
 		\Magento\Framework\Url\Helper\Data $urlHelper,
 		\Magento\Catalog\ViewModel\Product\OptionsData $optionsData,
 		\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
-		\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
 		\Magento\Checkout\Helper\Cart $cartHelper,
 		\Magento\Framework\Pricing\Helper\Data $priceHelper,
+		\Magento\Catalog\Helper\Product $productHelper,
 		array $data = []
 	) {
 		parent::__construct($context, $data);
 		$this->productRepository = $productRepository;
+		$this->resourceConnection = $resourceConnection;
 		$this->imageBuilder = $imageBuilder;
 		$this->priceHelper = $priceHelper;
 		$this->urlHelper = $urlHelper;
+		$this->productHelper = $productHelper;
 		$this->optionsData = $optionsData;
 		$this->categoryCollectionFactory = $categoryCollectionFactory;
-		$this->_productCollectionFactory = $productCollectionFactory;
 		$this->cartHelper = $cartHelper;
 	}
 
-	public function getProductByCategoriesName($name)
+	public function getProductImageUrl($product)
+	{
+		return $this->productHelper->getThumbnailUrl($product);
+	}
+
+	public function getProductById($productId)
 	{	
-	   	$categoryCollection = $this->categoryCollectionFactory->create();
-		$categories = $categoryCollection->addAttributeToFilter('name', $name)->getData();
-		if ($categories) {
-			$productOutPut = $this->_productCollectionFactory->create()
-				->addAttributeToSelect('*')
-				->addCategoriesFilter(['eq' => $categories[0]['entity_id']])
-				->addFieldToFilter('entity_id', array('neq' => $this->getData()['productId']))
-				->addAttributeToFilter('visibility', array('neq' => '1'))
-				->addAttributeToFilter('type_id', array('in' => ['configurable','simple']))
-				->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
-				->setPageSize(5)
-				->load();
-	
-			return $productOutPut;
+		$product = $this->productRepository->getById($productId);
+
+		if ($product->getVisibility() != 1 && $product->getStatus() == 1 && $product->getId() != $this->getData()['productId']) {
+			return $product;
 		}
 
 		return null;
 	}
 
+	public function getProductShowPopupOfCategory($categoryId)
+	{
+		$tableName = $this->resourceConnection->getTableName('catalog_category_product_popup');
+        $connection = $this->resourceConnection->getConnection();
+		
+        $select = $connection->select()
+            ->from(
+                ['popup' => $tableName],
+                ['product_id','position']
+            )
+            ->where(
+                "popup.category_id = $categoryId"
+            );
+
+        $products = $connection->fetchAll($select);
+		usort($products, function ($preProduct, $nextProduct) {
+			return $preProduct['position'] - $nextProduct['position'];
+		});
+
+        return $products;
+	}
+
+	public function getCategoryCollection()
+	{
+		$categoryIds = $this->getCategoryIds();
+
+		if ($categoryIds != null) {
+			$collection = $this->categoryCollectionFactory->create();
+			$collection->addAttributeToSelect('*');
+			$collection->addAttributeToFilter('entity_id', $categoryIds);
+			
+			return $collection;
+		}
+
+		return null;
+	}
+
+	public function getCategoryIds()
+	{
+		$product = $this->getProduct();
+		$categoryShowInPopup = $product->getCategoryShowInPopupCrossell();
+
+		return $categoryShowInPopup != null ? explode(",", $categoryShowInPopup) : null;
+	}
+
 	public function getProduct()
 	{
 		$data = $this->getData();
+		
 		return $this->productRepository->getById($data['productId']);
 	}
 

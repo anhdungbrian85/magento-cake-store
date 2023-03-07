@@ -1,103 +1,105 @@
 <?php
-$productData = [
-	'crosssell' => [
-		'products' => $block->getProduct()->getCrossSellProductCollection()->addAttributeToSelect('*'),
-		'label' => __('CrossSell Product')
-	],
-	'candles' => [
-		'products' => $block->getProductByCategoriesName('Candles'),
-		'label' => __('Candles')
-	],
-	'balloons' => [
-		'products' => $block->getProductByCategoriesName('Balloons'),
-		'label' => __('Balloons')
-	]
-];
+	$categoryCollection = $block->getCategoryCollection();
 ?>
-<?php if ( count( $productData['crosssell']['products']) > 0 || count( $productData['candles']['products'] ) > 0 || count( $productData['balloons']['products'] ) > 0): ?>
+<?php if ($categoryCollection != null && count($categoryCollection) > 0 ): ?>
 	<div class="addtocart-sidebar">
 		<div class="addedtocart-wrapper">
 			<div class="suggest-products">
-				<?php foreach ($productData as $tab => $data): ?>
-					<?php if ( count( $data['products'] ) > 0 ): ?>
-
-						<div class="tab product-tab">
-							<div class="tab-title">
-								<?php echo $data['label']; ?>
-							</div>
-							<div class="tab-content" style="display: none;">
-								<?php foreach ($data['products'] as $product): ?>
-									<div class="item">
-										<div class="item-info">
-											<div class="item-image">
-												<?php
-													$imageDisplayArea = 'product_more_to_add';
-													$productImage = $block->getImage($product, $imageDisplayArea);
-												?>
-												<a href="<?= $product->getProductUrl() ?>"
-													class="product photo product-item-photo"
-													tabindex="-1">
-													<?= $productImage->toHtml() ?>
-												</a>
-											</div>
-											<div class="item-name">
-												<a class="product-item-link" href="<?= $product->getProductUrl() ?>">
-													<?php echo $product->getName(); ?>
-												</a>
-												<div class="product-price">
-													<?= $product->getTypeId() == 'simple' ? $block->getPrice($product->getFinalPrice()) :  $block->getProductPrice($product)?>
+				<?php foreach ($categoryCollection as $category): ?>
+					<?php $productShowPopupOfCategory = $block->getProductShowPopupOfCategory($category->getId());?>
+					<div class="tab product-tab">
+						<div class="tab-title">
+							<?= $category->getTitleShowInPopupCrossell() != '' ? $category->getTitleShowInPopupCrossell() : $category->getName() ?>
+						</div>
+						<div class="tab-content" style="display: none;">
+							<?php if ( count( $productShowPopupOfCategory ) > 0 ): ?>
+								<?php foreach ($productShowPopupOfCategory as $item): ?>
+									<?php $product = $block->getProductById($item['product_id']);?>
+									<?php if ($product != null) : ?>
+										<div class="item">
+											<div class="item-info">
+												<div class="item-image">
+													<?php
+														$imageDisplayArea = 'product_more_to_add';
+														$productImage = $block->getImage($product, $imageDisplayArea);
+													?>
+													<a href="<?= $product->getProductUrl() ?>"
+														class="product photo product-item-photo"
+														tabindex="-1">
+														<span class="product-image-container product-image-container" style="width: 40px;">
+														<span class="product-image-wrapper" style="padding-bottom: 100%;">
+															<img class="product-image-photo" src="<?= $block->getProductImageUrl($product) ?>" loading="lazy" alt="<?php echo $product->getName(); ?>"></span>
+														</span>
+													</a>
+												</div>
+												<div class="item-name">
+													<a class="product-item-link" href="<?= $product->getProductUrl() ?>">
+														<?php echo $product->getName(); ?>
+													</a>
+													<div class="product-price">
+														<?= $product->getTypeId() == 'simple' ? $block->getPrice($product->getFinalPrice()) :  $block->getProductPrice($product)?>
+													</div>
 												</div>
 											</div>
-										</div>
 											<div class="item-action">
-													<?php $postParams = $block->getAddToCartPostParams($product); ?>
-													<form data-role="tocart-form"
-														  data-product-sku='<?= $product->getSku() ?>'
-														  action="<?= $postParams['action'] ?>"
-														  method="post"
-														  class="popup-tocart tocart-form tocart-<?= $product->getId() ?>">
-														<?php $optionsData = $block->getViewModel()->getOptionsData($product); ?>
-														<?php foreach ($optionsData as $optionItem): ?>
-															<input type="hidden"
-																   name="<?= $optionItem['name'] ?>"
-																   value="<?= $optionItem['value'] ?>">
-														<?php endforeach; ?>
+												<?php $postParams = $block->getAddToCartPostParams($product); ?>
+												<form data-role="tocart-form"
+														data-product-sku='<?= $product->getSku() ?>'
+														action="<?= $postParams['action'] ?>"
+														method="post"
+														class="popup-tocart tocart-form tocart-<?= $product->getId() ?>">
+													<?php $optionsData = $block->getViewModel()->getOptionsData($product); ?>
+													<?php foreach ($optionsData as $optionItem): ?>
 														<input type="hidden"
-															   name="product"
-															   value="<?= /* @noEscape */ $postParams['data']['product'] ?>">
-														<input type="hidden"
-															   name="<?= /* @noEscape */ \Magento\Framework\App\Action\Action::PARAM_NAME_URL_ENCODED ?>"
-															   value="<?=
-															   /* @noEscape */ $postParams['data'][\Magento\Framework\App\Action\Action::PARAM_NAME_URL_ENCODED]
-																?>">
-														<?= $block->getBlockHtml('formkey') ?>
-														<button type="submit"
-																title="<?= __('Add to Cart') ?>"
-																class="action tocart primary"
-																disabled>
-															<span><?= __('Add to Cart') ?></span>
-														</button>
-													</form>
+																name="<?= $optionItem['name'] ?>"
+																value="<?= $optionItem['value'] ?>">
+													<?php endforeach; ?>
+													<input type="hidden"
+															name="product"
+															value="<?= /* @noEscape */ $postParams['data']['product'] ?>">
+													<input type="hidden"
+															name="<?= /* @noEscape */ \Magento\Framework\App\Action\Action::PARAM_NAME_URL_ENCODED ?>"
+															value="<?=
+															/* @noEscape */ $postParams['data'][\Magento\Framework\App\Action\Action::PARAM_NAME_URL_ENCODED]
+															?>">
+													<?= $block->getBlockHtml('formkey') ?>
+													<button type="submit"
+															title="<?= __('Add to Cart') ?>"
+															class="action tocart primary"
+															disabled>
+														<span><?= __('Add to Cart') ?></span>
+													</button>
+												</form>
 											</div>
-									</div>
+										</div>
+										<script type="text/x-magento-init">
+											{
+												"[data-role=tocart-form], .form.map.checkout": {
+													"catalogAddToCart": {
+														"product_sku": "<?= $escaper->escapeJs($product->getSku()) ?>"
+													}
+												}
+											}
+										</script>
+									<?php endif; ?>
 								<?php endforeach ?>
-							</div>
+							<?php else :?>
+								<div><span><?= __('Don\'t have any product in '. $category->getName()) ?></span></div>
+							<?php endif ?>
 						</div>
-						<script type="text/x-magento-init">
-						{
-							"[data-role=tocart-form], .form.map.checkout": {
-								"catalogAddToCart": {
-									"product_sku": "<?= $escaper->escapeJs($product->getSku()) ?>"
-								}
-							}
-						}
-						</script>
-					<?php endif ?>
+					</div>
 				<?php endforeach ?>
-
 			</div>
 		</div>
 	</div>
 <?php else :?>
-	<div><span><?= __('Noting in here.') ?></span></div>
+	<div><span><?= __('Nothing in here.') ?></span></div>
 <?php endif ?>
+<div class="block-action" >
+	<div class="block-action-continue">
+		<button type="button" class="btn-action-continue" title="<?= __('Continue Shopping')?>" href="#" data-role="closeBtn"><?= __('Continue Shopping')?></button>
+	</div>
+	<div class="block-action-view-cart">
+		<a type="button" class="btn-action-view-cart" title="<?= __('View Basket')?>" href="<?= $this->getUrl('checkout/cart/')?>"><?= __('View Basket')?></a>
+	</div>
+</div>

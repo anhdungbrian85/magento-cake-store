@@ -1,0 +1,19 @@
+{
+    "catalog_category_product_popup": {
+        "column": {
+            "entity_id": true,
+            "category_id": true,
+            "product_id": true,
+            "position": true
+        },
+        "index": {
+            "CATALOG_CATEGORY_PRODUCT_POPUP_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CAT_CTGR_PRD_POPUP_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "CAT_CTGR_PRD_POPUP_CTGR_ID_CAT_CTGR_ENTT_ENTT_ID": true,
+            "CATALOG_CATEGORY_PRODUCT_POPUP_CATEGORY_ID_PRODUCT_ID": true
+        }
+    }
+}

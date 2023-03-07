@@ -8,6 +8,30 @@
 			padding: 14px 0;
 		}
 
+		.block-action {
+			margin-top: 20px;
+
+			.block-action-continue {
+				margin-bottom: 10px;
+			}
+
+			> div {
+				button,
+				a {
+					background: #992E80;
+					border: 0;
+					color: #fff;
+					font-weight: 500;
+					border-radius: 5px;
+					font-size: 15px;
+				}
+
+				a {
+					padding: 3px 15px;
+				}
+			}
+		}
+
 		.modal-inner-wrap {
 			left: auto;
 			margin: 0;
@@ -51,6 +75,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			text-transform: capitalize;
 
 			&:after {
 				font-family: 'pagebuilder-font';
@@ -70,6 +95,11 @@
 
 		.item-info {
 			display: inline-flex;
+			align-items: inherit;
+
+			.item-image .product-item-photo{
+				display: flex;
+			}
 		}
 
 		.item-image {
