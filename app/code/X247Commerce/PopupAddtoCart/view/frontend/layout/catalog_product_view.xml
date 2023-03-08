@@ -4,7 +4,7 @@
         <referenceContainer name="content">
             <container name="add.more.product" htmlTag="div" htmlId="add-more-product" htmlClass="add-more-product" before="-">
                 <container name="add.more" htmlId="add-more" htmlTag="div" htmlClass="add-more-content" >
-                    <block class="Magento\Framework\View\Element\Template" name="add.more.popup" template="X247Commerce_PopupAddtoCart::addedtocart/popup.phtml" />
+                    <block class="Magento\Framework\View\Element\Template" name="add.more.popup" template="X247Commerce_PopupAddtoCart::addedtocart/popup.phtml" ifconfig="x247commerce_popupcrossel/general/enable"/>
                 </container>
             </container>
         </referenceContainer>

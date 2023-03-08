@@ -146,8 +146,9 @@ class Data extends AbstractHelper
                $orderItemsDetailHtml .= $itemMessageHtml;
                $itemPhotoHtml = "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
-                    <div class='photo-content'><img style='vertical-align: top' src='{$orderPath['photo']}?t=jpg'/></div>
-                </div>";
+                    <div class='photo-content'>
+                    " . ($orderPath['photo']) ? "<img style='vertical-align: top' src='{$orderPath['photo']}'/>" : '' .
+                   "</div> </div>";
                $orderItemsDetailHtml .= $itemPhotoHtml;
                $itemBarCodeHtml = "<div class='barcode-container'>
                     <div class='barcode-title'>Bar Code</div>
@@ -217,7 +218,6 @@ class Data extends AbstractHelper
            'margin_footer' => 10,
            'showBarcodeNumbers' => FALSE
        ]);
-        $mpdf->showImageErrors = true;
        try {
            $mpdf->WriteHTML($html);
        } catch (\Mpdf\MpdfException $e) {
