@@ -7,7 +7,6 @@ use Amasty\StorePickupWithLocator\Model\Carrier\Shipping;
 use Amasty\StorePickupWithLocator\Model\ConfigProvider;
 use Amasty\StorePickupWithLocator\Model\DateTimeValidator;
 use Amasty\StorePickupWithLocator\Model\Quote\CurbsideValidator;
-use Amasty\StorePickupWithLocator\Model\QuoteRepository;
 use Amasty\StorePickupWithLocator\Model\TimeHandler;
 use Magento\Checkout\Api\Data\PaymentDetailsInterface;
 use Magento\Checkout\Api\Data\ShippingInformationInterface;
@@ -15,7 +14,8 @@ use Magento\Checkout\Model\ShippingInformationManagement;
 use Magento\Checkout\Api\ShippingInformationManagementInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Quote\Model\ShippingAddressManagementInterface;
-use Magento\Quote\Model\QuoteRepository as QuoteMageRepository;
+use Magento\Quote\Model\QuoteRepository;
+use Magento\Quote\Model\QuoteIdMaskFactory;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 
 
@@ -55,7 +55,7 @@ class ShippingInformationManagementPlugin
      */
     private $timeHandler;
     protected $storeLocationContextInterface;
-    protected $quoteMageRepository;
+    protected $quoteIdMaskFactory;
     protected $storeLocationContext;
 
     public function __construct(
@@ -65,7 +65,7 @@ class ShippingInformationManagementPlugin
         ConfigProvider $configProvider,
         CurbsideValidator $curbsideValidator,
         TimeHandler $timeHandler,
-        QuoteMageRepository $quoteMageRepository,
+        QuoteIdMaskFactory $quoteIdMaskFactory,
         StoreLocationContextInterface $storeLocationContext
     ) {
         $this->quoteRepository = $quoteRepository;
@@ -74,7 +74,7 @@ class ShippingInformationManagementPlugin
         $this->configProvider = $configProvider;
         $this->curbsideValidator = $curbsideValidator;
         $this->timeHandler = $timeHandler;
-        $this->quoteMageRepository = $quoteMageRepository;
+        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
         $this->storeLocationContext = $storeLocationContext;
     }
 
@@ -95,23 +95,19 @@ class ShippingInformationManagementPlugin
         ShippingInformationInterface $addressInformation
     ) {
         $pickupQuoteData = $addressInformation->getExtensionAttributes()->getAmPickup();
-
-        if (!($pickupQuoteData instanceof QuoteInterface)) {
-            return $paymentDetails;
-        }
-
-        $addressId = $this->shippingAddressManagement->get($cartId)->getId();
-        $quoteEntity = $this->quoteRepository->getByAddressId($addressId);
-        
-        $storeLocationId = $pickupQuoteData->getStoreId();
-        $quoteEntity->setStoreLocationId($storeLocationId);
-
-        $this->quoteRepository->save($quoteEntity);
-        $this->storeLocationContext->setStoreLocationId($storeLocationId);
-        
         $shippingMethod = $addressInformation->getShippingCarrierCode();
+
         if ($shippingMethod == 'amstorepickup') {
             $this->storeLocationContext->setDeliveryType(0);
+            if ($pickupQuoteData instanceof QuoteInterface) {
+                $storeLocationId = $pickupQuoteData->getStoreId();
+                if ($storeLocationId != $this->storeLocationContext->getStoreLocationId()) {
+                    $quoteEntity = $this->quoteRepository->getActive($cartId);
+                    $quoteEntity->setStoreLocationId($storeLocationId);
+                    $this->quoteRepository->save($quoteEntity);
+                    $this->storeLocationContext->setStoreLocationId($storeLocationId);
+                }
+            }
         }   else {
             $this->storeLocationContext->setDeliveryType(1);
         }

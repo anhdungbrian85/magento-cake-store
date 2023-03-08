@@ -5,7 +5,11 @@ var config = {
 
             // bind afterRender function 
             'Amasty_StorePickupWithLocator/template/checkout/pickup/pickup-store.html': 
-               'X247Commerce_Checkout/template/checkout/pickup/pickup-store.html'
+               'X247Commerce_Checkout/template/checkout/pickup/pickup-store.html',
+
+            // Rewrite AM Delivery Date component
+            'Amasty_CheckoutDeliveryDate/js/form/element/delivery-date': 
+                'X247Commerce_Checkout/js/form/element/amc-delivery-date'
         }
 
     },
@@ -27,10 +31,17 @@ var config = {
                 'X247Commerce_Checkout/js/model/checkout-data-resolver-mixin': true
             },
 
+            // change context model value when select shipping method
             'Magento_Checkout/js/view/shipping': {
                 'Amasty_CheckoutCore/js/view/shipping-mixin': false,
                 'X247Commerce_Checkout/js/view/shipping-mixin': true
             },
+
+            // ignore cache pickup date
+            'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date': {
+                "X247Commerce_Checkout/js/view/pickup/pickup-date-mixin": true
+            },
+            
         }
     }
 };

@@ -7,15 +7,15 @@ use Amasty\StorePickupWithLocator\Model\Carrier\Shipping;
 use Amasty\StorePickupWithLocator\Model\ConfigProvider;
 use Amasty\StorePickupWithLocator\Model\DateTimeValidator;
 use Amasty\StorePickupWithLocator\Model\Quote\CurbsideValidator;
-use Amasty\StorePickupWithLocator\Model\QuoteRepository;
 use Amasty\StorePickupWithLocator\Model\TimeHandler;
 use Magento\Checkout\Api\Data\PaymentDetailsInterface;
 use Magento\Checkout\Api\Data\ShippingInformationInterface;
 use Magento\Checkout\Api\GuestShippingInformationManagementInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Quote\Model\ShippingAddressManagementInterface;
-use Magento\Quote\Model\QuoteRepository as QuoteMageRepository;
+use Magento\Quote\Model\QuoteRepository;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
+use Magento\Quote\Model\QuoteIdMaskFactory;
 
 /**
  * Class GuestShippingInformationManagementPlugin for save store pickup data
@@ -23,10 +23,6 @@ use X247Commerce\Checkout\Api\StoreLocationContextInterface;
  */
 class GuestShippingInformationManagementPlugin
 {
-    /**
-     * @var QuoteRepository
-     */
-    private $quoteRepository;
 
     /**
      * @var DateTimeValidator
@@ -55,8 +51,8 @@ class GuestShippingInformationManagementPlugin
 
     protected $storeLocationContextInterface;
 
-    protected $quoteMageRepository;
     protected $storeLocationContext;
+    protected $quoteIdMaskFactory;
 
     public function __construct(
         QuoteRepository $quoteRepository,
@@ -65,8 +61,8 @@ class GuestShippingInformationManagementPlugin
         ConfigProvider $configProvider,
         CurbsideValidator $curbsideValidator,
         TimeHandler $timeHandler,
-        QuoteMageRepository $quoteMageRepository,
-        StoreLocationContextInterface $storeLocationContext
+        StoreLocationContextInterface $storeLocationContext,
+        QuoteIdMaskFactory $quoteIdMaskFactory
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->validator = $validator;
@@ -74,8 +70,8 @@ class GuestShippingInformationManagementPlugin
         $this->configProvider = $configProvider;
         $this->curbsideValidator = $curbsideValidator;
         $this->timeHandler = $timeHandler;
-        $this->quoteMageRepository = $quoteMageRepository;
         $this->storeLocationContext = $storeLocationContext;
+        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
     }
 
     /**
@@ -99,9 +95,9 @@ class GuestShippingInformationManagementPlugin
         if (!($pickupQuoteData instanceof QuoteInterface)) {
             return $paymentDetails;
         }
-
-        $addressId = $this->shippingAddressManagement->get($cartId)->getId();
-        $quoteEntity = $this->quoteRepository->getByAddressId($addressId);
+        
+        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
+        $quoteEntity = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
         
         $storeLocationId = $pickupQuoteData->getStoreId();
         $quoteEntity->setStoreLocationId($storeLocationId);
