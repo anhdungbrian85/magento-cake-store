@@ -94,8 +94,9 @@ class Data extends AbstractHelper
                if (isset($options['options']) && !empty($options['options'])) {
                    foreach ($options['options'] as $option) {
                        $response = $this->isJson(''.$option['option_value'] . '', true);
+
                        if (!empty($response) && !empty($response->order_path)) {
-                           $orderPath['photo'] =  $mediaUrl. $response->order_path . '.png';
+                           $orderPath['photo'] =  $response->fullpath;
 
                        } else {
                            if ($option['label'] == 'Personalised Message On Cake') {
@@ -144,8 +145,10 @@ class Data extends AbstractHelper
                     <div class='message-content'>{$orderPath['message']}</div>
                 </div>";
                $orderItemsDetailHtml .= $itemMessageHtml;
+               $itemPhotoHtml = $orderPath['photo'];
                $itemPhotoHtml = "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
+                    <br>
                     <div class='photo-content'>{$orderPath['photo']}
                     " . ($orderPath['photo']) ? "<img style='vertical-align: top' src='{$orderPath['photo']}'/>" : '' .
                    "</div> </div>";
