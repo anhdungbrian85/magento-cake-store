@@ -129,7 +129,7 @@ class Data extends AbstractHelper
                         <td>{$sku}</td>
                         <td><img style='vertical-align: top' src='{$imageUrl}?t=jpg' width='80' /></td>
                         <td>{$base}</td>
-                        <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /></td>
+                        <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
                         <td>{$size}</td>
                         <td>{$colour}</td>
                         <td>{$orderPath['number_shape']}</td>
@@ -146,13 +146,14 @@ class Data extends AbstractHelper
                $orderItemsDetailHtml .= $itemMessageHtml;
                $itemPhotoHtml = "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
-                    <div class='photo-content'>
+                    <div class='photo-content'>{$orderPath['photo']}
                     " . ($orderPath['photo']) ? "<img style='vertical-align: top' src='{$orderPath['photo']}'/>" : '' .
                    "</div> </div>";
+
                $orderItemsDetailHtml .= $itemPhotoHtml;
                $itemBarCodeHtml = "<div class='barcode-container'>
                     <div class='barcode-title'>Bar Code</div>
-                    <div class='barcode-content'><barcode code='{$product->getBarcode()}' text='1' class='' /></div>
+                    <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
                 </div>";
                $orderItemsDetailHtml .= $itemBarCodeHtml;
            }
