@@ -78,7 +78,7 @@ class Data extends AbstractHelper
                     $sku = $parentProduct->getSku();
                 }
                 $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape'):" ";
-                $iconShape = "OrderPdf_PdfExport::{$shape}.png";
+                $iconShape = "OrderPdf_PdfExport::images/{$shape}.png";
                 $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge'):" ";
                 $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings'):" ";
                 $base  = substr($sponge, 0, 1);//position,count V
