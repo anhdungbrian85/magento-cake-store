@@ -114,7 +114,7 @@ class Data extends AbstractHelper
                }
 
                 $itemHtml = "
-                    <table>
+                    <table class='item-table'>
                         <tr>
                         <td>Ref</td>
                         <td>Image</td>
@@ -145,14 +145,14 @@ class Data extends AbstractHelper
                 </div>";
                $orderItemsDetailHtml .= $itemMessageHtml;
 
-               $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
+            $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
                     <div class='photo-content'>
                     <img style='vertical-align: top' src='{$orderPath['photo']}'/>
                    </div> </div>" : "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
                      </div>";
-
+                     
                $orderItemsDetailHtml .= $itemPhotoHtml;
                $itemBarCodeHtml = "<div class='barcode-container'>
                     <div class='barcode-title'>Bar Code</div>
@@ -170,8 +170,9 @@ class Data extends AbstractHelper
             </div>";
         }
 
+        $orderData['grand_total'] = number_format($orderData['grand_total'], 2, '.', ',');
        $orderBillingDetailHtml = "
-            <table>
+            <table class='table-footer'>
                <tr>
                     <td>
                         Received as per order<br/>
@@ -193,11 +194,26 @@ class Data extends AbstractHelper
             table { border-collapse: collapse; margin-top: 0; }
             td { padding: 0.5em; }
             h1 { margin-bottom: 0; }
+            .content-container {border: 1px solid;}
+            .order-info {border-bottom: 1px solid; width: 100%; padding-left: 10px;}
+            .order-info tr {display: flex; width: 100%;}
+            .order-info .order-info-image {width: 50%;}
+            .item-table {width: 100%; border-bottom: 1px solid; padding-left: 10px;}
+            .item-table td {width: auto;}
+            .note-container {width: 100%; border-top: 1px solid; padding: 10px;}
+            .message-container {width: 100%; border-bottom: 1px solid; padding: 10px;}
+            .photo-container {width: 100%; padding: 10px;}
+            .photo-container .photo-content {text-align: center;}
+            .table-footer {width: 100%; border-top: 1px solid; padding-left: 10px;}
+            .table-footer tr {display: flex; justify-content: space-around;}
+            .barcode-container {padding: 10px;}
+            img {width: 35px;}
             </style>
-            <table>
+            <div class='content-container'>
+            <table class='order-info'>
                 <tr>
-                    <td>GIF</td>
-                    <td>
+                    <td class='order-info-image'>GIF</td>
+                    <td class='order-info-content'>
                         <div>Order number: {$orderData['order_no']}</div>
                         <div>Date: {$orderData['delivery_date']}</div>
                         <div>Time: {$orderData['delivery_time']}</div>
@@ -211,17 +227,21 @@ class Data extends AbstractHelper
             {$orderNoteDetailHtml}
             {$orderBillingDetailHtml}
             <br />
-        ";
+        </div>";
        $mpdf = new \Mpdf\Mpdf([
            'tempDir' =>  $this->directory->getPath('media') . '/tmp/mpdf',
-           'margin_left' => 20,
-           'margin_right' => 15,
+           'margin_left' => 10,
+           'margin_right' => 5,
            'margin_top' => 25,
            'margin_bottom' => 25,
            'margin_header' => 10,
            'margin_footer' => 10,
            'showBarcodeNumbers' => FALSE
        ]);
+
+    //    var_dump($html);
+    //    die;
+
        try {
            $mpdf->WriteHTML($html);
        } catch (\Mpdf\MpdfException $e) {
