@@ -4,12 +4,14 @@
 define([
     'ko',
     'jquery',
+    'underscore',
     'Magento_Ui/js/form/element/date',
     'mage/translate',
     'locationContext',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver'
-], function (ko, $, AbstractField, $t, locationContext, pickupDataResolver) {
+], function (ko, $, _, AbstractField, $t, locationContext, pickupDataResolver) {
     'use strict';
+
 
     return AbstractField.extend({
         defaults: {
@@ -76,6 +78,15 @@ define([
                 $t('Nov'),
                 $t('Dec')
             ];
+            this.options.dayNameIndex = {
+                'sunday': 0,
+                'monday': 1,
+                'tuesday': 2,
+                'wednesday': 3,
+                'thursday': 4,
+                'friday': 5,
+                'saturday': 6
+            };
             this.options.nextText = $t('Next');
             this.options.prevText = $t('Prev');
             this.options.weekHeader = $t('Wk');
@@ -83,15 +94,36 @@ define([
             this.options.showOn = 'both';
             this.options.firstDay = this.amcheckout_firstDay;
 
+            var self = this;
             this.deliveryDateConfig = ko.pureComputed(function() {
             	return locationContext.deliveryDateConfig();
             });
+
+            var store = pickupDataResolver.getStoreById(locationContext.storeLocationId());
+            if (locationContext.storeLocationId()) {
+                if (store && store.schedule_id) {
+                    var schedule = pickupDataResolver.getScheduleByScheduleId(store.schedule_id),
+                        allowedDays = [];
+                    
+                    _.each(schedule, function(weekDay, dayName) {
+                        if (weekDay[dayName+'_'+'status'] == 1) {
+                            allowedDays.push(self.options.dayNameIndex[dayName]);
+                        }
+                    })
+
+                    if (allowedDays.length) {
+                        allowedDays.sort()
+                        locationContext.deliveryDateConfig(allowedDays)
+                    }
+                }
+            }
 
             if (this.deliveryDateConfig().length > 0) {
                 this.options.beforeShowDay = this.restrictDates.bind(this);
             }
 
             this.prepareDateTimeFormats();
+            this.setDateToFirstPickupDate(store);
 
             return this;
         },
@@ -103,6 +135,57 @@ define([
          */
         restrictDates: function (d) {
             return [$.inArray(d.getDay(), this.deliveryDateConfig()) != -1, ''];
+        },
+
+        setDateToFirstPickupDate: function (store) {
+            var firstPickupDate = this.getFirstPickupDate(store), 
+                self = this;
+
+            this.firstPickupDate = firstPickupDate;
+
+            // This is direct access to the element because change of value does not trigger change of datepicker input
+            var setDatePicker = setInterval(function() {
+                if ($('#' + self.uid).length) {
+                    $('#' + self.uid).datepicker('setDate', firstPickupDate);
+                    clearInterval(setDatePicker);
+                }
+                
+            }, 500);            
+        },
+
+        getFirstPickupDate: function (store) {
+            var now = new Date(), // today
+                index;
+            
+            if (!store.schedule_id) {
+                return now;
+            }
+
+            if (now.getHours() >= 16) {
+                var minPickupDate = this.getNextOpenDay(now)
+                return minPickupDate;
+            }
+            // break loop after the 31st iteration
+            
+            return now;
+        },
+
+        getNextOpenDay: function(date) {
+            date = new Date(+date);
+            do {
+                date.setDate(date.getDate() + 1);
+            }   while (
+                $.inArray(date.getDay(), this.deliveryDateConfig())  == -1
+                //@todo check not in Holidays
+            )
+            return date;
+        },
+
+        getHolidays: function(store) 
+        {
+            return [];
         }
+
+
     });
 });

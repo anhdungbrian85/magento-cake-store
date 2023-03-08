@@ -4,6 +4,7 @@ define([
 	'use strict';
 
 
+
 	return {
 		storeLocationId: ko.observable(window.checkoutConfig.storeLocationId),
 		deliveryType: ko.observable(window.checkoutConfig.deliveryType),

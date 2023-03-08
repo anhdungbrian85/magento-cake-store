@@ -28,7 +28,6 @@ define([
             pickUpComponent.onChangeStore();
         },
         onChangeStore: function (storeId) {
-            console.log(pickupDataResolver)
             pickupDataResolver.storeId(storeId);
             // as we need Store Location Id data even using other delivery methods
             locationContext.storeLocationId(storeId)

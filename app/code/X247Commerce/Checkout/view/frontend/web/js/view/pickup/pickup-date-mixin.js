@@ -61,6 +61,23 @@ define([
 
             return minPickupDate;
         },
+         /**
+         * Set the first store work day to date field
+         *
+         * @param {Object} store
+         * @return {void}
+         */
+        setDateToFirstPickupDate: function (store) {
+            var firstPickupDate = this.getFirstPickupDate(store);
+            console.log(firstPickupDate)
+            this.firstPickupDate = firstPickupDate;
+
+            // This is direct access to the element because change of value does not trigger change of datepicker input
+            $('#' + this.uid).datepicker('setDate', firstPickupDate);
+            this.onValueChange(firstPickupDate);
+        },
+
+
 
     };
 
