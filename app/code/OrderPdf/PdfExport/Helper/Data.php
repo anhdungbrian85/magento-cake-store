@@ -202,11 +202,12 @@ class Data extends AbstractHelper
             .item-table td {width: auto;}
             .note-container {width: 100%; border-top: 1px solid; padding: 10px;}
             .message-container {width: 100%; border-bottom: 1px solid; padding: 10px;}
-            .photo-container {width: 100%; padding: 10px;}
+            .photo-container {width: 100%; padding: 10px; border-bottom: 1px solid;}
             .photo-container .photo-content {text-align: center;}
+            .photo-container .photo-content img {width: 80px;}
             .table-footer {width: 100%; border-top: 1px solid; padding-left: 10px;}
             .table-footer tr {display: flex; justify-content: space-around;}
-            .barcode-container {padding: 10px;}
+            .barcode-container {padding: 10px; border-bottom: 1px solid;}
             img {width: 35px;}
             </style>
             <div class='content-container'>
@@ -238,9 +239,6 @@ class Data extends AbstractHelper
            'margin_footer' => 10,
            'showBarcodeNumbers' => FALSE
        ]);
-
-    //    var_dump($html);
-    //    die;
 
        try {
            $mpdf->WriteHTML($html);
