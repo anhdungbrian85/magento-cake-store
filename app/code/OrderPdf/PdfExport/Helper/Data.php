@@ -148,7 +148,7 @@ class Data extends AbstractHelper
             $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
                     <div class='photo-content'>
-                    <img style='vertical-align: top' src='{$orderPath['photo']}'/>
+                    <img class='customer-photo' style='vertical-align: top' src='{$orderPath['photo']}'/>
                    </div> </div>" : "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
                      </div>";
@@ -204,11 +204,11 @@ class Data extends AbstractHelper
             .message-container {width: 100%; border-bottom: 1px solid; padding: 10px;}
             .photo-container {width: 100%; padding: 10px; border-bottom: 1px solid;}
             .photo-container .photo-content {text-align: center;}
-            .photo-container .photo-content img {width: 80px;}
             .table-footer {width: 100%; border-top: 1px solid; padding-left: 10px;}
             .table-footer tr {display: flex; justify-content: space-around;}
             .barcode-container {padding: 10px; border-bottom: 1px solid;}
             img {width: 35px;}
+            .customer-photo {width: 100px;}
             </style>
             <div class='content-container'>
             <table class='order-info'>
