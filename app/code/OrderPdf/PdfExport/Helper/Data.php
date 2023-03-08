@@ -65,7 +65,7 @@ class Data extends AbstractHelper
        $orderItemsDetailHtml = '';
        $orderNoteDetailHtml = '';
        $currencySymbol = $this->storeManager->getStore()->getBaseCurrency()->getCurrencySymbol();
-        $mediaUrl = $this->storeManager->getStore()->getBaseUrl(
+       $mediaUrl = $this->storeManager->getStore()->getBaseUrl(
                 \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
             );
         if(isset($itemsData) && $itemsData!=null) {
@@ -94,10 +94,8 @@ class Data extends AbstractHelper
                if (isset($options['options']) && !empty($options['options'])) {
                    foreach ($options['options'] as $option) {
                        $response = $this->isJson(''.$option['option_value'] . '', true);
-
-                       if (!empty($response) && !empty($response->order_path)) {
+                       if (!empty($response) && !empty($response->fullpath)) {
                            $orderPath['photo'] =  $response->fullpath;
-
                        } else {
                            if ($option['label'] == 'Personalised Message On Cake') {
                                $orderPath['message']  = $option['option_value'];
@@ -114,6 +112,7 @@ class Data extends AbstractHelper
                        }
                    }
                }
+
                 $itemHtml = "
                     <table>
                         <tr>
@@ -145,13 +144,14 @@ class Data extends AbstractHelper
                     <div class='message-content'>{$orderPath['message']}</div>
                 </div>";
                $orderItemsDetailHtml .= $itemMessageHtml;
-               $itemPhotoHtml = $orderPath['photo'];
-               $itemPhotoHtml = "<div class='photo-container'>
+
+               $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
-                    <br>
-                    <div class='photo-content'>{$orderPath['photo']}
-                    " . ($orderPath['photo']) ? "<img style='vertical-align: top' src='{$orderPath['photo']}'/>" : '' .
-                   "</div> </div>";
+                    <div class='photo-content'>
+                    <img style='vertical-align: top' src='{$orderPath['photo']}'/>
+                   </div> </div>" : "<div class='photo-container'>
+                    <div class='photo-title'>Customer's Photo</div>
+                     </div>";
 
                $orderItemsDetailHtml .= $itemPhotoHtml;
                $itemBarCodeHtml = "<div class='barcode-container'>
