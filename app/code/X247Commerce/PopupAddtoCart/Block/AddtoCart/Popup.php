@@ -20,6 +20,14 @@ class Popup extends Template
 
 	protected $cartHelper;
 
+	public $resourceConnection;
+
+	public $priceHelper;
+
+	public $productHelper;
+
+	public $categoryCollectionFactory;
+
 	public function __construct(
 		Template\Context $context,
 		ResourceConnection $resourceConnection,
@@ -102,8 +110,14 @@ class Popup extends Template
 	{
 		$product = $this->getProduct();
 		$categoryShowInPopup = $product->getCategoryShowInPopupCrossell();
+		$categoryShowInPopup = (array)json_decode($categoryShowInPopup);
+		$categoryIds = [];
+		
+		foreach ($categoryShowInPopup["custom_field"] as $item) {
+			$categoryIds[] = $item->select_field;
+		}
 
-		return $categoryShowInPopup != null ? explode(",", $categoryShowInPopup) : null;
+		return $categoryIds;
 	}
 
 	public function getProduct()
