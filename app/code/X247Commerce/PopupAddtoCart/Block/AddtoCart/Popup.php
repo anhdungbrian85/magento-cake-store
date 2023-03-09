@@ -26,7 +26,7 @@ class Popup extends Template
 
 	public $productHelper;
 
-	public $categoryCollectionFactory;
+	public $categoryRepository;
 
 	public function __construct(
 		Template\Context $context,
@@ -35,21 +35,21 @@ class Popup extends Template
 		\Magento\Catalog\Block\Product\ImageBuilder $imageBuilder,
 		\Magento\Framework\Url\Helper\Data $urlHelper,
 		\Magento\Catalog\ViewModel\Product\OptionsData $optionsData,
-		\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
 		\Magento\Checkout\Helper\Cart $cartHelper,
 		\Magento\Framework\Pricing\Helper\Data $priceHelper,
 		\Magento\Catalog\Helper\Product $productHelper,
+		\Magento\Catalog\Model\CategoryRepository $categoryRepository,
 		array $data = []
 	) {
 		parent::__construct($context, $data);
 		$this->productRepository = $productRepository;
 		$this->resourceConnection = $resourceConnection;
+		$this->categoryRepository = $categoryRepository;
 		$this->imageBuilder = $imageBuilder;
 		$this->priceHelper = $priceHelper;
 		$this->urlHelper = $urlHelper;
 		$this->productHelper = $productHelper;
 		$this->optionsData = $optionsData;
-		$this->categoryCollectionFactory = $categoryCollectionFactory;
 		$this->cartHelper = $cartHelper;
 	}
 
@@ -91,16 +91,10 @@ class Popup extends Template
         return $products;
 	}
 
-	public function getCategoryCollection()
+	public function getCategoryCollection($categoryId)
 	{
-		$categoryIds = $this->getCategoryIds();
-
-		if ($categoryIds != null) {
-			$collection = $this->categoryCollectionFactory->create();
-			$collection->addAttributeToSelect('*');
-			$collection->addAttributeToFilter('entity_id', $categoryIds);
-			
-			return $collection;
+		if ($categoryId != '') {
+			return $this->categoryRepository->get($categoryId);
 		}
 
 		return null;
@@ -113,11 +107,15 @@ class Popup extends Template
 		$categoryShowInPopup = (array)json_decode($categoryShowInPopup);
 		$categoryIds = [];
 		
-		foreach ($categoryShowInPopup["custom_field"] as $item) {
-			$categoryIds[] = $item->select_field;
-		}
+		if ($categoryShowInPopup != null) {
+			foreach ($categoryShowInPopup["custom_field"] as $item) {
+				$categoryIds[] = $item->select_field;
+			}
 
-		return $categoryIds;
+			return $categoryIds;
+		}
+		
+		return null;
 	}
 
 	public function getProduct()
