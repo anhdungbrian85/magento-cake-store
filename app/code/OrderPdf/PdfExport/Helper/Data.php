@@ -152,12 +152,12 @@ class Data extends AbstractHelper
                    </div> </div>" : "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
                      </div>";
-                     
+
                $orderItemsDetailHtml .= $itemPhotoHtml;
                $itemBarCodeHtml = "<div class='barcode-container'>
                     <div class='barcode-title'>Bar Code</div>
                     <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
-                </div>";
+                </div><pagebreak/>";
                $orderItemsDetailHtml .= $itemBarCodeHtml;
            }
        }
