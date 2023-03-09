@@ -116,7 +116,7 @@ class Data extends AbstractHelper
                 $itemHtml = "
                     <table class='order-info'>
                         <tr>
-                            <td class='order-info-image'>GIF</td>
+                            <td class='order-info-image'><img style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
                             <td class='order-info-content'>
                                 <div>Order number: {$orderData['order_no']}</div>
                                 <div>Date: {$orderData['delivery_date']}</div>
@@ -139,8 +139,7 @@ class Data extends AbstractHelper
                         <td>Number</td>
                     </tr>
                         <tr>
-                        <td>{$sku}</td>
-                        <td><img style='vertical-align: top' src='{$imageUrl}?t=jpg' width='80' /></td>
+                        <td>{$sku}</td>" . (($imageUrl) ? '<td>[Custom]</td>' : '<td></td>') . "
                         <td>{$base}</td>
                         <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
                         <td>{$size}</td>
