@@ -116,7 +116,7 @@ class Data extends AbstractHelper
                 $itemHtml = "
                     <table class='order-info'>
                         <tr>
-                            <td class='order-info-image'><img style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
+                            <td class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
                             <td class='order-info-content'>
                                 <div>Order number: {$orderData['order_no']}</div>
                                 <div>Date: {$orderData['delivery_date']}</div>
@@ -141,7 +141,7 @@ class Data extends AbstractHelper
                         <tr>
                         <td>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td>[Custom]</td>' : '<td>[No Custom]</td>') . "
                         <td>{$base}</td>
-                        <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
+                        <td><img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
                         <td>{$size}</td>
                         <td>{$colour}</td>
                         <td>{$orderPath['number_shape']}</td>
@@ -157,7 +157,7 @@ class Data extends AbstractHelper
                 </div>";
                $orderItemsDetailHtml .= $itemMessageHtml;
 
-            $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
+                $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
                     <div class='photo-title'>Customer's Photo</div>
                     <div class='photo-content'>
                     <img class='customer-photo' style='vertical-align: top' src='{$orderPath['photo']}'/>
@@ -166,41 +166,44 @@ class Data extends AbstractHelper
                      </div>";
 
                $orderItemsDetailHtml .= $itemPhotoHtml;
-               $itemBarCodeHtml = "<div class='barcode-container'>
-                    <div class='barcode-title'>Bar Code</div>
+
+               $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
+               if ($delivery->getId()) {
+                   $orderNoteDetailHtml = "<div class='note-container'>
+                        <div class='note-title'>Notes:</div>
+                        <div class='note-content'>{$delivery->getData('comment')}</div>
+                    </div>";
+               }
+               $orderItemsDetailHtml .= $orderNoteDetailHtml;
+               $orderData['grand_total'] = number_format($orderData['grand_total'], 2, '.', ',');
+               $orderBillingDetailHtml = "
+                    <table class='table-footer'>
+                       <tr>
+                            <td>
+                                Received as per order<br/>
+                                Print Name: -----------<br/>
+                                Signature:  -----------<br/>
+                                Date:       -----------<br/>
+                            </td>
+                            <td>
+                                Made By:    -----------<br/>
+                                Serve By:   -----------<br/>
+                                {$currencySymbol}{$orderData['grand_total']} Order<br/>
+                                {$currencySymbol}{$orderData['grand_total']} Paid Online<br/>
+                            </td>
+                        </tr>
+                    </table>
+               ";
+               $orderItemsDetailHtml .= $orderBillingDetailHtml;
+               $itemBarCodeHtml = "<div>
                     <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
-                </div><pagebreak />";
+                </div>";
                $orderItemsDetailHtml .= $itemBarCodeHtml;
+               $orderItemsDetailHtml .= '<pagebreak />';
            }
        }
 
-        $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
-        if ($delivery->getId()) {
-            $orderNoteDetailHtml = "<div class='note-container'>
-                <div class='note-title'>Notes:</div>
-                <div class='note-content'>{$delivery->getData('comment')}</div>
-            </div>";
-        }
 
-        $orderData['grand_total'] = number_format($orderData['grand_total'], 2, '.', ',');
-       $orderBillingDetailHtml = "
-            <table class='table-footer'>
-               <tr>
-                    <td>
-                        Received as per order<br/>
-                        Print Name: -----------<br/>
-                        Signature:  -----------<br/>
-                        Date:       -----------<br/>
-                    </td>
-                    <td>
-                        Made By:    -----------<br/>
-                        Serve By:   -----------<br/>
-                        {$currencySymbol}{$orderData['grand_total']} Order<br/>
-                        {$currencySymbol}{$orderData['grand_total']} Paid Online<br/>
-                    </td>
-                </tr>
-            </table>
-       ";
        $html = "
             <style>
             table { border-collapse: collapse; margin-top: 0; }
@@ -209,7 +212,8 @@ class Data extends AbstractHelper
             .content-container {border: 1px solid;}
             .order-info {border-bottom: 1px solid; width: 100%; padding-left: 10px;}
             .order-info tr {display: flex; width: 100%;}
-            .order-info .order-info-image {width: 50%;}
+            .order-info .order-info-image {width: 50%; text-align: center}
+            .order-info-image-icon {width: 120px;}
             .item-table {width: 100%; border-bottom: 1px solid; padding-left: 10px;}
             .item-table td {width: auto;}
             .note-container {width: 100%; border-top: 1px solid; padding: 10px;}
@@ -219,13 +223,11 @@ class Data extends AbstractHelper
             .table-footer {width: 100%; border-top: 1px solid; padding-left: 10px;}
             .table-footer tr {display: flex; justify-content: space-around;}
             .barcode-container {padding: 10px; border-bottom: 1px solid;}
-            img {width: 35px;}
+            .shape-icon {width: 35px;}
             .customer-photo {width: 100px;}
             </style>
             <div class='content-container'>
                 {$orderItemsDetailHtml}
-                {$orderNoteDetailHtml}
-                {$orderBillingDetailHtml}
                 <br />
             </div>";
        $mpdf = new \Mpdf\Mpdf([
@@ -246,7 +248,7 @@ class Data extends AbstractHelper
        } catch (\Mpdf\MpdfException $e) {
            die($e->getMessage());
        }
-       $mpdf->Output();
+       $mpdf->Output($orderData['order_no'], 'D');
     }
 
     protected function getItemOptions($item)
