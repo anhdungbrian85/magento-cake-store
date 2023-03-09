@@ -139,7 +139,7 @@ class Data extends AbstractHelper
                         <td>Number</td>
                     </tr>
                         <tr>
-                        <td>{$sku}</td>" . (($imageUrl) ? '<td>[Custom]</td>' : '<td></td>') . "
+                        <td>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td>[Custom]</td>' : '<td>[No Custom]</td>') . "
                         <td>{$base}</td>
                         <td><img style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
                         <td>{$size}</td>
