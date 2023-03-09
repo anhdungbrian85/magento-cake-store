@@ -38,11 +38,11 @@ class SendPickupReminder
 		foreach ($result as $order) {		
 			$orderId = $order['order_id']; // Replace with the order ID you want to retrieve
 			try {				
-				$order = $this->orderRepository->get($orderId);
-				$orderData = $order->getData();				
-				if($orderData['kl_sms_consent'] == '"1"'){
+				$orderDetails = $this->orderRepository->get($orderId);
+				$orderData = $orderDetails->getData();				
+				if($orderData['kl_sms_consent'] == '"1"' && $orderData['sms_reminder'] != '1'){
 				
-					$billingAddress = $order->getBillingAddress();				
+					$billingAddress = $orderDetails->getBillingAddress();				
 					$telephone = $billingAddress->getTelephone();			
 					
 					if (substr($telephone, 0, 1) === "0") {
@@ -76,6 +76,65 @@ class SendPickupReminder
 					  }
 					}';	   
 					$this->sendRequest($klaviyoApiParams);
+					$orderDetails->setSmsReminder('1');
+					$orderDetails->save();
+				}
+			} catch (\Exception $e) {
+				echo $e->getMessage();
+				$this->logger->error('Klaviyo SMS reminder Order id'.$orderId.' Error '.$e->getMessage());
+				continue;
+			}
+		}
+
+		$deliverytableName = $this->resource->getTableName('amasty_amcheckout_delivery');
+		$valueDelivery = date('Y-m-d');
+		$selectDelivery = $connection->select()
+			->from($deliverytableName)
+			->where('date = ?', $valueDelivery);
+		$resultDelivery = $connection->fetchAll($selectDelivery);
+		foreach ($resultDelivery as $orderDelivery) {		
+			$orderDeliveryId = $orderDelivery['order_id']; // Replace with the order ID you want to retrieve
+			try {				
+				$orderDetailDelivery = $this->orderRepository->get($orderDeliveryId);
+				$orderDeliveryData = $orderDetailDelivery->getData();				
+				if($orderDeliveryData['kl_sms_consent'] == '"1"' && $orderDeliveryData['sms_reminder'] != '1'){
+				
+					$billingAddress = $orderDetailDelivery->getBillingAddress();				
+					$telephone = $billingAddress->getTelephone();			
+					
+					if (substr($telephone, 0, 1) === "0") {
+						$telephone = substr_replace($telephone, "+44", 0, 1);
+					}else{
+						$telephone ="+44".$telephone;
+					}
+					
+					// Do something with the order data
+					// Send Klaviyo event
+					echo $klaviyoApiParams = '{
+					  "data": {
+						"type": "event",
+						"attributes": {
+						  "profile": {
+							"$email": "'.$orderDeliveryData['customer_email'].'",
+							"$phone_number":"'.$telephone.'",
+							"$country":"United Kingdom",
+							"$pickup_date":"'.date('Y-m-d').'"
+						  },
+						  "metric": {
+							"name": "Delivery date",
+							"service": "'.date('Y-m-d').'" 
+						  },
+						  "properties": {                
+							"OrderNumber": "'.$orderDeliveryData['increment_id'].'"							
+						  },
+						  "value": '.$orderDeliveryData['grand_total'].',
+						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
+						}
+					  }
+					}';	   
+					$this->sendRequest($klaviyoApiParams);
+					$orderDetailDelivery->setSmsReminder('1');
+					$orderDetailDelivery->save();
 				}
 			} catch (\Exception $e) {
 				echo $e->getMessage();
