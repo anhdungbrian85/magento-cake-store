@@ -81,7 +81,7 @@ class SendPickupReminder
 				}
 			} catch (\Exception $e) {
 				echo $e->getMessage();
-				$this->logger->error('Klaviyo SMS reminder Order id'.$orderId.' Error '.$e->getMessage());
+				$this->logger->error('Klaviyo STOREPICKUP SMS reminder Order id'.$orderId.' Error '.$e->getMessage());
 				continue;
 			}
 		}
@@ -99,24 +99,24 @@ class SendPickupReminder
 				$orderDeliveryData = $orderDetailDelivery->getData();				
 				if($orderDeliveryData['kl_sms_consent'] == '"1"' && $orderDeliveryData['sms_reminder'] != '1'){
 				
-					$billingAddress = $orderDetailDelivery->getBillingAddress();				
-					$telephone = $billingAddress->getTelephone();			
+					$billingDeliveryAddress = $orderDetailDelivery->getBillingAddress();				
+					$delierytelephone = $billingDeliveryAddress->getTelephone();			
 					
-					if (substr($telephone, 0, 1) === "0") {
-						$telephone = substr_replace($telephone, "+44", 0, 1);
+					if (substr($delierytelephone, 0, 1) === "0") {
+						$delierytelephone = substr_replace($delierytelephone, "+44", 0, 1);
 					}else{
-						$telephone ="+44".$telephone;
+						$delierytelephone ="+44".$delierytelephone;
 					}
 					
 					// Do something with the order data
 					// Send Klaviyo event
-					echo $klaviyoApiParams = '{
+					echo $klaviyoDelieryApiParams = '{
 					  "data": {
 						"type": "event",
 						"attributes": {
 						  "profile": {
 							"$email": "'.$orderDeliveryData['customer_email'].'",
-							"$phone_number":"'.$telephone.'",
+							"$phone_number":"'.$delierytelephone.'",
 							"$country":"United Kingdom",
 							"$pickup_date":"'.date('Y-m-d').'"
 						  },
@@ -132,13 +132,13 @@ class SendPickupReminder
 						}
 					  }
 					}';	   
-					$this->sendRequest($klaviyoApiParams);
+					$this->sendRequest($klaviyoDelieryApiParams);
 					$orderDetailDelivery->setSmsReminder('1');
 					$orderDetailDelivery->save();
 				}
 			} catch (\Exception $e) {
 				echo $e->getMessage();
-				$this->logger->error('Klaviyo SMS reminder Order id'.$orderId.' Error '.$e->getMessage());
+				$this->logger->error('Klaviyo DELIVERY SMS reminder Order id'.$orderDeliveryId.' Error '.$e->getMessage());
 				continue;
 			}
 		}		
