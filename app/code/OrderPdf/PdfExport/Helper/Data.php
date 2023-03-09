@@ -69,7 +69,9 @@ class Data extends AbstractHelper
                 \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
             );
         if(isset($itemsData) && $itemsData!=null) {
+            $tmp = 0;
            foreach ($itemsData as $item) {
+                $tmp++;
                 $product = $this->productRepository->get($item->getSku());
                 $parentByChild = $this->catalogProductTypeConfigurable->getParentIdsByChild($product->getId());
                 $sku = $item->getSku();
@@ -199,7 +201,9 @@ class Data extends AbstractHelper
                     <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
                 </div>";
                $orderItemsDetailHtml .= $itemBarCodeHtml;
-               $orderItemsDetailHtml .= '<pagebreak />';
+               if (count($itemsData) > $tmp) {
+                    $orderItemsDetailHtml .= '<pagebreak />';
+               }
            }
        }
 
