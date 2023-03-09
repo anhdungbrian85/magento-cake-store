@@ -114,6 +114,19 @@ class Data extends AbstractHelper
                }
 
                 $itemHtml = "
+                    <table class='order-info'>
+                        <tr>
+                            <td class='order-info-image'>GIF</td>
+                            <td class='order-info-content'>
+                                <div>Order number: {$orderData['order_no']}</div>
+                                <div>Date: {$orderData['delivery_date']}</div>
+                                <div>Time: {$orderData['delivery_time']}</div>
+                                <div>Billing Name: {$orderData['firstname']} {$orderData['lastname']}</div>
+                                <div>Billing Tel: {$orderData['phone_no']}</div>
+                                <div>Billing Email: {$orderData['email']}</div>
+                            </td>
+                        </tr>
+                    </table>
                     <table class='item-table'>
                         <tr>
                         <td>Ref</td>
@@ -157,7 +170,7 @@ class Data extends AbstractHelper
                $itemBarCodeHtml = "<div class='barcode-container'>
                     <div class='barcode-title'>Bar Code</div>
                     <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
-                </div><pagebreak/>";
+                </div><pagebreak />";
                $orderItemsDetailHtml .= $itemBarCodeHtml;
            }
        }
@@ -211,24 +224,11 @@ class Data extends AbstractHelper
             .customer-photo {width: 100px;}
             </style>
             <div class='content-container'>
-            <table class='order-info'>
-                <tr>
-                    <td class='order-info-image'>GIF</td>
-                    <td class='order-info-content'>
-                        <div>Order number: {$orderData['order_no']}</div>
-                        <div>Date: {$orderData['delivery_date']}</div>
-                        <div>Time: {$orderData['delivery_time']}</div>
-                        <div>Billing Name: {$orderData['firstname']} {$orderData['lastname']}</div>
-                        <div>Billing Tel: {$orderData['phone_no']}</div>
-                        <div>Billing Email: {$orderData['email']}</div>
-                    </td>
-                </tr>
-            </table>
-            {$orderItemsDetailHtml}
-            {$orderNoteDetailHtml}
-            {$orderBillingDetailHtml}
-            <br />
-        </div>";
+                {$orderItemsDetailHtml}
+                {$orderNoteDetailHtml}
+                {$orderBillingDetailHtml}
+                <br />
+            </div>";
        $mpdf = new \Mpdf\Mpdf([
            'tempDir' =>  $this->directory->getPath('media') . '/tmp/mpdf',
            'margin_left' => 10,
@@ -241,7 +241,9 @@ class Data extends AbstractHelper
        ]);
 
        try {
+           $mpdf->setFooter('Page {PAGENO} of {nbpg}');
            $mpdf->WriteHTML($html);
+
        } catch (\Mpdf\MpdfException $e) {
            die($e->getMessage());
        }
