@@ -248,7 +248,7 @@ class Data extends AbstractHelper
        } catch (\Mpdf\MpdfException $e) {
            die($e->getMessage());
        }
-       $mpdf->Output($orderData['order_no'], 'D');
+       $mpdf->Output($orderData['order_no'] . '.pdf', 'D');
     }
 
     protected function getItemOptions($item)
