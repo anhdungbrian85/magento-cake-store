@@ -78,7 +78,9 @@ class Data extends AbstractHelper
             $logger->info('Before check empty items data!');
             if(isset($itemsData) && $itemsData!=null) {
                 $logger->info('During check empty items data!');
+                $tmp = 0;
                 foreach ($itemsData as $item) {
+                    $tmp++;
                     $product = $this->productRepository->get($item->getSku());
                     $parentByChild = $this->catalogProductTypeConfigurable->getParentIdsByChild($product->getId());
                     $sku = $item->getSku();
@@ -213,7 +215,10 @@ class Data extends AbstractHelper
                     <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
                 </div>";
                     $orderItemsDetailHtml .= $itemBarCodeHtml;
-                    $orderItemsDetailHtml .= '<pagebreak />';
+                    if (count($itemsData) > $tmp) {
+                        $orderItemsDetailHtml .= '<pagebreak />';
+                     }
+
                 }
             }
 
@@ -263,7 +268,7 @@ class Data extends AbstractHelper
             } catch (\Mpdf\MpdfException $e) {
                 $logger->info('Has error when renderring order pdf:' . $e->getMessage());
             }
-            $mpdf->Output($orderData['order_no'], 'D');
+            $mpdf->Output($orderData['order_no'] . '.pdf', 'I');
             $logger->info('End debugging!');
         } catch (\Exception $e) {
             $logger->info('Has error when processing:' . $e->getMessage());
