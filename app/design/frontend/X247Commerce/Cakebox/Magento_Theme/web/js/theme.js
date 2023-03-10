@@ -61,7 +61,12 @@ define([
         $('.swatch-layered.size_servings .swatch-option.text').each( function (){
             let value = $.trim($(this).text());
             let arrayValue = value.split(" ");
-            arrayValue[0] = '<span class="size-number-value">' + arrayValue[0] + '</span>';
+            if (arrayValue[3] == 'Cupcakes') {
+                arrayValue[0] = '<span class="size-number-value">' + arrayValue[0];
+                arrayValue[2] = arrayValue[2] + '</span>';
+            } else {
+                arrayValue[0] = '<span class="size-number-value">' + arrayValue[0] + '</span>';
+            }
             $(this).html(arrayValue.join(' '));
         });
     }
