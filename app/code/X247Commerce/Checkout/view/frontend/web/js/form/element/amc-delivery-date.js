@@ -93,6 +93,7 @@ define([
             this.options.minDate = new Date();
             this.options.showOn = 'both';
             this.options.firstDay = this.amcheckout_firstDay;
+            this.options.defaultDate = new Date();
 
             var self = this;
             this.deliveryDateConfig = ko.pureComputed(function() {
@@ -123,7 +124,7 @@ define([
             }
 
             this.prepareDateTimeFormats();
-            this.setDateToFirstPickupDate(store);
+            // this.setDateToFirstPickupDate(store);
 
             return this;
         },
@@ -141,16 +142,7 @@ define([
             var firstPickupDate = this.getFirstPickupDate(store), 
                 self = this;
 
-            this.firstPickupDate = firstPickupDate;
-
-            // This is direct access to the element because change of value does not trigger change of datepicker input
-            var setDatePicker = setInterval(function() {
-                if ($('#' + self.uid).length) {
-                    $('#' + self.uid).datepicker('setDate', firstPickupDate);
-                    clearInterval(setDatePicker);
-                }
-                
-            }, 500);            
+            this.firstPickupDate = firstPickupDate;           
         },
 
         getFirstPickupDate: function (store) {
