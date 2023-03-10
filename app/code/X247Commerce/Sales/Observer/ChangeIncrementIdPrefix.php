@@ -10,6 +10,7 @@ class ChangeIncrementIdPrefix implements ObserverInterface
     protected $logger;
     protected $locatorSourceResolver;
     protected $storeLocationContextInterface;
+    protected $locationFactory;
     protected $yextAttribute;
     public function __construct(
         \Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory $invoiceCollectionFactory,
@@ -18,7 +19,8 @@ class ChangeIncrementIdPrefix implements ObserverInterface
         \X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver $locatorSourceResolver,
         \X247Commerce\Checkout\Api\StoreLocationContextInterface $storeLocationContextInterface,
         \X247Commerce\Yext\Model\YextAttribute $yextAttribute,
-        \Magento\Customer\Model\Session $customerSession
+        \Amasty\Storelocator\Model\LocationFactory $locationFactory,
+        \Magento\Checkout\Model\Session $checkoutSession
     ) {
         $this->invoiceCollectionFactory = $invoiceCollectionFactory;
         $this->logger = $logger;
@@ -26,7 +28,8 @@ class ChangeIncrementIdPrefix implements ObserverInterface
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->yextAttribute = $yextAttribute;
         $this->storeLocationContextInterface = $storeLocationContextInterface;
-        $this->customerSession = $customerSession;
+        $this->locationFactory = $locationFactory;
+        $this->checkoutSession = $checkoutSession;
     }
     public function execute(Observer $observer)
     {
@@ -42,12 +45,12 @@ class ChangeIncrementIdPrefix implements ObserverInterface
     {
         $shippingMethod  = '';
         if ($order) {
-            $locationId = !empty($order->getStoreLocationId()) ? $order->getStoreLocationId() : $this->customerSession->getStoreLocationId();        
+            $locationId = !empty($order->getStoreLocationId()) ? $order->getStoreLocationId() : $this->checkoutSession->getStoreLocationId();        
             $shippingMethod  = $order->getShippingMethod();
         } else {
-            $locationId = $this->customerSession->getStoreLocationId();
+            $locationId = $this->checkoutSession->getStoreLocationId();
         }
-        
+        $location = $this->locationFactory->create()->load($locationId);
         $yextEntityIdOfLocation = $this->yextAttribute->getYextEntityIdByLocationId($locationId);        
         $yextPrefix = $yextEntityIdOfLocation ? substr($yextEntityIdOfLocation, -3, 3).'-' : '';
 
@@ -56,7 +59,7 @@ class ChangeIncrementIdPrefix implements ObserverInterface
         } else {
             $deliPrefix = 'DEL';
         }
-        if (strpos($yextEntityIdOfLocation, 'CBK') !== false) {
+        if (strpos($yextEntityIdOfLocation, 'CBK') !== false || strpos(strtoupper($location->getName()), 'ASDA')) {
             $deliPrefix = 'KIO';
         }
         $prefix = $yextPrefix.$deliPrefix.'-';
