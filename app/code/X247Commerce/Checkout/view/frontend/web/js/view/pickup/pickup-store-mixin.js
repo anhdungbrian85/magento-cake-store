@@ -25,6 +25,7 @@ define([
             }
             let pickUpComponent = registry.get('checkout.steps.shipping-step.shippingAddress.amstorepickup.am_pickup_date');
             //trigger
+            console.log(pickUpComponent)
             pickUpComponent.onChangeStore();
         },
         onChangeStore: function (storeId) {
