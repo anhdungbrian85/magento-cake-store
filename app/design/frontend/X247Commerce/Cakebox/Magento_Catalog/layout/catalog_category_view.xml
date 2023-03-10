@@ -31,5 +31,6 @@
                 <block class="Magento\Catalog\Block\Category\Rss\Link" name="rss.link.mobile" template="Magento_Catalog::category/rss.phtml"/>
             </block>
         </referenceContainer>
+        <move element="category.view.container" destination="main" after="-"/>
     </body>
 </page>
