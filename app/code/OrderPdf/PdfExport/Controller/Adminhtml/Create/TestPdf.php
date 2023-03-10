@@ -25,7 +25,7 @@ class TestPdf extends \Magento\Backend\App\Action
         $logger->info('Start debugging!');
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $mpdf = new \Mpdf\Mpdf([
-            'tempDir' =>  $this->directoryList->getPath('media') . '/tmp/mpdf',
+            'tempDir' =>  $this->directoryList->getPath('var') . 'log/tmp/mpdf',
             'margin_left' => 10,
             'margin_right' => 5,
             'margin_top' => 25,
