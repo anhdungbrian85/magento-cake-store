@@ -48,50 +48,42 @@ class Index extends \Magento\Sales\Controller\Adminhtml\Order
         $this->resultPageFactory = $resultPageFactory;
         $this->resultJsonFactory = $resultJsonFactory;
         $this->resultLayoutFactory = $resultLayoutFactory;
-        $this->resultRawFactory = $resultRawFactory;
         $this->orderManagement = $orderManagement;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
 		$this->_orderpdf = $orderpdf;
 		$this->helper = $helper;
-        $this->resultRawFactory = $resultRawFactory;
         parent::__construct($context,$coreRegistry,$fileFactory,$translateInline,$resultPageFactory,
 		$resultJsonFactory,$resultLayoutFactory,$resultRawFactory,$orderManagement,$orderRepository,$logger );
     }
     public function execute()
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/order_pdf.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Start debugging on Controller!');
 		$_fileFactory = $this->_fileFactory;
-        // In case you want to do something with the order
         $order_id = $this->getRequest()->getParam('order_id');
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
-        //$order = $this->_initOrder();
 		$order = $this->_orderpdf->load($order_id);
-
         $resultRedirect = $this->resultRedirectFactory->create();
+        $logger->info('After get data on Controller');
         try {
             // TODO: Do something with the order
-			if($order->getState()=='complete' || $order->getState()=='processing'){
-
-			$this->helper->createOrderPdf($order,$_fileFactory);
-
-			}else{
-
+            $logger->info('Before check order status');
+			if($order->getState()=='complete' || $order->getState()=='processing') {
+                $logger->info('Before rendering order pdf on Controller');
+			    $this->helper->createOrderPdf($order, $_fileFactory);
+                $logger->info('After rendering order pdf on Controller');
+			} else {
+                $logger->info('Order status is not in processing or completed');
 				$this->messageManager->addSuccessMessage(__('Order status is not in processing or completed.'));
 			}
 
         } catch (\Exception $e) {
+            $logger->info('Has error during process on Controller');
             $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
-
+        $logger->info('End debugging on Controller!');
         return $resultRedirect->setPath('sales/order/view', [ 'order_id' => $order->getId() ]);
-    }
-
-    /**
-     * @return bool
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('OrderPdf_PdfExport::order_dosomething');
     }
 }
