@@ -74,6 +74,10 @@
     print {
         .media-width('min', @screen__l);
     }
+    @media all and (min-width: @screen__ls),
+    print {
+        .media-width('min', @screen__ls);
+    }
 
     @media all and (min-width: @screen__l + 1),
     print {
@@ -93,5 +97,8 @@
     print {
         .media-width('max', (@screen__l));
     }
-
+    @media all  and (max-width: @screen__ls),
+    print {
+        .media-width('max', (@screen__ls));
+    }
 }

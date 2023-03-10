@@ -1,6 +1,62 @@
 & when (@media-common = true) {
-	.category-page-header {
+	.catalog-category-view .list-category-celebration-cakes{
+		> .row-full-width-inner {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
 
+			.child-category-row {
+				margin: 0 1%;
+
+				.child-category-row-item {
+					text-align: center;
+					box-shadow: 5px 10px 15px #eee;
+					border: 0.5px solid #eee;
+					margin-top: 30px;
+					padding-bottom: 20px;
+
+					.child-category-row-item-title {
+    					text-align: center;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						display: flex;
+						text-align: center;
+						justify-content: center;
+						align-items: center;
+						height: 55px;
+						margin-bottom: 10px;
+						font-size: 24px;
+						font-weight: 400;
+					}
+
+					.child-category-row-image {
+    					max-height: 250px;
+						
+						img {
+							height: 100%;
+							max-height: 250px;
+							min-height: 250px;
+							width: 100%;
+						}
+					}
+
+					.button-view-now-category a {
+						color: #C14EAA;
+						background: #fff;
+						padding: 7px 14px;
+						font-size: 14px;
+						font-weight: 400;
+						border-color: #C14EAA;
+						border-radius: 6px;
+
+						&:hover {
+							color: #fff;
+							background: #C14EAA;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -8,7 +64,25 @@
 //  Desktop
 //  _____________________________________________
 
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__ls) {
+	.catalog-category-view .list-category-celebration-cakes{
+		> .row-full-width-inner {
+			.child-category-row {
+				width: 31%;
+			}
+		}
+	}
+}
+
 .media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__m) {
+	.catalog-category-view .list-category-celebration-cakes{
+		> .row-full-width-inner {
+			.child-category-row {
+				width: 17%;
+			}
+		}
+	}
+
 	.category-header {
 		background-size: cover;
 		background-repeat: no-repeat;
@@ -75,6 +149,14 @@
 		display: none;
 	}
 
+	.catalog-category-view .list-category-celebration-cakes{
+		> .row-full-width-inner {
+			.child-category-row {
+				width: 48%;
+			}
+		}
+	}
+
 	.category-view {
 		.page-title-wrapper {
 			text-align: center;
@@ -93,6 +175,16 @@
 				font-family: 'pagebuilder-font';
 				content: '\f103';
 				color: #555555;
+			}
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break = @screen__xs) {
+	.catalog-category-view .list-category-celebration-cakes{
+		> .row-full-width-inner {
+			.child-category-row {
+				width: 98%;
 			}
 		}
 	}
