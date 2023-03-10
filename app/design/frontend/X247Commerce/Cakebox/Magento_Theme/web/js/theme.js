@@ -56,6 +56,21 @@ define([
         }
     });
 
+    if ( $( window ).width() < 767 ) {
+        $('.am-filter-items-color, .am-ranges.price-ranges').parents('.filter-options-item').hide();
+        $('.swatch-layered.size_servings .swatch-option.text').each( function (){
+            let value = $.trim($(this).text());
+            let arrayValue = value.split(" ");
+            if (arrayValue[3] == 'Cupcakes') {
+                arrayValue[0] = '<span class="size-number-value">' + arrayValue[0];
+                arrayValue[2] = arrayValue[2] + '</span>';
+            } else {
+                arrayValue[0] = '<span class="size-number-value">' + arrayValue[0] + '</span>';
+            }
+            $(this).html(arrayValue.join(' '));
+        });
+    }
+
     $('body').on( 'click', '.item-parent .icon-toggle', function(e) {
         e.preventDefault();
         var parentItem = $(this).parents('.item-parent'),

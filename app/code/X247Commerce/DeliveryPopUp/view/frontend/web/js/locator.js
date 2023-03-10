@@ -173,11 +173,11 @@ define([
                         window.location.reload();
                     }
                     
-                } else {
+                } else if (response.delivery_status == false) {
                     if ($('[name="delivery-type"]:checked').val() == 1) {
                         $('.delivery-popup.text').append(errorMessage);
                     }
-                    
+                } else {
                     response = JSON.parse(response);
                     self.options.jsonLocations = response;
                     self.getIdentifiers();
