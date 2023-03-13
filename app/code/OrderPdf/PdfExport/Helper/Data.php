@@ -255,7 +255,7 @@ class Data extends AbstractHelper
                 <br />
             </div>";
             $mpdf = new \Mpdf\Mpdf([
-                'tempDir' =>  $this->directory->getPath('media') . '/tmp/mpdf',
+                'tempDir' =>  $this->directory->getPath('var') . '/log/tmp/mpdf',
                 'margin_left' => 10,
                 'margin_right' => 5,
                 'margin_top' => 25,
@@ -269,18 +269,19 @@ class Data extends AbstractHelper
                 $logger->info('Start render order pdf!');
                 $mpdf->setFooter('Page {PAGENO} of {nbpg}');
                 $mpdf->WriteHTML($html);
-                $logger->info('End render order pdf!');
+                $mpdf->Output($orderData['order_no'] . '.pdf', 'I');
+                $fileContent = ['type' => 'string', 'value' => $mpdf->Output($orderData['order_no'] . '.pdf', 'S'), 'rm' => true];
+                return $this->fileFactory->create(
+                    'invoice.pdf',
+                    $fileContent,
+                    DirectoryList::VAR_DIR,
+                    'application/pdf'
+                );
             } catch (\Mpdf\MpdfException $e) {
                 $logger->info('Has error when renderring order pdf:' . $e->getMessage());
             }
-//            $mpdf->Output($orderData['order_no'] . '.pdf', 'I');
-            $fileContent = ['type' => 'string', 'value' => $mpdf->Output($orderData['order_no'] . '.pdf', 'S'), 'rm' => true];
-            return $this->fileFactory->create(
-                $orderData['order_no'] . '.pdf',
-                $fileContent,
-                DirectoryList::VAR_DIR,
-                'application/pdf'
-            );
+
+            $logger->info('End debugging!');
         } catch (\Exception $e) {
             $logger->info('Has error when processing:' . $e->getMessage());
             return $e;
