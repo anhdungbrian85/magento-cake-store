@@ -56,7 +56,7 @@ define([
         bindSelectLocation: function() {
             let self = this;
             url.setBaseUrl(BASE_URL);
-            var redirectUrl = url.build('elebration-cakes/by-flavour-theme/click-collect-1-hour.html');
+            var redirectUrl = url.build('celebration-cakes/click-collect-1-hour.html');
 
             $(document).on('click', '.select-location', function() {
                 const location_id = $(this).data('location-id');
