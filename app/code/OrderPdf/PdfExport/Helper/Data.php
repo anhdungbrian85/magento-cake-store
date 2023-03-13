@@ -1,6 +1,7 @@
 <?php
 
 namespace OrderPdf\PdfExport\Helper;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use \Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Amasty\StorePickupWithLocator\Api\OrderRepositoryInterface;
@@ -29,7 +30,10 @@ class Data extends AbstractHelper
 
     protected $assetRepo;
 
+    protected $fileFactory;
+
     public function __construct(
+        \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\Filesystem\DirectoryList $directory,
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider $deliveryDateProvider,
@@ -53,6 +57,7 @@ class Data extends AbstractHelper
         $this->deliveryDateProvider = $deliveryDateProvider;
         $this->assetRepo = $assetRepo;
         $this->directory = $directory;
+        $this->fileFactory = $fileFactory;
     }
 
     public function createOrderPdf($order,$_fileFactory)
@@ -268,8 +273,14 @@ class Data extends AbstractHelper
             } catch (\Mpdf\MpdfException $e) {
                 $logger->info('Has error when renderring order pdf:' . $e->getMessage());
             }
-            $mpdf->Output($orderData['order_no'] . '.pdf', 'I');
-            $logger->info('End debugging!');
+//            $mpdf->Output($orderData['order_no'] . '.pdf', 'I');
+            $fileContent = ['type' => 'string', 'value' => $mpdf->Output($orderData['order_no'] . '.pdf', 'S'), 'rm' => true];
+            return $this->fileFactory->create(
+                $orderData['order_no'] . '.pdf',
+                $fileContent,
+                DirectoryList::VAR_DIR,
+                'application/pdf'
+            );
         } catch (\Exception $e) {
             $logger->info('Has error when processing:' . $e->getMessage());
             return $e;
