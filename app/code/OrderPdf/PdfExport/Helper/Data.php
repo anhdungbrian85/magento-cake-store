@@ -272,7 +272,7 @@ class Data extends AbstractHelper
                 $mpdf->Output($orderData['order_no'] . '.pdf', 'I');
                 $fileContent = ['type' => 'string', 'value' => $mpdf->Output($orderData['order_no'] . '.pdf', 'S'), 'rm' => true];
                 return $this->fileFactory->create(
-                    'invoice.pdf',
+                    $orderData['order_no'] . '.pdf',
                     $fileContent,
                     DirectoryList::VAR_DIR,
                     'application/pdf'

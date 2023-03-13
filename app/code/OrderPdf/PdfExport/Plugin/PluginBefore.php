@@ -29,11 +29,6 @@ class PluginBefore
                 ['label' => __('Order Creation Pdf'), 'onclick' => 'setLocation("' . $url . '")', 'class' => 'reset'],
                 -1
             );
-            $buttonList->add(
-                'test_create_order_pdf_button',
-                ['label' => __('Test Order Creation Pdf'), 'onclick' => 'setLocation("' . $context->getUrl('orderspdf/create/testPdf') . '")', 'class' => 'reset'],
-                -1
-            );
         }
     }
 }
