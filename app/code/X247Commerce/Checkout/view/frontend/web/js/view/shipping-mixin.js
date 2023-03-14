@@ -227,16 +227,18 @@ define(
                 },
 
                 selectShippingMethod: function (method) {
-                	if (method['carrier_code'] == 'amstorepickup') {
-                		locationContext.deliveryType(0)
-                	}	else {
-                		locationContext.deliveryType(1) // as when go to checkout delivery type 1 will have same behaviour with delivert type 2
-                	}
+                    
                     window.loaderIsNotAllowed = true;
                     this._super(method);
                     instance.validateAndSaveIfChanged();
                     delete window.loaderIsNotAllowed;
-
+                    if (method) {
+                        if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
+                            locationContext.deliveryType(0)
+                        }   else {
+                            locationContext.deliveryType(1) // as when go to checkout delivery type 1 will have same behaviour with delivert type 2
+                        }
+                    }
                     return true;
                 },
 

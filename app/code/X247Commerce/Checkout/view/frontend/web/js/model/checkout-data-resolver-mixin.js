@@ -140,6 +140,7 @@ define(
 
                     if (availableRate) {
                         selectShippingMethodAction(availableRate);
+                        
                     } else {
                         selectShippingMethodAction(null);
                     }

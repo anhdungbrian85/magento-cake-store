@@ -4,12 +4,8 @@ var config = {
             locationContext: 'X247Commerce_Checkout/js/model/location-context',
 
             // bind afterRender function 
-            // 'Amasty_StorePickupWithLocator/template/checkout/pickup/pickup-store.html': 
-            //    'X247Commerce_Checkout/template/checkout/pickup/pickup-store.html',
-
-            // Rewrite AM Delivery Date component
-            'Amasty_CheckoutDeliveryDate/js/form/element/delivery-date': 
-                'X247Commerce_Checkout/js/form/element/amc-delivery-date'
+            'Amasty_StorePickupWithLocator/template/checkout/pickup/pickup-store.html': 
+               'X247Commerce_Checkout/template/checkout/pickup/pickup-store.html'
         }
 
     },
