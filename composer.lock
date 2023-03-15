@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30985d244cc8f29c251f813b0078da06",
+    "content-hash": "4a68c9b0437f5ab6bf881bb4f7258d52",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -29175,6 +29175,57 @@
                 "source": "https://github.com/wikimedia/less.php/tree/v3.2.1"
             },
             "time": "2023-02-03T06:43:41+00:00"
+        },
+        {
+            "name": "wyomind/datafeedmanager",
+            "version": "11.24.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.wyomind.com/wyomind-datafeedmanager-11.24.6.zip",
+                "reference": ""
+            },
+            "require": {
+                "magento/framework": ">=100.0.0",
+                "php": "~5.5.0|~5.6.0|>=7.0.0",
+                "wyomind/framework": ">=5.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Wyomind\\DataFeedManager\\": ""
+                }
+            },
+            "license": [
+                "Commercial License - Copyright 2023  - WYOMIND  - Purchasing any product (Software) from the  wyomind.com web-site means buyer agree to the following statements (see LICENSE.TXT)"
+            ]
+        },
+        {
+            "name": "wyomind/framework",
+            "version": "7.2.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.wyomind.com/wyomind-framework-7.2.6.zip",
+                "reference": ""
+            },
+            "require": {
+                "magento/framework": ">=100.0.0",
+                "php": "~5.5.0|~5.6.0|>=7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Wyomind\\Framework\\": ""
+                }
+            },
+            "license": [
+                "Commercial License - Copyright 2023  - WYOMIND  - Purchasing any product (Software) from the  wyomind.com web-site means buyer agree to the following statements (see LICENSE.TXT)"
+            ]
         },
         {
             "name": "zordius/lightncandy",

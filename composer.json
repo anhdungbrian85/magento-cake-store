@@ -14,6 +14,10 @@
         }
     },
     "repositories": {
+        "wyomind": {
+            "type": "composer",
+            "url": "https://chay_watkins_cakebox_com:WB7aVwlC@repo.wyomind.com"
+        },
         "amasty": {
             "type": "composer",
             "url": "https://composer.amasty.com/enterprise/"
@@ -51,7 +55,8 @@
         "mpdf/mpdf": "^8.1",
         "olegkoval/magento2-regenerate-url-rewrites": "^1.6",
         "smsglobal/module-sms": "^1.2",
-        "trustpilot/module-reviews": "^2.6"
+        "trustpilot/module-reviews": "^2.6",
+        "wyomind/datafeedmanager": "^11.24"
     },
     "suggest": {
         "ext-pcntl": "Need for run processes in parallel mode"
