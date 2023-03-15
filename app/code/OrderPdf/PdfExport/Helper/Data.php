@@ -268,6 +268,7 @@ class Data extends AbstractHelper
             try {
                 $logger->info('Start render order pdf!');
                 $mpdf->setFooter('Page {PAGENO} of {nbpg}');
+
                 $mpdf->WriteHTML($html);
                 $mpdf->Output($orderData['order_no'] . '.pdf', 'D');
                 $fileContent = ['type' => 'string', 'value' => $mpdf->Output($orderData['order_no'] . '.pdf', 'S'), 'rm' => true];
