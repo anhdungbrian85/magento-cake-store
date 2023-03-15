@@ -35,7 +35,7 @@ class CategoryShow extends AbstractModifier
 
 	public function modifyData(array $data)
 	{
-		if (array_key_exists('category_show_in_popup_crossell', $data[key($data)]["product"]) && $data[key($data)]["product"]["category_show_in_popup_crossell"] != "") {
+		if (count($data) > 0 && array_key_exists('category_show_in_popup_crossell', $data[key($data)]["product"]) && $data[key($data)]["product"]["category_show_in_popup_crossell"] != "") {
 			$data[key($data)]["product"]["category_show"] = json_decode($data[key($data)]["product"]["category_show_in_popup_crossell"]);
 		}
 
