@@ -5,33 +5,37 @@
 define([
 	'jquery',
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+        'Amasty_StorePickupWithLocator/js/model/pickup',
     'locationContext',
     'uiRegistry',
-    'Amasty_StorePickupWithLocator/js/model/pickup',
-    'Magento_Customer/js/customer-data',
-	'mage/translate'
+	'mage/translate',
     
 
 ], function (
 	$,
 	pickupDataResolver,
+    pickup,
     locationContext,
     registry,
-    pickup,
-    customerData
 ) {
     'use strict';
 
     var mixin = {
 
         preselectStoreLocationPickup: function() {
-            pickupDataResolver.updateDefaultValue();
-            pickupDataResolver.storeId.valueHasMutated();
+            // var self = this;
+            // // pickupDataResolver.updatePickupDefaultValue();
+            // // this.value = locationContext.storeLocationId();
+            // // if (locationContext.deliveryType()  == 0) {
+                
+            //     console.log(self.uid);
+            //     $('#' + self.uid).val(locationContext.storeLocationId()).trigger('change');
+            //     pickupDataResolver.storeId(locationContext.storeLocationId());
+                
+            // // }
+
         },
-        onChangeStore: function (storeId) {
-            pickupDataResolver.storeId(storeId);
-            locationContext.storeLocationId(storeId)
-        },
+        
     };
 
     return function (target) {

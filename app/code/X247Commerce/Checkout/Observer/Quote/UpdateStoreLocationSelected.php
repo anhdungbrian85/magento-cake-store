@@ -51,8 +51,8 @@ class UpdateStoreLocationSelected implements ObserverInterface
                 $quote = $this->checkoutSession->getQuote()->setData('store_location_id', $this->storeLocationContext->getStoreLocationId())->save();
 
                 $quote = $this->checkoutSession->getQuote(); 
-                $this->logger->info('quote id: '. $this->checkoutSession->getQuote()->getId());
-                $this->logger->info('shippingAddress id: '. $quote->getShippingAddress()->getId());
+                // $this->logger->info('quote id: '. $this->checkoutSession->getQuote()->getId());
+                // $this->logger->info('shippingAddress id: '. $quote->getShippingAddress()->getId());
                 $shippingAddress = $this->addressFactory->create()->load($quote->getShippingAddress()->getId());
 
                 $location = $this->locationFactory->create()->load($locationId);
@@ -78,24 +78,24 @@ class UpdateStoreLocationSelected implements ObserverInterface
                         $pickupQuote = $this->pickupQuoteFactory->create();
                     }
 
-                    $today = $this->timeZone->date(new \DateTime('now'));
+                    $today = $this->timezone->date(new \DateTime('now'));
                     $pickupDate = $today ;
-                    $workingTime = $location->getWorkingTime($pickupDate->format('l'));
+                    $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
 
                     if ($workingTime) {
-                        $openTime = explode(' - ', $workingTime)[0];
+                        $openTime = explode(' - ', array_shift($workingTime))[0];
                     }   else {
-                        $openTime = '11:00';
+                        $openTime = '10:00';
                     }
-                    $openTimeSlotEnd = (new \DateTime($openTime))->modify("+ 30min")->format("Y m d H:i:s");;
+                    $openTime = strtotime($pickupDate->format('Y-m-d ') .$openTime);
 
                     $pickupQuote->addData([
                         'address_id' => $shippingAddress->getId(),
                         'quote_id' => $quote->getId(),
                         'store_id' => $location->getId(),
                         'date' => $pickupDate->format('Y-m-d'),
-                        'time_from' => strtotime($pickupDate->format('Y-m-d ') .$openTime),
-                        'time_to' =>   strtotime($pickupDate->format('Y-m-d ') .$openTimeAdd30m)
+                        'time_from' => $openTime,
+                        'time_to' =>  (int) $openTime + 1800 // 30mins
 
                     ]);
                     
