@@ -7,7 +7,7 @@ class Save
     {
         $postData = $subject->getRequest()->getPostValue();
 
-        if ( array_key_exists('category_show', $postData['product']) ) {
+        if ( !empty($postData['product']['category_show']) ) {
             $newCategoryData = $postData['product']['category_show'];
 
             foreach ($newCategoryData['custom_field'] as $value) {
@@ -26,5 +26,7 @@ class Save
 
             $postData['product']['category_show_in_popup_crossell'] = json_encode($newCategoryData);
         }
+        
+        $subject->getRequest()->setPostValue($postData);
     }
 }
