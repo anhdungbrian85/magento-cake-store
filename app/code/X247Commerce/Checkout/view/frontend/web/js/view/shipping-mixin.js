@@ -227,11 +227,6 @@ define(
                 },
 
                 selectShippingMethod: function (method) {
-                    
-                    window.loaderIsNotAllowed = true;
-                    this._super(method);
-                    instance.validateAndSaveIfChanged();
-                    delete window.loaderIsNotAllowed;
                     if (method) {
                         if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
                             locationContext.deliveryType(0)
@@ -239,6 +234,12 @@ define(
                             locationContext.deliveryType(1) // as when go to checkout delivery type 1 will have same behaviour with delivert type 2
                         }
                     }
+
+                    window.loaderIsNotAllowed = true;
+                    this._super(method);
+                    instance.validateAndSaveIfChanged();
+                    delete window.loaderIsNotAllowed;
+                    
                     return true;
                 },
 
@@ -268,7 +269,10 @@ define(
 
                     if (!customer.isLoggedIn()) {
                         $(loginFormSelector).validation();
-                        emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
+                        if ($(loginFormSelector + ' input[name=username]').length) {
+                            emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
+                        }
+                        
                     }
 
                     if (this.isFormInline) {

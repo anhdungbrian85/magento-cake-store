@@ -8,7 +8,8 @@ define([
     'locationContext',
     'uiRegistry',
     'Amasty_StorePickupWithLocator/js/model/pickup',
-	'mage/translate',
+    'Magento_Customer/js/customer-data',
+	'mage/translate'
     
 
 ], function (
@@ -16,21 +17,16 @@ define([
 	pickupDataResolver,
     locationContext,
     registry,
-    pickup
+    pickup,
+    customerData
 ) {
     'use strict';
 
     var mixin = {
 
         preselectStoreLocationPickup: function() {
-            var self = this;
-            // this.value = locationContext.storeLocationId();
-            if (locationContext.deliveryType()  == 0) {
-                pickupDataResolver.storeId(locationContext.storeLocationId());
-                locationContext.storeLocationId(locationContext.storeLocationId());
-                $('#' + self.uid).val(locationContext.storeLocationId()).trigger('change');
-            }
-
+            pickupDataResolver.updateDefaultValue();
+            pickupDataResolver.storeId.valueHasMutated();
         },
         onChangeStore: function (storeId) {
             pickupDataResolver.storeId(storeId);
