@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="controller_amasty_location_form_save">
-        <observer name="x247_additional_data_location_save" instance="X247Commerce\HolidayOpeningTime\Observer\LocationAfterSave" />
-    </event>
-</config>
