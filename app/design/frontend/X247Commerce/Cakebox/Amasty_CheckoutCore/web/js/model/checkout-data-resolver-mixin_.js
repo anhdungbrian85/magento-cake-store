@@ -72,13 +72,13 @@ define(
                  */
                 resolveShippingRates: function (original, ratesData) {
                     if (!ratesData || ratesData.length === 0) {
-                    	console.log(0);
                         selectShippingMethodAction(null);
 
                         return;
                     }
 
                     if (ratesData.length === 1) {
+
                         if (ratesData[0].error_message) {
                             selectShippingMethodAction(null);
 
@@ -90,8 +90,6 @@ define(
 
                         return;
                     }
-
-
                     var selectedShippingRate = checkoutData.getSelectedShippingRate(),
                         availableRate = false;
 
@@ -114,19 +112,6 @@ define(
                         });
                     }
 
-                    if (!availableRate) {
-                    	if (window.checkoutConfig.deliveryType ==  '0') {
-                    		availableRate = _.find(ratesData, function (rate) {
-	                            return rate['carrier_code'] == 'amstorepickup';
-	                        });
-                    	}
-                    	if (window.checkoutConfig.deliveryType ==  '1' || window.checkoutConfig.deliveryType ===  '2') {
-                    		availableRate = _.find(ratesData, function (rate) {
-	                            return rate['carrier_code'] == 'flatrate';
-	                        });
-                    	}
-                    }  
-
                     if (!availableRate && _getDefaultShippingMethod()) {
                         availableRate = _.find(ratesData, function (rate) {
                             return rate['carrier_code'] + '_' + rate['method_code'] === _getDefaultShippingMethod();
@@ -136,7 +121,7 @@ define(
                                 return !!rate.available;
                             });
                         }
-                    }	
+                    }
 
                     if (availableRate) {
                         selectShippingMethodAction(availableRate);

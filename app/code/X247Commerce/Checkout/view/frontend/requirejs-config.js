@@ -2,19 +2,10 @@ var config = {
     map: {
         "*": {
             locationContext: 'X247Commerce_Checkout/js/model/location-context',
-
-            // bind afterRender function 
-            'Amasty_StorePickupWithLocator/template/checkout/pickup/pickup-store.html': 
-               'X247Commerce_Checkout/template/checkout/pickup/pickup-store.html'
         }
-
     },
     config: {
         mixins: {
-            // preselect Store Location Pickup 
-            "Amasty_StorePickupWithLocator/js/view/pickup/pickup-store": {
-                "X247Commerce_Checkout/js/view/pickup/pickup-store-mixin": true
-            },
 
             // Hide delivery date block when use pickup store 
             "Amasty_CheckoutCore/js/model/one-step-layout": {

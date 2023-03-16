@@ -5,37 +5,37 @@
 define([
 	'jquery',
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+        'Amasty_StorePickupWithLocator/js/model/pickup',
     'locationContext',
     'uiRegistry',
-    'Amasty_StorePickupWithLocator/js/model/pickup',
 	'mage/translate',
     
 
 ], function (
 	$,
 	pickupDataResolver,
+    pickup,
     locationContext,
     registry,
-    pickup
 ) {
     'use strict';
 
     var mixin = {
 
         preselectStoreLocationPickup: function() {
-            var self = this;
-            // this.value = locationContext.storeLocationId();
-            if (locationContext.deliveryType()  == 0) {
-                pickupDataResolver.storeId(locationContext.storeLocationId());
-                locationContext.storeLocationId(locationContext.storeLocationId());
-                $('#' + self.uid).val(locationContext.storeLocationId()).trigger('change');
-            }
+            // var self = this;
+            // // pickupDataResolver.updatePickupDefaultValue();
+            // // this.value = locationContext.storeLocationId();
+            // // if (locationContext.deliveryType()  == 0) {
+                
+            //     console.log(self.uid);
+            //     $('#' + self.uid).val(locationContext.storeLocationId()).trigger('change');
+            //     pickupDataResolver.storeId(locationContext.storeLocationId());
+                
+            // // }
 
         },
-        onChangeStore: function (storeId) {
-            pickupDataResolver.storeId(storeId);
-            locationContext.storeLocationId(storeId)
-        },
+        
     };
 
     return function (target) {
