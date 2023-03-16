@@ -89,9 +89,11 @@ class Data extends AbstractHelper
                     $product = $this->productRepository->get($item->getSku());
                     $parentByChild = $this->catalogProductTypeConfigurable->getParentIdsByChild($product->getId());
                     $sku = $item->getSku();
+                    $imageUrl = $this->catalogImageHelper->init($product, 'product_thumbnail_image')->getUrl();
                     if (isset($parentByChild[0])) {
                         $parentProduct = $this->productRepository->getById($parentByChild[0]);
                         $sku = $parentProduct->getSku();
+                        $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl();
                     }
                     $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape'):" ";
                     $iconShape = "OrderPdf_PdfExport::images/{$shape}.png";
@@ -100,7 +102,7 @@ class Data extends AbstractHelper
                     $base  = substr($sponge, 0, 1);//position,count V
                     $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):" ";
-                    $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl();
+
                     $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
                     $orderPath = [];
                     $orderPath['message'] = '';
