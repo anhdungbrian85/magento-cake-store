@@ -55,8 +55,7 @@
         "mpdf/mpdf": "^8.1",
         "olegkoval/magento2-regenerate-url-rewrites": "^1.6",
         "smsglobal/module-sms": "^1.2",
-        "trustpilot/module-reviews": "^2.6",
-        "wyomind/datafeedmanager": "^11.24"
+        "trustpilot/module-reviews": "^2.6"
     },
     "suggest": {
         "ext-pcntl": "Need for run processes in parallel mode"
