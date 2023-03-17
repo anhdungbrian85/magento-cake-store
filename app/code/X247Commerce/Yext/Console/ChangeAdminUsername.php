@@ -15,6 +15,7 @@ use Magento\Framework\App\State;
 use Magento\User\Model\UserFactory;
 use Magento\User\Model\ResourceModel\User\CollectionFactory as UserCollectionFactory;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
+use X247Commerce\StoreLocatorSource\Helper\User as X247UserHelper;
 
 class ChangeAdminUsername extends Command
 {
@@ -27,6 +28,7 @@ class ChangeAdminUsername extends Command
     protected $userFactory;
     protected $userCollectionFactory;
     protected $locatorSourceResolver;
+    protected $userHelper;
 
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -36,7 +38,8 @@ class ChangeAdminUsername extends Command
         UserFactory $userFactory,
         UserCollectionFactory $userCollectionFactory,
         State $state,
-        LocatorSourceResolver $locatorSourceResolver
+        LocatorSourceResolver $locatorSourceResolver,
+        X247UserHelper $userHelper
     ) {
         parent::__construct();
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -48,6 +51,7 @@ class ChangeAdminUsername extends Command
         $this->userFactory = $userFactory;
         $this->userCollectionFactory = $userCollectionFactory;
         $this->locatorSourceResolver = $locatorSourceResolver;
+        $this->userHelper = $userHelper;
     }
 
 
@@ -69,19 +73,31 @@ class ChangeAdminUsername extends Command
     {
         $tableName = $this->connection->getTableName('admin_user');
         $data = ['username' => 'email'];
-        $where = "firstname like '%Cake Box%'";
+        $like = "firstname like '%Cake Box%'";
 
-        $select = $this->connection->select()
-            ->from(
-                false,
-                $data
-            )
-            ->where($where);
-        $updateSelect = $this->connection->updateFromSelect(
-            $select,
-            $tableName
-        );
-        
-        $this->connection->query($updateSelect);
+        foreach ($this->_prepareCollection() as $user) {
+            
+            $where = $like." and user_id = ".$user->getId();
+            $select = $this->connection->select()
+                ->from(
+                    false,
+                    $data
+                )
+                ->where($where);
+            $updateSelect = $this->connection->updateFromSelect(
+                $select,
+                $tableName
+            );
+            $this->connection->query($updateSelect);            
+        }
+    }
+    /**
+     * @return $this
+     */
+    protected function _prepareCollection()
+    {
+        $adminUsers = $this->userCollectionFactory->create()->addFieldToFilter("detail_role.role_id", ['eq' => $this->userHelper->getStaffRole()]);
+
+        return $adminUsers;
     }
 }
