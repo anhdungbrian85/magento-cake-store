@@ -539,10 +539,10 @@ class YextAttribute
         try {
 
             $adminInfo = [
-                'username'  => $data['name'] ? strtolower(str_replace([' ', '(', ')'], ['_', '', ''], trim($data['name']))) : 'cakebox',
+                'username'  => $data['email'],
                 'firstname' => 'Cake Box',
                 'lastname'    => $data['name'] ? str_replace(['Cake Box ', '(', ')'], '', trim($data['name'])) : 'Cake Box',
-                'email'     => $data['email'] ? $data['email'] : strtolower(str_replace(['cake box', ' ', '(', ')'], '_', trim($data['name']))).'@eggfreecake.co.uk',
+                'email'     => $data['email'],
                 'interface_locale' => 'en_US',
                 'is_active' => 1,
                 'password'  => 'Cakebox123'
@@ -553,21 +553,27 @@ class YextAttribute
                 $user = $this->userFactory->create()->load($userId);
                 if ($adminInfo['email'] != $user->getEmail()) {
                     //only edit when email was changed
-                    $user->addData($adminInfo)->save();
+                    
+                    $user->setEmail($adminInfo['email']);
+                    $user->setUserName($adminInfo['email']);
+                    $user->save();
                 }
             }   else {
                 $user = $this->userFactory->create()->load($adminInfo['email'], 'email');
                 if (!$user->getId()) {
-                    $user = $this->userFactory->create();
-                    $user->addData($adminInfo)->save();
-                }
-            }
-
-            if (!empty($data['email'])) {
-                $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']);
-            }   else {
-                $this->logger->log('600', "Add New User without Yext Store Email");
-            }
+                    if (!empty($data['email'])) {
+                        $user = $this->userFactory->create();
+                        $user->addData($adminInfo);
+                        $user->setRoleId($this->userHelper->getStaffRole());
+                        $user->save();
+                        if ($user->getId()) {
+                            $this->yextHelper->sendEmail($adminInfo['username'], $adminInfo['password'], $data['email']);
+                        }
+                    }   else {
+                        $this->logger->log('600', "Location do not have a Email, Admin User was not created");
+                    } 
+                }   
+            } 
             
             return $user;
         } catch (\Exception $e) {
@@ -605,10 +611,9 @@ class YextAttribute
                 $source->setData($sourceData)->save();
                 $this->eventManager->dispatch('yext_webhook_inventory_source_add_after', [
                     'source' => $source
-                ]);
-                return $source;
+                ]);                
             }
-            
+            return $source;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -789,7 +794,7 @@ class YextAttribute
                    $insertData[] = ['store_id' => $location->getId(), 'type' => 'Regular Hours', 'store_name' => $location->getName(), 'date' => $holidayHoursfromYext['date'], 'open_time' => $openTime, 'break_start' => $breakStart, 'break_end' => $breakEnd, 'close_time' => $endTime];
                 }
             }
-            // var_dump($insertData);
+            
             return $this->connection->insertOnDuplicate($tableName, $insertData, ['open_time', 'break_start', 'break_end', 'close_time']);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
