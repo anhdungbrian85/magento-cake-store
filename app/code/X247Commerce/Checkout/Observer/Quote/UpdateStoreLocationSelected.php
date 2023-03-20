@@ -57,7 +57,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
 
                 $location = $this->locationFactory->create()->load($locationId);
                 $deliveryType = $this->storeLocationContext->getDeliveryType();
-                if ($deliveryType == 0) {
+                if ($deliveryType == 0 || $deliveryType == 2) {
                     $dataShippingAddress = [
                         'street' => $location->getData('address'),
                         'city' => $location->getData('city'),
