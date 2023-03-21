@@ -7,7 +7,15 @@
     </type>
     <preference for="X247Commerce\Checkout\Api\StoreLocationContextInterface" type="X247Commerce\Checkout\Service\StoreLocationContext"/>
 
-    <type name="Amasty\StorePickupWithLocator\CustomerData\LocationData">
-        <plugin name="x247checkout_remove_location_to_data_customer" type="X247Commerce\Checkout\Plugin\CustomerData\LocationData" sortOrder="20" disabled="false" />
+    <!-- Set delivery date options -->
+    <type name="Amasty\CheckoutDeliveryDate\Model\ConfigProvider">
+        <plugin name="x247checkout_edit_config_delivery_date" type="X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider" sortOrder="20" disabled="false" />
     </type>
+    
+    <!-- Change delivery date value label -->
+    <type name="Amasty\CheckoutDeliveryDate\Block\Sales\Order\Info\Delivery">
+        <plugin name="x247checkout_change_delivery_value" type="X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\DeliveryInfo" sortOrder="20" disabled="false" />
+    </type>
+
+
 </config>

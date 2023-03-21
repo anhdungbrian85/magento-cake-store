@@ -14,4 +14,10 @@
     <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
         <plugin name="Plugin_Frontend_LayoutProcessor_Magento_Checkout_Block_Checkout" type="X247Commerce\Checkout\Plugin\Checkout\LayoutProcessor" sortOrder="10" disabled="false"/>
     </type>
+
+    <!-- Remove location data to customer data -->
+    <type name="Amasty\StorePickupWithLocator\CustomerData\LocationData">
+        <plugin name="x247checkout_remove_location_to_data_customer" type="X247Commerce\Checkout\Plugin\CustomerData\LocationData" sortOrder="20" disabled="false" />
+    </type>
+
 </config>
