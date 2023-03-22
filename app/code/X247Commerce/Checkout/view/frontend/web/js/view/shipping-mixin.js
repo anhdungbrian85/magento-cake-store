@@ -124,7 +124,12 @@ define(
                         }
                     }, this);
                 },
-
+                checkVisible: function(carrier_code) {
+                    if (locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup') {
+                        return false;
+                    }
+                    return true;
+                },
                 initObservable: function () {
                     this._super();
 
