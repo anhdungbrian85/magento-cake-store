@@ -54,13 +54,13 @@ define([
                                 type: 'inline'
                             },
                             callbacks: {
-                                // beforeClose: function() {
-                                //     $('[data-block="minicart"]').trigger('contentLoading');
-                                //     $.ajax({
-                                //         url: url,
-                                //         method: "POST"
-                                //     });
-                                // }
+                                beforeClose: function() {
+                                    $('[data-block="minicart"]').trigger('contentLoading');
+                                    $.ajax({
+                                        url: url,
+                                        method: "POST"
+                                    });
+                                }
                             },
                             mainClass: 'mfp-wp-confirmation-popup'
                         });
