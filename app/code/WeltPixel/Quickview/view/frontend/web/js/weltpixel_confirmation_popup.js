@@ -23,10 +23,13 @@ define([
                 let wpConfirmationPopupOptions = options[0];
                 let messagesOptions = options[1];
                 let parentBody = window.parent.document.body;
-
+                console.log('confirmation_popup_content', wpConfirmationPopupOptions.confirmation_popup_content);
+                console.log('wp_messages', messagesOptions.wp_messages);
+                console.log(wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages);
                 if (wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages) {
                     let quickviewPopup = $('.wp-quickview-popup .mfp-close', parentBody);
                     let url = window.weltpixel_quickview.baseUrl + 'weltpixel_quickview/index/updatecart';
+                    console.log('quickviewPopup', quickviewPopup);
                     if (quickviewPopup.length) {
                         let parentJQuery = window.parent.jQuery;
                         setTimeout(function() {
