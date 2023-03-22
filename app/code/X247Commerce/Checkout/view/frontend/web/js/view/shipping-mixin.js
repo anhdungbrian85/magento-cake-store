@@ -71,7 +71,6 @@ define(
 
                 initialize: function () {
                     this._super();
-
                     instance = this;
                     onLoad(shippingRegistry.initObservers.bind(shippingRegistry, this.elems));
                     onLoad(this.registerObserversAfterLoad.bind(this));
@@ -124,7 +123,12 @@ define(
                         }
                     }, this);
                 },
-
+                checkVisible: function(carrier_code) {
+                    if (locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup') {
+                        return false;
+                    }
+                    return true;
+                },
                 initObservable: function () {
                     this._super();
 
@@ -229,9 +233,9 @@ define(
                 selectShippingMethod: function (method) {
                     if (method) {
                         if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
-                            locationContext.deliveryType(0)
+                            locationContext.deliveryType(quote.getDeliveryType())
                         }   else {
-                            locationContext.deliveryType(1) // as when go to checkout delivery type 1 will have same behaviour with delivert type 2
+                            locationContext.deliveryType(1) 
                         }
                     }
 

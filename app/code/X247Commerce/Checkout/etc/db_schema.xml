@@ -5,6 +5,7 @@
     </table>
     <table name="quote" resource="default" engine="innodb">
         <column xsi:type="int" name="store_location_id" nullable="true" comment="Store Location ID"/>
+        <column xsi:type="smallint" name="delivery_type" nullable="true" comment="Delivery type"/>
     </table>
     
 </schema>

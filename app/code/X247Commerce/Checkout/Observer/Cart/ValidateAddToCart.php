@@ -87,7 +87,7 @@ class ValidateAddToCart implements ObserverInterface
                 $attributeSetName = $attributeSetOfProduct->getAttributeSetName();
                 // $this->logger->log('600', 'Selected attributes '.print_r($attributeSetName, true));
                 if (!in_array($categoryClickCollectId, $productCategoryIds) && $attributeSetName == "Cake") {
-                    throw new LocalizedException(__('You must only add product of "Click & Collect 1 Hour" category with Express 1 Hour Collection!'));
+                    throw new LocalizedException(__('You must only add cake of "Click & Collect 1 Hour" category with Express 1 Hour Collection!'));
                 }
             }
         }

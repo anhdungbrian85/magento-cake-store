@@ -48,7 +48,10 @@ class UpdateStoreLocationSelected implements ObserverInterface
     {
         if ($locationId = $this->storeLocationContext->getStoreLocationId()) {
             try {
-                $quote = $this->checkoutSession->getQuote()->setData('store_location_id', $this->storeLocationContext->getStoreLocationId())->save();
+                $quote = $this->checkoutSession->getQuote()
+                    ->setData('store_location_id', $this->storeLocationContext->getStoreLocationId())
+                    ->setData('delivery_type', $this->storeLocationContext->getDeliveryType())
+                    ->save();
 
                 $quote = $this->checkoutSession->getQuote(); 
                 // $this->logger->info('quote id: '. $this->checkoutSession->getQuote()->getId());

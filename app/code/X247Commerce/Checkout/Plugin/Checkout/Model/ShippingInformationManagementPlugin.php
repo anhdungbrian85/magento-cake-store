@@ -96,19 +96,22 @@ class ShippingInformationManagementPlugin
     ) {
         $pickupQuoteData = $addressInformation->getExtensionAttributes()->getAmPickup();
         $shippingMethod = $addressInformation->getShippingCarrierCode();
+        $quoteEntity = $this->quoteRepository->getActive($cartId);
 
         if ($shippingMethod == 'amstorepickup') {
-            $this->storeLocationContext->setDeliveryType(0);
             if ($pickupQuoteData instanceof QuoteInterface) {
                 $storeLocationId = $pickupQuoteData->getStoreId();
                 if ($storeLocationId != $this->storeLocationContext->getStoreLocationId()) {
-                    $quoteEntity = $this->quoteRepository->getActive($cartId);
+                    
                     $quoteEntity->setStoreLocationId($storeLocationId);
+                    $this->storeLocationContext->setDeliveryType($quoteEntity->getData('delivery_type'));
                     $this->quoteRepository->save($quoteEntity);
                     $this->storeLocationContext->setStoreLocationId($storeLocationId);
                 }
             }
         }   else {
+            $quoteEntity->setData('delivery_type', 1);
+            $this->quoteRepository->save($quoteEntity);
             $this->storeLocationContext->setDeliveryType(1);
         }
 
