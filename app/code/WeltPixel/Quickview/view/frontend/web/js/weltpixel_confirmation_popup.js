@@ -23,21 +23,14 @@ define([
                 let wpConfirmationPopupOptions = options[0];
                 let messagesOptions = options[1];
                 let parentBody = window.parent.document.body;
-                console.log('Start Debug');
-                console.log('wpConfirmationPopupOptions', wpConfirmationPopupOptions);
-                console.log('wp_messages', messagesOptions.wp_messages);
-                console.log(wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages);
+
                 if (wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages) {
                     let quickviewPopup = $('.wp-quickview-popup .mfp-close', parentBody);
                     let url = window.weltpixel_quickview.baseUrl + 'weltpixel_quickview/index/updatecart';
-                    console.log('quickviewPopup', quickviewPopup);
-                    console.log('Start Debug 1');
                     if (quickviewPopup.length) {
-                        console.log('Start Debug 2');
                         let parentJQuery = window.parent.jQuery;
                         setTimeout(function() {
                             $('.wp-quickview-popup .mfp-close', parentBody).trigger('click');
-                            console.log('Start Debug 3');
                             parentJQuery.magnificPopup.open({
                                 items: {
                                     src: wpConfirmationPopupOptions.confirmation_popup_content,
@@ -45,7 +38,7 @@ define([
                                 },
                                 callbacks: {
                                     beforeClose: function() {
-                                        parentJQuery('[data-block="minicart"]').trigger('contentLoading');
+                                        parentJQuery('[data-block="minicart"]').trigger('contentLoading');  
                                         parentJQuery.ajax({
                                             url: url,
                                             method: "POST"
@@ -55,7 +48,6 @@ define([
                             });
                         }, 1000);
                     } else {
-                        console.log('Start Debug 4');
                         $.magnificPopup.open({
                             items: {
                                 src: wpConfirmationPopupOptions.confirmation_popup_content,
@@ -63,7 +55,7 @@ define([
                             },
                             callbacks: {
                                 beforeClose: function() {
-                                    $('[data-block="minicart"]').trigger('contentLoading');
+                                    // $('[data-block="minicart"]').trigger('contentLoading');
                                     $.ajax({
                                         url: url,
                                         method: "POST"
