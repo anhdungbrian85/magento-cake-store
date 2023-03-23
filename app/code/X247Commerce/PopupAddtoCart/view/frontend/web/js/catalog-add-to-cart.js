@@ -126,7 +126,7 @@ define([
                 /** @inheritdoc */
                 success: function (res) {
                     var eventData, parameters;
-
+                    localStorage.setItem("wp_messages_loaded", '0');
                     $(document).trigger('ajax:addToCart', {
                         'sku': form.data().productSku,
                         'productIds': productIds,
@@ -138,22 +138,18 @@ define([
                     /**
                      * Open popup confirmation
                      */
-                    let wpConfirmationPopupOptions = customerData.get('wp_confirmation_popup')();
-                    if (wpConfirmationPopupOptions.confirmation_popup_content) {
-                        $.magnificPopup.open({
-                            items: {
-                                src: wpConfirmationPopupOptions.confirmation_popup_content,
-                                type: 'inline'
-                            },
-                            callbacks: {
-                                beforeClose: function() {
-                                    $('[data-block="minicart"]').trigger('contentLoading');
-                                }
-                            },
-                            mainClass: 'mfp-wp-confirmation-popup'
-                        });
-
-                    }
+                    // customerData.reload(['wp_confirmation_popup'], false);
+                    // let wpConfirmationPopupOptions = customerData.get('wp_confirmation_popup')();
+                    // if (wpConfirmationPopupOptions.confirmation_popup_content) {
+                    //     $.magnificPopup.open({
+                    //         items: {
+                    //             src: wpConfirmationPopupOptions.confirmation_popup_content,
+                    //             type: 'inline'
+                    //         },
+                    //         mainClass: 'mfp-wp-confirmation-popup'
+                    //     });
+                    //
+                    // }
                     /**
                      * Open popup confirmation
                      */
