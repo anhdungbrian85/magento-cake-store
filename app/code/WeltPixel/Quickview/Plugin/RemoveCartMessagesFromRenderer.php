@@ -64,6 +64,7 @@ class RemoveCartMessagesFromRenderer
         }
 
         $messageIdentifier = $message->getIdentifier();
+        $logger->info('afterRender start $messageIdentifier addCartSuccessMessage');
         if ($messageIdentifier == 'addCartSuccessMessage') {
             $logger->info('afterRender $messageIdentifier addCartSuccessMessage');
             return '';
