@@ -38,25 +38,33 @@ class RemoveCartMessages
         $result
         )
     {
+        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/confirmation_popup.log');
+        $logger = new \Zend\Log\Logger();
+        $logger->addWriter($writer);
+        $logger->info('afterGetSectionData start');
         if (!$this->helper->isAjaxCartEnabled()) {
+            $logger->info('afterGetSectionData isAjaxCartEnabled disable');
             return $result;
         }
 
         if ($this->sessionManager->getData('wp_messages')) {
+            $logger->info('afterGetSectionData Session Manager wp_messages isset');
             $result['wp_messages'] = true;
             $this->sessionManager->unsetData('wp_messages');
         }
 
         if (isset($result['messages'])) {
+            $logger->info('afterGetSectionData Check messages isset');
             foreach ($result['messages'] as $id => $messageDetails) {
                 $messageText = $messageDetails['text'];
                 if (($messageDetails['type'] == 'success') && (!strlen($messageText))) {
+                    $logger->info('afterGetSectionData Check messages success');
                     unset($result['messages'][$id]);
                     $result['wp_messages'] = true;
                 }
             }
         }
-
+        $logger->info('afterGetSectionData end');
         return $result;
 
     }

@@ -51,8 +51,13 @@ class RemoveCartMessagesFromRenderer
         MessageInterface $message,
         array $initializationData
     ) {
+        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/confirmation_popup.log');
+        $logger = new \Zend\Log\Logger();
+        $logger->addWriter($writer);
+        $logger->info('afterRender start');
         if (!$this->request->isAjax() || !$this->helper->isAjaxCartEnabled()) {
             if (!$this->request->isAjax()) {
+                $logger->info('afterRender isAjax not');
                 $this->sessionManager->setData('wp_messages', true);
             }
             return $result;
@@ -60,9 +65,10 @@ class RemoveCartMessagesFromRenderer
 
         $messageIdentifier = $message->getIdentifier();
         if ($messageIdentifier == 'addCartSuccessMessage') {
+            $logger->info('afterRender $messageIdentifier addCartSuccessMessage');
             return '';
         }
-
+        $logger->info('afterRender end');
         return $result;
     }
 }
