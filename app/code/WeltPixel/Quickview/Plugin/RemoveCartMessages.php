@@ -48,6 +48,7 @@ class RemoveCartMessages
         $logger->info('afterGetSectionData Start Session Manager wp_messages isset');
         if ($this->sessionManager->getData('wp_messages')) {
             $result['wp_messages'] = true;
+            $result['wp_messages_loaded'] = true;
             $this->sessionManager->unsetData('wp_messages');
             $logger->info('afterGetSectionData Session Manager wp_messages isset');
         }
@@ -62,6 +63,7 @@ class RemoveCartMessages
                 if (($messageDetails['type'] == 'success') && (!strlen($messageText))) {
                     unset($result['messages'][$id]);
                     $result['wp_messages'] = true;
+                    $result['wp_messages_loaded'] = true;
                     $logger->info('afterGetSectionData Check messages success');
                 }
             }
