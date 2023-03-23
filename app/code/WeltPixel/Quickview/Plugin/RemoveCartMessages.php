@@ -36,8 +36,7 @@ class RemoveCartMessages
     public function afterGetSectionData(
         \Magento\Theme\CustomerData\Messages $subject,
         $result
-        )
-    {
+    ) {
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/confirmation_popup.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
@@ -48,19 +47,21 @@ class RemoveCartMessages
         }
 
         if ($this->sessionManager->getData('wp_messages')) {
-            $logger->info('afterGetSectionData Session Manager wp_messages isset');
             $result['wp_messages'] = true;
             $this->sessionManager->unsetData('wp_messages');
+            $logger->info('afterGetSectionData Session Manager wp_messages isset');
         }
 
         if (isset($result['messages'])) {
             $logger->info('afterGetSectionData Check messages isset');
             foreach ($result['messages'] as $id => $messageDetails) {
                 $messageText = $messageDetails['text'];
+                $logger->info('afterGetSectionData messageText:', $messageText);
+                $logger->info('afterGetSectionData messageDetails:' . $messageDetails['type']);
                 if (($messageDetails['type'] == 'success') && (!strlen($messageText))) {
-                    $logger->info('afterGetSectionData Check messages success');
                     unset($result['messages'][$id]);
                     $result['wp_messages'] = true;
+                    $logger->info('afterGetSectionData Check messages success');
                 }
             }
         }
