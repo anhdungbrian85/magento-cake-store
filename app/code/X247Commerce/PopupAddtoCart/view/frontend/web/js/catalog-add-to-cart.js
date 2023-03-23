@@ -11,8 +11,11 @@ define([
     'Magento_Catalog/js/product/view/product-info-resolver',
     'mage/url',
     'Magento_Ui/js/modal/modal',
+    'Magento_Customer/js/customer-data',
+    'magnificPopup',
+    'weltpixel_quickview',
     'jquery-ui-modules/widget'
-], function ($, $t, _, idsResolver, productInfoResolver, urlBuilder, modal) {
+], function ($, $t, _, idsResolver, productInfoResolver, urlBuilder, modal, customerData, magnificPopup, weltpixel_quickview) {
     'use strict';
 
     $.widget('mage.catalogAddToCart', {
@@ -132,6 +135,29 @@ define([
                         'response': res
                     });
 
+                    /**
+                     * Open popup confirmation
+                     */
+                    let wpConfirmationPopupOptions = customerData.get('wp_confirmation_popup')();
+                    if (wpConfirmationPopupOptions.confirmation_popup_content) {
+                        $.magnificPopup.open({
+                            items: {
+                                src: wpConfirmationPopupOptions.confirmation_popup_content,
+                                type: 'inline'
+                            },
+                            callbacks: {
+                                beforeClose: function() {
+                                    $('[data-block="minicart"]').trigger('contentLoading');
+                                }
+                            },
+                            mainClass: 'mfp-wp-confirmation-popup'
+                        });
+
+                    }
+                    /**
+                     * Open popup confirmation
+                     */
+
                     if (self.isLoaderEnabled()) {
                         $('body').trigger(self.options.processStop);
                     }
@@ -174,6 +200,7 @@ define([
                             .html(res.product.statusText);
                     }
                     self.enableAddToCartButton(form);
+
 
                     if ( ! form.hasClass('popup-tocart') ) {
                         $.ajax({

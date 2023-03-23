@@ -55,6 +55,7 @@ class RemoveCartMessagesFromRenderer
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info('afterRender start');
+        $logger->info('afterRender isAjax not');
         if (!$this->request->isAjax() || !$this->helper->isAjaxCartEnabled()) {
             if (!$this->request->isAjax()) {
                 $logger->info('afterRender isAjax not');
