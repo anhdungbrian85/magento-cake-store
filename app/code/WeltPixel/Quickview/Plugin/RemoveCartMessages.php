@@ -38,8 +38,8 @@ class RemoveCartMessages
         $result
         )
     {
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/confirmation_popup.log');
-        $logger = new \Zend\Log\Logger();
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/confirmation_popup.log');
+        $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info('afterGetSectionData start');
         if (!$this->helper->isAjaxCartEnabled()) {

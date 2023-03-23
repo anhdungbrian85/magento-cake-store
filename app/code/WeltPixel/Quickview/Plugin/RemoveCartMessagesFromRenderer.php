@@ -51,8 +51,8 @@ class RemoveCartMessagesFromRenderer
         MessageInterface $message,
         array $initializationData
     ) {
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/confirmation_popup.log');
-        $logger = new \Zend\Log\Logger();
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/confirmation_popup.log');
+        $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info('afterRender start');
         if (!$this->request->isAjax() || !$this->helper->isAjaxCartEnabled()) {
