@@ -24,7 +24,7 @@ define([
                 let messagesOptions = options[1];
                 let parentBody = window.parent.document.body;
 
-                if (wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages) {
+                if (wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages && (!localStorage.wp_messages_loaded || localStorage.wp_messages_loaded === '0')) {
                     let quickviewPopup = $('.wp-quickview-popup .mfp-close', parentBody);
                     let url = window.weltpixel_quickview.baseUrl + 'weltpixel_quickview/index/updatecart';
                     if (quickviewPopup.length) {
@@ -48,6 +48,7 @@ define([
                             });
                         }, 1000);
                     } else {
+                        localStorage.setItem("wp_messages_loaded", '1');
                         $.magnificPopup.open({
                             items: {
                                 src: wpConfirmationPopupOptions.confirmation_popup_content,

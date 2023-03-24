@@ -3,11 +3,8 @@ namespace X247Commerce\Checkout\Plugin\CustomerData;
 
 class LocationData
 {
-    public function afterGetSectionData(
-       \Amasty\StorePickupWithLocator\CustomerData\LocationData $subject, 
-       $result
-    ) {
+    public function aroundGetSectionData(\Amasty\StorePickupWithLocator\CustomerData\LocationData $subject, callable $proceed)
+    {
         return ['stores' => []];
     }
-
 }
