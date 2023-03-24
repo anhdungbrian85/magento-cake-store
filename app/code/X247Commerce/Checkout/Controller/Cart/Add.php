@@ -151,16 +151,16 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                         $product->getName()
                     );
                     // Remove success mesasge as we have popup 
-                    // $this->messageManager->addSuccessMessage($message);
+                    $this->messageManager->addSuccessMessage($message);
 
                 } else {
-                    $this->messageManager->addComplexSuccessMessage(
-                        'addCartSuccessMessage',
-                        [
-                            'product_name' => $product->getName(),
-                            'cart_url' => $this->getCartUrl(),
-                        ]
-                    );
+                    // $this->messageManager->addComplexSuccessMessage(
+                    //     'addCartSuccessMessage',
+                    //     [
+                    //         'product_name' => $product->getName(),
+                    //         'cart_url' => $this->getCartUrl(),
+                    //     ]
+                    // );
                 }
                 if ($this->cart->getQuote()->getHasError()) {
                     $errors = $this->cart->getQuote()->getErrors();
