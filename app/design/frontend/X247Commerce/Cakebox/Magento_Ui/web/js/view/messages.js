@@ -36,7 +36,7 @@ define([
             var self = this;
 
             // getSuccessMessages
-            self.messageContainer.getErrorMessages().subscribe(function(messages) {
+            self.messageContainer.getSuccessMessages().subscribe(function(messages) {
                 console.log(messages)
                 if (messages.length && messages[0].includes('checkout/cart')) {
                     setTimeout(function() {
