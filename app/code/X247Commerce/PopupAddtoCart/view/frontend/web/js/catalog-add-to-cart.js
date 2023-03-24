@@ -11,11 +11,8 @@ define([
     'Magento_Catalog/js/product/view/product-info-resolver',
     'mage/url',
     'Magento_Ui/js/modal/modal',
-    'Magento_Customer/js/customer-data',
-    'magnificPopup',
-    'weltpixel_quickview',
     'jquery-ui-modules/widget'
-], function ($, $t, _, idsResolver, productInfoResolver, urlBuilder, modal, customerData, magnificPopup, weltpixel_quickview) {
+], function ($, $t, _, idsResolver, productInfoResolver, urlBuilder, modal) {
     'use strict';
 
     $.widget('mage.catalogAddToCart', {
@@ -134,25 +131,6 @@ define([
                         'form': form,
                         'response': res
                     });
-
-                    /**
-                     * Open popup confirmation
-                     */
-                    // customerData.reload(['wp_confirmation_popup'], false);
-                    // let wpConfirmationPopupOptions = customerData.get('wp_confirmation_popup')();
-                    // if (wpConfirmationPopupOptions.confirmation_popup_content) {
-                    //     $.magnificPopup.open({
-                    //         items: {
-                    //             src: wpConfirmationPopupOptions.confirmation_popup_content,
-                    //             type: 'inline'
-                    //         },
-                    //         mainClass: 'mfp-wp-confirmation-popup'
-                    //     });
-                    //
-                    // }
-                    /**
-                     * Open popup confirmation
-                     */
 
                     if (self.isLoaderEnabled()) {
                         $('body').trigger(self.options.processStop);
