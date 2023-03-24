@@ -150,7 +150,9 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                         'You added %1 to your shopping cart.',
                         $product->getName()
                     );
-                    $this->messageManager->addSuccessMessage($message);
+                    // Remove success mesasge as we have popup 
+                    // $this->messageManager->addSuccessMessage($message);
+
                 } else {
                     $this->messageManager->addComplexSuccessMessage(
                         'addCartSuccessMessage',
@@ -200,7 +202,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         return $this->getResponse();
     }
 
-    /**
+     /**
      * Resolve response
      *
      * @param string $backUrl
@@ -223,11 +225,6 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                     'statusText' => __('Out of stock')
                 ];
             }
-        }
-        if (!$this->checkProductAvailableInStore()) {
-            $result['available'] = [
-                    'statusText' => __('Not Available')
-                ];
         }
 
         $this->getResponse()->representJson(

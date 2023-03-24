@@ -2,8 +2,8 @@
 <config xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <router id="standard">
-        <route id="X247Commerce_Checkout" frontName="x247checkout">
-            <module name="X247Commerce_Checkout"/>
+        <route id="checkout">
+            <module name="X247Commerce_Checkout" before="Magento_Checkout" />
         </route>
     </router>
 </config>
