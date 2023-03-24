@@ -105,7 +105,7 @@ class TimeHandler extends \Amasty\StorePickupWithLocator\Model\TimeHandler
             $arrayOfTimes[$step]['fromInUnix'] = $startTime;
             $arrayOfTimes[$step]['label'] =
                 $this->convertTime($startTime);
-            $arrayOfTimes[$step]['value'] = $startTime . '|' . ($startTime + $interval);
+            $arrayOfTimes[$step]['value'] = $startTime . '|' . ($startTime + self::DURATION_IN_SEC);
             $startTime += self::DURATION_IN_SEC;
             $arrayOfTimes[$step]['toInUnix'] = $startTime;
             $step++;
