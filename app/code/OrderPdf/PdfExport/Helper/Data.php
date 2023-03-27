@@ -7,6 +7,7 @@ use Magento\Framework\App\Helper\Context;
 use Amasty\StorePickupWithLocator\Api\OrderRepositoryInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Amasty\StorePickupWithLocator\Model\TimeHandler;
+use Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider;
 
 class Data extends AbstractHelper
 {
@@ -72,6 +73,7 @@ class Data extends AbstractHelper
         if (empty($orderData)) {
             return;
         }
+
         try {
             $logger->info('After check empty order data!');
             $orderItemsDetailHtml = '';
@@ -81,6 +83,19 @@ class Data extends AbstractHelper
                 \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
             );
             $logger->info('Before check empty items data!');
+            $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
+            $deliveryOrderHtml = '';
+            if ($delivery->getId()) {
+                $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
+                $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
+                $deliveryOrderHtml = "
+                        <div class='order-date-title'><span class='text-bold'>Delivery Date</span>: <span class='text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
+                        <div class='order-time-title'><span class='text-bold'>Delivery Time</span>: <span class='text-size-20'>{$deliveryTime}</span></div>";
+            } else {
+                $deliveryOrderHtml = "
+                    <div class='order-date-title'><span class='text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
+                    <div class='order-time-title'><span class='text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
+            }
             if(isset($itemsData) && $itemsData!=null) {
                 $logger->info('During check empty items data!');
                 $tmp = 0;
@@ -138,60 +153,59 @@ class Data extends AbstractHelper
                         <tr>
                             <td class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
                             <td class='order-info-content'>
-                                <div>Order number: {$orderData['order_no']}</div>
-                                <div>Date: {$orderData['delivery_date']}</div>
-                                <div>Time: {$orderData['delivery_time']}</div>
-                                <div>Billing Name: {$orderData['firstname']} {$orderData['lastname']}</div>
-                                <div>Billing Tel: {$orderData['phone_no']}</div>
-                                <div>Billing Email: {$orderData['email']}</div>
+                                <div class='order-number-title'><span class='text-bold'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
+                            . $deliveryOrderHtml ."
+                                <div><span class='text-bold'>Billing Name</span>: {$orderData['firstname']} {$orderData['lastname']}</div>
+                                <div><span class='text-bold'>Billing Tel</span>: {$orderData['phone_no']}</div>
+                                <div><span class='text-bold'>Billing Email</span>: {$orderData['email']}</div>
                             </td>
                         </tr>
                     </table>
                     <table class='item-table'>
                         <tr>
-                        <td>Ref</td>
-                        <td>Image</td>
-                        <td>Base</td>
-                        <td>Shape</td>
-                        <td>Size</td>
-                        <td>Colour</td>
-                        <td>Number Shape</td>
-                        <td>Number</td>
-                    </tr>
+                            <td class='grey-border'>Ref</td>
+                            <td class='grey-border'>Image</td>
+                            <td class='grey-border'>Base</td>
+                            <td class='grey-border'>Shape</td>
+                            <td class='grey-border'>Size</td>
+                            <td class='grey-border'>Colour</td>
+                            <td class='grey-border'>Number Shape</td>
+                            <td class='grey-border'>Number</td>
+                        </tr>
                         <tr>
-                        <td>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td>[Custom]</td>' : '<td>[No Custom]</td>') . "
-                        <td>{$base}</td>
-                        <td><img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
-                        <td>{$size}</td>
-                        <td>{$colour}</td>
-                        <td>{$orderPath['number_shape']}</td>
-                        <td>{$orderPath['number']}</td>
-                    </tr>
+                            <td class='grey-border'>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td class="grey-border">[Custom]</td>' : '<td class="grey-border">[No Custom]</td>') . "
+                            <td class='grey-border'>{$base}</td>
+                            <td class='grey-border'><img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
+                            <td class='grey-border'>{$size}</td>
+                            <td class='grey-border'>{$colour}</td>
+                            <td class='grey-border'>{$orderPath['number_shape']}</td>
+                            <td class='grey-border'>{$orderPath['number']}</td>
+                        </tr>
                 </table>";
                     $orderItemsDetailHtml .= $itemHtml;
                     $logger->info('After render order info!');
                     $logger->info('Before render message container!');
-                    $itemMessageHtml = "<div class='message-container'>
+                    $itemMessageHtml = "<div class='message-container grey-border'>
                     <div class='message-title'>Message</div>
                     <div class='message-content'>{$orderPath['message']}</div>
                 </div>";
                     $orderItemsDetailHtml .= $itemMessageHtml;
                     $logger->info('After render message container!');
                     $logger->info('Before render photo container!');
-                    $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container'>
+                    $itemPhotoHtml = (!empty($orderPath['photo'])) ? "<div class='photo-container grey-border'>
                     <div class='photo-title'>Customer's Photo</div>
                     <div class='photo-content'>
                     <img class='customer-photo' style='vertical-align: top' src='{$orderPath['photo']}'/>
-                   </div> </div>" : "<div class='photo-container'>
+                   </div> </div>" : "<div class='photo-container grey-border'>
                     <div class='photo-title'>Customer's Photo</div>
                      </div>";
 
                     $orderItemsDetailHtml .= $itemPhotoHtml;
                     $logger->info('After render photo container!');
                     $logger->info('Before render note container!');
-                    $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
+
                     if ($delivery->getId()) {
-                        $orderNoteDetailHtml = "<div class='note-container'>
+                        $orderNoteDetailHtml = "<div class='note-container grey-border'>
                         <div class='note-title'>Notes:</div>
                         <div class='note-content'>{$delivery->getData('comment')}</div>
                     </div>";
@@ -202,7 +216,7 @@ class Data extends AbstractHelper
                     $orderBillingDetailHtml = "
                     <table class='table-footer'>
                        <tr>
-                            <td>
+                            <td class='grey-border'>
                                 Received as per order<br/>
                                 Print Name: -----------<br/>
                                 Signature:  -----------<br/>
@@ -211,8 +225,10 @@ class Data extends AbstractHelper
                             <td>
                                 Made By:    -----------<br/>
                                 Serve By:   -----------<br/>
-                                {$currencySymbol}{$orderData['grand_total']} Order<br/>
-                                {$currencySymbol}{$orderData['grand_total']} Paid Online<br/>
+                                <div class='grey-border'>
+                                    {$currencySymbol}{$orderData['grand_total']} Order<br/>
+                                    {$currencySymbol}{$orderData['grand_total']} Paid Online<br/>
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -233,22 +249,25 @@ class Data extends AbstractHelper
             $html = "
             <style>
             table { border-collapse: collapse; margin-top: 0; }
-            td { padding: 0.5em; }
+            td { padding: 0.5em; margin: 1px;}
             h1 { margin-bottom: 0; }
-            .content-container {border: 1px solid;}
-            .order-info {border-bottom: 1px solid; width: 100%; padding-left: 10px;}
+            .grey-border {border: 1px solid grey; border-collapse: collapse;}
+            .text-bold {font-weight: bold !important;}
+            .text-size-20 {font-size: 20px}
+            .content-container {}
+            .order-info {width: 100%; padding-left: 10px;}
             .order-info tr {display: flex; width: 100%;}
             .order-info .order-info-image {width: 50%; text-align: center}
             .order-info-image-icon {width: 120px;}
-            .item-table {width: 100%; border-bottom: 1px solid; padding-left: 10px;}
+            .item-table {width: 100%; padding-left: 10px;}
             .item-table td {width: auto;}
-            .note-container {width: 100%; border-top: 1px solid; padding: 10px;}
-            .message-container {width: 100%; border-bottom: 1px solid; padding: 10px;}
-            .photo-container {width: 100%; padding: 10px; border-bottom: 1px solid;}
+            .note-container {width: 100%; padding: 10px;}
+            .message-container {width: 100%; padding: 10px;}
+            .photo-container {width: 100%; padding: 10px;}
             .photo-container .photo-content {text-align: center;}
-            .table-footer {width: 100%; border-top: 1px solid; padding-left: 10px;}
+            .table-footer {width: 100%; padding-left: 10px;}
             .table-footer tr {display: flex; justify-content: space-around;}
-            .barcode-container {padding: 10px; border-bottom: 1px solid;}
+            .barcode-container {padding: 10px;}
             .shape-icon {width: 35px;}
             .customer-photo {width: 100px;}
             </style>
@@ -264,7 +283,9 @@ class Data extends AbstractHelper
                 'margin_bottom' => 25,
                 'margin_header' => 10,
                 'margin_footer' => 10,
-                'showBarcodeNumbers' => FALSE
+                'showBarcodeNumbers' => FALSE,
+                'default_font' => 'dejavusanscondensed',
+                'format' => 'A5'
             ]);
 
             try {
