@@ -8,6 +8,7 @@ $priceHelper = $this->helper('Magento\Framework\Pricing\Helper\Data');
 $taxHelper = $this->helper('Magento\Catalog\Helper\Data');
 $productViewModel = $block->getProductViewModel();
 $lastAddedProductId = $block->getLastAddedProductId();
+
 $popupDetails = $block->getPopupDetails();
 $lastAddedProductDetails = reset($popupDetails['items']);
 if (!$lastAddedProductDetails) {
@@ -21,6 +22,7 @@ $productName = $lastAddedProductDetails['product_name'];
 $productPrice = $lastAddedProductDetails['product_price'];
 $productInitialPrice = $lastAddedProductDetails['product_initial_price'];
 $productFinalPrice = $lastAddedProductDetails['product_final_price'];
+
 $subtotal = $popupDetails['subtotal'];
 $summaryCount = $popupDetails['summary_count'];
 $summaryCountLabel = ($summaryCount > 1) ? __('items') : __('item');

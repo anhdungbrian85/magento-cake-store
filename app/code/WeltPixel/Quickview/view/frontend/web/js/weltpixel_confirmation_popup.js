@@ -13,20 +13,12 @@ define([
         initialize: function () {
             var that  = this;
             this._super();
-            this.wpConfirmationPopup = customerData.get('wp_confirmation_popup');
-
-            this.messages = customerData.get('messages');
-            this.productAddedEvent = ko.computed(function()  {
-               return [ that.wpConfirmationPopup(), that.messages() ];
-            });
-            
             $(document).on('ajax:addToCart', function(e, data) {
 
-                if (!data.response.length) {
-                    let confirmation_popup_content = that.wpConfirmationPopup();
+                if (data.response.confirmation_popup_content) {
+                    let confirmation_popup_content = data.response.confirmation_popup_content;
                     let parentBody = window.parent.document.body;
-                    console.log(confirmation_popup_content.confirmation_popup_content)
-                    $('<div />').html(confirmation_popup_content.confirmation_popup_content)
+                    $('<div />').html(confirmation_popup_content)
                     .modal({
                         autoOpen: true,
                         modalClass: 'wp-confirmation-popup-wrapper',

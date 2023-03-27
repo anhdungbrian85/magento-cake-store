@@ -4,7 +4,4 @@
     <action name="weltpixel_quickview/index/updatecart">
         <section name="cart"/>
     </action>
-    <action name="checkout/cart/add">
-        <section name="wp_confirmation_popup"/>
-    </action>
 </config>
