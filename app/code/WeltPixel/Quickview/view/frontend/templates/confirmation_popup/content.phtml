@@ -96,14 +96,6 @@ if (isset($lastAddedProductDetails['product_price_value']) && isset($lastAddedPr
             <span class="subtotal-value"><?= $subtotal ?></span>
             <span class="total-items">( <?= $summaryCount . ' ' . $summaryCountLabel ?> )</span>
         </div>
-        <div class="action-buttons">
-            <a class="action primary cart-checkout" href="<?= $block->getUrl('checkout', ['_secure' => true]);?>">
-                <span><?= __('Go to Checkout'); ?></span>
-            </a>
-            <button class="action secondary continue-shopping">
-                <span><?= __('Continue shopping'); ?></span>
-            </button>
-        </div>
     </div>
     <?php if ($staticBlockContent) : ?>
     <div class="cms-block-wrapper">
@@ -338,3 +330,8 @@ if (isset($lastAddedProductDetails['product_price_value']) && isset($lastAddedPr
             });
     </script>
 </div>
+<style type="text/css">
+    .wp-confirmation-popup-wrapper .modal-header {
+        display: none;
+    }
+</style>
