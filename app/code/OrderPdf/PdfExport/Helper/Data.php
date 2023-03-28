@@ -154,7 +154,7 @@ class Data extends AbstractHelper
                             <td class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
                             <td class='order-info-content'>
                                 <div class='order-number-title'><span class='text-bold'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
-                            . $deliveryOrderHtml ."
+                        . $deliveryOrderHtml ."
                                 <div><span class='text-bold'>Billing Name</span>: {$orderData['firstname']} {$orderData['lastname']}</div>
                                 <div><span class='text-bold'>Billing Tel</span>: {$orderData['phone_no']}</div>
                                 <div><span class='text-bold'>Billing Email</span>: {$orderData['email']}</div>
@@ -240,7 +240,7 @@ class Data extends AbstractHelper
                     $orderItemsDetailHtml .= $itemBarCodeHtml;
                     if (count($itemsData) > $tmp) {
                         $orderItemsDetailHtml .= '<pagebreak />';
-                     }
+                    }
 
                 }
             }
