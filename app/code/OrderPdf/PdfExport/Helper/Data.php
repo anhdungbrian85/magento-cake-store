@@ -214,24 +214,22 @@ class Data extends AbstractHelper
                     $orderItemsDetailHtml .= $orderNoteDetailHtml;
                     $orderData['grand_total'] = number_format($orderData['grand_total'], 2, '.', ',');
                     $orderBillingDetailHtml = "
-                    <table class='table-footer'>
-                       <tr>
-                            <td class='grey-border'>
-                                Received as per order<br/>
-                                Print Name: -----------<br/>
-                                Signature:  -----------<br/>
-                                Date:       -----------<br/>
-                            </td>
-                            <td>
+                    <div class='order-total-container'>
+                        <div class='order-total-item grey-border'>
+                            Received as per order<br/>
+                            Print Name: -----------<br/>
+                            Signature:  -----------<br/>
+                            Date:       -----------<br/>
+                        </div>
+                        <div class='order-total-item'>
                                 Made By:    -----------<br/>
                                 Serve By:   -----------<br/>
                                 <div class='grey-border'>
-                                    {$currencySymbol}{$orderData['grand_total']} Order<br/>
-                                    {$currencySymbol}{$orderData['grand_total']} Paid Online<br/>
+                                    <div>{$currencySymbol}{$orderData['grand_total']} Order</div>
+                                    <div>{$currencySymbol}{$orderData['grand_total']} Paid Online</div>
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
+                        </div>
+                    </div>
                ";
                     $orderItemsDetailHtml .= $orderBillingDetailHtml;
                     $itemBarCodeHtml = "<div>
@@ -253,7 +251,8 @@ class Data extends AbstractHelper
             .grey-border {border: 1px solid grey; margin-top: 2px; margin-bottom: 2px;}
             .text-bold {font-weight: bold !important;}
             .text-size-20 {font-size: 20px}
-            .content-container {}
+            .order-total-container { width: 100%;}
+            .order-total-item {width: 48%; float:left}
             .order-info {width: 100%; padding-left: 10px;}
             .order-info tr {display: flex; width: 100%;}
             .order-info .order-info-image {width: 50%; text-align: center}
