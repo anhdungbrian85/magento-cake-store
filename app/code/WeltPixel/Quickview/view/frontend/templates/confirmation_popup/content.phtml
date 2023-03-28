@@ -8,7 +8,6 @@ $priceHelper = $this->helper('Magento\Framework\Pricing\Helper\Data');
 $taxHelper = $this->helper('Magento\Catalog\Helper\Data');
 $productViewModel = $block->getProductViewModel();
 $lastAddedProductId = $block->getLastAddedProductId();
-
 $popupDetails = $block->getPopupDetails();
 $lastAddedProductDetails = reset($popupDetails['items']);
 if (!$lastAddedProductDetails) {
@@ -22,7 +21,6 @@ $productName = $lastAddedProductDetails['product_name'];
 $productPrice = $lastAddedProductDetails['product_price'];
 $productInitialPrice = $lastAddedProductDetails['product_initial_price'];
 $productFinalPrice = $lastAddedProductDetails['product_final_price'];
-
 $subtotal = $popupDetails['subtotal'];
 $summaryCount = $popupDetails['summary_count'];
 $summaryCountLabel = ($summaryCount > 1) ? __('items') : __('item');
@@ -97,6 +95,14 @@ if (isset($lastAddedProductDetails['product_price_value']) && isset($lastAddedPr
             <span class="label"><?= __('Cart subtotal'); ?>:</span>
             <span class="subtotal-value"><?= $subtotal ?></span>
             <span class="total-items">( <?= $summaryCount . ' ' . $summaryCountLabel ?> )</span>
+        </div>
+        <div class="action-buttons">
+            <a class="action primary cart-checkout" href="<?= $block->getUrl('checkout', ['_secure' => true]);?>">
+                <span><?= __('Go to Checkout'); ?></span>
+            </a>
+            <button class="action secondary continue-shopping">
+                <span><?= __('Continue shopping'); ?></span>
+            </button>
         </div>
     </div>
     <?php if ($staticBlockContent) : ?>
@@ -332,8 +338,3 @@ if (isset($lastAddedProductDetails['product_price_value']) && isset($lastAddedPr
             });
     </script>
 </div>
-<style type="text/css">
-    .wp-confirmation-popup-wrapper .modal-header {
-        display: none;
-    }
-</style>

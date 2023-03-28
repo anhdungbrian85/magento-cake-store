@@ -102,6 +102,8 @@ define([
             self.disableAddToCartButton(form);
             formData = new FormData(form[0]);
 
+            console.log(form);
+
             $.ajax({
                 url: form.prop('action'),
                 data: formData,
@@ -186,7 +188,7 @@ define([
 
                             /** @inheritdoc */
                             success: function (res) {
-                                // console.log(res);
+                                console.log(res);
                                 $('#addmore-sidebar').html(res.output);
 
                                     $('#addmore-sidebar .product-tab:first-child()').addClass('active');

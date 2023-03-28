@@ -16,7 +16,6 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 use Magento\Customer\Model\Session as CustomerSession;
-use WeltPixel\Quickview\CustomerData\ConfirmationPopup;
 
 /**
  * Controller for processing add to cart action.
@@ -36,9 +35,6 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
     private $quantityProcessor;
     protected $locatorSourceResolver;
     protected $customerSession;
-    protected $confirmationPopup;
-    protected $_wpHelper;
-    protected $_blockFactory;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -61,10 +57,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         ProductRepositoryInterface $productRepository,
         CustomerSession $customerSession,
         LocatorSourceResolver $locatorSourceResolver,
-        ConfirmationPopup $confirmationPopup,
-        \WeltPixel\Quickview\Helper\Data $_wpHelper,
-        \Magento\Framework\View\Element\BlockFactory $_blockFactory,
-        ?RequestQuantityProcessor $quantityProcessor = null,
+        ?RequestQuantityProcessor $quantityProcessor = null
     ) {
         parent::__construct(
             $context,
@@ -79,10 +72,6 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             ?? ObjectManager::getInstance()->get(RequestQuantityProcessor::class);
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->customerSession = $customerSession;
-        $this->confirmationPopup = $confirmationPopup;
-        $this->_wpHelper = $_wpHelper;
-        $this->_blockFactory = $_blockFactory;
-
     }
 
     /**
@@ -163,13 +152,13 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                     );
                     $this->messageManager->addSuccessMessage($message);
                 } else {
-                    // $this->messageManager->addComplexSuccessMessage(
-                    //     'addCartSuccessMessage',
-                    //     [
-                    //         'product_name' => $product->getName(),
-                    //         'cart_url' => $this->getCartUrl(),
-                    //     ]
-                    // );
+                    $this->messageManager->addComplexSuccessMessage(
+                        'addCartSuccessMessage',
+                        [
+                            'product_name' => $product->getName(),
+                            'cart_url' => $this->getCartUrl(),
+                        ]
+                    );
                 }
                 if ($this->cart->getQuote()->getHasError()) {
                     $errors = $this->cart->getQuote()->getErrors();
@@ -177,15 +166,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                         $this->messageManager->addErrorMessage($error->getText());
                     }
                 }
-                $resultPopupContent = $this->getAjaxPopupContent($product->getId());
-                if ($resultPopupContent) {
-                    return $this->getResponse()->representJson(
-                        $this->_objectManager->get(\Magento\Framework\Json\Helper\Data::class)
-                            ->jsonEncode($resultPopupContent)
-                    );
-                }
-                return $this->goBack();
-
+                return $this->goBack(null, $product);
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             if ($this->_checkoutSession->getUseNotice(true)) {
@@ -219,7 +200,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         return $this->getResponse();
     }
 
-     /**
+    /**
      * Resolve response
      *
      * @param string $backUrl
@@ -236,13 +217,17 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
 
         if ($backUrl || $backUrl = $this->getBackUrl()) {
             $result['backUrl'] = $backUrl;
-
         } else {
             if ($product && !$product->getIsSalable()) {
                 $result['product'] = [
                     'statusText' => __('Out of stock')
                 ];
             }
+        }
+        if (!$this->checkProductAvailableInStore()) {
+            $result['available'] = [
+                    'statusText' => __('Not Available')
+                ];
         }
 
         $this->getResponse()->representJson(
@@ -285,34 +270,5 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         $locationId = $this->customerSession->getStoreLocationId();
         $product = $this->_initProduct();
         return $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $product);
-    }
-
-
-    private function getAjaxPopupContent($productId)
-    {
-        if (!$this->_wpHelper->isAjaxCartEnabled()) {
-            return [];
-        }
-        $abstractProductBlock = $this->_blockFactory->createBlock('\Magento\Catalog\Block\Product\AbstractProduct');
-        $confirmationPopupBlock = $this->_blockFactory->createBlock('\WeltPixel\Quickview\Block\ConfirmationPopup')
-            ->setTemplate('WeltPixel_Quickview::confirmation_popup/content.phtml')
-            ->setProductViewModel($abstractProductBlock)
-            ->setLastAddedProductId($productId);
-
-        /** @var \Magento\Framework\Pricing\Render $priceRender */
-        $priceRender = $confirmationPopupBlock->getLayout()->getBlock('product.price.render.default');
-        if (!$priceRender) {
-            $confirmationPopupBlock->getLayout()->createBlock(
-                \Magento\Framework\Pricing\Render::class,
-                'product.price.render.default',
-                ['data' => ['price_render_handle' => 'catalog_product_prices']]
-            );
-        }
-
-        $confirmationPopup = $confirmationPopupBlock->toHtml();
-
-        return [
-            'confirmation_popup_content' => $confirmationPopup
-        ];
     }
 }

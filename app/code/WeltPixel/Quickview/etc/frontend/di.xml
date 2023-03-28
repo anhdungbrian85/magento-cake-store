@@ -41,6 +41,13 @@
         <plugin name="weltpixel-quickview-page-config-structure"
                 type="WeltPixel\Quickview\Plugin\PageConfigStructure" sortOrder="10"/>
     </type>
+    <type name="Magento\Customer\CustomerData\SectionPoolInterface">
+        <arguments>
+            <argument name="sectionSourceMap" xsi:type="array">
+                <item name="wp_confirmation_popup" xsi:type="string">WeltPixel\Quickview\CustomerData\ConfirmationPopup</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="WeltPixel\Quickview\Block\ConfirmationPopup">
         <plugin name="wp_confirmation_popup_tax_price" type="WeltPixel\Quickview\Plugin\Tax\PopupPrice"/>
     </type>
