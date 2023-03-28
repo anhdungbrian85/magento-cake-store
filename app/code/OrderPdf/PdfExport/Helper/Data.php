@@ -85,16 +85,16 @@ class Data extends AbstractHelper
             $logger->info('Before check empty items data!');
             $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
             $deliveryOrderHtml = '';
-            if ($delivery->getId()) {
+            if (strpos($orderData['order_no'], 'DEL')) {
                 $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
                 $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
                 $deliveryOrderHtml = "
-                        <div class='order-date-title'><span class='text-bold'>Delivery Date</span>: <span class='text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
-                        <div class='order-time-title'><span class='text-bold'>Delivery Time</span>: <span class='text-size-20'>{$deliveryTime}</span></div>";
-            } else {
+                        <div class='order-date-title'><span class='text-size-10 text-bold'>Delivery Date</span>: <span class='text-size-10 text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
+                        <div class='order-time-title'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>";
+            } else if (strpos($orderData['order_no'], 'COL')) {
                 $deliveryOrderHtml = "
-                    <div class='order-date-title'><span class='text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
-                    <div class='order-time-title'><span class='text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
+                    <div class='order-date-title'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
+                    <div class='order-time-title'><span class='text-size-10 text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
             }
             if(isset($itemsData) && $itemsData!=null) {
                 $logger->info('During check empty items data!');
@@ -153,11 +153,11 @@ class Data extends AbstractHelper
                         <tr>
                             <td class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
                             <td class='order-info-content'>
-                                <div class='order-number-title'><span class='text-bold'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
+                                <div class='order-number-title'><span class='text-bold text-size-10'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
                         . $deliveryOrderHtml ."
-                                <div><span class='text-bold'>Billing Name</span>: {$orderData['firstname']} {$orderData['lastname']}</div>
-                                <div><span class='text-bold'>Billing Tel</span>: {$orderData['phone_no']}</div>
-                                <div><span class='text-bold'>Billing Email</span>: {$orderData['email']}</div>
+                                <div><span class='text-bold text-size-10'>Billing Name</span>: {$orderData['firstname']} {$orderData['lastname']}</div>
+                                <div><span class='text-bold text-size-10'>Billing Tel</span>: {$orderData['phone_no']}</div>
+                                <div><span class='text-bold text-size-10'>Billing Email</span>: {$orderData['email']}</div>
                             </td>
                         </tr>
                     </table>
@@ -243,30 +243,30 @@ class Data extends AbstractHelper
                 }
             }
 
-
             $html = "
             <style>
-            td { padding: 2px;}
-            h1 { margin-bottom: 0; }
-            .grey-border {border: 1px solid grey; margin-top: 2px; margin-bottom: 2px;}
-            .text-bold {font-weight: bold !important;}
-            .text-size-20 {font-size: 20px}
-            .order-total-container { width: 100%;}
-            .order-total-item {width: 48%; float:left}
-            .order-info {width: 100%; padding-left: 10px;}
-            .order-info tr {display: flex; width: 100%;}
-            .order-info .order-info-image {width: 50%; text-align: center}
-            .order-info-image-icon {width: 120px;}
-            .item-table {width: 100%;}
-            .item-table td {width: auto;}
-            .note-container {width: 100%; padding: 5px;}
-            .message-container {width: 100%; padding: 5px;}
-            .photo-container {width: 100%; padding: 5px;}
-            .photo-container .photo-content {text-align: center;}
-            .barcode-container {padding: 10px;}
-            .shape-icon {width: 35px;}
-            .customer-photo {width: 100px;}
-            .barcode-content {margin-top: 2px;}
+                td { padding: 2px;}
+                h1 { margin-bottom: 0; }
+                .grey-border {border: 1px solid grey; margin-top: 2px; margin-bottom: 2px;}
+                .text-bold {font-weight: bold !important;}
+                .text-size-10 {font-size: 14px;}
+                .text-size-20 {font-size: 20px}
+                .order-total-container { width: 100%;}
+                .order-total-item {width: 48%; float:left}
+                .order-info {width: 100%; padding-left: 10px;}
+                .order-info tr {display: flex; width: 100%;}
+                .order-info .order-info-image {width: 30%; text-align: center}
+                .order-info-image-icon {width: 120px;}
+                .item-table {width: 100%;}
+                .item-table td {width: auto;}
+                .note-container {width: 100%; padding: 5px;}
+                .message-container {width: 100%; padding: 5px;}
+                .photo-container {width: 100%; padding: 5px;}
+                .photo-container .photo-content {text-align: center;}
+                .barcode-container {padding: 10px;}
+                .shape-icon {width: 35px;}
+                .customer-photo {width: 100px;}
+                .barcode-content {margin-top: 2px;}
             </style>
             <div class='content-container'>
                 {$orderItemsDetailHtml}
