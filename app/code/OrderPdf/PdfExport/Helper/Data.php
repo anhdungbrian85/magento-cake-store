@@ -196,7 +196,7 @@ class Data extends AbstractHelper
                     <div class='photo-title'>Customer's Photo</div>
                     <div class='photo-content'>
                     <img class='customer-photo' style='vertical-align: top' src='{$orderPath['photo']}'/>
-                   </div> </div>" : "<div class='photo-container grey-border'>
+                    </div> </div>" : "<div class='photo-container grey-border'>
                     <div class='photo-title'>Customer's Photo</div>
                      </div>";
 
@@ -206,9 +206,9 @@ class Data extends AbstractHelper
 
                     if ($delivery->getId()) {
                         $orderNoteDetailHtml = "<div class='note-container grey-border'>
-                        <div class='note-title'>Notes:</div>
-                        <div class='note-content'>{$delivery->getData('comment')}</div>
-                    </div>";
+                            <div class='note-title'>Notes:</div>
+                            <div class='note-content'>{$delivery->getData('comment')}</div>
+                        </div>";
                     }
                     $logger->info('After render note container!');
                     $orderItemsDetailHtml .= $orderNoteDetailHtml;
@@ -248,10 +248,9 @@ class Data extends AbstractHelper
 
             $html = "
             <style>
-            table { border-collapse: collapse; margin-top: 0; }
-            td { padding: 0.5em; margin: 1px;}
+            td { padding: 0.5em;}
             h1 { margin-bottom: 0; }
-            .grey-border {border: 1px solid grey; border-collapse: collapse;}
+            .grey-border {border: 1px solid grey; margin-top: 5px; margin-bottom: 5px;}
             .text-bold {font-weight: bold !important;}
             .text-size-20 {font-size: 20px}
             .content-container {}
@@ -259,17 +258,16 @@ class Data extends AbstractHelper
             .order-info tr {display: flex; width: 100%;}
             .order-info .order-info-image {width: 50%; text-align: center}
             .order-info-image-icon {width: 120px;}
-            .item-table {width: 100%; padding-left: 10px;}
+            .item-table {width: 100%;}
             .item-table td {width: auto;}
             .note-container {width: 100%; padding: 10px;}
             .message-container {width: 100%; padding: 10px;}
             .photo-container {width: 100%; padding: 10px;}
             .photo-container .photo-content {text-align: center;}
-            .table-footer {width: 100%; padding-left: 10px;}
-            .table-footer tr {display: flex; justify-content: space-around;}
             .barcode-container {padding: 10px;}
             .shape-icon {width: 35px;}
             .customer-photo {width: 100px;}
+            .barcode-content {margin-top: 5px;}
             </style>
             <div class='content-container'>
                 {$orderItemsDetailHtml}
@@ -290,8 +288,7 @@ class Data extends AbstractHelper
 
             try {
                 $logger->info('Start render order pdf!');
-                $mpdf->setFooter('Page {PAGENO} of {nbpg}');
-
+                $mpdf->SetHTMLFooter('<div style="text-align: left; font-weight: bold; color:purple;">PAGE {PAGENO} of {nbpg}</div>');
                 $mpdf->WriteHTML($html);
                 $mpdf->Output($orderData['order_no'] . '.pdf', 'D');
                 $fileContent = ['type' => 'string', 'value' => $mpdf->Output($orderData['order_no'] . '.pdf', 'S'), 'rm' => true];
