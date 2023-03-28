@@ -248,9 +248,9 @@ class Data extends AbstractHelper
 
             $html = "
             <style>
-            td { padding: 0.5em;}
+            td { padding: 2px;}
             h1 { margin-bottom: 0; }
-            .grey-border {border: 1px solid grey; margin-top: 5px; margin-bottom: 5px;}
+            .grey-border {border: 1px solid grey; margin-top: 2px; margin-bottom: 2px;}
             .text-bold {font-weight: bold !important;}
             .text-size-20 {font-size: 20px}
             .content-container {}
@@ -260,14 +260,14 @@ class Data extends AbstractHelper
             .order-info-image-icon {width: 120px;}
             .item-table {width: 100%;}
             .item-table td {width: auto;}
-            .note-container {width: 100%; padding: 10px;}
-            .message-container {width: 100%; padding: 10px;}
-            .photo-container {width: 100%; padding: 10px;}
+            .note-container {width: 100%; padding: 5px;}
+            .message-container {width: 100%; padding: 5px;}
+            .photo-container {width: 100%; padding: 5px;}
             .photo-container .photo-content {text-align: center;}
             .barcode-container {padding: 10px;}
             .shape-icon {width: 35px;}
             .customer-photo {width: 100px;}
-            .barcode-content {margin-top: 5px;}
+            .barcode-content {margin-top: 2px;}
             </style>
             <div class='content-container'>
                 {$orderItemsDetailHtml}
