@@ -48,7 +48,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $destCode = $this->getRequest()->getParam('dest');
 
         $resultJson = $this->resultJsonFactory->create();
-        if ($deliveryType == 1 || $deliveryType == 2) {
+        if ($deliveryType == 1) {
             
             $location = $this->getClosestStoreLocation($destCode);
             if ($location && $location->getId()) {
@@ -58,10 +58,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
 
                 $this->storeLocationContextInterface->setStoreLocationId($location->getId());
 
-                return $resultJson->setData([
-                        'store_location_id' => $location->getId(),
-                        'redirect_url' => $deliveryType == 2 ? $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB) . 'celebration-cakes/click-collect-1-hour.html'  : null
-                    ]);
+                return $resultJson->setData(['store_location_id' => $location->getId()]);
             }   else {
                 return $resultJson->setData(['delivery_status' => false]);
             }
