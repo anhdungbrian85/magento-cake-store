@@ -1,7 +1,7 @@
-diff --git a/vendor/module-mega-menu-lite/view/frontend/requirejs-config.js b/vendor/module-mega-menu-lite/view/frontend/requirejs-config.js
+diff --git a/vendor/amasty/module-mega-menu-lite/view/frontend/requirejs-config.js b/vendor/amasty/module-mega-menu-lite/view/frontend/requirejs-config.js
 index 24b733a82c5481c5a2d5c2ab58c6e20176dc7559..8c5ff2e1e43caa8bfdcd3dcf6af678f00044f449 100755
---- a/vendor/module-mega-menu-lite/view/frontend/requirejs-config.js
-+++ b/vendor/module-mega-menu-lite/view/frontend/requirejs-config.js
+--- a/vendor/amasty/module-mega-menu-lite/view/frontend/requirejs-config.js
++++ b/vendor/amasty/module-mega-menu-lite/view/frontend/requirejs-config.js
 @@ -2,7 +2,6 @@ var config = {
      shim: {
          'Magento_Customer/js/section-config': {
