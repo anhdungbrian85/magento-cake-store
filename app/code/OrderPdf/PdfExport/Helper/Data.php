@@ -91,7 +91,7 @@ class Data extends AbstractHelper
                 $deliveryOrderHtml = "
                         <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Date</span>: <span class='text-size-10 text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
                         <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>";
-            } else if (strpos($orderData['order_no'], 'COL')) {
+            } else {
                 $deliveryOrderHtml = "
                     <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
                     <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
