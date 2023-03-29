@@ -89,12 +89,12 @@ class Data extends AbstractHelper
                 $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
                 $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
                 $deliveryOrderHtml = "
-                        <div class='order-date-title'><span class='text-size-10 text-bold'>Delivery Date</span>: <span class='text-size-10 text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
-                        <div class='order-time-title'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>";
+                        <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Date</span>: <span class='text-size-10 text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
+                        <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>";
             } else if (strpos($orderData['order_no'], 'COL')) {
                 $deliveryOrderHtml = "
-                    <div class='order-date-title'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
-                    <div class='order-time-title'><span class='text-size-10 text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
+                    <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
+                    <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
             }
             if(isset($itemsData) && $itemsData!=null) {
                 $logger->info('During check empty items data!');
@@ -149,37 +149,33 @@ class Data extends AbstractHelper
                     $logger->info('After check empty options!');
                     $logger->info('Before render order info!');
                     $itemHtml = "
-                    <table class='order-info'>
-                        <tr>
-                            <td class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></td>
-                            <td class='order-info-content'>
-                                <div class='order-number-title'><span class='text-bold text-size-10'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
-                        . $deliveryOrderHtml ."
-                                <div><span class='text-bold text-size-10'>Billing Name</span>: {$orderData['firstname']} {$orderData['lastname']}</div>
-                                <div><span class='text-bold text-size-10'>Billing Tel</span>: {$orderData['phone_no']}</div>
-                                <div><span class='text-bold text-size-10'>Billing Email</span>: {$orderData['email']}</div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class='order-info'>
+                        <div class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></div>
+                        <div class='order-info-content'>
+                            <div style='margin-top: 10px;' class='order-number-title'><span class='text-bold text-size-10'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
+                                . $deliveryOrderHtml ."
+                            <div style='margin-top: 10px;'><span class='text-bold text-size-10'>Billing Name</span>     : {$orderData['firstname']} {$orderData['lastname']}</div>
+                            <div style='margin-top: 10px;'><span class='text-bold text-size-10'>Billing Tel</span>      : {$orderData['phone_no']}</div>
+                            <div style='margin-top: 10px;'><span class='text-bold text-size-10'>Billing Email</span>    : {$orderData['email']}</div>
+                        </div>
+                    </div>
                     <table class='item-table'>
                         <tr>
                             <td class='grey-border'>Ref</td>
-                            <td class='grey-border'>Image</td>
+                            <td class='grey-border'>Pic</td>
                             <td class='grey-border'>Base</td>
                             <td class='grey-border'>Shape</td>
                             <td class='grey-border'>Size</td>
                             <td class='grey-border'>Colour</td>
-                            <td class='grey-border'>Number Shape</td>
-                            <td class='grey-border'>Number</td>
                         </tr>
                         <tr>
                             <td class='grey-border'>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td class="grey-border">[Custom]</td>' : '<td class="grey-border">[No Custom]</td>') . "
                             <td class='grey-border'>{$base}</td>
-                            <td class='grey-border'><img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}</td>
+                            <td class='grey-border'>
+                                <img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}<br>{$orderPath['number_shape']}
+                            </td>
                             <td class='grey-border'>{$size}</td>
                             <td class='grey-border'>{$colour}</td>
-                            <td class='grey-border'>{$orderPath['number_shape']}</td>
-                            <td class='grey-border'>{$orderPath['number']}</td>
                         </tr>
                 </table>";
                     $orderItemsDetailHtml .= $itemHtml;
@@ -247,6 +243,8 @@ class Data extends AbstractHelper
             <style>
                 td { padding: 2px;}
                 h1 { margin-bottom: 0; }
+                .order-info-content {float: left;}
+                .order-info-image {float: left;}
                 .grey-border {border: 1px solid grey; margin-top: 2px; margin-bottom: 2px;}
                 .text-bold {font-weight: bold !important;}
                 .text-size-10 {font-size: 14px;}
