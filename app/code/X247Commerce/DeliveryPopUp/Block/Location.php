@@ -160,9 +160,13 @@ class Location extends \Amasty\Storelocator\Block\Location
 
             $this->locationCollection->setCurPage($pageNumber);
             $this->locationCollection->setPageSize($this->configProvider->getPaginationLimit());
-            if ($this->getRequest()->getPost('delivery-type') == 0) {
+            if ($this->getRequest()->getPost('delivery-type') == 0 || $this->getRequest()->getPost('delivery-type') == 2) {
                 $this->locationCollection->addFieldToFilter('curbside_enabled',1);
             }
+            if ($this->getRequest()->getPost('delivery-type') == 2) {
+                $this->locationCollection->getSelect()->where('main_table.id NOT IN (?)', ['asda_tbl' => new \Zend_Db_Expr("SELECT asda_location_id FROM ".$this->locationCollection->getTable('store_location_asda_link'))]);
+            }
+            
             $this->reviewRepository->loadReviewForLocations($this->locationCollection->getAllIds());
 
             foreach ($this->locationCollection as $location) {
