@@ -11,6 +11,11 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "laminas/laminas-dependency-plugin": true,
             "magento/*": true
+        },
+        "allow-plugins": {
+            "magento/*": true,
+            "laminas/*": true,
+            "cweagans/composer-patches": true
         }
     },
     "repositories": {
@@ -112,6 +117,11 @@
                 "lib/web/jquery/jquery.tabs.js"
             ],
             "tinymce/tinymce": "lib/web/tiny_mce_5"
+        },
+        "patches": {
+            "amasty/module-mega-menu-lite": {
+                "fix-conflict-email-component-checkout": "_extra/patches/module-mega-menu-lite/Amasty-Fix-osc-no-email-field.composer.patch"
+            }
         },
         "magento-force": true,
         "magento-deploystrategy": "copy",
