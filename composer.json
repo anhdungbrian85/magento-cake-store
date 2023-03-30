@@ -40,6 +40,7 @@
         "amasty/module-store-pickup-with-locator-msi": "^1.0",
         "amasty/shopby": "^2.19",
         "amasty/shopby-seo": "^2.13",
+        "cweagans/composer-patches": "^1.7",
         "klaviyo/magento2-extension": "^4.0",
         "klevu/module-msi": "^1.0",
         "klevu/module-search": "^3.0",
