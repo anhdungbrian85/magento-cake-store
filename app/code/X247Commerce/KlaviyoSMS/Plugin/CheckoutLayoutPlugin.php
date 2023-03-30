@@ -85,9 +85,10 @@ class CheckoutLayoutPlugin
                     'value' => $address->getTelephone()
                 ];
 
-                $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_phone_number'] = $smsConsentTelephone;
+                // $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_phone_number'] = $smsConsentTelephone;
                 // $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_consent'] = $smsConsentCheckbox;
                 $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['kl_sms_consent'] = $smsConsentCheckbox;
+                $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['kl_sms_phone_number'] = $smsConsentTelephone;
             }
         }
 
