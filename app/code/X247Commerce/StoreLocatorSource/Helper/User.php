@@ -53,9 +53,12 @@ class User extends AbstractHelper
         if (!$user) {
             $user = $this->getCurrentUser();
         }
-        $staffRole = $this->getStaffRole();
-        $currentAdminRole = $user->getRole()->getId();
-        return $staffRole == $currentAdminRole;
+        if ($user) {
+            $staffRole = $this->getStaffRole();
+            $currentAdminRole = $user->getRole()->getId();
+            return $staffRole == $currentAdminRole;
+        }
+        return false;
     }
 
     /**
