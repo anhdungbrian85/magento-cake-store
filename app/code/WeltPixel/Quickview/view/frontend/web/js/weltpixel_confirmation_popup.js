@@ -13,61 +13,50 @@ define([
         initialize: function () {
             var that  = this;
             this._super();
-            this.wpConfirmationPopup = customerData.get('wp_confirmation_popup');
-            this.messages = customerData.get('messages');
-            this.productAddedEvent = ko.computed(function()  {
-               return [ that.wpConfirmationPopup(), that.messages() ];
-            });
+            $(document).on('ajax:addToCart', function(e, data) {
 
-            this.productAddedEvent.subscribe(function(options) {
-                let wpConfirmationPopupOptions = options[0];
-                let messagesOptions = options[1];
-                let parentBody = window.parent.document.body;
-
-                if (wpConfirmationPopupOptions.confirmation_popup_content && messagesOptions.wp_messages && (!localStorage.wp_messages_loaded || localStorage.wp_messages_loaded === '0')) {
-                    let quickviewPopup = $('.wp-quickview-popup .mfp-close', parentBody);
-                    let url = window.weltpixel_quickview.baseUrl + 'weltpixel_quickview/index/updatecart';
-                    if (quickviewPopup.length) {
-                        let parentJQuery = window.parent.jQuery;
-                        setTimeout(function() {
-                            $('.wp-quickview-popup .mfp-close', parentBody).trigger('click');
-                            parentJQuery.magnificPopup.open({
-                                items: {
-                                    src: wpConfirmationPopupOptions.confirmation_popup_content,
-                                    type: 'inline'
+                if (data.response.confirmation_popup_content) {
+                    let confirmation_popup_content = data.response.confirmation_popup_content;
+                    let parentBody = window.parent.document.body;
+                    $('<div />').html(confirmation_popup_content)
+                    .modal({
+                        autoOpen: true,
+                        modalClass: 'wp-confirmation-popup-wrapper',
+                        modalCloseBtn: '.mfp-close',
+                        buttons: [{
+                            text: "Continue Shopping",
+                            attr: {
+                                'data-action': 'confirm'
+                            },
+                            'class': 'action primary',
+                            click: function () {
+                                this.closeModal();
+                                $('.mfp-close', parentBody).trigger('click');
+                            }
+                        },
+                            {
+                                text: "Go To Checkout",
+                                attr: {
+                                    'data-action': 'cancel'
                                 },
-                                callbacks: {
-                                    beforeClose: function() {
-                                        parentJQuery('[data-block="minicart"]').trigger('contentLoading');
-                                        parentJQuery.ajax({
-                                            url: url,
-                                            method: "POST"
-                                        });
-                                    }
+                                'class': 'action primary',
+                                click: function () {
+                                    parent.window.location = window.location.origin + '/checkout'
                                 }
-                            });
-                        }, 1000);
-                    } else {
-                        localStorage.setItem("wp_messages_loaded", '1');
-                        $.magnificPopup.open({
-                            items: {
-                                src: wpConfirmationPopupOptions.confirmation_popup_content,
-                                type: 'inline'
-                            },
-                            callbacks: {
-                                beforeClose: function() {
-                                    $('[data-block="minicart"]').trigger('contentLoading');
-                                    $.ajax({
-                                        url: url,
-                                        method: "POST"
-                                    });
-                                }
-                            },
-                            mainClass: 'mfp-wp-confirmation-popup'
-                        });
-                    }
-
+                        }],
+                        
+                        callbacks: {
+                            beforeClose: function() {
+                                $('[data-block="minicart"]').trigger('contentLoading');
+                                $.ajax({
+                                    url: url,
+                                    method: "POST"
+                                });
+                            }
+                        },
+                    });
                 }
+                
             });
         }
     });

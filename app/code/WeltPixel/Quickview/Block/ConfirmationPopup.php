@@ -186,7 +186,7 @@ class ConfirmationPopup extends \Magento\Framework\View\Element\Template
             return $items;
         }
 
-        foreach (array_reverse($this->getAllQuoteItems()) as $item) {
+        foreach ($this->getAllQuoteItems() as $item) {
             /* @var $item \Magento\Quote\Model\Quote\Item */
             if (!$item->getProduct()->isVisibleInSiteVisibility()) {
                 $product =  $item->getOptionByCode('product_type') !== null
