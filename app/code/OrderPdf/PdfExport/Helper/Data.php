@@ -33,6 +33,8 @@ class Data extends AbstractHelper
 
     protected $fileFactory;
 
+    protected $swatchHelper;
+
     public function __construct(
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\Filesystem\DirectoryList $directory,
@@ -45,6 +47,7 @@ class Data extends AbstractHelper
         TimeHandler $timeHandler,
         TimezoneInterface $timezone,
         OrderRepositoryInterface $orderRepository,
+        \Magento\Swatches\Helper\Data $swatchHelper,
         Context $context
     ) {
         parent::__construct($context);
@@ -59,6 +62,7 @@ class Data extends AbstractHelper
         $this->assetRepo = $assetRepo;
         $this->directory = $directory;
         $this->fileFactory = $fileFactory;
+        $this->swatchHelper = $swatchHelper;
     }
 
     public function createOrderPdf($order,$_fileFactory)
@@ -116,8 +120,12 @@ class Data extends AbstractHelper
                     $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings'):" ";
                     $base  = substr($sponge, 0, 1);//position,count V
                     $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
-                    $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):" ";
-
+                    $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):"";
+                    $hashcode = $this->getAtributeSwatchHashcode(152);
+// var_dump($product->getResource()->getAttribute('color')->getData());
+// var_dump($this->getOptionIdByLabel($product, 'color', $colour));
+// var_dump($hashcode);
+// die();
                     $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
                     $orderPath = [];
                     $orderPath['message'] = '';
@@ -146,6 +154,12 @@ class Data extends AbstractHelper
                             }
                         }
                     }
+                    $colorHtml = $colour ? "<div class='colour-wrapper'>
+                                                <p class='colour-view' >
+                                                    <span style='background-color:red;height:15px;width:15px;border: 1px solid red; color:red;border-radius: 25px;'>____</span>
+                                                </p>
+                                                <div class='colour-text' style='margin-top: 50px;'>{$colour}</div>
+                                            </div>" : '';
                     $logger->info('After check empty options!');
                     $logger->info('Before render order info!');
                     $itemHtml = "
@@ -166,16 +180,18 @@ class Data extends AbstractHelper
                             <td class='grey-border'>Base</td>
                             <td class='grey-border'>Shape</td>
                             <td class='grey-border'>Size</td>
+                            <td class='grey-border'>Number</td>
                             <td class='grey-border'>Colour</td>
                         </tr>
                         <tr>
                             <td class='grey-border'>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td class="grey-border">[Custom]</td>' : '<td class="grey-border">[No Custom]</td>') . "
                             <td class='grey-border'>{$base}</td>
                             <td class='grey-border'>
-                                <img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}<br>{$orderPath['number_shape']}
+                                <img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}
                             </td>
                             <td class='grey-border'>{$size}</td>
-                            <td class='grey-border'>{$colour}</td>
+                            <td class='grey-border'>{$orderPath['number']}</td>
+                            <td class='grey-border'>{$colorHtml}</td>
                         </tr>
                 </table>";
                     $orderItemsDetailHtml .= $itemHtml;
@@ -238,7 +254,11 @@ class Data extends AbstractHelper
 
                 }
             }
-
+            $colorHex = $colour ? $this->getColorCss($colour) : '';
+            $colorStyle = ".colour-wrapper {width:max-content;}
+                            .colour-view {background:{$colorHex};height:25px;width:25px;border-radius: 25px;margin:auto;}
+                            .colour-text {color:{$colorHex};margin-top: 5px;}";
+            $cssColor = $colour ? $colorStyle : '';
             $html = "
             <style>
                 td { padding: 2px;}
@@ -265,6 +285,7 @@ class Data extends AbstractHelper
                 .shape-icon {width: 35px;}
                 .customer-photo {width: 100px;}
                 .barcode-content {margin-top: 2px;}
+                {$cssColor}
             </style>
             <div class='content-container'>
                 {$orderItemsDetailHtml}
@@ -282,7 +303,7 @@ class Data extends AbstractHelper
                 'default_font' => 'dejavusanscondensed',
                 'format' => 'A5'
             ]);
-
+// var_dump($html);die();
             try {
                 $logger->info('Start render order pdf!');
                 $mpdf->SetHTMLFooter('<div style="text-align: left; font-weight: bold; color:purple;">PAGE {PAGENO} of {nbpg}</div>');
@@ -354,5 +375,68 @@ class Data extends AbstractHelper
     public function isJson($string,$return_data = false) {
         $data = json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE) ? ($return_data ? $data : TRUE) : FALSE;
+    }
+    public function getAtributeSwatchHashcode($optionid) {
+        $hashcodeData = $this->swatchHelper->getSwatchesByOptionsId([$optionid]);
+        return $hashcodeData;
+        // return $hashcodeData[$optionid]['value'];
+    } 
+    public function getOptionIdByLabel($product, $attributeCode,$optionLabel)
+    {
+        $isAttributeExist = $product->getResource()->getAttribute($attributeCode);
+        $optionId = '';
+        if ($isAttributeExist && $isAttributeExist->usesSource()) {
+            $optionId = $isAttributeExist->getSource()->getOptionId($optionLabel);
+        }
+        return $optionId;
+    }
+
+    public function getColorCss($colour)
+    {
+        switch ($colour) {
+            case 'Baby Blue':
+                $cssColor = '#3ca9ed';
+                break;
+            case 'Green': 
+                $cssColor = '#008000';
+                break;
+            case 'Lilac': 
+                $cssColor = '#c5aded';
+                break;
+            case 'Pink': 
+                $cssColor = '#ffc0cb';
+                break;
+            case 'Red': 
+                $cssColor = '#ff0000';
+                break;
+            case 'Yellow': 
+                $cssColor = '#ffff00';
+                break;
+            case 'Tangerine_Apricot': 
+            case 'Tangerine Apricot': 
+                $cssColor = '#d13913';
+                break;
+            case 'Rose Gold': 
+                $cssColor = '#b76e79';
+                break;
+            case 'Silver': 
+                $cssColor = '#bfb9bf';
+                break;
+            case 'Mixed Blue / Pink': 
+            case 'Mixed  Blue / Pink': 
+                $cssColor = '#bfb9bf';
+                break;
+            case 'Chocolate': 
+                $cssColor = '#a65c17';
+                break;
+            case 'Blue': 
+                $cssColor = '#0000ff';
+                break;
+            
+            default:
+                $cssColor = '';
+                break;
+        }
+        return $cssColor;
     }
 }
