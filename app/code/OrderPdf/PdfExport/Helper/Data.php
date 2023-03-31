@@ -35,7 +35,10 @@ class Data extends AbstractHelper
 
     protected $swatchHelper;
 
+    protected $addressConfig;
+
     public function __construct(
+        \Magento\Customer\Model\Address\Config $addressConfig,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\Filesystem\DirectoryList $directory,
         \Magento\Framework\View\Asset\Repository $assetRepo,
@@ -51,6 +54,7 @@ class Data extends AbstractHelper
         Context $context
     ) {
         parent::__construct($context);
+        $this->addressConfig = $addressConfig;
         $this->orderRepository = $orderRepository;
         $this->timezone = $timezone;
         $this->timeHandler = $timeHandler;
@@ -89,12 +93,17 @@ class Data extends AbstractHelper
             $logger->info('Before check empty items data!');
             $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
             $deliveryOrderHtml = '';
-            if (strpos($orderData['order_no'], 'DEL')) {
+            if (strpos($orderData['order_no'], 'DEL') >= 0) {
                 $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
                 $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
+                $shippingAddress = $order->getShippingAddress();
+                $streetData = $shippingAddress->getStreet();
+                $shippingAddressHtml = $streetData[0] . ', ' . $shippingAddress->getPostcode();
                 $deliveryOrderHtml = "
                         <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Date</span>: <span class='text-size-10 text-size-20'>{$this->timezone->formatDate($delivery->getData('date'), \IntlDateFormatter::FULL, false)}</span></div>
-                        <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>";
+                        <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>
+                        <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Address</span>: <span class='text-size-10'>{$shippingAddressHtml}</span></div>
+                        ";
             } else {
                 $deliveryOrderHtml = "
                     <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
