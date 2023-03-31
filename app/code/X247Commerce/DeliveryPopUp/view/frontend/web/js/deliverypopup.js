@@ -1,10 +1,12 @@
 define([
     'jquery',
-    'Magento_Ui/js/modal/modal'
-], function($, modal){
+    'Magento_Ui/js/modal/modal',
+    'mage/url'
+], function($, modal, urlBuilder){
     'use strict';
     $.widget('x247.deliverypopup', {
         _create: function() {
+
             let $widget = this;
             var options = {
                 type: 'popup',
@@ -21,9 +23,16 @@ define([
                 }]
             };
             var popup = modal(options, $('#custom-delivery-popup-modal'));
-            $( document ).ready(function() {
-                $('#custom-delivery-popup-modal').modal('openModal');
-            });     
+            $.ajax({
+                url: urlBuilder.build('deliverypopup'),
+                method: "POST",
+                dataType: "json",
+                success: function(res) {
+                    if (res.showPopup && $('#custom-delivery-popup-modal').length) {
+                        $('#custom-delivery-popup-modal').modal('openModal');
+                    }
+                }
+            })
         },
     });
     return $.x247.deliverypopup;
