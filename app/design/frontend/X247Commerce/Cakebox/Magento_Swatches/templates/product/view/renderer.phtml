@@ -8,7 +8,6 @@
 /** @var $block \Magento\Swatches\Block\Product\Renderer\Configurable */
 /** @var \Magento\Swatches\ViewModel\Product\Renderer\Configurable $configurableViewModel */
 $configurableViewModel = $block->getConfigurableViewModel();
-
 $product = $block->getProduct();
 $helperSwatch = $this->helper('X247Commerce\Products\Helper\Data');
 $shapeImage = false;
@@ -18,7 +17,6 @@ if ( $product->getData('shape') ) {
     $shapeImage = $helperSwatch->getDataSwatchSponge($product->getData('shape'));
     $label = $product->getResource()->getAttribute('shape')->getFrontend()->getValue($product);
 }
-
 ?>
 <div class="swatch-opt" data-role="swatch-options"></div>
 
@@ -27,6 +25,7 @@ if ( $product->getData('shape') ) {
         "[data-role=swatch-options]": {
             "Magento_Swatches/js/swatch-renderer": {
                 "jsonConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonConfig() ?>,
+                "jsonConfig1HourCollection": <?= $block->getJsonConfigWith1HourCollection() ?>,
                 "jsonSwatchConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonSwatchConfig() ?>,
                 "mediaCallback": "<?= $block->escapeJs($block->escapeUrl($block->getMediaCallback())) ?>",
                 "getNutriticsUrl": "<?= /* @escapeNotVerified */ $block->getUrl('nutritics/ajax/GetNutriticsInfo') ?>",

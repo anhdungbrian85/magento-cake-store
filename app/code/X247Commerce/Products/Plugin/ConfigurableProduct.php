@@ -64,9 +64,9 @@ class ConfigurableProduct
             if ($product->getCharacterLimit()) {
                 $characterLimit['character_limit'][$product->getId()] = $product->getCharacterLimit();
             }
-            if ($isCake && $product->getLeadDelivery() != 1) {
-                $hideId[] = $product->getId();
-            }
+            // if ($isCake && $product->getLeadDelivery() != 1) {
+            //     $hideId[] = $product->getId();
+            // }
             $productCategoryIds = $product->getCategoryIds();
             $allCategoryIds = array_merge($allCategoryIds, $productCategoryIds);
         }
