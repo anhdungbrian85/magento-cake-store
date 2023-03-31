@@ -115,7 +115,6 @@ class Data extends AbstractHelper
                         $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl();
                     }
                     $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape'):" ";
-                    $iconShape = "OrderPdf_PdfExport::images/{$shape}.png";
                     $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge'):" ";
                     $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings'):" ";
                     $base  = substr($sponge, 0, 1);//position,count V
@@ -179,6 +178,18 @@ class Data extends AbstractHelper
                     }
                     $logger->info('After check empty options!');
                     $logger->info('Before render order info!');
+                    $iconShapeHtml = '';
+                    if ($shape != 'Number' ){
+                        $iconShape = "OrderPdf_PdfExport::images/{$shape}.png";
+                        $iconShapeHtml = "<img class='shape-icon' style='vertical-align: top'
+                                                src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}";
+                    } else {
+                        if ($orderPath['number_shape']) {
+                            $iconShapeHtml = "{$shape}<br>{$orderPath['number_shape']}";
+                        } else {
+                            $iconShapeHtml = "{$shape}<br>{$orderPath['number']}";
+                        }
+                    }
                     $itemHtml = "
                     <div class='order-info'>
                         <div class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></div>
@@ -204,7 +215,7 @@ class Data extends AbstractHelper
                             <td class='grey-border'>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td class="grey-border">[Custom]</td>' : '<td class="grey-border">[No Custom]</td>') . "
                             <td class='grey-border'>{$base}</td>
                             <td class='grey-border'>
-                                <img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}
+                                {$iconShapeHtml}
                             </td>
                             <td class='grey-border'>{$size}</td>
                             {$orderNumberHtml}
