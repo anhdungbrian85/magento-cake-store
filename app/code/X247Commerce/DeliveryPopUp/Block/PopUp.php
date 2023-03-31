@@ -30,12 +30,10 @@ use Magento\Framework\App\Http\Context as HttpContext;
 class PopUp extends \Amasty\Storelocator\Block\Location
 {
  	protected FormKey       $formKey;
-
     protected PopUpHelper   $popupHelper;
-
     protected StoreLocationContextInterface $storeLocationContextInterface;
-
     protected HttpContext $httpContext;
+    protected \Psr\Log\LoggerInterface $logger;
 
     protected \Magento\Framework\App\Request\Http $request;
 
@@ -59,6 +57,7 @@ class PopUp extends \Amasty\Storelocator\Block\Location
         BaseImageLocation $baseImageLocation,
         LocationProductValidatorInterface $locationProductValidator,
         ReviewRepositoryInterface  $reviewRepository,
+        \Psr\Log\LoggerInterface $logger,
         array $data = []
         
  	) {
@@ -67,6 +66,7 @@ class PopUp extends \Amasty\Storelocator\Block\Location
         $this->storeLocationContextInterface = $storeLocationContextInterface;
         $this->httpContext = $httpContext;
         $this->request = $request;
+        $this->logger = $logger;
  		parent::__construct(
             $context, 
             $coreRegistry, 
@@ -88,6 +88,11 @@ class PopUp extends \Amasty\Storelocator\Block\Location
 
     public function shouldShowPopup()
     {
+
+        $this->logger->info('Debug store_location_id: '. (int) $this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID)); 
+
+        $this->logger->info('Debug store_location_id: '. (int) $this->popupHelper->isEnabledPopup()); 
+        
         return !$this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID) && $this->popupHelper->isEnabledPopup() && (
             $this->request->getFullActionName() != "checkout_index_index"
         );

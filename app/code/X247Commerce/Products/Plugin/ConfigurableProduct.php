@@ -6,6 +6,7 @@ use Magento\Framework\Json\EncoderInterface;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Catalog\Api\AttributeSetRepositoryInterface;
 
 class ConfigurableProduct
 {
@@ -14,13 +15,16 @@ class ConfigurableProduct
     protected $storeLocationContext;
     protected $checkoutSession;
     protected $categoryCollection;
+    protected AttributeSetRepositoryInterface $attributeSetRepository;
+    protected $productAttributeSetName;
 
     public function __construct(
         ProductCollection $productCollection,
         EncoderInterface $jsonEncoder,
         StoreLocationContextInterface $storeLocationContext,
         CheckoutSession $checkoutSession,
-        CategoryCollectionFactory $categoryCollection
+        CategoryCollectionFactory $categoryCollection,
+        AttributeSetRepositoryInterface $attributeSetRepository
     )
     {
         $this->productCollection = $productCollection;
@@ -28,6 +32,17 @@ class ConfigurableProduct
         $this->storeLocationContext  = $storeLocationContext ;
         $this->checkoutSession = $checkoutSession;
         $this->categoryCollection = $categoryCollection;
+        $this->attributeSetRepository = $attributeSetRepository;
+    }
+
+    protected function getProductAttributeSetName($attributeSetId)
+    {
+        if (!$this->productAttributeSetName) {
+            $productAttributeSetName = $this->attributeSetRepository
+                        ->get($attributeSetId)->getAttributeSetName();
+            $this->productAttributeSetName = $productAttributeSetName;
+        }
+        return $this->productAttributeSetName;
     }
 
     public function afterGetJsonConfig(
@@ -43,11 +58,13 @@ class ConfigurableProduct
         $hideId = [];
         $characterLimit = [];
         foreach ($subject->getAllowProducts() as $product) {
+            $isCake = strtolower($this->getProductAttributeSetName($product->getAttributeSetId())) == 'cake';
+          
             $resultArr['skus'][$product->getId()] = $product->getSku();
             if ($product->getCharacterLimit()) {
                 $characterLimit['character_limit'][$product->getId()] = $product->getCharacterLimit();
             }
-            if ($product->getLeadDelivery() != 1) {
+            if ($isCake && $product->getLeadDelivery() != 1) {
                 $hideId[] = $product->getId();
             }
             $productCategoryIds = $product->getCategoryIds();
