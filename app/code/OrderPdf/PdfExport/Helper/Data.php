@@ -121,11 +121,23 @@ class Data extends AbstractHelper
                     $base  = substr($sponge, 0, 1);//position,count V
                     $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):"";
-                    $hashcode = $this->getAtributeSwatchHashcode(152);
-// var_dump($product->getResource()->getAttribute('color')->getData());
-// var_dump($this->getOptionIdByLabel($product, 'color', $colour));
-// var_dump($hashcode);
-// die();
+                    $colorOption = $product->getResource()->getAttribute('color')->getSource()->getSpecificOptions($product->getData('color'));
+                    $colourOptionId = 0;
+                    $colorHexCode = '';
+                    if (!empty($colorOption)) {
+                        foreach ($colorOption as $colorOptionItem) {
+                            if ($colorOptionItem['value']) {
+                                $colourOptionId = $colorOptionItem['value'];
+                            }
+                        }
+                    }
+                    if ($colourOptionId > 0) {
+                        $colorData = $this->swatchHelper->getSwatchesByOptionsId([$colourOptionId]);
+                        if (!empty($colorData['value'])) {
+                            $colorHexCode = $colorData['value'];
+                        }
+                    }
+
                     $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
                     $orderPath = [];
                     $orderPath['message'] = '';
@@ -156,10 +168,15 @@ class Data extends AbstractHelper
                     }
                     $colorHtml = $colour ? "<div class='colour-wrapper'>
                                                 <p class='colour-view' >
-                                                    <span style='background-color:red;height:15px;width:15px;border: 1px solid red; color:red;border-radius: 25px;'>____</span>
+                                                    <span style='background-color:{$colorHexCode};height:15px;width:15px;border: 1px solid {$colorHexCode}; color:{$colorHexCode};border-radius: 25px;'>____</span>
                                                 </p>
                                                 <div class='colour-text' style='margin-top: 50px;'>{$colour}</div>
                                             </div>" : '';
+                    if ($orderPath['number']) {
+                        $orderNumberHtml = "<td class='grey-border'>{$orderPath['number']}</td>";
+                    } else {
+                        $orderNumberHtml = "<td class='grey-border'>{$orderPath['number_shape']}</td>";
+                    }
                     $logger->info('After check empty options!');
                     $logger->info('Before render order info!');
                     $itemHtml = "
@@ -190,7 +207,7 @@ class Data extends AbstractHelper
                                 <img class='shape-icon' style='vertical-align: top' src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}
                             </td>
                             <td class='grey-border'>{$size}</td>
-                            <td class='grey-border'>{$orderPath['number']}</td>
+                            {$orderNumberHtml}
                             <td class='grey-border'>{$colorHtml}</td>
                         </tr>
                 </table>";
@@ -303,7 +320,6 @@ class Data extends AbstractHelper
                 'default_font' => 'dejavusanscondensed',
                 'format' => 'A5'
             ]);
-// var_dump($html);die();
             try {
                 $logger->info('Start render order pdf!');
                 $mpdf->SetHTMLFooter('<div style="text-align: left; font-weight: bold; color:purple;">PAGE {PAGENO} of {nbpg}</div>');
@@ -376,11 +392,7 @@ class Data extends AbstractHelper
         $data = json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE) ? ($return_data ? $data : TRUE) : FALSE;
     }
-    public function getAtributeSwatchHashcode($optionid) {
-        $hashcodeData = $this->swatchHelper->getSwatchesByOptionsId([$optionid]);
-        return $hashcodeData;
-        // return $hashcodeData[$optionid]['value'];
-    } 
+
     public function getOptionIdByLabel($product, $attributeCode,$optionLabel)
     {
         $isAttributeExist = $product->getResource()->getAttribute($attributeCode);
@@ -397,42 +409,42 @@ class Data extends AbstractHelper
             case 'Baby Blue':
                 $cssColor = '#3ca9ed';
                 break;
-            case 'Green': 
+            case 'Green':
                 $cssColor = '#008000';
                 break;
-            case 'Lilac': 
+            case 'Lilac':
                 $cssColor = '#c5aded';
                 break;
-            case 'Pink': 
+            case 'Pink':
                 $cssColor = '#ffc0cb';
                 break;
-            case 'Red': 
+            case 'Red':
                 $cssColor = '#ff0000';
                 break;
-            case 'Yellow': 
+            case 'Yellow':
                 $cssColor = '#ffff00';
                 break;
-            case 'Tangerine_Apricot': 
-            case 'Tangerine Apricot': 
+            case 'Tangerine_Apricot':
+            case 'Tangerine Apricot':
                 $cssColor = '#d13913';
                 break;
-            case 'Rose Gold': 
+            case 'Rose Gold':
                 $cssColor = '#b76e79';
                 break;
-            case 'Silver': 
+            case 'Silver':
                 $cssColor = '#bfb9bf';
                 break;
-            case 'Mixed Blue / Pink': 
-            case 'Mixed  Blue / Pink': 
+            case 'Mixed Blue / Pink':
+            case 'Mixed  Blue / Pink':
                 $cssColor = '#bfb9bf';
                 break;
-            case 'Chocolate': 
+            case 'Chocolate':
                 $cssColor = '#a65c17';
                 break;
-            case 'Blue': 
+            case 'Blue':
                 $cssColor = '#0000ff';
                 break;
-            
+
             default:
                 $cssColor = '';
                 break;
