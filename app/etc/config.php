@@ -486,7 +486,7 @@ return [
         'Mollie_Payment' => 1,
         'Mollie_Subscriptions' => 1,
         'OlegKoval_RegenerateUrlRewrites' => 1,
-        'OrderPdf_PdfExport' => 0,
+        'OrderPdf_PdfExport' => 1,
         'Amasty_CheckoutDeliveryDate' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'Smsglobal_Sms' => 0,

@@ -15,7 +15,7 @@ class PluginBefore
      * @return array
      */
 
-    public function beforePushButtons(
+    public function afterPushButtons(
         \Magento\Backend\Block\Widget\Button\Toolbar\Interceptor $subject,
         \Magento\Framework\View\Element\AbstractBlock $context,
         \Magento\Backend\Block\Widget\Button\ButtonList $buttonList
