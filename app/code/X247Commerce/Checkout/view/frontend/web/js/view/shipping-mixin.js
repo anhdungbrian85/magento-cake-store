@@ -1,6 +1,7 @@
 define(
     [
         'underscore',
+        'Amasty_StorePickupWithLocator/js/model/pickup',
         'ko',
         'jquery',
         'Magento_Ui/js/lib/view/utils/async',
@@ -26,6 +27,7 @@ define(
     ],
     function (
         _,
+        pickup,
         ko,
         $,
         async,
@@ -205,6 +207,10 @@ define(
                     }
 
                     return result;
+                },
+
+                isCollection: function () {
+                    return pickup.isPickup();
                 },
 
                 /**
