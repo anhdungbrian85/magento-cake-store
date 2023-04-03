@@ -294,7 +294,7 @@ class Data extends AbstractHelper
             $colorHex = $colour ? $this->getColorCss($colour) : '';
             $colorStyle = ".colour-wrapper {width:max-content;}
                             .colour-view {background:{$colorHex};height:25px;width:25px;border-radius: 25px;margin:auto;}
-                            .colour-text {color:{$colorHex};margin-top: 5px;}";
+                            .colour-text {margin-top: 5px;}";
             $cssColor = $colour ? $colorStyle : '';
             $html = "
             <style>
