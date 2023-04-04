@@ -130,10 +130,9 @@ class Configurable extends MageSwatchesConfigurable implements
         $hideId = [];
        	
         foreach ($this->getAllowProducts() as $product) {
-            $isCake = strtolower($this->getProductAttributeSetName($product->getAttributeSetId())) == 'cake';
           	
             $resultArr['skus'][$product->getId()] = $product->getSku();
-            if ($isCake && $product->getLeadDelivery() != 1) {
+            if ($product->getLeadDelivery() != 1) {
                 $hideId[] = $product->getId();
             }
 
@@ -151,17 +150,6 @@ class Configurable extends MageSwatchesConfigurable implements
         }
         
         return $this->jsonEncoder->encode($resultArr);
-    }
-
-    protected function getProductAttributeSetName($attributeSetId)
-    {
-
-        if (!$this->productAttributeSetName) {
-            $productAttributeSetName = $this->attributeSetRepository
-                        ->get($attributeSetId)->getAttributeSetName();
-            $this->productAttributeSetName = $productAttributeSetName;
-        }
-        return $this->productAttributeSetName;
     }
 
     public function getCategoryByUrlKey($urlKey)

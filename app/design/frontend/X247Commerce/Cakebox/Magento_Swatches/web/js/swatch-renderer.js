@@ -10,10 +10,12 @@ define([
     'mage/smart-keyboard-handler',
     'mage/translate',
     'priceUtils',
+    'Magento_Theme/js/model/breadcrumb-list',
+    'breadcrumbs',
     'jquery-ui-modules/widget',
     'jquery/jquery.parsequery',
     'mage/validation/validation'
-], function ($, _, mageTemplate, keyboardHandler, $t, priceUtils) {
+], function ($, _, mageTemplate, keyboardHandler, $t, priceUtils, breadcrumbList) {
     'use strict';
 
     /**
@@ -310,32 +312,64 @@ define([
          * @private
          */
         _init: function () {
+            var $widget = this,
+                configurableProductUrl = this.options.configurableProductUrl,
+                clickCollect = '';
+
+            $widget.optionsMap = {};
+
+            for (let item of breadcrumbList) {
+                if (item.link.indexOf('click-collect-1-hour') != -1) {
+                    clickCollect = true;
+                }
+            };
+            $.ajax({
+                url: configurableProductUrl,
+                type: 'POST',
+                data: {
+                    productId : $widget.options.parentProductId,
+                    clickCollect : clickCollect
+                },
+                success: function(response) {     
+                    // var newHtmls = $.parseJSON(response);
+                    
+                    if (response.jsonConfig) {
+                        $widget.options.jsonConfig =  $.parseJSON(response.jsonConfig);
+                    }
+                    
+                    if ($($widget.element).attr('data-rendered')) {
+                        return;
+                    }
+
+                    $($widget.element).attr('data-rendered', true);
+
+                    if (_.isEmpty($widget.options.jsonConfig.images)) {
+                        $widget.options.useAjax = true;
+                        // creates debounced variant of _LoadProductMedia()
+                        // to use it in events handlers instead of _LoadProductMedia()
+                        $widget._debouncedLoadProductMedia = _.debounce($widget._LoadProductMedia.bind($widget), 500);
+                    }
+
+                    $widget.options.tierPriceTemplate = $($widget.options.tierPriceTemplateSelector).html();
+
+                    if ($widget.options.jsonConfig !== '' && $widget.options.jsonSwatchConfig !== '') {
+                        // store unsorted attributes
+                        $widget.options.jsonConfig.mappedAttributes = _.clone($widget.options.jsonConfig.attributes);
+                        $widget._sortAttributes();
+                        $widget._RenderControls();
+                        $widget._setPreSelectedGallery();
+                        $($widget.element).trigger('swatch.initialized');
+                    } else {
+                        console.log('SwatchRenderer: No input data received');
+                    }
+                },
+                error: function (xhr, status, errorThrown) {
+                    console.log('Error happens. Try again.');
+                }
+            });
+
             // Don't render the same set of swatches twice
-            if ($(this.element).attr('data-rendered')) {
-                return;
-            }
-
-            $(this.element).attr('data-rendered', true);
-
-            if (_.isEmpty(this.options.jsonConfig.images)) {
-                this.options.useAjax = true;
-                // creates debounced variant of _LoadProductMedia()
-                // to use it in events handlers instead of _LoadProductMedia()
-                this._debouncedLoadProductMedia = _.debounce(this._LoadProductMedia.bind(this), 500);
-            }
-
-            this.options.tierPriceTemplate = $(this.options.tierPriceTemplateSelector).html();
-
-            if (this.options.jsonConfig !== '' && this.options.jsonSwatchConfig !== '') {
-                // store unsorted attributes
-                this.options.jsonConfig.mappedAttributes = _.clone(this.options.jsonConfig.attributes);
-                this._sortAttributes();
-                this._RenderControls();
-                this._setPreSelectedGallery();
-                $(this.element).trigger('swatch.initialized');
-            } else {
-                console.log('SwatchRenderer: No input data received');
-            }
+           
         },
 
         /**

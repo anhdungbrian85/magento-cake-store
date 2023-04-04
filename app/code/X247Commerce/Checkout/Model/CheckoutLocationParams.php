@@ -16,7 +16,7 @@ use Amasty\StorePickupWithLocator\Model\ConfigProvider;
 use Amasty\StorePickupWithLocator\Model\ScheduleProvider;
 use Magento\Customer\CustomerData\SectionSourceInterface;
 use Magento\Framework\UrlInterface;
-
+use Magento\Framework\App\ResourceConnection;
 class CheckoutLocationParams
 {
     protected $checkoutSession;
@@ -32,6 +32,7 @@ class CheckoutLocationParams
     protected $locationProvider;
     protected $scheduleProvider;
     protected $locationsAvailability;
+    protected $_resource;
 
     public function __construct(
         CheckoutSession $checkoutSession,
@@ -45,7 +46,8 @@ class CheckoutLocationParams
         LocationProvider $locationProvider,
         ScheduleProvider $scheduleProvider,
         LocationsAvailability $locationsAvailability,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        ResourceConnection $resource
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->storeLocationContext = $storeLocationContext;
@@ -59,6 +61,7 @@ class CheckoutLocationParams
         $this->scheduleProvider = $scheduleProvider;
         $this->locationsAvailability = $locationsAvailability;
         $this->logger = $logger;
+        $this->_resource = $resource;
 
     }
     public function getConfig()
@@ -74,7 +77,8 @@ class CheckoutLocationParams
                 'am_pickup_store' => $this->storeLocationContext->getStoreLocationId(),
                 'am_pickup_time' => $pickupQuote->getTimeFrom().'|'.$pickupQuote->getTimeTo()
             ],
-            'amastyLocations' => $this->getLocationData()
+            'amastyLocations' => $this->getLocationData(),
+            'asdaLocationIds' => $this->getAsdaLocationId()
         ];
     }
 
@@ -110,6 +114,19 @@ class CheckoutLocationParams
             'multiple_addresses_url' => '',
             'contact_us_url' => $this->getContactUsUrl()
         ];
+    }
+
+    public function getAsdaLocationId() {
+        // $locationItems = $this->locationProvider->getPreparedCollection();
+        // foreach ($locationItems as $location) {            
+        // }
+        $connection = $this->_resource->getConnection();
+        $tableName = $connection->getTableName('store_location_asda_link');
+
+        $query = $connection->select()->from($tableName, ['asda_location_id']);
+
+        $fetchData = $connection->fetchCol($query);
+        return $fetchData;
     }
 
     /**

@@ -1,14 +1,23 @@
 define([
-    'ko'
-], function (ko) {
+    'ko',
+    'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver'
+], function (ko, pickupDataResolver) {
 	'use strict';
 
+	var storeLocationId = ko.computed(function() {
+        return pickupDataResolver.storeId();
+    });
+	
+	var deliveryType = ko.observable(window.checkoutConfig.deliveryType);
 
+	var isAsda = ko.computed(function() {
+        return window.checkoutConfig.asdaLocationIds.includes(storeLocationId().toString());
+    });
 
 	return {
-		storeLocationId: ko.observable(window.checkoutConfig.storeLocationId),
-		deliveryType: ko.observable(window.checkoutConfig.deliveryType),
-		deliveryDateConfig: ko.observableArray([]), // this won't affect to ampickup store
-		deliveryTimeConfig: ko.observableArray([])
+		storeLocationId: storeLocationId,
+		deliveryType: deliveryType,
+		isAsda: isAsda
 	}
+	
 })

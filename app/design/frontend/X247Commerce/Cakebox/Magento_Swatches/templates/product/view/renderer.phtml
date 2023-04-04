@@ -24,11 +24,12 @@ if ( $product->getData('shape') ) {
     {
         "[data-role=swatch-options]": {
             "Magento_Swatches/js/swatch-renderer": {
-                "jsonConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonConfig() ?>,
+                "jsonConfig": {},
                 
                 "jsonSwatchConfig": <?= /* @noEscape */ $swatchOptions = $block->getJsonSwatchConfig() ?>,
                 "mediaCallback": "<?= $block->escapeJs($block->escapeUrl($block->getMediaCallback())) ?>",
                 "getNutriticsUrl": "<?= /* @escapeNotVerified */ $block->getUrl('nutritics/ajax/GetNutriticsInfo') ?>",
+                "configurableProductUrl": "<?= /* @escapeNotVerified */ $block->getUrl('x247product/ajax/ConfigurableProduct') ?>",
                 "parentProductId": "<?= /* @escapeNotVerified */ $product->getId() ?>",
                 "gallerySwitchStrategy": "<?= $block->escapeJs($block->getVar('gallery_switch_strategy', 'Magento_ConfigurableProduct')) ?: 'replace'; ?>",
                 "jsonSwatchImageSizeConfig": <?= /* @noEscape */ $block->getJsonSwatchSizeConfig() ?>,

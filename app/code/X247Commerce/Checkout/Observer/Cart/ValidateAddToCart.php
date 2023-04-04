@@ -83,10 +83,8 @@ class ValidateAddToCart implements ObserverInterface
                 }
                 $productCategoryIds = $product->getCategoryIds();
                 // $this->logger->log('600', 'Selected attributes '.print_r($product->getAttributeSetId(), true));
-                $attributeSetOfProduct = $this->getAttributeSetOfProduct($product->getAttributeSetId());
-                $attributeSetName = $attributeSetOfProduct->getAttributeSetName();
-                // $this->logger->log('600', 'Selected attributes '.print_r($attributeSetName, true));
-                if (!in_array($categoryClickCollectId, $productCategoryIds) && $attributeSetName == "Cake") {
+
+                if (!in_array($categoryClickCollectId, $productCategoryIds)) {
                     throw new LocalizedException(__('You must only add cake of "Click & Collect 1 Hour" category with Express 1 Hour Collection!'));
                 }
             }
