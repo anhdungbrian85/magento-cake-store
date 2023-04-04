@@ -17,7 +17,5 @@
         <plugin name="x247checkout_change_delivery_value" type="X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\DeliveryInfo" sortOrder="20" disabled="false" />
     </type>
 
-    <type name="Amasty\StorePickupWithLocator\Model\PickupDate">
-        <plugin name="change_format_date" type="X247Commerce\Checkout\Plugin\Model\PickupDate" disabled="false"  />
-    </type>
+
 </config>
