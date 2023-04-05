@@ -1,12 +1,17 @@
 & when (@media-common = true) {
 	.checkout-onepage-success {
-		.data-item td {
-			&:first-child {
-				width: 50%;
+		.show-order {
+			table {
+				max-width: 1000px;
 			}
-
-			&:last-child {
-				width: 17%;
+			.data-item td {
+				&:first-child {
+					width: 50%;
+				}
+	
+				&:last-child {
+					width: 17%;
+				}
 			}
 		}
 
@@ -29,41 +34,52 @@
 }
 
 .media-width(@extremum, @break) when (@extremum ='max') and (@break = @screen__m) {
-	.checkout-onepage-success {
+	#html-body.checkout-onepage-success {
 		.show-order {
-			.data-item {
-				display: flex;
-				flex-wrap: wrap;
-
+			tbody .data-item {
+				display: table-row;
 				td {
 					&:first-child {
-						order: -1;
+						width: auto;
 					}
 		
 					&:last-child {
-						width: 30%;
-						order: 1;
-					}
-
-					&:not(:first-child, :last-child) {
-						order: 2;
+						width: auto;
 					}
 				}
 			}
 
-			tfoot {
-				display: block;
-	
-				tr {
-					display: flex;
-					justify-content: space-between;
-					max-width: 100%;
-					min-width: 85%;
+			tr:not(.data-item) {
+				max-width: 100%;
+				min-width: 85%;
 
-					td {
-						padding-right: 10%;
-					}
+				td {
+					padding-right: 10%;
 				}
+			}
+		}
+
+		#registration {
+			width: auto;
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum ='max') and (@break = @screen__xs) {
+	#html-body.checkout-onepage-success .columns{
+		.show-order tbody {
+			display: flex;
+    		flex-wrap: wrap;
+
+			tr:not(.data-item) {
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+			}
+
+			.data-item {
+				display: flex;
+				flex-wrap: wrap;
 			}
 		}
 	}

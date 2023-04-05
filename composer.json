@@ -61,6 +61,7 @@
         "mpdf/mpdf": "^8.1",
         "olegkoval/magento2-regenerate-url-rewrites": "^1.6",
         "smsglobal/module-sms": "^1.2",
+        "sparsh/magento-2-facebook-pixel-extension": "^1.3",
         "trustpilot/module-reviews": "^2.6"
     },
     "suggest": {
