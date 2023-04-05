@@ -126,7 +126,9 @@ define(
                     }, this);
                 },
                 checkVisible: function(carrier_code) {
-                    if (locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup') {
+                    
+                    if ((locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup')
+                     || (locationContext.isAsda() && carrier_code == 'flatrate') ) {
                         return false;
                     }
                     return true;
