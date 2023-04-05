@@ -8,6 +8,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
     protected $renderer;
     protected $_productRepository;
     protected $_categoryCollectionFactory;
+    protected $orderAmastyFactory;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -17,16 +18,19 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
      * @param array $data
      */
     public function __construct(
-    \Magento\Framework\View\Element\Template\Context $context,
-    \Magento\Checkout\Model\Session $checkoutSession,
-    \Magento\Sales\Model\Order\Config $orderConfig,
-    \Magento\Framework\App\Http\Context $httpContext,
-    \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-    \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
-    \Magento\Catalog\Model\ProductRepository $productRepository,
-    \Magento\Sales\Model\Order\Address\Renderer $renderer, array $data = []
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Sales\Model\Order\Config $orderConfig,
+        \Magento\Framework\App\Http\Context $httpContext,
+        \Magento\Sales\Api\Data\OrderInterface $orderInterface,
+        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
+        \Magento\Catalog\Model\ProductRepository $productRepository,
+        \Amasty\StorePickupWithLocator\Model\ResourceModel\Order\CollectionFactory $orderAmastyFactory,
+        \Magento\Sales\Model\Order\Address\Renderer $renderer,
+        array $data = []
     ) {
         $this->orderInterface = $orderInterface;
+        $this->orderAmastyFactory = $orderAmastyFactory;
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
         $this->_productRepository = $productRepository;
         $this->renderer = $renderer;
@@ -37,6 +41,25 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
 
     public function getOrder($id) {
         return $this->orderInterface->loadByIncrementId($id);
+    }
+
+    public function getDeliveryDateTime($order)
+    {   
+        return $this->orderAmastyFactory->create()
+                    ->addFieldToSelect(['time_from', 'date'])
+                    ->addFieldToFilter('order_id', ['eq' => $order->getId()])
+                    ->getFirstItem()
+                    ->getData();
+    }
+
+    public function getFormatTime($time)
+    {
+        return gmdate("g:i A", $time);
+    }
+
+    public function getFormatDate($date)
+    {
+        return date('d/m/Y', strtotime($date));
     }
 
     public function getFormatedAddress($address) {
