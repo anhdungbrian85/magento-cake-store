@@ -16,8 +16,8 @@
         </div>
         <div class="order-details">
             <div class="block-delivery">
-                <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') . $deliveryDayeTime['date'] != '' ? $block->getFormatDate($deliveryDayeTime['date']) : '--' ; ?></span><br>
-                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') . $deliveryDayeTime['date'] != '' ? $block->getFormatTime($deliveryDayeTime['time_from']) : '--'; ?></span>
+                <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') ?> <span><?= $deliveryDayeTime['date'] != '' ? $block->getFormatDate($deliveryDayeTime['date']) : '--' ?></span></span><br>
+                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= $deliveryDayeTime['date'] != '' ? $block->getFormatTime($deliveryDayeTime['time_from']) : '--'?></span></span>
             </div>
             <div class="show-order">
                 <table width="100%" cellpadding="0" cellspacing="0">
