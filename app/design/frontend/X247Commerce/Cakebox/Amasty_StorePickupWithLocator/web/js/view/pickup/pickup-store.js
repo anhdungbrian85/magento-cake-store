@@ -8,6 +8,8 @@ define([
     'Magento_Customer/js/customer-data',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'Amasty_StorePickupWithLocator/js/model/pickup',
+    'mage/url',
+    'Magento_Ui/js/model/messageList',
     'mage/translate'
 ], function (
     $,
@@ -15,7 +17,9 @@ define([
     Select,
     customerData,
     pickupDataResolver,
-    pickup
+    pickup,
+    urlBuilder,
+    messageList
 ) {
     'use strict';
 
@@ -85,7 +89,20 @@ define([
         },
 
         onChangeStore: function (storeId) {
-            pickupDataResolver.storeId(storeId);
+            $.ajax({
+                url: urlBuilder.build("x247_storelocator/cart/validate"),
+                data: {
+                    location_id: storeId
+                },
+                type: 'post',
+                success: function (response) {
+                    if (response.status === 200) {
+                        pickupDataResolver.storeId(storeId);
+                    } else {
+                        messageList.addSuccessMessage({message: response.message})
+                    }
+                }
+            });
         },
 
         /**
