@@ -7,10 +7,13 @@
 //  ---------------------------------------------
 
 & when (@media-common = true) {
-    .checkout-block.delivery {
-        &.delivery-type-0,
-        &.delivery-type-2 {
-            display: none;
+    .checkout-block,
+    .amcheckout-block {
+        &.delivery {
+            &.delivery-type-0,
+            &.delivery-type-2 {
+                display: none;
+            }
         }
     }
 
