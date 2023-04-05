@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a41c25c4c9e32ffa85ab70e22c356133",
+    "content-hash": "11d1f3759f94e360b12a3229e96798e1",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -25872,6 +25872,31 @@
                 "source": "https://github.com/smsglobal/magento-m2-sms-integration/tree/1.2.1"
             },
             "time": "2021-09-17T00:39:51+00:00"
+        },
+        {
+            "name": "sparsh/magento-2-facebook-pixel-extension",
+            "version": "1.3.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/sparsh/magento-2-facebook-pixel-extension/sparsh-magento-2-facebook-pixel-extension-1.3.0.0.zip",
+                "shasum": "a857ad382222cb2dae6e79d9e6b1040f852903ad"
+            },
+            "require": {
+                "php": "~7.0.13|~7.1.0|~7.2.0|~7.3.0|~7.4.0|^8.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Sparsh\\FacebookPixel\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0"
+            ],
+            "description": "Sparsh Facebook Pixel Extension for Magento 2"
         },
         {
             "name": "spomky-labs/aes-key-wrap",
