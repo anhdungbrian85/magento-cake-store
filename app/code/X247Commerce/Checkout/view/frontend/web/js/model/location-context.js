@@ -1,12 +1,9 @@
 define([
-    'ko',
-    'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver'
-], function (ko, pickupDataResolver) {
+    'ko'
+], function (ko) {
 	'use strict';
 
-	var storeLocationId = ko.computed(function() {
-        return pickupDataResolver.storeId();
-    });
+	var storeLocationId = ko.observable(window.checkoutConfig.storeLocationId);
 	
 	var deliveryType = ko.observable(window.checkoutConfig.deliveryType);
 

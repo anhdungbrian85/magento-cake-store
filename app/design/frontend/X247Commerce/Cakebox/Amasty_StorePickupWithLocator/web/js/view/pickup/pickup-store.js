@@ -3,6 +3,8 @@
  */
 define([
     'jquery',
+    'underscore',
+    'ko',
     'Magento_Checkout/js/model/quote',
     'Magento_Ui/js/form/element/select',
     'Magento_Customer/js/customer-data',
@@ -10,16 +12,20 @@ define([
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'mage/url',
     'Magento_Ui/js/model/messageList',
+    'locationContext',
     'mage/translate'
 ], function (
     $,
+    _,
+    ko,
     quote,
     Select,
     customerData,
     pickupDataResolver,
     pickup,
     urlBuilder,
-    messageList
+    messageList,
+    locationContext
 ) {
     'use strict';
 
@@ -40,17 +46,27 @@ define([
             this._super();
 
             pickupData = pickupDataResolver.pickupData;
-            stores = pickupData().stores;
+            var stores = ko.computed(function() {
+                var allStores = pickupData().stores;
+                if (locationContext.deliveryType() == 2) {
+                    allStores = _.filter(allStores, function(store) {
+                        console.log(store)
+                        return !store.is_asda;
+                    })
+                }
+                return allStores;
+            });
+            
             amPickupConfig = window.checkoutConfig.amastyStorePickupConfig;
 
-            if (stores
+            if (stores()
                 && (pickupData().website_id !== amPickupConfig.websiteId
                     || pickupData().store_id !== amPickupConfig.storeId)
             ) {
                 customerData.reload([ this.storesSectionName ], false);
             }
-
-            this.options = stores || [];
+            this.options = stores(); 
+           
             this.value = pickupDataResolver.getDataByKey('am_pickup_store');
             this.visible = pickup.isPickup();
 
@@ -98,6 +114,7 @@ define([
                 success: function (response) {
                     if (response.status === 200) {
                         pickupDataResolver.storeId(storeId);
+                        locationContext.storeLocationId(storeId);
                     } else {
                         messageList.addSuccessMessage({message: response.message})
                     }
