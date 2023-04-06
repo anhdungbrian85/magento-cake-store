@@ -50,11 +50,13 @@ class ConfigurableProduct
         $categoryClickCollectId = $categoryClickCollect->getEntityId();
         $allCategoryIds = [];
         $resultArr['skus'] = [];
+        $resultArr['lead_delivery'] = [];
         $hideId = [];
         $characterLimit = [];
         foreach ($subject->getAllowProducts() as $product) {
           
             $resultArr['skus'][$product->getId()] = $product->getSku();
+            $resultArr['lead_delivery'][$product->getId()] = $product->getLeadDelivery();
             if ($product->getCharacterLimit()) {
                 $characterLimit['character_limit'][$product->getId()] = $product->getCharacterLimit();
             }
