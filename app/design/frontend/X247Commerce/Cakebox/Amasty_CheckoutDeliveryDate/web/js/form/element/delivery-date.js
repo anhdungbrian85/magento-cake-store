@@ -21,6 +21,7 @@ define([
 
         initConfig: function () {
             this._super();
+            this.options.dateFormat = "d/M/yy";
             this.options.closeText = $t('Done');
             this.options.currentText = $t('Today');
             this.options.dayNames = [
