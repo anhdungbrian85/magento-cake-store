@@ -315,7 +315,6 @@ define([
             var $widget = this,
                 configurableProductUrl = this.options.configurableProductUrl,
                 clickCollect = '';
-
             $widget.optionsMap = {};
 
             for (let item of breadcrumbList) {
@@ -337,6 +336,9 @@ define([
                         $widget.options.jsonConfig =  $.parseJSON(response.jsonConfig);
                     }
                     
+                    window.leadDelivery = JSON.stringify($widget.options.jsonConfig.lead_delivery);
+                    window.indexSwatch = JSON.stringify($widget.options.jsonConfig.index);
+                    localStorage.setItem("lead_delivery", JSON.stringify($widget.options.jsonConfig.lead_delivery));
                     if ($($widget.element).attr('data-rendered')) {
                         return;
                     }
