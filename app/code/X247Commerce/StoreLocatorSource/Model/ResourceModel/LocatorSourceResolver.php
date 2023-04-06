@@ -381,21 +381,53 @@ class LocatorSourceResolver
     public function getClosestLocationHasProducts($currentLocationId, $products)
     {
         $locationData = [];
+        $nearestDistance = 100000000;
         $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $inventorySourceTbl = $this->resource->getTableName('inventory_source');
         $getCurrentSourceDataQuery = $this->connection->select()
             ->from($locationSourceLinkTbl, ['*'])
             ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $locationSourceLinkTbl.source_code")
             ->where("location_id = ?", $currentLocationId);
-        $currentSourceData =  $this->connection->fetchAll($getCurrentSourceDataQuery);
+        $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
         if (!empty($currentSourceData)) {
             $inventoryConfig = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock', ScopeInterface::SCOPE_STORE);
             $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
             $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ['*'])
+                ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $inventorySourceItemTbl.source_code")
                 ->where('sku IN (?)', implode(',', $products))
                 ->where('status = ?', self::IN_STOCK_STATUS);
-            $this->connection->fetchAll($getAvailableSourcesOfProducts);
+            $availableSources = $this->connection->fetchAll($getAvailableSourcesOfProducts);
+            if (!empty($availableSources) && count($availableSources) > 0) {
+                foreach ($availableSources as $availableSource) {
+                    if (isset($availableSource['latitude']) && isset($availableSource['longitude']) && isset($currentSourceData['latitude']) && isset($currentSourceData['longitude'])) {
+                        $distanceToCurrentSource = $this->calculateDistance(
+                            $availableSource['latitude'], 
+                            $availableSource['longitude'],
+                            $currentSourceData['latitude'],
+                            $currentSourceData['longitude']
+                        );
+                        if ($nearestDistance > $distanceToCurrentSource) {
+                            $locationData = $availableSource;
+                        }
+                        
+                    }
+                    
+                }
+            }
         }
         return $locationData;
+    }
+
+    public function calculateDistance($lat1, $lon1, $lat2, $lon2) {
+        if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+            return 0;
+        } else {
+            $theta = $lon1 - $lon2;
+            $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+            $dist = acos($dist);
+            $dist = rad2deg($dist);
+            $miles = $dist * 60 * 1.1515;
+            return $miles;
+        }
     }
 }
