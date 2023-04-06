@@ -63,30 +63,22 @@ class ValidateAddToCart implements ObserverInterface
         $productId = $postValues['product'];
         $addProduct = $observer->getProduct();
 
-        $categoryUrlKey = "click-collect-1-hour";
-        
-        $categoryClickCollect = $this->getCategoryByUrlKey($categoryUrlKey);
-        $categoryClickCollectId = $categoryClickCollect->getEntityId();
+        if ($deliveryType == 2) {      
+            $product = null;
+            if ($addProduct->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) 
+            {
+                $attributes = $postValues['super_attribute'];                
+                
+                $product = $this->configurableproduct->getProductByAttributes($attributes, $addProduct);
+            } else {
+                $product = $addProduct;
+            }
+            
+            // $this->logger->log('600', 'Selected attributes '.print_r($product->getAttributeSetId(), true));
 
-        if ($deliveryType == 2) {
-            if (!$categoryClickCollectId) {
-                throw new LocalizedException(__('The "Click & Collect 1 Hour" Category does not exist!'));
-            } else {            
-                $product = null;
-                if ($addProduct->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) 
-                {
-                    $attributes = $postValues['super_attribute'];                
-                    
-                    $product = $this->configurableproduct->getProductByAttributes($attributes, $addProduct);
-                } else {
-                    $product = $addProduct;
-                }
-                $productCategoryIds = $product->getCategoryIds();
-                // $this->logger->log('600', 'Selected attributes '.print_r($product->getAttributeSetId(), true));
-
-                if (!in_array($categoryClickCollectId, $productCategoryIds)) {
-                    throw new LocalizedException(__('You must only add cake of "Click & Collect 1 Hour" category with Express 1 Hour Collection!'));
-                }
+            if ($product->getLeadDelivery() > 1) {
+                $this->storeLocationContext->setDeliveryType(0);
+                $this->checkoutSession->setDeliveryType(0);
             }
         }
         return;        
@@ -98,10 +90,5 @@ class ValidateAddToCart implements ObserverInterface
                                 ->addAttributeToFilter('url_key', $urlKey)
                                 ->getFirstItem();
         return $category;
-    }
-    public function getAttributeSetOfProduct($attributeSetIdOfProduct) 
-    {
-        $attributeSetRepository = $this->attributeSet->get($attributeSetIdOfProduct);
-        return $attributeSetRepository;
     }
 }

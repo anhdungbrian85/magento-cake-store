@@ -11,8 +11,9 @@ define([
     'Magento_Catalog/js/product/view/product-info-resolver',
     'mage/url',
     'Magento_Ui/js/modal/modal',
+    'Magento_Ui/js/modal/confirm',
     'jquery-ui-modules/widget'
-], function ($, $t, _, idsResolver, productInfoResolver, urlBuilder, modal) {
+], function ($, $t, _, idsResolver, productInfoResolver, urlBuilder, modal, confirmation) {
     'use strict';
 
     $.widget('mage.catalogAddToCart', {
@@ -51,7 +52,7 @@ define([
 
             this.element.data('catalog-addtocart-initialized', 1);
             this.element.on('submit', function (e) {
-                e.preventDefault();
+                e.preventDefault();                
                 self.submitForm($(this));
             });
         },
@@ -86,7 +87,56 @@ define([
          * @param {jQuery} form
          */
         submitForm: function (form) {
-            this.ajaxSubmit(form);
+            var self = this,
+                optionValues = [],
+                indexValues = {},
+                productId,
+                lead_delivery = JSON.parse(window.leadDelivery),
+                index = JSON.parse(window.indexSwatch);
+            $.each(form.serializeArray(), function (key, item) {
+                if (item.name.indexOf('super_attribute') !== -1) {
+                    optionValues.push(item.value);
+                }
+            });
+            
+            $.each(index, function (key, value) {
+                var v = Object.values(value).sort();
+                if (JSON.stringify(optionValues.sort()) == JSON.stringify(v)) {
+                    productId = key;     
+                }       
+            });
+            if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1) {
+                confirmation({
+                    title: $.mage.__('Confirmation Title'),
+                    content: 'This product takes longer than 1 hour to make, do you want to continue?',
+                    actions: {
+                        confirm: function() {
+                            self.ajaxSubmit(form);
+                        },
+                        cancel: function() {
+                            // do something when the cancel button is clicked
+                        },
+                        always: function() {
+                            // do something when the modal is closed
+                        }
+                    },
+                    buttons: [{
+                        text: $.mage.__('Cancel'),
+                        class: 'action-secondary action-dismiss',
+                        click: function (event) {
+                            this.closeModal(event);
+                        }
+                    }, {
+                        text: $.mage.__('Continue'),
+                        class: 'action-primary action-accept',
+                        click: function (event) {
+                            this.closeModal(event, true);
+                        }
+                    }]
+                });
+            } else {
+                self.ajaxSubmit(form);
+            }
         },
 
         /**
@@ -186,7 +236,7 @@ define([
 
                             /** @inheritdoc */
                             success: function (res) {
-                                // console.log(res);
+                                
                                 $('#addmore-sidebar').html(res.output);
 
                                     $('#addmore-sidebar .product-tab:first-child()').addClass('active');
@@ -204,8 +254,8 @@ define([
                                             }
                                         }]
                                     };
-                                    var popup = modal(options, $('#add-more-product'));
-                                    $('#add-more-product').modal('openModal');
+                                    // var popup = modal(options, $('#add-more-product'));
+                                    // $('#add-more-product').modal('openModal');
 
                                     $('.tab-title').on('click', function(e) {
                                         if ( $(this).parent().hasClass('active') ) {
