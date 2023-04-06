@@ -21,6 +21,11 @@
         <plugin name="x247checkout_remove_location_to_data_customer" type="X247Commerce\Checkout\Plugin\CustomerData\LocationData" sortOrder="20" disabled="false" />
     </type>
 
+    <!-- Add more data to location data -->
+    <type name="Amasty\StorePickupWithLocator\Model\LocationProvider">
+        <plugin name="x247checkout_add_custom_location_to_data" type="X247Commerce\Checkout\Plugin\Model\LocationProvider" sortOrder="20" disabled="false" />
+    </type>
+    
     <preference for="Magento\Checkout\Controller\Cart\Add" 
         type="X247Commerce\Checkout\Controller\Cart\Add" />
 

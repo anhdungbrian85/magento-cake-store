@@ -38,7 +38,7 @@ class Validate extends \Magento\Framework\App\Action\Action
                 if (!$available) {
                     $result = [
                         'status' => 500,
-                        'message' => __('Some of the products are out stock!')
+                        'abc' => __('Some of the products are out stock!')
                     ];
                     return $this->getResponse()->setBody(json_encode($result));
                 }
@@ -46,13 +46,13 @@ class Validate extends \Magento\Framework\App\Action\Action
         } else {
             $result = [
                 'status' => 500,
-                'message' => __('Invalid params!')
+                'abc' => __('Invalid params!')
             ];
             return $this->getResponse()->setBody(json_encode($result));
         }
         $result = [
             'status' => 200,
-            'message' => __('Okay!')
+            'abc' => __('Okay!')
         ];
         return $this->getResponse()->setBody(json_encode($result));
     }
