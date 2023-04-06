@@ -648,7 +648,7 @@ class Data extends AbstractHelper
      */
     public function strbits($string)
     {
-        return (strlen($string)*8);
+        return strlen($string);
     }
 
     /**

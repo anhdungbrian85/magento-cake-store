@@ -1,0 +1,19 @@
+<?php
+// @codingStandardsIgnoreFile
+?>
+<?php if($this->isEnabled()) : ?>
+    <?php $helper = $this->helper('WeltPixel\GA4\Helper\Data'); ?>
+    <?php $ga4ServerSideHelper = $this->helper('WeltPixel\GA4\Helper\ServerSideTracking'); ?>
+        <?php if (!($ga4ServerSideHelper->isServerSideTrakingEnabled() && $ga4ServerSideHelper->shouldEventBeTracked(\WeltPixel\GA4\Model\Config\Source\ServerSide\TrackingEvents::EVENT_BEGIN_CHECKOUT)
+            && $ga4ServerSideHelper->isDataLayerEventDisabled())) : ?>
+            <?php $products = $this->getProducts(); ?>
+
+            <?php
+            $this->setDataLayerOption('event', 'begin_checkout');
+            $this->setDataLayerOption('cart_total', number_format($this->getCartTotal(), 2, '.', ''));
+            $this->setDataLayerOption('value', number_format($this->getCartTotal(), 2, '.', ''));
+            $this->setDataLayerOption('currency', $this->getCurrencyCode());
+            $this->setEcommerceData('items', $products);
+        ?>
+    <?php endif; ?>
+<?php endif; ?>
