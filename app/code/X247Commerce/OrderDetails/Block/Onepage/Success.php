@@ -39,12 +39,13 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         );
     }
 
-    public function getOrder($id) {
+    public function getOrder($id) 
+    {    
         return $this->orderInterface->loadByIncrementId($id);
     }
 
     public function getDeliveryDateTime($order)
-    {   
+    {
         if ($order->getShippingMethod() == 'amstorepickup_amstorepickup') {
             return $this->orderAmastyFactory->create()
                         ->addFieldToSelect(['time_from', 'date'])
@@ -74,13 +75,14 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         return $this->renderer->format($address, 'html');
     }
 
-    public function getDeliveryHours($key)
+    public function getDeliveryHours($deliveryDayTime)
     {
-        if ($key != '') {
+        if (array_key_exists('time', $deliveryDayTime)) {
+            $key = $deliveryDayTime['time'];
             $arrayHoursValue = $this->connfigTimeDelivery->getDeliveryHours();
-
+    
             return $arrayHoursValue[array_search($key, array_column($arrayHoursValue, 'value'))]['label'];
-        } 
+        }
 
         return '--';
     }

@@ -17,7 +17,7 @@
         <div class="order-details">
             <div class="block-delivery">
                 <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') ?> <span><?= array_key_exists('date', $deliveryDayTime) ? $block->getFormatDate($deliveryDayTime['date']) : '--' ?></span></span><br>
-                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= array_key_exists('time_from', $deliveryDayTime) ? $block->getFormatTime($deliveryDayTime['time_from']) : $block->getDeliveryHours($deliveryDayTime['time'])?></span></span>
+                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= array_key_exists('time_from', $deliveryDayTime) ? $block->getFormatTime($deliveryDayTime['time_from']) : $block->getDeliveryHours($deliveryDayTime)?></span></span>
             </div>
             <div class="show-order">
                 <table width="100%" cellpadding="0" cellspacing="0">
