@@ -9,15 +9,18 @@ use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 
 class ValidateOutOfStockStatus implements ObserverInterface
 {
+    protected $checkoutSession;
 
     protected $locationContext;
 
     protected $locatorSourceResolver;
 
     public function __construct(
+        \Magento\Checkout\Model\Session $checkoutSession,
         \X247Commerce\Checkout\Api\StoreLocationContextInterface $locationContext,
         LocatorSourceResolver $locatorSourceResolver
     ) {
+        $this->checkoutSession = $checkoutSession;
         $this->locationContext = $locationContext;
         $this->locatorSourceResolver = $locatorSourceResolver;
     }
@@ -27,10 +30,12 @@ class ValidateOutOfStockStatus implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $product = $observer->getProduct();
         $selectedLocationId = $this->locationContext->getStoreLocationId();
-        if (!$this->locatorSourceResolver->checkProductAvailableInStore($selectedLocationId, $product)) {
-            throw new \Magento\Framework\Exception\LocalizedException(__('The product is out of stock on this location.'));
+        $quote = $this->checkoutSession->getQuote();
+        foreach($quote->getAllVisibleItems() as $item) {
+            if (!$this->locatorSourceResolver->checkProductAvailableInStore($selectedLocationId, $item)) {
+                throw new \Magento\Framework\Exception\LocalizedException(__('The product is out of stock on this location.'));
+            }
         }
     }
 }
