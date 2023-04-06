@@ -159,6 +159,34 @@ class YextAttribute
 
         return $location;
     }
+    /**
+     * Get Location by name value
+     *
+     * @param value of name
+     * @return \Amasty\Storelocator\Model\Location ||null
+     */
+    public function getLocationByName($value)
+    {
+        //get amasty_amlocator_location by name
+        $locationCollection = $this->locationCollectionFactory->create();
+        $location = $locationCollection->addFieldToFilter('name', $value)->getFirstItem();
+
+        return $location;
+    }
+    /**
+     * Get Location by email value
+     *
+     * @param value of name
+     * @return \Amasty\Storelocator\Model\Location ||null
+     */
+    public function getLocationByEmail($value)
+    {
+        //get amasty_amlocator_location by name
+        $locationCollection = $this->locationCollectionFactory->create();
+        $location = $locationCollection->addFieldToFilter('email', $value)->getFirstItem();
+
+        return $location;
+    }
 
     /**
      * Get yext_entity_id value by Location 
@@ -225,7 +253,7 @@ class YextAttribute
     }
 
     /**
-     * Process data from event or response to data of \Amasty\Storelocator\Model\Location
+     * Process data from yext event or response to data of \Amasty\Storelocator\Model\Location
      *
      * @param array $input
      * 
@@ -234,57 +262,7 @@ class YextAttribute
     public function responseDataProcess($input)
     {
         //process data from $input to insert into amasty_amlocator_location
-        $data = [];
-        $data['name'] = isset($input['name']) ? $input['name'] : '';
-        $url_key = '';
-        if (isset($input['name'])) {
-            $url_key = $this->yextHelper->getUrlKeyFromName($input['name']);
-        }
-        $data['url_key'] = $url_key;
-        $data['country'] = isset($input['address']['countryCode']) ? $input['address']['countryCode'] : '' ;
-        $data['status'] = 1;
-        $data['stores'] = 0;
-        $address = '';
-        if (isset($input['address']['line1']) && isset($input['address']['line2'])) {
-            $address = $input['address']['line1'] . ' ' . $input['address']['line2'];
-        }
-        if (isset($input['address']['line1']) && !isset($input['address']['line2'])) {
-            $address = $input['address']['line1'];
-        }
-        $data['address'] = $address;
-        $data['city'] = isset($input['address']['city']) ? $input['address']['city'] : '';
-        $data['zip'] = isset($input['address']['postalCode']) ? $input['address']['postalCode'] : '';
-        $data['state'] = isset($input['address']['region']) ? $input['address']['region'] : '' ;
-        if (isset($input['geocodedCoordinate'])) {
-            $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : 0 ;
-            $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : 0 ;
-        }
-        if (!isset($input['geocodedCoordinate']) && isset($input['yextDisplayCoordinate'])) {
-            $data['lat'] = isset($input['yextDisplayCoordinate']['latitude']) ? $input['yextDisplayCoordinate']['latitude'] : 0 ;
-            $data['lng'] = isset($input['yextDisplayCoordinate']['longitude']) ? $input['yextDisplayCoordinate']['longitude'] : 0 ;
-        }
-        if (!isset($input['geocodedCoordinate']) && !isset($input['yextDisplayCoordinate']) && isset($input['cityCoordinate'])) {
-            $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : 0 ;
-            $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : 0 ;
-        }
-        $data['description'] = isset($input['description']) ? $input['description'] : '' ;
-        $data['phone'] = isset($input['mainPhone']) ? $input['mainPhone'] : '' ;
-        $data['email'] = isset($input['emails'][0]) ? $input['emails'][0] : '' ;
-        $data['website'] = isset($input['facebookPageUrl']) ? $input['facebookPageUrl'] : '' ;
-        // $data['actions_serialized'] = isset($input['primaryProfile']) ? $input['primaryProfile'] : '' ;
-        $data['photoGallery'] = [];
-        if (isset($input["photoGallery"])) {
-            foreach ($input["photoGallery"] as $image) {
-                $data['photoGallery'][] = $image["image"]["url"];
-            }
-        }
-        if (isset($input['pickupAndDeliveryServices'])) {
-            $data['enable_delivery'] = in_array("DELIVERY", $input['pickupAndDeliveryServices']) ? 1 : 0;
-            $data['curbside_enabled'] = in_array("IN_STORE_PICKUP", $input['pickupAndDeliveryServices']) ? 1 : 0;
-        } else {
-            $data['enable_delivery'] = 0;
-            $data['curbside_enabled'] = 0;
-        }
+        $data = $this->yextHelper->responseDataProcess($input);
         
         return $data;
     }
@@ -376,22 +354,6 @@ class YextAttribute
                         'yext_data' => $data
 
                     ]);
-                    // We delay inserting admin and source to 2nd save.
-
-                    // $newUser = $this->editAdminUser($insert, $locationModel->getId());
-                    // $newSource = $this->editSource($insert, $locationModel->getId());
-
-                    // $defaultAssignStockId = $this->yextHelper->getDefaultAssignStock();
-
-                    // if (!is_null($newSource)) {
-                    //     $this->assignSourceToStock($newSource->getSourceCode(), $defaultAssignStockId, $locationModel->getId());
-                    // }
-
-                    // if (!is_null($newUser) && !is_null($newSource)) {
-                    //     $this->adminSource->setData(['user_id' => $newUser->getUserId(), 'source_code' => $newSource->getSourceCode()]);
-                    //     $this->adminSource->save();
-                    //     $this->locatorSourceResolver->assignAmLocatorStoreToSource($locationModel->getId(), $newSource->getSourceCode());
-                    // }
                 }
                 return $locationModel;
             } else {
@@ -413,16 +375,26 @@ class YextAttribute
     public function editLocation($data, $yextEntityId)
     {
         // $this->logger->log('600', print_r($data, true));
-        try {
-            
+        try {            
             $insert = $this->responseDataProcess($data['primaryProfile']);
             $location = $this->getLocationByYext("'$yextEntityId'");
             
+            //no location with given yext_entity_id or yext_entity_id was change
+            if (!$location->getId()) {
+                $location = $this->getLocationByName($insert['name']);
+                if (!$location->getId()) {
+                    $location = $this->getLocationByEmail($insert['email']);
+                }
+            }
+
             if (!$location->getId()) {
                 return null;
             } else {
                 //edit location
-
+                $locationYextEntityIdValue = $this->getYextEntityIdByLocation($location);
+                if ($locationYextEntityIdValue != $yextEntityId) {
+                    $this->updateYextEnityId($location->getId(), $yextEntityId);
+                }
                 $notAsdaFlag = empty($data['primaryProfile']['asda_parent_store']);
                 $currentParentOfLocation = $this->locatorSourceResolver->getAsdaLocationParentLocation($location->getId());
                 
@@ -439,25 +411,7 @@ class YextAttribute
                         $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($location->getId(), $currentParentSource);
                         $this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent($currentParentOfLocation, $location->getId());
                     }
-                } else {
-                        // $users = $this->locatorSourceResolver->getUserByAmLocatorStore($location->getId());
-                        // if (!empty($users)) {
-                        //     foreach ($users as $userId)
-                        //     {
-                        //         $user = $this->userFactory->create()->load($userId);
-                        //         if ($user->getId()) {
-                        //             $user->delete();
-                        //         }                        
-                        //     }
-                        // }
-                        // $sourceCodeByAmLocator = $this->locatorSourceResolver->getSourceCodeByAmLocator($location->getId());
-                        // if (!empty($sourceCodeByAmLocator))
-                        // {                       
-                        //     $source = $this->sourceInterface->load($sourceCodeByAmLocator);
-                        //     if ($source->getSourceCode()) {
-                        //         $source->delete();
-                        //     } 
-                        // }  
+                } else { 
                         $parentLocationYextEntity = $data['primaryProfile']['asda_parent_store'][0];
                         $parentLocation = $this->getLocationByYext("'$parentLocationYextEntity'");
                         $sourceCode = $this->locatorSourceResolver->getSourceCodeByAmLocator($parentLocation->getId());
@@ -519,9 +473,7 @@ class YextAttribute
                 $location->save();
 
                 return $location;
-            }
-
-            
+            }            
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -589,7 +541,6 @@ class YextAttribute
      */
     public function editSource($storeData, $locationId)
     {  
-
         $locationName = trim($storeData['name']);
 
         $sourceData = [
@@ -605,14 +556,25 @@ class YextAttribute
         ];
 
         try {
-            $source = $this->sourceInterfaceFactory->create()->load($sourceData['source_code']);
+            $source_code = $this->locatorSourceResolver->getSourceCodeByAmLocator($locationId);
+            if (!$source_code) {
+                $source_code = $sourceData['source_code'];
+            }
+            $source = $this->sourceInterfaceFactory->create()->load($source_code);
+            
             if (!$source->getSourceCode()) {
                 $source = $this->sourceInterfaceFactory->create();
                 $source->setData($sourceData)->save();
                 $this->eventManager->dispatch('yext_webhook_inventory_source_add_after', [
                     'source' => $source
                 ]);                
-            }
+            } 
+            // else {
+            //     $source->addData($sourceData)->save();
+            //     $this->eventManager->dispatch('yext_webhook_inventory_source_update_after', [
+            //         'source' => $source
+            //     ]); 
+            // }
             return $source;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -819,5 +781,13 @@ class YextAttribute
     public function unAssignAmLocatorStoreWithSource($locationId, $sourceCode)
     {
         $this->locatorSourceResolver->unAssignAmLocatorStoreWithSource($locationId, $sourceCode);
+    }
+    public function updateYextEnityId($locationId, $newYextEnityId)
+    {
+        $tableName = $this->connection->getTableName(self::AMASTY_AMLOCATOR_STORE_ATTRIBUTE);
+        $data = ['value' => $newYextEnityId];
+        $where = ['store_id = ?' => $locationId, 'attribute_id = ?' => $this->getYextEntityAttributeId()];
+
+        return $this->connection->update($tableName, $data, $where);
     }
 }
