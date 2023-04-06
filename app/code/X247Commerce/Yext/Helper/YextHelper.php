@@ -296,4 +296,68 @@ class YextHelper extends AbstractHelper
 
         return $resultSource;
     }
+    /**
+     * Process data from yext event or response to data of \Amasty\Storelocator\Model\Location
+     *
+     * @param array $input
+     * 
+     * @return array
+     */
+    public function responseDataProcess($input)
+    {
+        //process data from $input to insert into amasty_amlocator_location
+        $data = [];
+        $data['name'] = isset($input['name']) ? $input['name'] : '';
+        $url_key = '';
+        if (isset($input['name'])) {
+            $url_key = $this->getUrlKeyFromName($input['name']);
+        }
+        $data['url_key'] = $url_key;
+        $data['country'] = isset($input['address']['countryCode']) ? $input['address']['countryCode'] : '' ;
+        $data['status'] = 1;
+        $data['stores'] = 0;
+        $address = '';
+        if (isset($input['address']['line1']) && isset($input['address']['line2'])) {
+            $address = $input['address']['line1'] . ' ' . $input['address']['line2'];
+        }
+        if (isset($input['address']['line1']) && !isset($input['address']['line2'])) {
+            $address = $input['address']['line1'];
+        }
+        $data['address'] = $address;
+        $data['city'] = isset($input['address']['city']) ? $input['address']['city'] : '';
+        $data['zip'] = isset($input['address']['postalCode']) ? $input['address']['postalCode'] : '';
+        $data['state'] = isset($input['address']['region']) ? $input['address']['region'] : '' ;
+        if (isset($input['geocodedCoordinate'])) {
+            $data['lat'] = isset($input['geocodedCoordinate']['latitude']) ? $input['geocodedCoordinate']['latitude'] : 0 ;
+            $data['lng'] = isset($input['geocodedCoordinate']['longitude']) ? $input['geocodedCoordinate']['longitude'] : 0 ;
+        }
+        if (!isset($input['geocodedCoordinate']) && isset($input['yextDisplayCoordinate'])) {
+            $data['lat'] = isset($input['yextDisplayCoordinate']['latitude']) ? $input['yextDisplayCoordinate']['latitude'] : 0 ;
+            $data['lng'] = isset($input['yextDisplayCoordinate']['longitude']) ? $input['yextDisplayCoordinate']['longitude'] : 0 ;
+        }
+        if (!isset($input['geocodedCoordinate']) && !isset($input['yextDisplayCoordinate']) && isset($input['cityCoordinate'])) {
+            $data['lat'] = isset($input['cityCoordinate']['latitude']) ? $input['cityCoordinate']['latitude'] : 0 ;
+            $data['lng'] = isset($input['cityCoordinate']['longitude']) ? $input['cityCoordinate']['longitude'] : 0 ;
+        }
+        $data['description'] = isset($input['description']) ? $input['description'] : '' ;
+        $data['phone'] = isset($input['mainPhone']) ? $input['mainPhone'] : '' ;
+        $data['email'] = isset($input['emails'][0]) ? $input['emails'][0] : '' ;
+        $data['website'] = isset($input['facebookPageUrl']) ? $input['facebookPageUrl'] : '' ;
+        // $data['actions_serialized'] = isset($input['primaryProfile']) ? $input['primaryProfile'] : '' ;
+        $data['photoGallery'] = [];
+        if (isset($input["photoGallery"])) {
+            foreach ($input["photoGallery"] as $image) {
+                $data['photoGallery'][] = $image["image"]["url"];
+            }
+        }
+        if (isset($input['pickupAndDeliveryServices'])) {
+            $data['enable_delivery'] = in_array("DELIVERY", $input['pickupAndDeliveryServices']) ? 1 : 0;
+            $data['curbside_enabled'] = in_array("IN_STORE_PICKUP", $input['pickupAndDeliveryServices']) ? 1 : 0;
+        } else {
+            $data['enable_delivery'] = 0;
+            $data['curbside_enabled'] = 0;
+        }
+        
+        return $data;
+    }
 }
