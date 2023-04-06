@@ -4,20 +4,20 @@
 <div class="checkout-success-container">
     <?php if ($block->getOrderId()): ?>
         <?php $order = $block->getOrder($block->getOrderId());
-              $deliveryDayeTime = $block->getDeliveryDateTime($order);
+              $deliveryDayTime = $block->getDeliveryDateTime($order);
         ?>
         <div class="checkout-success">
             <?php if ($block->getCanViewOrder()) : ?>
                 <div><?= __('Thank you for shopping with us.Your order number is: %1', sprintf('<a href="%s" class="order-number">%s</a>', $block->escapeHtml($block->getViewOrderUrl()), $block->escapeHtml($block->getOrderId()))) ?></div>
             <?php else : ?>
-                <div><?= __('Thank you for shopping with us. Your order number is <span>%1</span>.', $block->escapeHtml($block->getOrderId())) ?></div>
+                <div><?= __('Thank you for shopping with us. Your order number is: <span>%1</span>.', $block->escapeHtml($block->getOrderId())) ?></div>
             <?php endif; ?>
             <div><?= /* @escapeNotVerified */ __('We\'ll email you an order confirmation with details and tracking information.') ?></div>
         </div>
         <div class="order-details">
             <div class="block-delivery">
-                <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') ?> <span><?= array_key_exists('date', $deliveryDayeTime) ? $block->getFormatDate($deliveryDayeTime['date']) : '--' ?></span></span><br>
-                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= array_key_exists('time_from', $deliveryDayeTime) ? $block->getFormatTime($deliveryDayeTime['time_from']) : '--'?></span></span>
+                <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') ?> <span><?= array_key_exists('date', $deliveryDayTime) ? $block->getFormatDate($deliveryDayTime['date']) : '--' ?></span></span><br>
+                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= array_key_exists('time_from', $deliveryDayTime) ? $block->getFormatTime($deliveryDayTime['time_from']) : $block->getDeliveryHours($deliveryDayTime['time'])?></span></span>
             </div>
             <div class="show-order">
                 <table width="100%" cellpadding="0" cellspacing="0">
