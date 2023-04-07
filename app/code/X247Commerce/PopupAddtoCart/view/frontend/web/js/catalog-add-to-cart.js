@@ -90,12 +90,11 @@ define([
         submitForm: function (form) {
             var self = this,
                 optionValues = [],
-                indexValues = {},
+                deliveryType = window.localStorage.getItem('delivery_type') ?? 0,
                 productId = window.indexSwatch ? '' : idsResolver(form)[0],
                 lead_delivery = window.leadDelivery ? JSON.parse(window.leadDelivery) : [],
                 index = window.indexSwatch ? JSON.parse(window.indexSwatch) : {};
-
-            console.log(customerData.get('cart')().items);
+                
             $.each(form.serializeArray(), function (key, item) {
                 if (item.name.indexOf('super_attribute') !== -1) {
                     optionValues.push(item.value);
@@ -108,7 +107,7 @@ define([
                     productId = key;     
                 }       
             });
-            if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1) {
+            if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1 && deliveryType == 2) {
                 confirmation({
                     title: $.mage.__('Notice!'),
                     content: 'This product takes longer than 1 hour to make, do you want to continue?',
