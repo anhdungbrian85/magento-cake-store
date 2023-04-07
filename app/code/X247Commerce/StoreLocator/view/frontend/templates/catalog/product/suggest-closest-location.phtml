@@ -6,20 +6,22 @@
 <div class="closest-location-container">
     <div class="closest-location_message"></div>
     <div class="closest-location_title">
-        <?= __('The location is closest available all of product in cart')?>
     </div>
 </div>
 <script type="text/x-magento-init">
     {
         "*": {
             "X247Commerce_StoreLocator/js/product/view/suggest-closest-location": {
-                "suggestClosestLocationAjaxUrl": "<?= $block->getSuggestClosestLocationAjaxUrl() ?>"
+                "suggestClosestLocationAjaxUrl": "<?= $block->getSuggestClosestLocationAjaxUrl() ?>",
+                "currentProductSku": "<?= $block->getCurrentProductSku() ?>",
+                "currentProductType": "<?= $block->getCurrentProductType() ?>"
             }
         }
     }
 </script>
 <script id="closest-location-title" type="text/x-magento-template">
     <div class="wrapper">
+        <div><?= __('The nearest location has this product and items in cart!')?></div>
         <a href="<%- data.href %>"><%= data.name %></a>
     </div>
 </script>

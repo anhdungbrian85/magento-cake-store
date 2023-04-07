@@ -6,7 +6,10 @@ define([
     'use strict';
     $.widget('mage.suggestClosestLocation', {
         _create: function() {
-            let data = {};
+            let data = {
+                currentProductSku : this.options.currentProductSku,
+                currentProductType: this.options.currentProductType
+            };
             this._sendAjax(this.options.suggestClosestLocationAjaxUrl, data);
         },
 

@@ -21,8 +21,8 @@ class ReselectLocation extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        if ($this->getRequest()->getParams('location_id')) {
-            $this->locationContext->setStoreLocationId($this->getRequest()->getParams('location_id'));
+        if ($this->getRequest()->getParam('location_id')) {
+            $this->locationContext->setStoreLocationId($this->getRequest()->getParam('location_id'));
         }
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
         return $resultRedirect;
