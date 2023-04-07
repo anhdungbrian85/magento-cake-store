@@ -82,7 +82,7 @@ define(
                             'shipping-address-fieldset',
                             'additional-fieldsets'
                         );
-                    }
+                    };
 
                     registry.get(
                         // eslint-disable-next-line max-len
@@ -158,13 +158,20 @@ define(
                  */
                 registerObserversAfterLoad: function () {
                     this.isInitialDataSaved = true;
-
+                    
                     shippingRegistry.isAddressChanged.subscribe(this.additionalFieldsObserver.bind(this));
                     shippingService.isLoading.subscribe(function (isLoading) {
                         if (!isLoading) {
                             this.validateAndSaveIfChanged();
                         }
                     }, this);
+                    
+                    $("[name='shippingAddress.custom_attributes.kl_sms_consent']").clone().appendTo(".fieldset.address[data-form='billing-new-address']");
+                    if (this.isCollection()) {
+                        $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
+                    } else {
+                        $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
+                    }
                 },
 
                 /**
@@ -241,8 +248,13 @@ define(
                 selectShippingMethod: function (method) {
                     if (method) {
                         if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
+                            if (!$("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").length) {
+                                $("[name='shippingAddress.custom_attributes.kl_sms_consent']").clone().appendTo(".fieldset.address[data-form='billing-new-address']");
+                            }
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
                             locationContext.deliveryType(quote.getDeliveryType())
                         }   else {
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
                             locationContext.deliveryType(1) 
                         }
                     }
