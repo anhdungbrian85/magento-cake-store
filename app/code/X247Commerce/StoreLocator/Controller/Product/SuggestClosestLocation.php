@@ -60,8 +60,8 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
                 'debug_note' => $e->getMessage()
             ];
         }
-        
-        
+
+
         return $this->getResponse()->setBody(json_encode($result));
     }
 }

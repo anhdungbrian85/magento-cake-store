@@ -30,12 +30,19 @@ class ValidateOutOfStockStatus implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/add_to_cart.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Starting debug');
         $selectedLocationId = $this->locationContext->getStoreLocationId();
         $quote = $this->checkoutSession->getQuote();
+        $logger->info('Selected Location Id: ' . $selectedLocationId );
         foreach($quote->getAllVisibleItems() as $item) {
             if (!$this->locatorSourceResolver->checkProductAvailableInStore($selectedLocationId, $item)) {
+                $logger->info('Error sku: ' . $item->getSku() );
                 throw new \Magento\Framework\Exception\LocalizedException(__('The product is out of stock on this location.'));
             }
         }
+        $logger->info('Ending debug');
     }
 }
