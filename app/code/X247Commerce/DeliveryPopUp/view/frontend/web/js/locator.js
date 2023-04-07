@@ -69,7 +69,7 @@ define([
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
-                    
+                    window.localStorage.setItem('delivery_type', delivery_type)
                     if (delivery_type != 2) {
                         window.location.reload();
                     } else {
