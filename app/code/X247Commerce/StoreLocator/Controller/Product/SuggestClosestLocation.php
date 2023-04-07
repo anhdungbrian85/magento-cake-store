@@ -33,8 +33,10 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         try {
+            $params = $this->getRequest()->getParams();
             $quote = $this->checkoutSession->getQuote();
-            $productSkus = [];
+            $productSkus = [$params['currentProductSku']];
+
             if (!empty($quote->getAllVisibleItems())) {
                 foreach ($quote->getAllVisibleItems() as $quoteItem) {
                     $productSkus[] = $quoteItem->getSku();
