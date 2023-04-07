@@ -105,21 +105,8 @@ define([
         },
 
         onChangeStore: function (storeId) {
-            $.ajax({
-                url: urlBuilder.build("x247_storelocator/cart/validate"),
-                data: {
-                    location_id: storeId
-                },
-                type: 'post',
-                success: function (response) {
-                    if (response.status === 200) {
-                        pickupDataResolver.storeId(storeId);
-                        locationContext.storeLocationId(storeId);
-                    } else {
-                        messageList.addSuccessMessage({message: response.message})
-                    }
-                }
-            });
+            pickupDataResolver.storeId(storeId);
+            locationContext.storeLocationId(storeId);
         },
 
         /**

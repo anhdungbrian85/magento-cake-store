@@ -37,6 +37,11 @@ class ValidateOutOfStockStatus implements ObserverInterface
         $selectedLocationId = $this->locationContext->getStoreLocationId();
         $quote = $this->checkoutSession->getQuote();
         $logger->info('Selected Location Id: ' . $selectedLocationId );
+        $currentProduct = $observer->getEvent()->getProduct();
+        if (!$this->locatorSourceResolver->checkProductAvailableInStore($selectedLocationId, $currentProduct)) {
+            $logger->info('Error current product: ' . $currentProduct->getSku() );
+            throw new \Magento\Framework\Exception\LocalizedException(__('The current product is out of stock on this location.'));
+        }
         foreach($quote->getAllVisibleItems() as $item) {
             if (!$this->locatorSourceResolver->checkProductAvailableInStore($selectedLocationId, $item)) {
                 $logger->info('Error sku: ' . $item->getSku() );
