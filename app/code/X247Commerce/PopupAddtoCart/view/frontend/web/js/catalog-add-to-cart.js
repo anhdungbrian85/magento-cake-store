@@ -90,9 +90,9 @@ define([
             var self = this,
                 optionValues = [],
                 indexValues = {},
-                productId,
-                lead_delivery = JSON.parse(window.leadDelivery),
-                index = JSON.parse(window.indexSwatch);
+                productId = window.indexSwatch ? '' : idsResolver(form)[0],
+                lead_delivery = window.leadDelivery ? JSON.parse(window.leadDelivery) : [],
+                index = window.indexSwatch ? JSON.parse(window.indexSwatch) : {};
             $.each(form.serializeArray(), function (key, item) {
                 if (item.name.indexOf('super_attribute') !== -1) {
                     optionValues.push(item.value);
