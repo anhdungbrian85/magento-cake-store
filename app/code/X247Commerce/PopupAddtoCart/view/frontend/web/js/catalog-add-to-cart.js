@@ -254,8 +254,8 @@ define([
                                             }
                                         }]
                                     };
-                                    // var popup = modal(options, $('#add-more-product'));
-                                    // $('#add-more-product').modal('openModal');
+                                    modal(options, $('#add-more-product'));
+                                    $('#add-more-product').modal('openModal');
 
                                     $('.tab-title').on('click', function(e) {
                                         if ( $(this).parent().hasClass('active') ) {
