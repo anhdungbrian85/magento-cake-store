@@ -384,34 +384,45 @@ class LocatorSourceResolver
         $nearestDistance = 100000000;
         $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $inventorySourceTbl = $this->resource->getTableName('inventory_source');
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
         $getCurrentSourceDataQuery = $this->connection->select()
             ->from($locationSourceLinkTbl, ['*'])
             ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $locationSourceLinkTbl.source_code")
             ->where("location_id = ?", $currentLocationId);
         $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
         if (!empty($currentSourceData)) {
-            $inventoryConfig = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock', ScopeInterface::SCOPE_STORE);
-            $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
-            $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ['*'])
-                ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $inventorySourceItemTbl.source_code")
-                ->where('sku IN (?)', implode(',', $products))
-                ->where('status = ?', self::IN_STOCK_STATUS);
-            $availableSources = $this->connection->fetchAll($getAvailableSourcesOfProducts);
+
+            $availableSources = [];
+            foreach ($products as $product) {
+                $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ["$inventorySourceItemTbl.source_code"])
+                    ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $inventorySourceItemTbl.source_code")
+                    ->where('sku = ?', $product)
+                    ->where('status = ?', self::IN_STOCK_STATUS);
+                $availableSourcesTmp = $this->connection->fetchCol($getAvailableSourcesOfProducts);
+                $availableSources = array_merge($availableSources, $availableSourcesTmp);
+            }
             if (!empty($availableSources) && count($availableSources) > 0) {
-                foreach ($availableSources as $availableSource) {
-                    if (isset($availableSource['latitude']) && isset($availableSource['longitude']) && isset($currentSourceData['latitude']) && isset($currentSourceData['longitude'])) {
+                $availableSources = array_unique($availableSources);
+                foreach ($availableSources as $availableSourceCode) {
+                    $getSourceDataQuery = $this->connection->select()
+                        ->from($inventorySourceTbl, ['*'])
+                        ->where("source_code = ?", $availableSourceCode);
+                    $availableSource = $this->connection->fetchRow($getSourceDataQuery);
+                    if (isset($availableSource['latitude']) &&
+                        isset($availableSource['longitude']) &&
+                        isset($currentSourceData['latitude']) &&
+                        isset($currentSourceData['longitude'])) {
                         $distanceToCurrentSource = $this->calculateDistance(
-                            $availableSource['latitude'], 
+                            $availableSource['latitude'],
                             $availableSource['longitude'],
                             $currentSourceData['latitude'],
                             $currentSourceData['longitude']
                         );
                         if ($nearestDistance > $distanceToCurrentSource) {
+                            $nearestDistance = $distanceToCurrentSource;
                             $locationData = $availableSource;
                         }
-                        
                     }
-                    
                 }
             }
         }

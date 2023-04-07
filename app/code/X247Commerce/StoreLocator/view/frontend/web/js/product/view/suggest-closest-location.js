@@ -1,6 +1,8 @@
 define([
-    'jquery'
-], function($){
+    'jquery',
+    'mage/template',
+    'mage/url'
+], function($, mageTemplate, urlBuilder){
     'use strict';
     $.widget('mage.suggestClosestLocation', {
         _create: function() {
@@ -15,7 +17,18 @@ define([
                 data: data,
                 dataType: 'json',
                 success: function (result) {
-                    console.log(result);
+                    if (result.status === 200) {
+                        let template = mageTemplate('#closest-location-title');
+                        let closestLocationHtml = template({
+                            data: {
+                                href: urlBuilder.build("x247_storelocator/product/reselectLocation") + '/location_id/' + result.closest_location.amlocator_store,
+                                name: result.closest_location.name
+                            }
+                        });
+                        $('.closest-location_title').append(closestLocationHtml);
+                    } else {
+                        $('.closest-location_message').text(result.message);
+                    }
                 }
             });
         }
