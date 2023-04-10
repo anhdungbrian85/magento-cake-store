@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="X247Commerce\Checkout\Api\StoreLocationContextInterface" type="X247Commerce\Checkout\Service\StoreLocationContext"/>
-
+    
     <type name="Magento\Checkout\Api\ShippingInformationManagementInterface">
         <plugin name="x247checkout_edit_checkout_location_context" type="X247Commerce\Checkout\Plugin\Checkout\Model\ShippingInformationManagementPlugin" sortOrder="20" disabled="false" />
     </type>
@@ -27,5 +27,9 @@
 
      <type name="Amasty\CheckoutDeliveryDate\Model\DeliveryInformationManagement">
         <plugin name="change_format_date_delivery" type="X247Commerce\Checkout\Plugin\Model\DeliveryInformationManagement" disabled="false"  />
+    </type>
+
+    <type name="Magento\Checkout\CustomerData\DefaultItem">
+        <plugin name="add_lead_delivery_data" type="X247Commerce\Checkout\Plugin\CustomerData\DefaultItem" disabled="false"  />
     </type>
 </config>
