@@ -109,7 +109,7 @@ define([
                 }       
             });
 
-            if (cart.length > 0) {
+            if (cart && cart.length > 0) {
                 for (var i=0; i<cart.length; i++){
                     let item = cart[i];
                   if (item.product_type == "configurable") {
