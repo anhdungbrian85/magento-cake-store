@@ -17,7 +17,7 @@
     </argument>
     <dataSource name="storelocator_location_are_listing_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">StoreLocatorLocationAreaGridDataProvider</argument>
+            <argument name="class" xsi:type="string">X247Commerce\StoreLocator\Model\DataProvider\DeliveryAreaProvider</argument>
             <argument name="name" xsi:type="string">storelocator_location_are_listing_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
