@@ -5,6 +5,8 @@ namespace X247Commerce\StoreLocator\Block\Catalog\Product;
 class SuggestClosestLocation extends \Magento\Framework\View\Element\Template
 {
 
+    protected $storeLocationContext;
+
     protected $registry;
 
     /**
@@ -12,12 +14,14 @@ class SuggestClosestLocation extends \Magento\Framework\View\Element\Template
      * @param array $data
      */
     public function __construct(
+        \X247Commerce\Checkout\Api\StoreLocationContextInterface $storeLocationContext,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\View\Element\Template\Context $context,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->registry = $registry;
+        $this->storeLocationContext = $storeLocationContext;
     }
 
     /**
@@ -29,7 +33,7 @@ class SuggestClosestLocation extends \Magento\Framework\View\Element\Template
     }
 
     public function getCurrentProduct()
-    {       
+    {
         return $this->registry->registry('current_product');
     }
 
@@ -43,5 +47,10 @@ class SuggestClosestLocation extends \Magento\Framework\View\Element\Template
     {
         $product = $this->getCurrentProduct();
         return $product->getProductType();
+    }
+
+    public function getCurrentStoreLocationId()
+    {
+        return $this->storeLocationContext->getStoreLocationId();
     }
 }
