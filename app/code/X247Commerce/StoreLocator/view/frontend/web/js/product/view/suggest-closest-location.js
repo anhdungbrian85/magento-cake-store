@@ -10,10 +10,10 @@ define([
                 currentProductSku : this.options.currentProductSku,
                 currentProductType: this.options.currentProductType
             };
-            this._sendAjax(this.options.suggestClosestLocationAjaxUrl, data);
+            this._sendAjax(this.options.suggestClosestLocationAjaxUrl, this.options.currentStoreLocationId, data);
         },
 
-        _sendAjax: function (url, data) {
+        _sendAjax: function (url, currentStoreLocationId, data) {
             $.ajax({
                 type: 'post',
                 url: url,
@@ -21,6 +21,9 @@ define([
                 dataType: 'json',
                 success: function (result) {
                     if (result.status === 200) {
+                        if (result.closest_location.amlocator_store === currentStoreLocationId) {
+                            return;
+                        }
                         let template = mageTemplate('#closest-location-title');
                         let closestLocationHtml = template({
                             data: {
