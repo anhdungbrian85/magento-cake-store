@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="X247Commerce_StoreLocator::menu" title="Locator Delivery Area" sortOrder="300">
+                    <resource id="X247Commerce_StoreLocator::deliveryarea" title="Location Delivery Area List" sortOrder="300" />
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
