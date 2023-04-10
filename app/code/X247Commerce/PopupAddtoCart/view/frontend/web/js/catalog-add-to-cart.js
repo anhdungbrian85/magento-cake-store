@@ -92,22 +92,48 @@ define([
                 optionValues = [],
                 deliveryType = window.localStorage.getItem('delivery_type') ?? 0,
                 productId = window.indexSwatch ? '' : idsResolver(form)[0],
+                alreadyInCart = false,
                 lead_delivery = window.leadDelivery ? JSON.parse(window.leadDelivery) : [],
-                index = window.indexSwatch ? JSON.parse(window.indexSwatch) : {};
-                
+                index = window.indexSwatch ? JSON.parse(window.indexSwatch) : {},
+                cart = customerData.get('cart')().items;
+
             $.each(form.serializeArray(), function (key, item) {
                 if (item.name.indexOf('super_attribute') !== -1) {
                     optionValues.push(item.value);
                 }
             });
-            
             $.each(index, function (key, value) {
                 var v = Object.values(value).sort();
                 if (JSON.stringify(optionValues.sort()) == JSON.stringify(v)) {
                     productId = key;     
                 }       
             });
-            if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1 && deliveryType == 2) {
+
+            if (cart.length > 0) {
+                for (var i=0; i<cart.length; i++){
+                    let item = cart[i];
+                  if (item.product_type == "configurable") {
+                      let op = [];
+                      let option = item.options;
+                      
+                      for (var j=0; j<option.length; j++){
+                          op.push(option[j].option_value);
+                      }
+                      
+                      if (item.product_id == idsResolver(form)[0] && JSON.stringify(optionValues.sort()) == JSON.stringify(op.sort())) {
+                          alreadyInCart = true;
+                          break;
+                      } 
+                  } 
+                  if (item.product_type == "simple") {
+                      if (item.product_id == productId) {
+                          alreadyInCart = true;
+                          break;
+                      }
+                  }
+                }
+            }
+            if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1 && deliveryType == 2 && alreadyInCart == false) {
                 confirmation({
                     title: $.mage.__('Notice!'),
                     content: 'This product takes longer than 1 hour to make, do you want to continue?',
