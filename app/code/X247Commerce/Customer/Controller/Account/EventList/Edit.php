@@ -3,6 +3,9 @@ namespace X247Commerce\Customer\Controller\Account\EventList;
 
 class Edit extends \Magento\Framework\App\Action\Action
 {
+	public $request;
+	public $eventFactory;
+
 	public function __construct(
 		\Magento\Framework\App\Action\Context $context,
 		\Magento\Framework\App\Request\Http $request,
@@ -17,9 +20,9 @@ class Edit extends \Magento\Framework\App\Action\Action
 	public function execute()
 	{
 		$array = [];
-		$data = $this->request->getParams();
 		
 		try {
+			$data = $this->request->getParams();
 			$array['occasion'] = $data['occasion'];
 			$array['their_name'] = $data['name'];
 			$array['date'] =  $data['year'] . '-' . $data['month'] . '-' . $data['day'];
