@@ -5,7 +5,7 @@ define([
     'use strict';
     $.widget('x247.popupeventcustomer', {
         options : {
-            n : 0
+            oddMonth: ['Jan', 'Mar', 'May', 'Jul', 'Aug', 'Oct', 'Dec']
         },
 
         _create: function() {
@@ -19,6 +19,7 @@ define([
 
             $('.button-edit').on('click', function(){
                 var parent = $(this).parents('.tb-item');
+                $widget.options.n = -1;
                 $('#edit-id-value').val($(this).attr('data-value'));
                 $('#year').val(parent.find('.tb-item-value .year-value').text());
                 $('#month').val(+parent.find('.tb-item-value .month-value').attr('data-value')).change();
@@ -40,17 +41,18 @@ define([
                 $('#edit-container').removeClass('active edit new');
                 $('#edit-container .edit-container-header h1').show();
             });
-
+            $widget.fetchDayList();
             $widget.getMonths();
 
-            $('#month').change(function () {
-                $widget.getDaysInMonth();
+            $('#month').change( function () {
+                $widget.getDaysInMonth($('#month').find(":selected").text(), $('#day').find(":selected").text());
             });
 
-            $('#year').on('change', function () {
-                $widget.getDaysInMonth();
+            $('#year').change( function () {
+                $widget.getDaysInMonth($('#month').find(":selected").text(), $('#day').find(":selected").text());
             });
         },
+
         getMonths: function() {
             var months = new Array(12);
             months[1] = "Jan";
@@ -67,7 +69,6 @@ define([
             months[12] = "Dec";
 
             for (var key in months) {
-                
                 $('#month')
                 .append($("<option></option>")
                 .attr("value", key)
@@ -75,15 +76,23 @@ define([
             }
         },
 
-        getDaysInMonth: function() {
+        fetchDayList: function () {
+            $('#day').empty();
+            for (let i = 1; i <= 31; i++) {
+                $('#day')
+                .append($("<option></option>")
+                .attr("value", i)
+                .text(i));
+            }
+        },
+
+        getDaysInMonth: function(month, day) {
             var $widget = this,
                 yearPresent = $('#year').val(),
-                oddMonth = ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov'],
-                month = $('#month').find(":selected").text(),
                 n = 0;
 
             if (month != "") {
-                if (oddMonth.includes(month)) {
+                if ($widget.options.oddMonth.includes(month)) {
                     n = 31;
                 } else {
                     if (month == "Feb") {
@@ -98,18 +107,17 @@ define([
                 }
             }
 
-            if (n != 0 && $widget.options.n != n) {
-                $('#day').empty();
-                for (let i = 1; i < n+1; i++) {
-                    $('#day')
-                    .append($("<option></option>")
-                    .attr("value", i)
-                    .text(i));
-                }
+            $('#day').empty();
+            for (let i = 1; i < n+1; i++) {
+                $('#day')
+                .append($("<option></option>")
+                .attr("value", i)
+                .text(i));
             }
 
-            $widget.options.n = n;
-
+            if (day <= n) {
+                $("#day").val(day).change();
+            }
         }
     });
     
