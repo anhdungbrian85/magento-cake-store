@@ -28,4 +28,6 @@
     <type name="Magento\Checkout\CustomerData\DefaultItem">
         <plugin name="add_lead_delivery_data" type="X247Commerce\Checkout\Plugin\CustomerData\DefaultItem" disabled="false"  />
     </type>
+
+    <preference for="Amasty\CheckoutCore\Block\Onepage\LayoutProcessor" type="X247Commerce\Checkout\Block\Onepage\LayoutProcessor" />
 </config>
