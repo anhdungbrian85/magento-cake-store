@@ -4,7 +4,9 @@ namespace X247Commerce\Customer\Block\Account\EventList;
 
 class Index extends \Magento\Framework\View\Element\Template
 {
-
+	public $eventFactory;
+	public $customerSession;
+	public $date;
  	public function __construct(
  		\Magento\Framework\View\Element\Template\Context $context,
 		\X247Commerce\Customer\Model\EventFactory $eventFactory,
@@ -41,7 +43,18 @@ class Index extends \Magento\Framework\View\Element\Template
 		$date = $this->date->gmtDate();
 		$year = explode("-", $date);
 
-		return $year[0];
+		return (int)$year[0];
+	}
+
+	public function getListYear()
+	{
+		$listYear = [];
+
+		for ($i = $this->getYearPresent(); $i >= $this->getYearPresent() - 50; $i--) {
+			$listYear[] = $i;
+		}
+
+		return $listYear;
 	}
 
 	public function getMonthLabel($value)
