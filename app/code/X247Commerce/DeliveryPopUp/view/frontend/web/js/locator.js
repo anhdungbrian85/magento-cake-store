@@ -352,6 +352,12 @@ define([
             });
 
             self.mapContainer.find(this.selectors.resetSelector).on('click', this.resetMap.bind(this));
+            self.mapContainer.find('.delivery').on('click', function(){
+                let value = self.mapContainer.find('.amlocator-text').val();
+                if(value.length > 0){
+                    self.makeAjaxCall();
+                }
+            })
         },
 
         toggleFilters: function () {
