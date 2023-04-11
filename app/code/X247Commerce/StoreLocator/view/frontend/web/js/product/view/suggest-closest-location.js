@@ -10,10 +10,15 @@ define([
                 currentProductSku : this.options.currentProductSku,
                 currentProductType: this.options.currentProductType
             };
-            this._sendAjax(this.options.suggestClosestLocationAjaxUrl, this.options.currentStoreLocationId, data);
+            this._sendAjax(
+                this.options.suggestClosestLocationAjaxUrl,
+                this.options.currentStoreLocationId,
+                this.options.currentProductType,
+                data
+            );
         },
 
-        _sendAjax: function (url, currentStoreLocationId, data) {
+        _sendAjax: function (url, currentStoreLocationId, productType, data) {
             $.ajax({
                 type: 'post',
                 url: url,
@@ -21,7 +26,7 @@ define([
                 dataType: 'json',
                 success: function (result) {
                     if (result.status === 200) {
-                        if (result.closest_location.amlocator_store === currentStoreLocationId) {
+                        if (result.closest_location.amlocator_store === currentStoreLocationId || productType !== 'simple') {
                             return;
                         }
                         let template = mageTemplate('#closest-location-title');
@@ -31,7 +36,7 @@ define([
                                 name: result.closest_location.name
                             }
                         });
-                        $('.closest-location_title').append(closestLocationHtml);
+                        $('.closest-location_title').html(closestLocationHtml);
                     } else {
                         $('.closest-location_message').text(result.message);
                     }

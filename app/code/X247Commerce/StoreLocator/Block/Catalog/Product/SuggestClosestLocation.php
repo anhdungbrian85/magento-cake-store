@@ -46,7 +46,7 @@ class SuggestClosestLocation extends \Magento\Framework\View\Element\Template
     public function getCurrentProductType()
     {
         $product = $this->getCurrentProduct();
-        return $product->getProductType();
+        return $product->getTypeId();
     }
 
     public function getCurrentStoreLocationId()
