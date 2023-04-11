@@ -14,13 +14,12 @@ define([
             var $widget = this;
 
             $('#button-add').on('click', function(){
-                
                 $('#edit-container').addClass('active new');
                 $('#edit-container .edit-container-header .edit').hide();
+                $('#edit-container .edit-container-content .create-another-reminder').hide();
             });
 
             $('.button-edit').on('click', function(){
-
                 var parent = $(this).parents('.tb-item');
                 $('#edit-id-value').val($(this).attr('data-value'));
                 $('#month').val(+parent.find('.tb-item-value .month-value').attr('data-value')).change();
@@ -29,11 +28,11 @@ define([
                 $('#occasion').val(parent.find('.tb-item-value .occasion-value').text());
                 $('#edit-container').addClass('active edit');
                 $('#edit-container .edit-container-header .new').hide();
+                $('#edit-container .edit-container-content .create-another-reminder').show();
                 $('#day').val(+parent.find('.tb-item-value .day-value').text()).change();
             });
 
             $('#edit-container #close').on('click', function() {
-
                 $('#edit-id-value').val("");
                 $('#year').val("").change();
                 $('#name').val("");
