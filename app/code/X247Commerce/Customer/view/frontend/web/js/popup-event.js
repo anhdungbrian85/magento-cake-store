@@ -5,12 +5,10 @@ define([
     'use strict';
     $.widget('x247.popupeventcustomer', {
         options : {
-            yearPresent : $('#year').val(),
             n : 0
         },
 
         _create: function() {
-
             var $widget = this;
 
             $('#button-add').on('click', function(){
@@ -22,8 +20,8 @@ define([
             $('.button-edit').on('click', function(){
                 var parent = $(this).parents('.tb-item');
                 $('#edit-id-value').val($(this).attr('data-value'));
-                $('#month').val(+parent.find('.tb-item-value .month-value').attr('data-value')).change();
                 $('#year').val(parent.find('.tb-item-value .year-value').text());
+                $('#month').val(+parent.find('.tb-item-value .month-value').attr('data-value')).change();
                 $('#name').val(parent.find('.tb-item-value .name-value').text());
                 $('#occasion').val(parent.find('.tb-item-value .occasion-value').text());
                 $('#edit-container').addClass('active edit');
@@ -46,17 +44,14 @@ define([
             $widget.getMonths();
 
             $('#month').change(function () {
-
                 $widget.getDaysInMonth();
             });
 
-            $('#year').change(function () {
-
+            $('#year').on('change', function () {
                 $widget.getDaysInMonth();
             });
         },
         getMonths: function() {
-
             var months = new Array(12);
             months[1] = "Jan";
             months[2] = "Feb";
@@ -81,16 +76,18 @@ define([
         },
 
         getDaysInMonth: function() {
-            var $widget = this;
-            var oddMonth = ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov'],
+            var $widget = this,
+                yearPresent = $('#year').val(),
+                oddMonth = ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov'],
                 month = $('#month').find(":selected").text(),
                 n = 0;
+
             if (month != "") {
                 if (oddMonth.includes(month)) {
                     n = 31;
                 } else {
                     if (month == "Feb") {
-                        if ( $widget.options.yearPresent % 4 == 0) {
+                        if ( yearPresent % 4 == 0) {
                             n = 29;
                         } else {
                             n = 28;
@@ -100,6 +97,7 @@ define([
                     }
                 }
             }
+
             if (n != 0 && $widget.options.n != n) {
                 $('#day').empty();
                 for (let i = 1; i < n+1; i++) {
