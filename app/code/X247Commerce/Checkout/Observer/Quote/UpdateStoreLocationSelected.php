@@ -82,6 +82,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     }
 
                     $today = $this->timezone->date(new \DateTime('now'));
+
                     $pickupDate = $today ;
                     $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
 

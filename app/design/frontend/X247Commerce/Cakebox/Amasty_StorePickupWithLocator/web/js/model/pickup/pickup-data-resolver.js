@@ -6,7 +6,6 @@ define([
 ], function (ko, _, customerData) {
     'use strict';
 
-    console.log(customerData)
     const selectedPickupInfoKey = 'amasty-selected-pickup-info',
         locationsDataKey = 'amasty-storepickup-data',
         storeKey = 'am_pickup_store',
@@ -154,7 +153,6 @@ define([
          */
         getTimeIntervalsByScheduleId: function (scheduleId) {
             var intervals = locationsData().schedule_data.intervals;
-
             if (!scheduleId || !intervals[scheduleId]) {
                 return intervals.default;
             }
