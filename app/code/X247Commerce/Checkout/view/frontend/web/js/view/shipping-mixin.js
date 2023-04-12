@@ -1,6 +1,7 @@
 define(
     [
         'underscore',
+        'Amasty_StorePickupWithLocator/js/model/pickup',
         'ko',
         'jquery',
         'Magento_Ui/js/lib/view/utils/async',
@@ -26,6 +27,7 @@ define(
     ],
     function (
         _,
+        pickup,
         ko,
         $,
         async,
@@ -71,7 +73,6 @@ define(
 
                 initialize: function () {
                     this._super();
-
                     instance = this;
                     onLoad(shippingRegistry.initObservers.bind(shippingRegistry, this.elems));
                     onLoad(this.registerObserversAfterLoad.bind(this));
@@ -81,7 +82,7 @@ define(
                             'shipping-address-fieldset',
                             'additional-fieldsets'
                         );
-                    }
+                    };
 
                     registry.get(
                         // eslint-disable-next-line max-len
@@ -124,7 +125,14 @@ define(
                         }
                     }, this);
                 },
-
+                checkVisible: function(carrier_code) {
+                    
+                    if ((locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup')
+                     || (locationContext.isAsda() && carrier_code == 'flatrate') ) {
+                        return false;
+                    }
+                    return true;
+                },
                 initObservable: function () {
                     this._super();
 
@@ -150,13 +158,20 @@ define(
                  */
                 registerObserversAfterLoad: function () {
                     this.isInitialDataSaved = true;
-
+                    
                     shippingRegistry.isAddressChanged.subscribe(this.additionalFieldsObserver.bind(this));
                     shippingService.isLoading.subscribe(function (isLoading) {
                         if (!isLoading) {
                             this.validateAndSaveIfChanged();
                         }
                     }, this);
+                    
+                    $("[name='shippingAddress.custom_attributes.kl_sms_consent']").clone().appendTo(".fieldset.address[data-form='billing-new-address']");
+                    if (this.isCollection()) {
+                        $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
+                    } else {
+                        $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
+                    }
                 },
 
                 /**
@@ -203,6 +218,10 @@ define(
                     return result;
                 },
 
+                isCollection: function () {
+                    return pickup.isPickup();
+                },
+
                 /**
                  * @param {String|Number|Object|*} value
                  * @return {boolean}
@@ -227,16 +246,24 @@ define(
                 },
 
                 selectShippingMethod: function (method) {
-                	if (method['carrier_code'] == 'amstorepickup') {
-                		locationContext.deliveryType(0)
-                	}	else {
-                		locationContext.deliveryType(1) // as when go to checkout delivery type 1 will have same behaviour with delivert type 2
-                	}
+                    if (method) {
+                        if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
+                            if (!$("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").length) {
+                                $("[name='shippingAddress.custom_attributes.kl_sms_consent']").clone().appendTo(".fieldset.address[data-form='billing-new-address']");
+                            }
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
+                            locationContext.deliveryType(quote.getDeliveryType())
+                        }   else {
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
+                            locationContext.deliveryType(1) 
+                        }
+                    }
+
                     window.loaderIsNotAllowed = true;
                     this._super(method);
                     instance.validateAndSaveIfChanged();
                     delete window.loaderIsNotAllowed;
-
+                    
                     return true;
                 },
 
@@ -266,7 +293,10 @@ define(
 
                     if (!customer.isLoggedIn()) {
                         $(loginFormSelector).validation();
-                        emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
+                        if ($(loginFormSelector + ' input[name=username]').length) {
+                            emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
+                        }
+                        
                     }
 
                     if (this.isFormInline) {

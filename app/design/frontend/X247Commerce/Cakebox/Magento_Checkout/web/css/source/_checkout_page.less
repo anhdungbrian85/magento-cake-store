@@ -1,0 +1,29 @@
+& when (@media-common = true) {
+    .checkout-index-index #maincontent{
+        button.action:not(.action-cancel),
+        .ampickup-choosemap {
+            background-color: #992E80;
+            color: #fff;
+
+            &:hover {
+                background-color: #c14eaa;
+            }
+        }
+
+        button.action.action-cancel {
+            color: #992E80;
+        }
+
+        .amcheckout-method.-selected,
+        .payment-method._active,
+        input[type='radio']:checked + label:before,
+        input[type='radio'] + label:hover:before,
+        .amcheckout-title > .amcheckout-icon.-minus,
+        .amcheckout-title > .amcheckout-icon.-minus:before,
+        .amcheckout-title > .amcheckout-icon.-plus,
+        .amcheckout-title > .amcheckout-icon.-plus:before,
+        input[type='checkbox'] + label:hover:before {
+            border-color: #992E80;
+        }
+    }
+}

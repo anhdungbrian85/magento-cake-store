@@ -11,9 +11,18 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "laminas/laminas-dependency-plugin": true,
             "magento/*": true
+        },
+        "allow-plugins": {
+            "magento/*": true,
+            "laminas/*": true,
+            "cweagans/composer-patches": true
         }
     },
     "repositories": {
+        "wyomind": {
+            "type": "composer",
+            "url": "https://chay_watkins_cakebox_com:WB7aVwlC@repo.wyomind.com"
+        },
         "amasty": {
             "type": "composer",
             "url": "https://composer.amasty.com/enterprise/"
@@ -36,6 +45,7 @@
         "amasty/module-store-pickup-with-locator-msi": "^1.0",
         "amasty/shopby": "^2.19",
         "amasty/shopby-seo": "^2.13",
+        "cweagans/composer-patches": "^1.7",
         "klaviyo/magento2-extension": "^4.0",
         "klevu/module-msi": "^1.0",
         "klevu/module-search": "^3.0",
@@ -51,6 +61,7 @@
         "mpdf/mpdf": "^8.1",
         "olegkoval/magento2-regenerate-url-rewrites": "^1.6",
         "smsglobal/module-sms": "^1.2",
+        "sparsh/magento-2-facebook-pixel-extension": "^1.3",
         "trustpilot/module-reviews": "^2.6"
     },
     "suggest": {
@@ -107,6 +118,11 @@
                 "lib/web/jquery/jquery.tabs.js"
             ],
             "tinymce/tinymce": "lib/web/tiny_mce_5"
+        },
+        "patches": {
+            "amasty/module-mega-menu-lite": {
+                "fix-conflict-email-component-checkout": "_extra/patches/module-mega-menu-lite/Amasty-Fix-osc-no-email-field.composer.patch"
+            }
         },
         "magento-force": true,
         "magento-deploystrategy": "copy",

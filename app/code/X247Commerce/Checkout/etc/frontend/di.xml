@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Amasty\StorePickupWithLocator\Model\TimeHandler" type="X247Commerce\Checkout\Model\TimeHandler"/>
     <type name="Magento\Framework\App\Action\AbstractAction">
         <plugin name="x247_http_context_before_get_vary_string" type="X247Commerce\Checkout\Plugin\HttpContext" sortOrder="1"/>
     </type>
@@ -11,4 +12,21 @@
            </argument>
        </arguments>
     </type>
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="Plugin_Frontend_LayoutProcessor_Magento_Checkout_Block_Checkout" type="X247Commerce\Checkout\Plugin\Checkout\LayoutProcessor" sortOrder="10" disabled="false"/>
+    </type>
+
+    <!-- Remove location data to customer data -->
+    <type name="Amasty\StorePickupWithLocator\CustomerData\LocationData">
+        <plugin name="x247checkout_remove_location_to_data_customer" type="X247Commerce\Checkout\Plugin\CustomerData\LocationData" sortOrder="20" disabled="false" />
+    </type>
+
+    <!-- Add more data to location data -->
+    <type name="Amasty\StorePickupWithLocator\Model\LocationProvider">
+        <plugin name="x247checkout_add_custom_location_to_data" type="X247Commerce\Checkout\Plugin\Model\LocationProvider" sortOrder="20" disabled="false" />
+    </type>
+    
+    <preference for="Magento\Checkout\Controller\Cart\Add" 
+        type="X247Commerce\Checkout\Controller\Cart\Add" />
+
 </config>

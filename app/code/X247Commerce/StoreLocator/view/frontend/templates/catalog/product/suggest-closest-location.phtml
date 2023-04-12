@@ -1,0 +1,34 @@
+<?php
+/**
+ * @var X247Commerce\StoreLocator\Block\Catalog\Product\SuggestClosestLocation $block
+ */
+?>
+<div class="closest-location-container">
+    <div class="closest-location_message"></div>
+    <div class="closest-location_title">
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "X247Commerce_StoreLocator/js/product/view/suggest-closest-location": {
+                "suggestClosestLocationAjaxUrl": "<?= $block->getSuggestClosestLocationAjaxUrl() ?>",
+                "currentProductSku": "<?= $block->getCurrentProductSku() ?>",
+                "currentProductType": "<?= $block->getCurrentProductType() ?>",
+                "currentStoreLocationId": "<?= $block->getCurrentStoreLocationId() ?>"
+            }
+        }
+    }
+</script>
+<script id="closest-location-title" type="text/x-magento-template">
+    <div class="wrapper">
+        <div><?= __('The nearest location has this product and items in cart!')?></div>
+        <a href="<%- data.href %>"><%= data.name %></a>
+    </div>
+</script>
+<script>
+    window.suggestClosestLocationAjaxUrl = "<?= $block->getSuggestClosestLocationAjaxUrl() ?>";
+    window.currentProductSku = "<?= $block->getCurrentProductSku() ?>";
+    window.currentProductType = "<?= $block->getCurrentProductType() ?>";
+    window.currentStoreLocationId = "<?= $block->getCurrentStoreLocationId() ?>";
+</script>

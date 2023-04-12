@@ -1,11 +1,17 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <add id="X247Commerce_StoreLocator::deliveryarea"
-             title="Location Delivery Area"
+        <add id="X247Commerce_StoreLocator::menu"
+             title="Delivery Area"
              module="X247Commerce_StoreLocator"
-             sortOrder="50"
-             parent="Amasty_Storelocator::storelocator"
+             translate="title"
+             sortOrder="70"
+             resource="X247Commerce_StoreLocator::menu"/>
+        <add id="X247Commerce_StoreLocator::deliveryarea"
+             title="Location Delivery Area List"
+             module="X247Commerce_StoreLocator"
+             sortOrder="10"
+             parent="X247Commerce_StoreLocator::menu"
              action="deliveryarea/deliveryarea/index"
              resource="X247Commerce_StoreLocator::deliveryarea"
         />

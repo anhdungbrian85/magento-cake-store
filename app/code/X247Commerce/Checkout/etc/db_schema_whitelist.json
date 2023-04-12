@@ -6,7 +6,8 @@
     },
     "quote": {
         "column": {
-            "store_location_id": true
+            "store_location_id": true,
+            "delivery_type": true
         }
     },
     "amasty_amlocator_schedule": {

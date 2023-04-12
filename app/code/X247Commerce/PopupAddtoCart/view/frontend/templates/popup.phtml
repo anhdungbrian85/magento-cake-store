@@ -1,11 +1,12 @@
 <?php
-	$categoryCollection = $block->getCategoryCollection();
+	$categoryIds = $block->getCategoryIds();
 ?>
-<?php if ($categoryCollection != null && count($categoryCollection) > 0 ): ?>
+<?php if ($categoryIds != null && count($categoryIds) > 0 ): ?>
 	<div class="addtocart-sidebar">
 		<div class="addedtocart-wrapper">
 			<div class="suggest-products">
-				<?php foreach ($categoryCollection as $category): ?>
+				<?php foreach ($categoryIds as $categoryId): ?>
+					<?php $category = $block->getCategoryCollection($categoryId); ?>
 					<?php $productShowPopupOfCategory = $block->getProductShowPopupOfCategory($category->getId());?>
 					<div class="tab product-tab">
 						<div class="tab-title">

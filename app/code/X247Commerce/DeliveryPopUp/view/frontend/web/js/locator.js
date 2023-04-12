@@ -2,7 +2,6 @@ define([
     'jquery',
     'mage/url',
     'Amasty_Storelocator/js/model/states-storage',
-    'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'mage/translate',
     'Amasty_Storelocator/vendor/chosen/chosen.min',
     'Amasty_Storelocator/vendor/jquery.ui.touch-punch.min',
@@ -10,7 +9,7 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery/jquery-ui',
     'jquery-ui-modules/slider'
-], function ($, url, statesStorage, pickupDataResolver) {
+], function ($, url, statesStorage) {
     $.widget('mage.amLocator', {
         options: {},
         url: null,
@@ -56,7 +55,7 @@ define([
         bindSelectLocation: function() {
             let self = this;
             url.setBaseUrl(BASE_URL);
-            var redirectUrl = url.build('elebration-cakes/by-flavour-theme/click-collect-1-hour.html');
+            var redirectUrl = url.build('celebration-cakes/click-collect-1-hour.html');
 
             $(document).on('click', '.select-location', function() {
                 const location_id = $(this).data('location-id');
@@ -70,9 +69,8 @@ define([
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
-                    
+                    window.localStorage.setItem('delivery_type', delivery_type)
                     if (delivery_type != 2) {
-                        pickupDataResolver.storeId(location_id);
                         window.location.reload();
                     } else {
                         window.location.href = redirectUrl;
@@ -173,11 +171,11 @@ define([
                         window.location.reload();
                     }
                     
-                } else {
+                } else if (response.delivery_status == false) {
                     if ($('[name="delivery-type"]:checked').val() == 1) {
                         $('.delivery-popup.text').append(errorMessage);
                     }
-                    
+                } else {
                     response = JSON.parse(response);
                     self.options.jsonLocations = response;
                     self.getIdentifiers();
@@ -354,6 +352,13 @@ define([
             });
 
             self.mapContainer.find(this.selectors.resetSelector).on('click', this.resetMap.bind(this));
+            self.mapContainer.find('#delivery-type-premium').on('change', function(){
+                let value = self.mapContainer.find(self.selectors.addressSelector).val();
+                if(value.length > 0){
+                    self.mapContainer.find('.amlocator-wrapper .amlocator-stores-wrapper').html('');
+                    self.makeAjaxCall();
+                }
+            })
         },
 
         toggleFilters: function () {

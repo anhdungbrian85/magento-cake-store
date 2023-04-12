@@ -9,3 +9,11 @@ td.delivery {
 td.kiosks {
     background-color: #7dc242;
 }
+
+td.red-canceled {
+    background-color: rgb(255, 49, 49);
+}
+
+td.grey-printed {
+    background-color: rgb(161, 161, 161);
+}

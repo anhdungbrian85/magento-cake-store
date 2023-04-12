@@ -1,0 +1,38 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Store Locator for Magento 2
+ */
+/**
+ * @var \Amasty\Storelocator\Block\View\Schedule $block
+ * @var \Amasty\Storelocator\Model\Location $location
+ */
+$location = $block->getLocation();
+$workToday = $location->getWorkingTimeToday();
+?>
+
+<div class="amlocator-schedule-container">
+    <div class="amlocator-today"  data-amlocator-js="collapse-trigger">
+        <strong><?= $block->escapeHtml(__("Today's Opening Hours")); ?></strong>
+        <span class="amlocator-time">
+            <span><?= $block->escapeHtml($workToday); ?></span>
+            <span class="amlocator-arrow -down"></span>
+        </span>
+    </div>
+
+    <div class="amlocator-week" data-amlocator-js="collapse-content" id="schedule<?= (int)$location->getId(); ?>">
+        <div class="amlocator-schedule-table">
+            <?php foreach ($location->dayNames as $key => $item) {
+                $workingTime = $location->getWorkingTime($key);
+                ?>
+                <div class="amlocator-row">
+                    <?php foreach ($workingTime as $keyTime => $time) { ?>
+                        <span class="amlocator-cell -day"><?= $block->escapeHtml(__($keyTime)) ?></span>
+                        <span class="amlocator-cell -time"><?= $block->escapeHtml(__($time)) ?></span>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</div>

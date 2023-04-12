@@ -30,11 +30,8 @@ use Magento\Framework\App\Http\Context as HttpContext;
 class PopUp extends \Amasty\Storelocator\Block\Location
 {
  	protected FormKey       $formKey;
-
     protected PopUpHelper   $popupHelper;
-
     protected StoreLocationContextInterface $storeLocationContextInterface;
-
     protected HttpContext $httpContext;
 
     protected \Magento\Framework\App\Request\Http $request;
@@ -87,7 +84,7 @@ class PopUp extends \Amasty\Storelocator\Block\Location
  	}
 
     public function shouldShowPopup()
-    {
+    {        
         return !$this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID) && $this->popupHelper->isEnabledPopup() && (
             $this->request->getFullActionName() != "checkout_index_index"
         );

@@ -1,12 +1,15 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
-        <plugin name="configurable_character_limit" type="X247Commerce\Products\Plugin\ConfigurableProduct" sortOrder="1" />
+        <plugin name="x247commerce_products_configurable_plugin" type="X247Commerce\Products\Plugin\ConfigurableProduct" sortOrder="1" />
     </type>
     <type name="Magento\Framework\Console\CommandList">
        <arguments>
            <argument name="commands" xsi:type="array">
                <item name="assign_all_product_to_all_source" xsi:type="object">X247Commerce\Products\Console\AssignAllProductToAllSource</item>
+           </argument>
+           <argument name="commands" xsi:type="array">
+               <item name="change_product_attribute_set" xsi:type="object">X247Commerce\Products\Console\ChangeAttributeSet</item>
            </argument>
        </arguments>
    </type>

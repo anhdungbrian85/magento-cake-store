@@ -25,6 +25,8 @@ $ php bin/magento setup:upgrade
 ```
 
 ###Release Notes  
+Version 1.12.5, November 18, 2022  
+-Optimized the Magento Order Import process by increasing the imported XML file size limit.
 
 Version 1.12.4, July 14, 2022  
 -New Feature: Added the possibility of displaying Gift Messages in WeSupply Email templates via variables. This applies to Gift Messages added to the whole order, as well as those added to individual items.  

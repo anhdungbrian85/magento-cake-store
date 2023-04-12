@@ -66,7 +66,9 @@ class Developer extends \Magento\Framework\App\Helper\AbstractHelper
             $groupid   = posix_getegid();
             $groupinfo = posix_getgrgid($groupid);
 
-            return $groupinfo['name'];
+            if (is_array($groupinfo)) {
+                return $groupinfo['name'];
+            }
         }
 
         return '-';

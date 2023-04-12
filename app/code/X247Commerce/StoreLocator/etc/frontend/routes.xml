@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <router id="standard">
+        <route id="x247_storelocator" frontName="x247_storelocator">
+            <module name="X247Commerce_StoreLocator" />
+        </route>
+    </router>
+</config>

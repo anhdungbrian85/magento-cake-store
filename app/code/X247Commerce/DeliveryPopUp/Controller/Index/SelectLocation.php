@@ -37,7 +37,10 @@ class SelectLocation extends \Amasty\Storelocator\Controller\Index\Ajax
             return $resultJson->setData(['store_location_id' => $locationId]);
         }
         $resultJson = $this->resultJsonFactory->create();
-        return $resultJson->setData(['store_location_id' => 0]);
+        return $resultJson->setData([
+                                    'store_location_id' => 0,
+                                    'redirect_url' => $deliveryType == 2 ? $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB) . 'celebration-cakes/click-collect-1-hour.html'  : null
+                                ]);
 
     }
 }

@@ -5,12 +5,11 @@ namespace X247Commerce\Checkout\Model;
 use Amasty\Storelocator\Ui\DataProvider\Form\ScheduleDataProvider;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
-class TimeHandler
+class TimeHandler extends \Amasty\StorePickupWithLocator\Model\TimeHandler
 {
     public const START_TIME = '00:00';
     public const END_TIME = '24:00';
     public const DURATION_IN_SEC = 30 * 60;
-
     public const DATE_FORMAT = 'Ymd';
     public const TIME_FORMAT = 'H:i';
     public const DATE_FORMAT_FOR_SAVE = 'd-m-Y';
@@ -34,18 +33,15 @@ class TimeHandler
      * @param array $scheduleArray
      * @return array
      */
-    public function execute($scheduleArray, $interval)
+    public function execute($scheduleArray)
     {
         $result = [];
 
         foreach ($scheduleArray as $day => $storeTime) {
             if ($scheduleArray[$day][$day . '_status']) {
-                if ($storeTime[ScheduleDataProvider::OPEN_TIME][ScheduleDataProvider::HOURS] <= '12') {
-                    $from = '12' . ':' . $storeTime[ScheduleDataProvider::OPEN_TIME][ScheduleDataProvider::MINUTES];
-                } else {
-                    $from = $storeTime[ScheduleDataProvider::OPEN_TIME][ScheduleDataProvider::HOURS]
-                        . ':' . $storeTime[ScheduleDataProvider::OPEN_TIME][ScheduleDataProvider::MINUTES];
-                }
+                $from = ($storeTime[ScheduleDataProvider::OPEN_TIME][ScheduleDataProvider::HOURS] + 1)
+                    . ':' . $storeTime[ScheduleDataProvider::OPEN_TIME][ScheduleDataProvider::MINUTES];
+
                 $breakFrom = $storeTime[ScheduleDataProvider::START_BREAK_TIME][ScheduleDataProvider::HOURS]
                     . ':' . $storeTime[ScheduleDataProvider::START_BREAK_TIME][ScheduleDataProvider::MINUTES];
 
@@ -55,7 +51,7 @@ class TimeHandler
                 $to = ($storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::HOURS] - 1)
                     . ':' . $storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::MINUTES];
 
-                $result[$day] = $this->getTimeRange($from, $breakFrom, $breakTo, $to, $interval);
+                $result[$day] = $this->getTimeRange($from, $breakFrom, $breakTo, $to);
             }
         }
 
@@ -69,20 +65,20 @@ class TimeHandler
      * @param string $to
      * @return array
      */
-    private function getTimeRange($from, $breakFrom, $breakTo, $to, $interval)
+    private function getTimeRange($from, $breakFrom, $breakTo, $to)
     {
         $firstSegment = [];
         $secondSegment = [];
 
         if ($breakFrom == $breakTo && $breakFrom == self::START_TIME) {
-            return $this->generate($from, $to, $interval);
+            return $this->generate($from, $to);
         } else {
             for ($i = 0; $i < 2; $i++) {
                 if (!$this->isFirstSegmentDone) {
-                    $firstSegment = $this->generate($from, $breakFrom, $interval);
+                    $firstSegment = $this->generate($from, $breakFrom);
                     $this->isFirstSegmentDone = true;
                 } else {
-                    $secondSegment = $this->generate($breakTo, $to, $interval);
+                    $secondSegment = $this->generate($breakTo, $to);
                     $this->isFirstSegmentDone = false;
                 }
             }
@@ -96,7 +92,7 @@ class TimeHandler
      * @param string $endTime
      * @return array
      */
-    public function generate($startTime, $endTime, $interval)
+    public function generate($startTime, $endTime)
     {
         $arrayOfTimes = [];
         $step = 0;
@@ -105,12 +101,12 @@ class TimeHandler
         $endTime = strtotime($this->getDate() . ' ' . $endTime);
         $endTime = $endTime > $startTime ? $endTime : strtotime($this->getDate() . ' ' . self::END_TIME);
 
-        while ($startTime + $interval <= $endTime) {
+        while ($startTime + self::DURATION_IN_SEC <= $endTime) {
             $arrayOfTimes[$step]['fromInUnix'] = $startTime;
             $arrayOfTimes[$step]['label'] =
-                $this->convertTime($startTime) . ' - ' . $this->convertTime($startTime + $interval);
-            $arrayOfTimes[$step]['value'] = $startTime . '|' . ($startTime + $interval);
-            $startTime += $interval;
+                $this->convertTime($startTime);
+            $arrayOfTimes[$step]['value'] = $startTime . '|' . ($startTime + self::DURATION_IN_SEC);
+            $startTime += self::DURATION_IN_SEC;
             $arrayOfTimes[$step]['toInUnix'] = $startTime;
             $step++;
         }
@@ -146,7 +142,7 @@ class TimeHandler
      */
     public function getDateTimestamp($date = null)
     {
-        return $this->timezone->date($date, null, false)->getTimestamp();
+        return strtotime($this->timezone->date($date, null, true)->format("Y-m-d H:i:s"));
     }
 
     /**

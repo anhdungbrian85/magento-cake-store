@@ -5,8 +5,7 @@
     </table>
     <table name="quote" resource="default" engine="innodb">
         <column xsi:type="int" name="store_location_id" nullable="true" comment="Store Location ID"/>
+        <column xsi:type="smallint" name="delivery_type" nullable="true" comment="Delivery type"/>
     </table>
-    <table name="amasty_amlocator_schedule" resource="default" engine="innodb" comment="amasty_amlocator_schedule">
-        <column xsi:type="varchar" name="interval" nullable="false" default="60" length="255" comment="Schedule Interval"/>
-    </table>
+    
 </schema>

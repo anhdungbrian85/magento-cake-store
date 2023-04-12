@@ -1,14 +1,14 @@
 <?php 
 /** @var $block \X247Commerce\DeliveryPopUp\Block\Location $block */ 
 ?>
-<?php if ($block->shouldShowPopup()): ?>
-<div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal">
+
+<div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal" >
     <div class="amlocator-map-container delivery-popup" id="map-container-delivery-popup">
         <div class="title">
-            <span><?= __("FIND YOUR LOCAL CAKE BOX")?></span>
+            <span><?= __("FIND YOUR NEAREST STORE")?></span>
         </div>
         <div class="amlocator-wrapper ">
-            <div class="delivery-popup text"><span><?= __("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque")?></span>
+            <div class="delivery-popup text"><span><?= __("Simply enter your postcode or location and let us know if you want to collect in-store or arrange delivery.")?></span>
             </div>
             <input type="text" value="" class="amlocator-text postcode"
                    name="address" placeholder="<?= $block->escapeHtml(__('Enter postcode, address')); ?>"
@@ -131,4 +131,3 @@
         }
     }
 </script>
-<?php endif ?>

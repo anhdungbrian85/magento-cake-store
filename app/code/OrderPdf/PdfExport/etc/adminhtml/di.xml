@@ -1,5 +1,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Backend\Block\Widget\Button\Toolbar">
-        <plugin name="OrderPdf_PdfExport::pluginBefore" type="OrderPdf\PdfExport\Plugin\PluginBefore" />
+    <!-- <type name="Magento\Backend\Block\Widget\Button\Toolbar">
+        <plugin name="OrderPdf_PdfExport::add_print_order_pdf_button" type="OrderPdf\PdfExport\Plugin\PluginBefore" />
+    </type> -->
+    <type name="Magento\Backend\Block\Widget\Button\ToolbarInterface">
+        <plugin name="add_print_order_pdf_button" type="OrderPdf\PdfExport\Plugin\Button\ToolbarPlugin"/>
     </type>
 </config>

@@ -115,12 +115,12 @@ define(
                     }
 
                     if (!availableRate) {
-                    	if (window.checkoutConfig.deliveryType ==  '0') {
+                    	if (window.checkoutConfig.deliveryType ==  '0' || window.checkoutConfig.deliveryType ===  '2') {
                     		availableRate = _.find(ratesData, function (rate) {
 	                            return rate['carrier_code'] == 'amstorepickup';
 	                        });
                     	}
-                    	if (window.checkoutConfig.deliveryType ==  '1' || window.checkoutConfig.deliveryType ===  '2') {
+                    	if (window.checkoutConfig.deliveryType ==  '1') {
                     		availableRate = _.find(ratesData, function (rate) {
 	                            return rate['carrier_code'] == 'flatrate';
 	                        });

@@ -80,6 +80,7 @@ class Save extends \Magento\User\Controller\Adminhtml\User implements HttpPostAc
     {
         $userId = (int)$this->getRequest()->getParam('user_id');
         $data = $this->getRequest()->getPostValue();
+        
         if (array_key_exists('form_key', $data)) {
             unset($data['form_key']);
         }
@@ -127,7 +128,7 @@ class Save extends \Magento\User\Controller\Adminhtml\User implements HttpPostAc
             $currentUser->performIdentityCheck($data[$currentUserPasswordField]);
             $model->save();
 
-            // edit admin_user_source_link table
+            // edit admin_user_source_link table, link user to source
             $this->saveAdminSourceLink($model, $data);
 
             $this->messageManager->addSuccess(__('You saved the user.'));
@@ -175,13 +176,14 @@ class Save extends \Magento\User\Controller\Adminhtml\User implements HttpPostAc
         $this->_redirect('adminhtml/*/edit', $arguments);
     }
 
-
+    /**
+     * Get id of user-source link from table admin_user_source_link
+     *
+     * @param User Id
+     * @return array $data
+     */
    public function getLinkCollection($userId)
    {
-       // $collection = $this->adminSourceCollection->create()
-       //   ->addAttributeToSelect('*')
-       //   ->addFieldToFilter('user_id', ['eq' => $userId]);
-
         $collection = $this->adminSourceFactory->create()->getCollection()->addFieldToFilter('user_id', array(
             'eq' => $userId
         ));
@@ -190,30 +192,35 @@ class Save extends \Magento\User\Controller\Adminhtml\User implements HttpPostAc
             $data[] = $item->getEntityId();
         }
      
-        return $data;
-     
+        return $data;     
     }
 
-    public function saveAdminSourceLink($model, $data)
+    /**
+     * Save to table admin_user_source_link
+     *
+     * @param \Magento\User\Model\User $model
+     * @param post data
+     * @return void
+     */
+    public function saveAdminSourceLink($modelUser, $data)
     {
-        $userId = $model->getUserId();
+        $userId = $modelUser->getUserId();
         $collectionLinkId = $this->getLinkCollection($userId);
-        $adminSourceLink = $this->adminSourceFactory->create();
 
-        if ($collectionLinkId) {
+        if ($collectionLinkId) {            
             foreach ($collectionLinkId as $linkId) {
-                $modelLink = $adminSourceLink->load($linkId);
+                $modelLink = $this->adminSourceFactory->create()->load($linkId);
                 $modelLink->delete();
             }
         }
 
-        if (isset($data['source'])) {
+        if (isset($data['source'])) {            
             foreach ($data['source'] as $source_code) {
                 $dataSave = [];
                 $dataSave['user_id'] = $userId;
                 $dataSave['source_code'] = $source_code;
 
-                $adminSourceLink->setData($dataSave);
+                $adminSourceLink = $this->adminSourceFactory->create()->setData($dataSave);
                 $adminSourceLink->save();
             }
         }

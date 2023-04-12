@@ -47,30 +47,21 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $this->storeLocationContextInterface->setDeliveryType($deliveryType);
         $destCode = $this->getRequest()->getParam('dest');
 
-        // $deliveryStatus = $this->deliveryAreaHelper->checkInputPostcode($destCode);
         $resultJson = $this->resultJsonFactory->create();
-        if ($deliveryType == 1 || $deliveryType == 2) {
-            // if ($deliveryStatus) {
-                $location = $this->getClosestStoreLocation();
-                if ($location->getId()) {
-                    if ($location->getEnableDelivery() == 0) {
-                        return $resultJson->setData(['enable_delivery' => 0]);
-                    }
-
-                    $this->storeLocationContextInterface->setStoreLocationId($location->getId());
-
-                    return $resultJson->setData([
-                            'store_location_id' => $location->getId(),
-                            'redirect_url' => $deliveryType == 2 ? $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB) . 'celebration-cakes/click-collect-1-hour.html'  : null
-                        ]);
-                }   else {
-                    $this->getCloseStoreLocations();
-                }
-            // } else {
+        if ($deliveryType == 1) {
             
-            //     $this->getCloseStoreLocations();
-            //     // return $resultJson->setData(['delivery_status' => false]);
-            // }
+            $location = $this->getClosestStoreLocation($destCode);
+            if ($location && $location->getId()) {
+                if ($location->getEnableDelivery() == 0) {
+                    return $resultJson->setData(['enable_delivery' => 0]);
+                }
+
+                $this->storeLocationContextInterface->setStoreLocationId($location->getId());
+
+                return $resultJson->setData(['store_location_id' => $location->getId()]);
+            }   else {
+                return $resultJson->setData(['delivery_status' => false]);
+            }
         } else {
             $this->getCloseStoreLocations();
         }
@@ -89,10 +80,20 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         return $this->getResponse()->setBody($block->getJsonLocations());
     }
 
-    public function getClosestStoreLocation()
-    {
+    public function getClosestStoreLocation($postcode)
+    {   
+        if (!$postcode) {
+            return false;
+        }
         $needToPrepareCollection = false;
         $location = $this->locationCollectionFactory->create()->addFieldToFilter('enable_delivery', ['eq' => 1]);
+        $deliverLocations = $this->deliveryAreaHelper->getDeliverLocations($postcode);
+        $deliverLocationsIds = [];
+
+        foreach ($deliverLocations as $deliverLocation) {
+            $deliverLocationsIds[] = $deliverLocation->getStoreId();
+        }
+        $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
         $location->applyDefaultFilters();
         return $location->getFirstItem();
     }

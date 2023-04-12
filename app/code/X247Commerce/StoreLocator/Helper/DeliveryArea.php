@@ -9,6 +9,7 @@ use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Backend\Helper\Data;
 use Magento\Framework\App\ResourceConnection;
+use X247Commerce\StoreLocator\Model\ResourceModel\DeliveryArea\CollectionFactory as DeliveryAreaCollection; 
 
 class DeliveryArea extends AbstractHelper
 {
@@ -19,13 +20,15 @@ class DeliveryArea extends AbstractHelper
     protected $backendHelper;
     protected $resource;
     protected $connection;
+    protected $deliveryAreaCollection;
 
     public function __construct(
         Context $context,
         StoreManagerInterface $storeManager,
         StateInterface $state,
         Data $backendHelper,
-        ResourceConnection $resource
+        ResourceConnection $resource,
+        DeliveryAreaCollection $deliveryAreaCollection
     ) 
     {
         parent::__construct($context);
@@ -35,6 +38,7 @@ class DeliveryArea extends AbstractHelper
         $this->backendHelper = $backendHelper;
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
+        $this->deliveryAreaCollection = $deliveryAreaCollection;
     }
 
     public function getListDeliveryArea()
@@ -84,5 +88,33 @@ class DeliveryArea extends AbstractHelper
             }
         }
         return false;
+    }
+
+    public function getDeliverLocations($postcode)
+    {
+        $isFullyPostcode = strpos(trim($postcode), ' ') !== false;
+        $prefix = $isFullyPostcode ? explode(' ', $postcode)[0] : $postcode;
+
+        $blDeliveryArea = $this->deliveryAreaCollection->create();
+        $blDeliveryArea->getSelect()
+            ->where("
+                ((status = 0 AND matching_strategy = 'Match Exact' AND postcode = '$postcode')
+                OR (status = 0 AND matching_strategy = 'Match Prefix' AND postcode = '$prefix'))
+            ");
+        $blackListAreas = $blDeliveryArea->getAllIds();
+
+        $wlDeliveryArea = $this->deliveryAreaCollection->create();
+
+        if (!empty($blackListAreas)) {
+            $wlDeliveryArea->addFieldtoFilter(
+                'id', ['nin' => $blackListAreas] // Ignore black list
+            );
+        }
+        // Add whitelist filter
+        $wlDeliveryArea->getSelect()->where("
+            ((status = 1 AND matching_strategy = 'Match Exact' AND postcode = '$postcode')
+            OR (status = 1 AND matching_strategy = 'Match Prefix' AND postcode = '$prefix'))
+        ");
+        return $wlDeliveryArea;
     }
 }

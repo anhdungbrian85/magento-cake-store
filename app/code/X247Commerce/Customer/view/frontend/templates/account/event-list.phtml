@@ -1,5 +1,5 @@
 <?php $listEvent = $block->getEventListCustomer();
-      $yearPresent = $block->getYearPresent();
+      $listYear = $block->getListYear();
 ?>
 
 <div class="event-list-container" id="event-list-container">
@@ -56,7 +56,13 @@
                     <select name="month" id="month">
                         <option value=""><?= __('Select Month')?></option>
                     </select>
-                    <input type="number" name="year" id="year" min="<?= ((int)$yearPresent - 50) ?>" max="<?= $yearPresent ?>"/>
+                    <select name="year" id="year">
+                        <?php if (count($listYear) > 0): ?>
+                            <?php foreach($listYear as $year): ?>
+                                <option value="<?= $year?>"><?= $year?></option>
+                            <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
                 </div>
                 <div class="occassion-area">
                     <div class="label occassion"><span><?= __('Occassion')?></span></div>

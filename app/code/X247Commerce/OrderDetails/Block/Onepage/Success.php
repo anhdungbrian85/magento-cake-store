@@ -8,25 +8,29 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
     protected $renderer;
     protected $_productRepository;
     protected $_categoryCollectionFactory;
+    protected $orderAmastyFactory;
+    protected $orderInterface;
+    protected $connfigTimeDelivery;
+    protected $deliveryAmastyFactory;
 
-    /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Sales\Model\Order\Config $orderConfig
-     * @param \Magento\Framework\App\Http\Context $httpContext
-     * @param array $data
-     */
     public function __construct(
-    \Magento\Framework\View\Element\Template\Context $context,
-    \Magento\Checkout\Model\Session $checkoutSession,
-    \Magento\Sales\Model\Order\Config $orderConfig,
-    \Magento\Framework\App\Http\Context $httpContext,
-    \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-    \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
-    \Magento\Catalog\Model\ProductRepository $productRepository,
-    \Magento\Sales\Model\Order\Address\Renderer $renderer, array $data = []
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Sales\Model\Order\Config $orderConfig,
+        \Magento\Framework\App\Http\Context $httpContext,
+        \Magento\Sales\Api\Data\OrderInterface $orderInterface,
+        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
+        \Magento\Catalog\Model\ProductRepository $productRepository,
+        \Amasty\StorePickupWithLocator\Model\ResourceModel\Order\CollectionFactory $orderAmastyFactory,
+        \Amasty\CheckoutDeliveryDate\Model\ResourceModel\Delivery\CollectionFactory $deliveryAmastyFactory,
+        \Amasty\CheckoutDeliveryDate\Model\ConfigProvider $connfigTimeDelivery,
+        \Magento\Sales\Model\Order\Address\Renderer $renderer,
+        array $data = []
     ) {
         $this->orderInterface = $orderInterface;
+        $this->orderAmastyFactory = $orderAmastyFactory;
+        $this->connfigTimeDelivery = $connfigTimeDelivery;
+        $this->deliveryAmastyFactory = $deliveryAmastyFactory;
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
         $this->_productRepository = $productRepository;
         $this->renderer = $renderer;
@@ -35,12 +39,52 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         );
     }
 
-    public function getOrder($id) {
+    public function getOrder($id) 
+    {    
         return $this->orderInterface->loadByIncrementId($id);
+    }
+
+    public function getDeliveryDateTime($order)
+    {
+        if ($order->getShippingMethod() == 'amstorepickup_amstorepickup') {
+            return $this->orderAmastyFactory->create()
+                        ->addFieldToSelect(['time_from', 'date'])
+                        ->addFieldToFilter('order_id', ['eq' => $order->getId()])
+                        ->getFirstItem()
+                        ->getData();
+        } else {
+            return $this->deliveryAmastyFactory->create()
+                        ->addFieldToSelect(['time', 'date'])
+                        ->addFieldToFilter('order_id', ['eq' => $order->getId()])
+                        ->getFirstItem()
+                        ->getData();
+        }
+    }
+
+    public function getFormatTime($time)
+    {
+        return gmdate("g:i A", $time);
+    }
+
+    public function getFormatDate($date)
+    {
+        return date('d/m/Y', strtotime($date));
     }
 
     public function getFormatedAddress($address) {
         return $this->renderer->format($address, 'html');
+    }
+
+    public function getDeliveryHours($deliveryDayTime)
+    {
+        if (array_key_exists('time', $deliveryDayTime)) {
+            $key = $deliveryDayTime['time'];
+            $arrayHoursValue = $this->connfigTimeDelivery->getDeliveryHours();
+    
+            return $arrayHoursValue[array_search($key, array_column($arrayHoursValue, 'value'))]['label'];
+        }
+
+        return '--';
     }
 
     public function getPaymentMethodtitle($order) {

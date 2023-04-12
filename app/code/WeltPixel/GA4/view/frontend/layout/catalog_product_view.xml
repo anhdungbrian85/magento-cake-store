@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block
+                ifconfig="weltpixel_ga4/serverside_measurement/enable"
+                class="Magento\Catalog\Block\Product\View"
+                name="weltpixel-ga4-server-view_item"
+                template="WeltPixel_GA4::serverside/product/view.phtml"
+            />
+        </referenceContainer>
+    </body>
+</page>
