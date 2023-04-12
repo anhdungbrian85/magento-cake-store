@@ -429,6 +429,39 @@ class LocatorSourceResolver
         return $locationData;
     }
 
+    public function validateOutOfStockStatusOfProduct($currentLocationId, $productSku)
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/add_to_cart.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Starting debug validateOutOfStockStatusOfProduct function');
+        $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
+        $inventorySourceTbl = $this->resource->getTableName('inventory_source');
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $getCurrentSourceDataQuery = $this->connection->select()
+            ->from($locationSourceLinkTbl, ['*'])
+            ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $locationSourceLinkTbl.source_code")
+            ->where("location_id = ?", $currentLocationId);
+        $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
+        if ($currentSourceData) {
+            try {
+                $getOutStockStatusOfProduct = $this->connection->select()->from($inventorySourceItemTbl, ["*"])
+                    ->where('sku = ?', $productSku)
+                    ->where("$inventorySourceItemTbl.source_code = ?", $currentSourceData['source_code']);
+                $logger->info('$getOutStockStatusOfProduct sql: ' . $getOutStockStatusOfProduct);
+                $inventorySourceItemRes = $this->connection->fetchRow($getOutStockStatusOfProduct);
+                $logger->info('Starting debug validateOutOfStockStatusOfProduct function');
+                $logger->info('Data::' . print_r($inventorySourceItemRes, true));
+                return $inventorySourceItemRes['status'];
+            } catch (\Exception $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     public function calculateDistance($lat1, $lon1, $lat2, $lon2) {
         if (($lat1 == $lat2) && ($lon1 == $lon2)) {
             return 0;

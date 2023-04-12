@@ -22,7 +22,7 @@ define([
                 simpleSku = this.options.jsonConfig.skus[products.slice().shift()];
                 let data = {
                     currentProductSku : window.currentProductSku,
-                    currentProductType: window.currentProductType
+                    currentProductType: simpleSku
                 };
 
                 $.ajax({
@@ -42,7 +42,7 @@ define([
                                     name: result.closest_location.name
                                 }
                             });
-                            $('.closest-location_title').append(closestLocationHtml);
+                            $('.closest-location_title').html(closestLocationHtml);
                         } else {
                             $('.closest-location_message').text(result.message);
                         }
