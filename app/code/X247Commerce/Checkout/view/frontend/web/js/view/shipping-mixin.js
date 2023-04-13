@@ -166,10 +166,7 @@ define(
                         }
                     }, this);
                     
-                    $("[name='shippingAddress.custom_attributes.kl_sms_consent']").clone().appendTo(".fieldset.address[data-form='billing-new-address']");
-                    if (this.isCollection()) {
-                        $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
-                    } else {
+                    if (!this.isCollection()) {
                         $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
                     }
                 },
@@ -247,14 +244,11 @@ define(
 
                 selectShippingMethod: function (method) {
                     if (method) {
-                        if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
-                            if (!$("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").length) {
-                                $("[name='shippingAddress.custom_attributes.kl_sms_consent']").clone().appendTo(".fieldset.address[data-form='billing-new-address']");
-                            }
-                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
+                        if (method['carrier_code'] && method['carrier_code'] !== 'amstorepickup') {
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
                             locationContext.deliveryType(quote.getDeliveryType())
                         }   else {
-                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
                             locationContext.deliveryType(1) 
                         }
                     }
