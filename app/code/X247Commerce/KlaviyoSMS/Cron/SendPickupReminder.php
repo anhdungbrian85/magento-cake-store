@@ -37,10 +37,17 @@ class SendPickupReminder
 		$result = $connection->fetchAll($select);
 		foreach ($result as $order) {		
 			$orderId = $order['order_id']; // Replace with the order ID you want to retrieve
+			$store_id = $order['store_id']; 
+			$collectionTime = date('H:i:s',$order['time_from']); 
+			
 			try {				
 				$orderDetails = $this->orderRepository->get($orderId);
 				$orderData = $orderDetails->getData();				
 				if($orderData['kl_sms_consent'] == '"1"' && $orderData['sms_reminder'] != '1'){
+					$selectStore = $connection->select()
+						->from('amasty_amlocator_location')
+						->where('id = ?', $store_id);
+					$resultStore = $connection->fetchAll($selectStore);
 				
 					$billingAddress = $orderDetails->getBillingAddress();				
 					$telephone = $billingAddress->getTelephone();			
@@ -61,14 +68,20 @@ class SendPickupReminder
 							"$email": "'.$orderData['customer_email'].'",
 							"$phone_number":"'.$telephone.'",
 							"$country":"United Kingdom",
-							"$pickup_date":"'.date('Y-m-d').'"
+							"$pickup_date":"'.date('Y-m-d').'T'.$collectionTime.'"
 						  },
 						  "metric": {
 							"name": "Delivery date",
 							"service": "'.date('Y-m-d').'" 
 						  },
 						  "properties": {                
-							"OrderNumber": "'.$orderData['increment_id'].'"							
+							"OrderNumber": "'.$orderData['increment_id'].'",
+							"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
+							"CollectionDate": "'.date('Y-m-d').'",						
+							"CollectionTime": "'.$collectionTime.'",							
+							"StoreName": "'.$resultStore[0]['name'].'",							
+							"StoreAddress": "'.$resultStore[0]['address'].'",							
+							"StorePostcode": "'.$resultStore[0]['zip'].'"						
 						  },
 						  "value": '.$orderData['grand_total'].',
 						  "unique_id": "'.$orderData['increment_id'].'" 
@@ -94,6 +107,9 @@ class SendPickupReminder
 		$resultDelivery = $connection->fetchAll($selectDelivery);
 		foreach ($resultDelivery as $orderDelivery) {		
 			$orderDeliveryId = $orderDelivery['order_id']; // Replace with the order ID you want to retrieve
+			$orderDeliveryTime = $orderDelivery['time']; 
+			$orderDeliveryDate = $orderDelivery['date']; 
+			
 			try {				
 				$orderDetailDelivery = $this->orderRepository->get($orderDeliveryId);
 				$orderDeliveryData = $orderDetailDelivery->getData();				
@@ -118,14 +134,17 @@ class SendPickupReminder
 							"$email": "'.$orderDeliveryData['customer_email'].'",
 							"$phone_number":"'.$delierytelephone.'",
 							"$country":"United Kingdom",
-							"$pickup_date":"'.date('Y-m-d').'"
+							"$pickup_date":"'.date('Y-m-d').'T'.$orderDeliveryTime.':00:00"
 						  },
 						  "metric": {
 							"name": "Delivery date",
 							"service": "'.date('Y-m-d').'" 
 						  },
 						  "properties": {                
-							"OrderNumber": "'.$orderDeliveryData['increment_id'].'"							
+							"OrderNumber": "'.$orderDeliveryData['increment_id'].'",
+							"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
+							"DeliveryDate": "'.date('Y-m-d').'",							
+							"DeliveryTime": "'.$orderDeliveryTime.':00:00"							
 						  },
 						  "value": '.$orderDeliveryData['grand_total'].',
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
