@@ -151,7 +151,7 @@ class SendPickupReminder
 						}
 					  }
 					}';	
-					$this->logger->info($klaviyoDelieryApiParams)					
+					$this->logger->info($klaviyoDelieryApiParams);				
 					$this->sendRequest($klaviyoDelieryApiParams);
 					$orderDetailDelivery->setSmsReminder('1');
 					$orderDetailDelivery->save();
