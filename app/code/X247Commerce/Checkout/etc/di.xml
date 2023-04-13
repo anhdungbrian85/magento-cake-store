@@ -21,10 +21,6 @@
         <plugin name="change_format_date" type="X247Commerce\Checkout\Plugin\Model\PickupDate" disabled="false"  />
     </type>
 
-    <type name="Amasty\CheckoutDeliveryDate\Model\GuestDeliveryInformationManagement">
-        <plugin name="change_format_date_guest_delivery" type="X247Commerce\Checkout\Plugin\Model\GuestDeliveryInformationManagement" disabled="false"  />
-    </type>
-
      <type name="Amasty\CheckoutDeliveryDate\Model\DeliveryInformationManagement">
         <plugin name="change_format_date_delivery" type="X247Commerce\Checkout\Plugin\Model\DeliveryInformationManagement" disabled="false"  />
     </type>
