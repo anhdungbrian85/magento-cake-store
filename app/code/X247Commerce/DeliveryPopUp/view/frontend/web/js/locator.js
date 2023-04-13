@@ -352,7 +352,7 @@ define([
             });
 
             self.mapContainer.find(this.selectors.resetSelector).on('click', this.resetMap.bind(this));
-            self.mapContainer.find('#delivery-type-premium').on('change', function(){
+            self.mapContainer.find('[name="delivery-type"]').on('change', function(){
                 let value = self.mapContainer.find(self.selectors.addressSelector).val();
                 if(value.length > 0){
                     self.mapContainer.find('.amlocator-wrapper .amlocator-stores-wrapper').html('');
