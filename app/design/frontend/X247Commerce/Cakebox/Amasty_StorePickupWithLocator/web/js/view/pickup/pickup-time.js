@@ -8,8 +8,9 @@ define([
     'Magento_Customer/js/customer-data',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+    'locationContext',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (ko, $, Component, customerData, pickup, pickupDataResolver) {
+], function (ko, $, Component, customerData, pickup, pickupDataResolver, locationContext) {
     'use strict';
 
     return Component.extend({
@@ -126,9 +127,8 @@ define([
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
                 filteredIntervals;
-
             filteredIntervals = intervals.filter(function (item) {
-                return item.fromInUnix > currentStoreTime + this.cartProductsDelay
+                return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
                     // && item.toInUnix <= this.sameDayCutoffTime;
             }.bind(this));
 

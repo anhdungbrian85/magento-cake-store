@@ -71,6 +71,7 @@ class CheckoutLocationParams
         return [
             'storeLocationId' => $this->storeLocationContext->getStoreLocationId(), 
             'deliveryType' => $this->storeLocationContext->getDeliveryType(),
+            'initLeadDeliveryValue' =>  $this->getInitLeadDeliveryValue(),
             'amastySelectedPickup' => [ 
                 'am_pickup_curbside' => [],
                 'am_pickup_date' => $pickupQuote->getDate(),
@@ -136,4 +137,18 @@ class CheckoutLocationParams
     {
         return $this->urlBuilder->getUrl('contact');
     }
+
+    private function getInitLeadDeliveryValue()
+    {
+        $quote = $this->checkoutSession->getQuote();
+        $leadDelivery = 0;
+        foreach ($quote->getAllItems() as $item) {
+            if ($leadDelivery < $item->getProduct()->getData('lead_delivery')) {
+                $leadDelivery = $item->getProduct()->getData('lead_delivery');
+            }
+        }
+        return $leadDelivery;
+    }
+
+
 }
