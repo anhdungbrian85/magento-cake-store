@@ -165,6 +165,10 @@ define(
                             this.validateAndSaveIfChanged();
                         }
                     }, this);
+                    
+                    if (!this.isCollection()) {
+                        $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
+                    }
                 },
 
                 /**
@@ -240,9 +244,11 @@ define(
 
                 selectShippingMethod: function (method) {
                     if (method) {
-                        if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
+                        if (method['carrier_code'] && method['carrier_code'] !== 'amstorepickup') {
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").hide();
                             locationContext.deliveryType(quote.getDeliveryType())
                         }   else {
+                            $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent']").show();
                             locationContext.deliveryType(1) 
                         }
                     }
