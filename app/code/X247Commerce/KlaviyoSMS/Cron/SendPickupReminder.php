@@ -68,7 +68,7 @@ class SendPickupReminder
 							"$email": "'.$orderData['customer_email'].'",
 							"$phone_number":"'.$telephone.'",
 							"$country":"United Kingdom",
-							"$pickup_date":"'.date('Y-m-d').'T'.$collectionTime.'"
+							"$pickup_date":"'.date('Y-m-d').'"
 						  },
 						  "metric": {
 							"name": "Delivery date",
@@ -83,7 +83,7 @@ class SendPickupReminder
 							"StoreAddress": "'.$resultStore[0]['address'].'",							
 							"StorePostcode": "'.$resultStore[0]['zip'].'"						
 						  },
-						  "value": '.$orderData['grand_total'].',
+						  "value": '.date('Y-m-d').',
 						  "unique_id": "'.$orderData['increment_id'].'" 
 						}
 					  }
@@ -134,7 +134,7 @@ class SendPickupReminder
 							"$email": "'.$orderDeliveryData['customer_email'].'",
 							"$phone_number":"'.$delierytelephone.'",
 							"$country":"United Kingdom",
-							"$pickup_date":"'.date('Y-m-d').'T'.$orderDeliveryTime.':00:00"
+							"$pickup_date":"'.date('Y-m-d').'"
 						  },
 						  "metric": {
 							"name": "Delivery date",
@@ -146,7 +146,7 @@ class SendPickupReminder
 							"DeliveryDate": "'.date('Y-m-d').'",							
 							"DeliveryTime": "'.$orderDeliveryTime.':00:00"							
 						  },
-						  "value": '.$orderDeliveryData['grand_total'].',
+						  "value": '.date('Y-m-d').',
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
 						}
 					  }
