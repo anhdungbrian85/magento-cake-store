@@ -83,11 +83,12 @@ class SendPickupReminder
 							"StoreAddress": "'.$resultStore[0]['address'].'",							
 							"StorePostcode": "'.$resultStore[0]['zip'].'"						
 						  },
-						  "value": '.date('Y-m-d').',
+						  "value": '.$orderDeliveryData['grand_total'].',
 						  "unique_id": "'.$orderData['increment_id'].'" 
 						}
 					  }
 					}';	   
+					$this->logger->info($klaviyoApiParams);
 					$this->sendRequest($klaviyoApiParams);
 					$orderDetails->setSmsReminder('1');
 					$orderDetails->save();
@@ -146,7 +147,7 @@ class SendPickupReminder
 							"DeliveryDate": "'.date('Y-m-d').'",							
 							"DeliveryTime": "'.$orderDeliveryTime.':00:00"							
 						  },
-						  "value": '.date('Y-m-d').',
+						  "value": '.$orderDeliveryData['grand_total'].',
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
 						}
 					  }
