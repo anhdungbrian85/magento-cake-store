@@ -1,10 +1,9 @@
 <?php
 
-namespace X247Commerce\Products\Plugin\Magento\Catalog\Ui\DataProvider\Product\Form\Modifier;
+namespace X247Commerce\Products\Plugin\Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier;
 
-class AttributeSet
+class Composite
 {
-
     protected $request;
 
     protected $adminSession;
@@ -29,8 +28,9 @@ class AttributeSet
         if ($roleId == 1 || $this->request->getParam('id') == NULL) {
             return $result;
         }
-        if (isset($result['attribute_set_id']['arguments']['data']['config'])) {
-            $result['attribute_set_id']['arguments']['data']['config']['visible'] = false;
+
+        if (isset($result['downloadable']['arguments']['data']['config'])) {
+            $result['downloadable']['arguments']['data']['config']['visible'] = false;
         }
 
         return $result;

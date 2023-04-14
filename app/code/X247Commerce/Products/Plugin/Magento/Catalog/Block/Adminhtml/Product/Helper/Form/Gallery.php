@@ -1,8 +1,8 @@
 <?php
 
-namespace X247Commerce\Products\Plugin\Magento\Catalog\Ui\DataProvider\Product\Form\Modifier;
+namespace X247Commerce\Products\Plugin\Magento\Catalog\Block\Adminhtml\Product\Helper\Form;
 
-class AttributeSet
+class Gallery
 {
 
     protected $request;
@@ -22,17 +22,13 @@ class AttributeSet
      * @param $result
      * @return mixed
      */
-    public function afterModifyMeta($subject, $result)
+    public function afterToHtml($subject, $result)
     {
         $roleData = $this->adminSession->getUser()->getRole()->getData();
         $roleId = (int) $roleData['role_id'];
         if ($roleId == 1 || $this->request->getParam('id') == NULL) {
             return $result;
         }
-        if (isset($result['attribute_set_id']['arguments']['data']['config'])) {
-            $result['attribute_set_id']['arguments']['data']['config']['visible'] = false;
-        }
-
-        return $result;
+        return $result = __('This action not apply for staff role');
     }
 }
