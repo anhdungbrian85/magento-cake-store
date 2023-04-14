@@ -46,6 +46,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
 
     public function execute(EventObserver $observer)
     {
+         
         if ($locationId = $this->storeLocationContext->getStoreLocationId()) {
             try {
                 $quote = $this->checkoutSession->getQuote()
@@ -82,18 +83,48 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     if (!$pickupQuote->getId()) {
                         $pickupQuote = $this->pickupQuoteFactory->create();
                     }
-
+                    $leadDelivery = $this->getInitLeadDeliveryValue();
                     $today = $this->timezone->date(new \DateTime('now'));
-
                     $pickupDate = $today ;
-                    $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
 
+                    $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
+                    
                     if ($workingTime) {
-                        $openTime = explode(' - ', array_shift($workingTime))[0];
+                        $openTime = explode(' - ', array_values($workingTime)[0])[0];
+                        $closeTime = explode(' - ', array_values($workingTime)[0])[1];
                     }   else {
                         $openTime = '10:00';
+                        $closeTime = '20:00';
                     }
+
+                    $this->logger->info('xxxxxxxxxxxxxxxxx:'. $openTime);
+                    $this->logger->info('xxxxxxxxxxxxxxxxx:'. $closeTime);
+                    $nowH = $pickupDate->format('H');
+                    $nowM = $pickupDate->format('i');
+
+                    if (1 < $nowM && $nowM <= 30) {
+                        $nearHalfTime = "$nowH:30";
+                        $openTime = $nearHalfTime;
+                    }  
+                    if ($nowM > 30) {
+                        $nowH++;
+                        $nearHalfTime = "$nowH:00";
+                        $openTime = $nearHalfTime;
+                    }
+
                     $openTime = strtotime($pickupDate->format('Y-m-d ') .$openTime);
+                    $closeTime = strtotime($pickupDate->format('Y-m-d ') .$closeTime);
+                    
+                    if ($openTime >= $closeTime) {
+                        $pickupDate = $this->timezone->date(new \DateTime('+1 day'));
+                        $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
+                    
+                        if ($workingTime) {
+                            $openTime = explode(' - ', array_values($workingTime)[0])[0] + 3600;
+                        }   else {
+                            $openTime = '11:00';
+                        }
+                    }
 
                     $pickupQuote->addData([
                         'address_id' => $shippingAddress->getId(),
@@ -101,7 +132,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                         'store_id' => $location->getId(),
                         'date' => $pickupDate->format('Y-m-d'),
                         'time_from' => $openTime,
-                        'time_to' =>  (int) $openTime + 1800 // 30mins
+                        'time_to' =>  (int) $openTime
 
                     ]);
                     
@@ -123,5 +154,17 @@ class UpdateStoreLocationSelected implements ObserverInterface
         }
         
         return $this;
+    }
+
+    private function getInitLeadDeliveryValue()
+    {
+        $quote = $this->checkoutSession->getQuote();
+        $leadDelivery = 0;
+        foreach ($quote->getAllItems() as $item) {
+            if ($leadDelivery < $item->getProduct()->getData('lead_delivery')) {
+                $leadDelivery = $item->getProduct()->getData('lead_delivery');
+            }
+        }
+        return $leadDelivery;
     }
 }
