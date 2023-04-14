@@ -166,7 +166,6 @@ define(
                         }
                     }, this);
                     
-                    $("[data-form='billing-new-address'] [name='shippingAddress.custom_attributes.kl_sms_consent'] .checkbox").prop( "checked", true );
                 },
 
                 /**
