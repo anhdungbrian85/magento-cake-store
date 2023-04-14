@@ -1,10 +1,9 @@
 <?php
 
-namespace X247Commerce\Products\Plugin\Magento\Catalog\Ui\DataProvider\Product\Form\Modifier;
+namespace X247Commerce\Products\Plugin\Magento\GiftMessage\Ui\DataProvider\Product\Modifier;
 
-class AttributeSet
+class GiftMessage
 {
-
     protected $request;
 
     protected $adminSession;
@@ -29,10 +28,10 @@ class AttributeSet
         if ($roleId == 1 || $this->request->getParam('id') == NULL) {
             return $result;
         }
-        if (isset($result['attribute_set_id']['arguments']['data']['config'])) {
-            $result['attribute_set_id']['arguments']['data']['config']['visible'] = false;
-        }
 
+        if (isset($result['gift-options']['arguments']['data']['config'])) {
+            $result['gift-options']['arguments']['data']['config']['visible'] = false;
+        }
         return $result;
     }
 }
