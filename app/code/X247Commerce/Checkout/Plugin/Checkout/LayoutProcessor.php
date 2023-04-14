@@ -39,32 +39,6 @@ class LayoutProcessor
         $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
         ['shippingAddress']['children']['shipping-address-fieldset']['children']['postcode']['value'] = $locationPostcode;
 
-        if ($this->_klaviyoScopeSetting->getConsentAtCheckoutSMSIsActive()) {
-            $smsConsentCheckbox = [
-                'component' => 'Magento_Ui/js/form/element/abstract',
-                'config' => [
-                    'customScope' => 'shippingAddress.custom_attributes',
-                    'template' => 'ui/form/field',
-                    'elementTmpl' => 'ui/form/element/checkbox',
-                    'options' => [],
-                    'id' => 'kl_sms_consent',
-                ],
-                'dataScope' => 'shippingAddress.custom_attributes.kl_sms_consent',
-                'label' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentLabelText(),
-                'description' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentText(),
-                'provider' => 'checkoutProvider',
-                'visible' => true,
-                'checked' => true,
-                'validation' => [],
-                'sortOrder' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentSortOrder(),
-                'id' => 'kl_sms_consent',
-            ];
-
-            $result['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['billing-address-form']['children']['form-fields']['children']['kl_sms_consent'] = $smsConsentCheckbox;
-            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_consent'] = [];
-            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['kl_sms_consent'] = [];
-        }
-
         $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
         ['shippingAddress']['children']['shipping-address-fieldset']['children']['telephone']['validation'] = ['required-entry' => true, 'max_text_length' => 255, 'min_text_length' => 1];
 

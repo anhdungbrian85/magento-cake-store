@@ -51,6 +51,8 @@ class UpdateStoreLocationSelected implements ObserverInterface
                 $quote = $this->checkoutSession->getQuote()
                     ->setData('store_location_id', $this->storeLocationContext->getStoreLocationId())
                     ->setData('delivery_type', $this->storeLocationContext->getDeliveryType())
+                    ->setData('kl_sms_consent', 1)
+                    ->setData('kl_email_consent', 1)
                     ->save();
 
                 $quote = $this->checkoutSession->getQuote(); 
