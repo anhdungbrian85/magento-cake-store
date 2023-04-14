@@ -65,11 +65,8 @@ class LayoutProcessor
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['kl_sms_consent'] = [];
         }
 
-        if (!$this->scopeConfig->getValue('x247commerce_checkout/billing/enable', ScopeInterface::SCOPE_STORE)) {
-            $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-            ['payment']['children']['afterMethods']['children']['billing-address-form']['children']['form-fields']['children']
-            ['telephone']['validation'] = ['required-entry' => false, 'max_text_length' => 255, 'min_text_length' => 1];
-        }
+        $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+        ['shippingAddress']['children']['shipping-address-fieldset']['children']['telephone']['validation'] = ['required-entry' => true, 'max_text_length' => 255, 'min_text_length' => 1];
 
         return $result;
     }
