@@ -9,8 +9,11 @@ define([
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'locationContext',
+    'mage/url',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/action/set-shipping-information',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (ko, $, Component, customerData, pickup, pickupDataResolver, locationContext) {
+], function (ko, $, Component, customerData, pickup, pickupDataResolver, locationContext, url, quote, setShippingInformationAction) {
     'use strict';
 
     return Component.extend({
@@ -136,12 +139,27 @@ define([
         },
 
         onUpdate: function (pickupTime) {
+
             var pickupTimeOption = this.options().filter(function (elem) {
                 return elem.value === pickupTime;
-            })[0];
+            })[0];            
 
+            url.setBaseUrl(BASE_URL);
+            let urlAjax = url.build('checkout/pickup/pickup');
+            $.ajax({
+                url: urlAjax,
+                type: 'POST',
+                data: {
+                    quoteId: quote.getQuoteId(),
+                    selectedTime: pickupTime
+                }
+            }).done(function(response) {
+                if (response.error) {
+                    console.log(response);
+                }
+            });
             pickupDataResolver.timeData(pickupTime);
-
+            // setShippingInformationAction();
             this.pickupTimeLabel = pickupTimeOption.label;
         },
 
