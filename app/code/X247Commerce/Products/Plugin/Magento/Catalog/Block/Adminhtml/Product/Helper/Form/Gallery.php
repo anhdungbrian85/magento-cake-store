@@ -29,6 +29,6 @@ class Gallery
         if ($roleId == 1 || $this->request->getParam('id') == NULL) {
             return $result;
         }
-        return $result = __('This action not apply for staff role');
+        return __('This action not apply for staff role');
     }
 }
