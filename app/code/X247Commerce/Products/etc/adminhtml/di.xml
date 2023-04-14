@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\CatalogStaging\Ui\DataProvider\Catalog\Product\Form\Modifier\Eav">
+        <plugin name="x247_hide_eav_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\CatalogStaging\Ui\DataProvider\Product\Form\Modifier\Eav"/>
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AttributeSet">
+        <plugin name="x247_hide_attribute_set_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AttributeSet"/>
+    </type>
+    <type name="Magento\Review\Ui\DataProvider\Product\Form\Modifier\Review">
+        <plugin name="x247_hide_attribute_set_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Review\Ui\DataProvider\Product\Form\Modifier\Review"/>
+    </type>
+</config>

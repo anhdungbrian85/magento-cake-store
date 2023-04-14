@@ -150,7 +150,8 @@ class SendPickupReminder
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
 						}
 					  }
-					}';	   
+					}';	
+					$this->logger->info($klaviyoDelieryApiParams);				
 					$this->sendRequest($klaviyoDelieryApiParams);
 					$orderDetailDelivery->setSmsReminder('1');
 					$orderDetailDelivery->save();

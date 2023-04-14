@@ -76,7 +76,7 @@ class SentMailAlertEvent
 
                 $sentToEmail = $customerFactory->load($event->getCustomerId())->getEmail();
                 $transport = $this->_transportBuilder
-                    ->setTemplateIdentifier('x247commerce_customer_event_email_template')
+                    ->setTemplateIdentifier($this->scopeConfig->getValue('x247commerce_customer/event/email_template', \Magento\Store\Model\ScopeInterface::SCOPE_STORE))
                     ->setTemplateOptions(
                         [
                             'area' => 'frontend',
