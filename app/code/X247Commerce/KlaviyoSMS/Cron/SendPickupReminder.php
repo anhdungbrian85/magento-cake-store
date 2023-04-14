@@ -76,6 +76,7 @@ class SendPickupReminder
 						  },
 						  "properties": {                
 							"OrderNumber": "'.$orderData['increment_id'].'",
+							"OrderType": "collection",
 							"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
 							"CollectionDate": "'.date('Y-m-d').'",						
 							"CollectionTime": "'.$collectionTime.'",							
@@ -143,6 +144,7 @@ class SendPickupReminder
 						  },
 						  "properties": {                
 							"OrderNumber": "'.$orderDeliveryData['increment_id'].'",
+							"OrderType": "delivery",
 							"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
 							"DeliveryDate": "'.date('Y-m-d').'",							
 							"DeliveryTime": "'.$orderDeliveryTime.':00:00"							
