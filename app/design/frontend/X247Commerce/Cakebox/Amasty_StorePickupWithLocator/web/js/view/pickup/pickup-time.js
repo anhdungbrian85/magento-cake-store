@@ -9,11 +9,8 @@ define([
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'locationContext',
-    'mage/url',
-    'Magento_Checkout/js/model/quote',
-    'Magento_Checkout/js/action/set-shipping-information',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (ko, $, Component, customerData, pickup, pickupDataResolver, locationContext, url, quote, setShippingInformationAction) {
+], function (ko, $, Component, customerData, pickup, pickupDataResolver, locationContext) {
     'use strict';
 
     return Component.extend({
@@ -82,20 +79,20 @@ define([
                 oldValue = this.value(),
                 isOldTimeValid,
                 isCachedTimeValid;
-
+                
             if (data.date && selectedStore) {
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStore.schedule_id);
 
                 if (this.storeScheduleSelected || data.store.schedule_id) {
                     timeIntervals = timeIntervals[this.selectedDayByName];
                 }
-
+                console.log(timeIntervals)
                 if (timeIntervals) {
                     this.options(this.isTodaySelected
                         ? this.restrictTimeIntervals(timeIntervals)
                         : timeIntervals);
                 }
-
+                
                 isOldTimeValid = this.options().some(function (interval) {
                     return interval.value === oldValue;
                 });
@@ -130,6 +127,7 @@ define([
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
                 filteredIntervals;
+                console.log(currentStoreTime)
             filteredIntervals = intervals.filter(function (item) {
                 return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
                     // && item.toInUnix <= this.sameDayCutoffTime;
@@ -139,27 +137,12 @@ define([
         },
 
         onUpdate: function (pickupTime) {
-
             var pickupTimeOption = this.options().filter(function (elem) {
                 return elem.value === pickupTime;
-            })[0];            
+            })[0];
 
-            url.setBaseUrl(BASE_URL);
-            let urlAjax = url.build('checkout/pickup/pickup');
-            $.ajax({
-                url: urlAjax,
-                type: 'POST',
-                data: {
-                    quoteId: quote.getQuoteId(),
-                    selectedTime: pickupTime
-                }
-            }).done(function(response) {
-                if (response.error) {
-                    console.log(response);
-                }
-            });
             pickupDataResolver.timeData(pickupTime);
-            // setShippingInformationAction();
+
             this.pickupTimeLabel = pickupTimeOption.label;
         },
 

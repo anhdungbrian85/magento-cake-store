@@ -21,7 +21,7 @@ define([
             this._super();
 
             addressService.selectStoreAddress(pickupDataResolver.getCurrentStoreData());
-            setShippingInformationAction()
+            // setShippingInformationAction()
         },
 
         pickupStateObserver: function (isActive) {
