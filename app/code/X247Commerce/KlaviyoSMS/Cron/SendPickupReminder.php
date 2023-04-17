@@ -48,6 +48,9 @@ class SendPickupReminder
 						->from('amasty_amlocator_location')
 						->where('id = ?', $store_id);
 					$resultStore = $connection->fetchAll($selectStore);
+					$storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
+					$storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
+					$storePostcode = isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : '';
 				
 					$billingAddress = $orderDetails->getBillingAddress();				
 					$telephone = $billingAddress->getTelephone();			
@@ -80,9 +83,9 @@ class SendPickupReminder
 							"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
 							"CollectionDate": "'.date('d-m-Y').'",						
 							"CollectionTime": "'.$collectionTime.'",							
-							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : ''.'",							
-							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : ''.'",							
-							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : ''.'"						
+							"StoreName": "'.$storeName.'",							
+							"StoreAddress": "'.$storeAddress.'",							
+							"StorePostcode": "'.$storePostcode.'"						
 						  },
 						  "value": '.$orderData['grand_total'].',
 						  "unique_id": "'.$orderData['increment_id'].'" 
@@ -123,7 +126,11 @@ class SendPickupReminder
 					$selectStore = $connection->select()
 						->from('amasty_amlocator_location')
 						->where('id = ?', $orderDeliveryData['store_location_id']);
-					$resultStore = $connection->fetchAll($selectStore);					
+					$resultStore = $connection->fetchAll($selectStore);	
+					$storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
+					$storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
+					$storePostcode = isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : '';
+					
 					
 					if (substr($delierytelephone, 0, 1) === "0") {
 						$delierytelephone = substr_replace($delierytelephone, "+44", 0, 1);
@@ -153,9 +160,9 @@ class SendPickupReminder
 							"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
 							"DeliveryDate": "'.date('d-m-Y').'",							
 							"DeliveryTime": "'.$orderDeliveryTime.':00:00",
-							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : ''.'",							
-							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : ''.'",							
-							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : ''.'"							
+							"StoreName": "'.$storeName.'",							
+							"StoreAddress": "'.$storeAddress.'",							
+							"StorePostcode": "'.$storePostcode.'"						
 						  },
 						  "value": '.$orderDeliveryData['grand_total'].',
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
