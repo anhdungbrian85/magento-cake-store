@@ -393,7 +393,6 @@ class LocatorSourceResolver
             ->where("location_id = ?", $currentLocationId);
         $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
         if (!empty($currentSourceData)) {
-
             $availableSources = [];
             foreach ($products as $product) {
                 $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ["$inventorySourceItemTbl.source_code"])

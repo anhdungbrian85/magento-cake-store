@@ -21,8 +21,8 @@ define([
                 var products = this._CalcProducts();
                 simpleSku = this.options.jsonConfig.skus[products.slice().shift()];
                 let data = {
-                    currentProductSku : window.currentProductSku,
-                    currentProductType: simpleSku
+                    currentProductSku : simpleSku,
+                    currentProductType: window.currentProductType
                 };
 
                 $.ajax({

@@ -77,6 +77,4 @@ class UpdateStockStatus extends \Magento\Backend\App\Action
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
         return $resultRedirect;
     }
-
-
 }

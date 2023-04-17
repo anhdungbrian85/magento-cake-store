@@ -42,6 +42,7 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
                     $productSkus[] = $quoteItem->getSku();
                 }
             }
+
             $closestLocation = $this->locatorSourceResolver->getClosestLocationHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
             if (!empty($closestLocation)) {
                 $result = [
