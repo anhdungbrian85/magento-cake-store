@@ -82,7 +82,7 @@ define(
                             'shipping-address-fieldset',
                             'additional-fieldsets'
                         );
-                    };
+                    }
 
                     registry.get(
                         // eslint-disable-next-line max-len
@@ -158,14 +158,13 @@ define(
                  */
                 registerObserversAfterLoad: function () {
                     this.isInitialDataSaved = true;
-                    
+
                     shippingRegistry.isAddressChanged.subscribe(this.additionalFieldsObserver.bind(this));
                     shippingService.isLoading.subscribe(function (isLoading) {
                         if (!isLoading) {
                             this.validateAndSaveIfChanged();
                         }
                     }, this);
-                    
                 },
 
                 /**
@@ -241,7 +240,7 @@ define(
 
                 selectShippingMethod: function (method) {
                     if (method) {
-                        if (method['carrier_code'] && method['carrier_code'] !== 'amstorepickup') {
+                        if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
                             locationContext.deliveryType(quote.getDeliveryType())
                         }   else {
                             locationContext.deliveryType(1) 

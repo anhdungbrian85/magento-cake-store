@@ -7,25 +7,13 @@ define([
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'locationContext',
     'uiRegistry',
-    'Magento_Customer/js/customer-data',
-	'mage/translate',
-    'Magento_Checkout/js/action/set-shipping-information',
-    'Magento_Checkout/js/model/quote',
-    'Magento_Checkout/js/action/select-billing-address',
-    'Magento_Checkout/js/model/shipping-save-processor/payload-extender',
-    'mage/url'
+	'mage/translate'
+
 ], function (
 	$,
 	pickupDataResolver,
     locationContext,
-    registry,
-    customerData,
-    translate,
-    setShippingInformationAction,
-    quote,
-    selectBillingAddressAction,
-    payloadExtender,
-    url
+    registry
 ) {
     'use strict';
 
@@ -47,6 +35,7 @@ define([
             }
 
             this.storeScheduleSelected(true);
+
             // if (this.getDataFromCache && this.restrictDates(new Date(this.dateFromCache))[0]) {
             //     this.getDataFromCache = false;
 
@@ -68,45 +57,8 @@ define([
             if (index >= 32) {
                 return null;
             }
-            return minPickupDate;
-        },
 
-        onValueChange: function (value) {
-            var datepickerDate,
-                selectedDate;
-            this._super();
-            url.setBaseUrl(BASE_URL);
-            let urlAjax = url.build('checkout/pickup/pickup');
-            
-            // This is direct access to the element because need to push date object(not string) to customer data
-            datepickerDate = $('#' + this.uid).datepicker('getDate');
-            selectedDate = datepickerDate && typeof datepickerDate.getFullYear == 'function'
-                ? datepickerDate
-                : value;
-            
-            let date = datepickerDate && typeof datepickerDate.getFullYear == 'function'
-                ? datepickerDate
-                : new Date();
-            let dateStr = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + " 00:00:00";
-            pickupDataResolver.dateData(selectedDate);
-            // customerData.set('selectedPickDate', selectedDate);
-            $.ajax({
-                url: urlAjax,
-                type: 'POST',
-                data: {
-                    quoteId: quote.getQuoteId(),
-                    selectedDate: dateStr
-                }
-            }).done(function(response) {
-                if (response.error) {
-                    console.log(response);
-                }
-            });
-            this.getSelectedDay(datepickerDate, value);
-            this.source.trigger('amStorepickup.date.change', {
-                date: value,
-                store: this.selectedStore
-            });
+            return minPickupDate;
         },
         /**
          * Check if date is valid
