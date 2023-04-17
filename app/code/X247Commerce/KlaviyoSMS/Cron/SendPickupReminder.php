@@ -84,7 +84,7 @@ class SendPickupReminder
 							"StoreAddress": "'.$resultStore[0]['address'].'",							
 							"StorePostcode": "'.$resultStore[0]['zip'].'"						
 						  },
-						  "value": '.$orderDeliveryData['grand_total'].',
+						  "value": '.$orderData['grand_total'].',
 						  "unique_id": "'.$orderData['increment_id'].'" 
 						}
 					  }
