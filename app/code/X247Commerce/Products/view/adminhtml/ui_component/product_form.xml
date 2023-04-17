@@ -2,7 +2,8 @@
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <settings>
         <buttons>
-            <button name="updateStockStatusConfigurable" class="X247Commerce\Products\Block\Adminhtml\Product\Edit\Button\UpdateStockStatusConfigurable"/>
+            <button name="updateOutOfStockStatusConfigurable" class="X247Commerce\Products\Block\Adminhtml\Product\Edit\Button\UpdateOutOfStockStatusConfigurable"/>
+            <button name="updateInStockStatusConfigurable" class="X247Commerce\Products\Block\Adminhtml\Product\Edit\Button\UpdateInStockStatusConfigurable"/>
         </buttons>
     </settings>
 </form>

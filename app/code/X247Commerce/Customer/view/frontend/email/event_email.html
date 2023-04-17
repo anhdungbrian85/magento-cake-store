@@ -2,8 +2,10 @@
 <!--@vars {
 "var event_date|raw":"Event Date",
 "var occasion|raw":"Occasion",
-"var their_name|raw":"Their Name"
+"var their_name|raw":"Their Name",
+"var customer_name|raw":"Customer Name"
 } @-->
+
 {{template config_path="design/email/header_template"}}
 <div>
 	<span>	{{trans "You have a reminder today (%_date)" _date=$event_date }}
