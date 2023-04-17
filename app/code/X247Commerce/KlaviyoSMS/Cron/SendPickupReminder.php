@@ -68,21 +68,21 @@ class SendPickupReminder
 							"$email": "'.$orderData['customer_email'].'",
 							"$phone_number":"'.$telephone.'",
 							"$country":"United Kingdom",
-							"$pickup_date":"'.date('Y-m-d').'"
+							"$pickup_date":"'.date('d-m-Y').'"
 						  },
 						  "metric": {
 							"name": "Delivery date",
-							"service": "'.date('Y-m-d').'" 
+							"service": "'.date('d-m-Y').'" 
 						  },
 						  "properties": {                
 							"OrderNumber": "'.$orderData['increment_id'].'",
 							"OrderType": "collection",
 							"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
-							"CollectionDate": "'.date('Y-m-d').'",						
+							"CollectionDate": "'.date('d-m-Y').'",						
 							"CollectionTime": "'.$collectionTime.'",							
-							"StoreName": "'.$resultStore[0]['name'].'",							
-							"StoreAddress": "'.$resultStore[0]['address'].'",							
-							"StorePostcode": "'.$resultStore[0]['zip'].'"						
+							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : null.'",							
+							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : null.'",							
+							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : null.'"						
 						  },
 						  "value": '.$orderData['grand_total'].',
 						  "unique_id": "'.$orderData['increment_id'].'" 
@@ -118,7 +118,12 @@ class SendPickupReminder
 				if($orderDeliveryData['kl_sms_consent'] == '"1"' && $orderDeliveryData['sms_reminder'] != '1'){
 				
 					$billingDeliveryAddress = $orderDetailDelivery->getBillingAddress();				
-					$delierytelephone = $billingDeliveryAddress->getTelephone();			
+					$delierytelephone = $billingDeliveryAddress->getTelephone();
+
+					$selectStore = $connection->select()
+						->from('amasty_amlocator_location')
+						->where('id = ?', $orderDeliveryData['store_location_id']);
+					$resultStore = $connection->fetchAll($selectStore);					
 					
 					if (substr($delierytelephone, 0, 1) === "0") {
 						$delierytelephone = substr_replace($delierytelephone, "+44", 0, 1);
@@ -136,18 +141,21 @@ class SendPickupReminder
 							"$email": "'.$orderDeliveryData['customer_email'].'",
 							"$phone_number":"'.$delierytelephone.'",
 							"$country":"United Kingdom",
-							"$pickup_date":"'.date('Y-m-d').'"
+							"$pickup_date":"'.date('d-m-Y').'"
 						  },
 						  "metric": {
 							"name": "Delivery date",
-							"service": "'.date('Y-m-d').'" 
+							"service": "'.date('d-m-Y').'" 
 						  },
 						  "properties": {                
 							"OrderNumber": "'.$orderDeliveryData['increment_id'].'",
 							"OrderType": "delivery",
 							"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
-							"DeliveryDate": "'.date('Y-m-d').'",							
-							"DeliveryTime": "'.$orderDeliveryTime.':00:00"							
+							"DeliveryDate": "'.date('d-m-Y').'",							
+							"DeliveryTime": "'.$orderDeliveryTime.':00:00",
+							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : null.'",							
+							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : null.'",							
+							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : null.'"							
 						  },
 						  "value": '.$orderDeliveryData['grand_total'].',
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
