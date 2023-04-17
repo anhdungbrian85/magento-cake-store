@@ -34,13 +34,13 @@ class ModifySourceItems
 
 	    	$roleData = $this->_adminSession->getUser()->getRole()->getData();
 	    	$userData = $this->_adminSession->getUser()->getData();
-	    	
+
 	    	$product = $this->locator->getProduct();
 
 	    	$roleId = (int) $roleData['role_id'];
 	    	if ($roleId != 1) {
 	    		$userSources = $this->getSourceCodeCollection($userData['user_id']);
-	    		    	
+
 	    		if (isset($result[$product->getId()]['sources']['assigned_sources'])) {
 	    			$items = $result[$product->getId()]['sources']['assigned_sources'];
 
@@ -58,7 +58,7 @@ class ModifySourceItems
 			    	$result[$product->getId()]['sources']['unassigned_sources'] = $unassign;
 	    		}
 	    	}
-    	
+
 		return $result;
 	}
 
@@ -72,7 +72,7 @@ class ModifySourceItems
                 $data[] = $item->getSourceCode();
             }
         }
-     
-        return $data;     
+
+        return $data;
     }
 }
