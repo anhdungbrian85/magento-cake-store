@@ -85,15 +85,15 @@ class SentMailAlertEvent
             $this->_inlineTranslation->suspend();
 
             $storeId = $this->_storeManager->getStore()->getId();
-            $customerFactory = $this->customerFactory->create();
+            $customerFactory = $this->customerFactory->create()->load(empty($event->getData()[0]) ? $event->getCustomerId() : $event->getData()[0]['customer_id']);
             $emailTemplateIdentifier = $this->scopeConfig->getValue('x247commerce_customer/event/email_template', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $eventDate = $this->timezone->date(new \DateTime(empty($event->getData()[0]) ? $event->getDate() : $event->getData()[0]['date']))->format('Y-m-d');
+            $sentToEmail = $customerFactory->getEmail();
             $sender = [
                 'name' => 'Alert Reminder Notification Email',
                 'email' => $this->scopeConfig->getValue(self::EMAIL_SENDER, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             ];
 
-            $eventDate = $this->timezone->date(new \DateTime(empty($event->getData()[0]) ? $event->getDate() : $event->getData()[0]['date']))->format('Y-m-d');
-            $sentToEmail = $customerFactory->load(empty($event->getData()[0]) ? $event->getCustomerId() : $event->getData()[0]['customer_id'])->getEmail();
             $transport = $this->_transportBuilder
                 ->setTemplateIdentifier($emailTemplateIdentifier)
                 ->setTemplateOptions(
@@ -103,6 +103,7 @@ class SentMailAlertEvent
                     ]
                 )
                 ->setTemplateVars([
+                    'customer_name' => $customerFactory->getName(),
                     'event_date' => $eventDate,
                     'their_name' => empty($event->getData()[0]) ? $event->getTheirName() : $event->getData()[0]['their_name'],
                     'occasion' => empty($event->getData()[0]) ? $event->getOccasion() : $event->getData()[0]['occasion']
