@@ -80,9 +80,9 @@ class SendPickupReminder
 							"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
 							"CollectionDate": "'.date('d-m-Y').'",						
 							"CollectionTime": "'.$collectionTime.'",							
-							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : null.'",							
-							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : null.'",							
-							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : null.'"						
+							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : ''.'",							
+							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : ''.'",							
+							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : ''.'"						
 						  },
 						  "value": '.$orderData['grand_total'].',
 						  "unique_id": "'.$orderData['increment_id'].'" 
@@ -153,9 +153,9 @@ class SendPickupReminder
 							"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
 							"DeliveryDate": "'.date('d-m-Y').'",							
 							"DeliveryTime": "'.$orderDeliveryTime.':00:00",
-							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : null.'",							
-							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : null.'",							
-							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : null.'"							
+							"StoreName": "'.isset($resultStore[0]['name']) ? $resultStore[0]['name'] : ''.'",							
+							"StoreAddress": "'.isset($resultStore[0]['address']) ? $resultStore[0]['address'] : ''.'",							
+							"StorePostcode": "'.isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : ''.'"							
 						  },
 						  "value": '.$orderDeliveryData['grand_total'].',
 						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
