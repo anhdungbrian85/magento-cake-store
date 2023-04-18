@@ -13,6 +13,10 @@ interface StoreLocationContextInterface
 
     public const DELIVERY_TYPE = 'delivery_type';
 
+    public const CUSTOMER_POSTCODE = 'customer_postcode';
+
+    public const GEOGRAPHIC_COORDINATE = 'geographic_coordinate';
+
     /**
      * Set Store localtion id to HttpContext.
      *
@@ -29,6 +33,39 @@ interface StoreLocationContextInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getStoreLocationId();
+    /**
+     * Set Customer Postcode to HttpContext.
+     *
+     * @param int $storeLocationId
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setCustomerPostcode($postcode);
+
+    /**
+     * Get Customer Postcode from HttpContext.
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCustomerPostcode();    
+
+    /**
+     * Set Customer Geographic Coordinate to HttpContext.
+     *
+     * @param int $storeLocationId
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setCustomerGeographicCoordinate($lat, $lng);
+
+    /**
+     * Get Customer Geographic Coordinate from HttpContext.
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCustomerGeographicCoordinate();
 
     /**
      * Set Delivery Type to HttpContext.
