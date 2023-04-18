@@ -22,6 +22,8 @@ class LocatorSourceResolver
     const IN_STOCK_STATUS = 1;
     const OUT_OF_STOCK_STATUS = 0;
 
+    const NOT_HAVE_STOCK_STATUS = -1;
+
     const LOCATION_SOURCE_LINK_TABLE = 'amasty_amlocator_location_source_link';
     const LOCATION_ASDA_LINK_TABLE = 'store_location_asda_link';
     const ADMIN_USER_SOURCE_LINK_TABLE = 'admin_user_source_link';
@@ -391,7 +393,6 @@ class LocatorSourceResolver
             ->where("location_id = ?", $currentLocationId);
         $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
         if (!empty($currentSourceData)) {
-
             $availableSources = [];
             foreach ($products as $product) {
                 $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ["$inventorySourceItemTbl.source_code"])
@@ -462,7 +463,32 @@ class LocatorSourceResolver
         return true;
     }
 
-    public function calculateDistance($lat1, $lon1, $lat2, $lon2) {
+    public function checkStockStatusBySourceCodeAndSku($sku, $sourceCode)
+    {
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $getStockStatusDataQuery = $this->connection->select()
+            ->from($inventorySourceItemTbl, ['*'])
+            ->where("sku = ?", $sku)
+            ->where("source_code = ?", $sourceCode);
+        $stockStatusItem =  $this->connection->fetchRow($getStockStatusDataQuery);
+        return $stockStatusItem['status'] ?? self::NOT_HAVE_STOCK_STATUS;
+    }
+
+    public function updateStockStatusBySourceCode($skus, $sourceCode, $status)
+    {
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $data = ['status' => $status];
+        foreach ($skus as $sku) {
+            $where = [
+                'sku = ?' => $sku,
+                'source_code = ?' => $sourceCode
+            ];
+            $this->connection->update($inventorySourceItemTbl, $data, $where);
+        }
+    }
+
+    public function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
         if (($lat1 == $lat2) && ($lon1 == $lon2)) {
             return 0;
         } else {
