@@ -25,11 +25,11 @@ define([
                 data: data,
                 dataType: 'json',
                 success: function (result) {
-                    if (result.status === 200) {
-                        if (productType !== 'simple') {
-                            $('.closest-location_message').text('');
-                            $('.closest-location_title').html('');
-                        } else {
+                    if (productType !== 'simple') {
+                        $('.closest-location_message').text('');
+                        $('.closest-location_title').html('');
+                    } else {
+                        if (result.status === 200) {
                             let template = mageTemplate('#closest-location-title');
                             let closestLocationHtml = 'This product is out of stock at your chosen store. Please select a different location.!';
                             for (const location of result.closest_location) {
@@ -42,13 +42,14 @@ define([
                             }
                             $('.closest-location_message').text('');
                             $('.closest-location_title').html(closestLocationHtml);
+
+                        } else if(result.status === 400) {
+                            $('.closest-location_message').text('');
+                            $('.closest-location_title').html('');
+                        } else {
+                            $('.closest-location_message').text(result.message);
+                            $('.closest-location_title').html('');
                         }
-                    } else if(result.status === 400) {
-                        $('.closest-location_message').text('');
-                        $('.closest-location_title').html('');
-                    } else {
-                        $('.closest-location_message').text(result.message);
-                        $('.closest-location_title').html('');
                     }
                 }
             });
