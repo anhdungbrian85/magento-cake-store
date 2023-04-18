@@ -88,7 +88,7 @@ class DeliveryData extends AbstractHelper
 
 	protected function getEndpointApiUrl($originPostcode, $destinationPostcode, $apiKey)
     {
-        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationPostcode&origins=$originPostcode&key=$apiKey";
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationPostcode&origins=$originPostcode&units=imperial&key=$apiKey";
 
         return $url;
     }

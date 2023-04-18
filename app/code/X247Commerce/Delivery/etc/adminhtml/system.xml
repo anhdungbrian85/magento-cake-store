@@ -37,7 +37,7 @@
 			</group>
 		</section>
 		<section id="delivery" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-			<label>Delivery</label>
+			<label>Cakebox Delivery Fee Tiers</label>
 			<tab>x247commerce</tab>
 			<resource>X247Commerce_Delivery::config_x247commerce_delivery</resource>
 			<group id="general" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
