@@ -41,9 +41,30 @@ class StoreLocationContext implements StoreLocationContextInterface
         return $this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID);
     }
 
-    /**
-     * @inheritdoc
-     */
+    public function setCustomerPostcode($postcode)
+    {
+        $this->httpContext->setValue(StoreLocationContextInterface::CUSTOMER_POSTCODE, $postcode, 0);
+        $this->checkoutSession->setCustomerPostcode($postcode);
+    }
+
+    public function getCustomerPostcode()
+    {
+        return $this->httpContext->getValue(StoreLocationContextInterface::CUSTOMER_POSTCODE);
+    }
+
+    public function setCustomerGeographicCoordinate($lat, $lng)
+    {
+        $geographicCoordinate = ['lat' => $lat, 'lng' => $lng];
+
+        $this->httpContext->setValue(StoreLocationContextInterface::GEOGRAPHIC_COORDINATE, json_encode($geographicCoordinate), 0);
+        $this->checkoutSession->setGeographicCoordinate(json_encode($geographicCoordinate));
+    }
+
+    public function getCustomerGeographicCoordinate()
+    {
+        return $this->httpContext->getValue(StoreLocationContextInterface::GEOGRAPHIC_COORDINATE);
+    }
+
     public function setDeliveryType($deliveryType)
     {
         $this->httpContext->setValue(StoreLocationContextInterface::DELIVERY_TYPE, $deliveryType, 0);
