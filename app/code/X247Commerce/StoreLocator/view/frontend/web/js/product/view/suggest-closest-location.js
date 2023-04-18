@@ -26,19 +26,29 @@ define([
                 dataType: 'json',
                 success: function (result) {
                     if (result.status === 200) {
-                        if (result.closest_location.amlocator_store === currentStoreLocationId || productType !== 'simple') {
-                            return;
-                        }
-                        let template = mageTemplate('#closest-location-title');
-                        let closestLocationHtml = template({
-                            data: {
-                                href: urlBuilder.build("x247_storelocator/product/reselectLocation") + '/location_id/' + result.closest_location.amlocator_store,
-                                name: result.closest_location.name
+                        if (productType !== 'simple') {
+                            $('.closest-location_message').text('');
+                            $('.closest-location_title').html('');
+                        } else {
+                            let template = mageTemplate('#closest-location-title');
+                            let closestLocationHtml = 'This product is out of stock at your chosen store. Please select a different location.!';
+                            for (const location of result.closest_location) {
+                                closestLocationHtml += template({
+                                    data: {
+                                        href: urlBuilder.build("x247_storelocator/product/reselectLocation") + '/location_id/' + location.amlocator_store,
+                                        name: location.name
+                                    }
+                                });
                             }
-                        });
-                        $('.closest-location_title').html(closestLocationHtml);
+                            $('.closest-location_message').text('');
+                            $('.closest-location_title').html(closestLocationHtml);
+                        }
+                    } else if(result.status === 400) {
+                        $('.closest-location_message').text('');
+                        $('.closest-location_title').html('');
                     } else {
                         $('.closest-location_message').text(result.message);
+                        $('.closest-location_title').html('');
                     }
                 }
             });
