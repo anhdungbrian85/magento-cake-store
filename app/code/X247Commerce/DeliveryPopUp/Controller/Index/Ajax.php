@@ -46,6 +46,7 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $deliveryType = $this->getRequest()->getPost('delivery-type');
         $this->storeLocationContextInterface->setDeliveryType($deliveryType);
         $destCode = $this->getRequest()->getParam('dest');
+        $this->storeLocationContextInterface->setCustomerPostcode($destCode);
 
         $resultJson = $this->resultJsonFactory->create();
         if ($deliveryType == 1) {

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<carriers>
+			<cakeboxdelivery>
+				<model>X247Commerce\Delivery\Model\Carrier\CakeboxDelivery</model>
+				<active>0</active>
+				<title>Cakebox Delivery</title>
+				<name>Cakebox Delivery</name>
+				<price>0.00</price>
+				<specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+				<sallowspecific>0</sallowspecific>
+			</cakeboxdelivery>
+		</carriers>
+		<delivery>
+			<general>
+				<distance>
+					<item1>
+		                <from_distance>0</from_distance>
+		                <to_distance>5</to_distance>
+		                <price>9.95</price>
+		            </item1>
+		            <item2>
+		                <from_distance>5</from_distance>
+		                <to_distance>10</to_distance>
+		                <price>14.95</price>
+		            </item2>
+		            <item3>
+		                <from_distance>10</from_distance>
+		                <to_distance>15</to_distance>
+		                <price>19.95</price>
+		            </item3>
+		        </distance>
+			</general>
+		</delivery>
+	</default>
+</config>

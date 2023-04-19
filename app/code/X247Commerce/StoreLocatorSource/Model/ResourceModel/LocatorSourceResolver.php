@@ -22,6 +22,8 @@ class LocatorSourceResolver
     const IN_STOCK_STATUS = 1;
     const OUT_OF_STOCK_STATUS = 0;
 
+    const NOT_HAVE_STOCK_STATUS = -1;
+
     const LOCATION_SOURCE_LINK_TABLE = 'amasty_amlocator_location_source_link';
     const LOCATION_ASDA_LINK_TABLE = 'store_location_asda_link';
     const ADMIN_USER_SOURCE_LINK_TABLE = 'admin_user_source_link';
@@ -381,21 +383,146 @@ class LocatorSourceResolver
     public function getClosestLocationHasProducts($currentLocationId, $products)
     {
         $locationData = [];
+        $nearestDistance = 100000000;
+        $currentSourceIsAvailable = false;
         $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $inventorySourceTbl = $this->resource->getTableName('inventory_source');
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
         $getCurrentSourceDataQuery = $this->connection->select()
             ->from($locationSourceLinkTbl, ['*'])
             ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $locationSourceLinkTbl.source_code")
             ->where("location_id = ?", $currentLocationId);
-        $currentSourceData =  $this->connection->fetchAll($getCurrentSourceDataQuery);
+        $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
         if (!empty($currentSourceData)) {
-            $inventoryConfig = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock', ScopeInterface::SCOPE_STORE);
-            $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
-            $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ['*'])
-                ->where('sku IN (?)', implode(',', $products))
-                ->where('status = ?', self::IN_STOCK_STATUS);
-            $this->connection->fetchAll($getAvailableSourcesOfProducts);
+            $availableSources = [];
+            foreach ($products as $product) {
+                $getAvailableSourcesOfProducts = $this->connection->select()->from($inventorySourceItemTbl, ["$inventorySourceItemTbl.source_code"])
+                    ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $inventorySourceItemTbl.source_code")
+                    ->where('sku = ?', $product)
+                    ->where('status = ?', self::IN_STOCK_STATUS);
+                $availableSourcesTmp = $this->connection->fetchCol($getAvailableSourcesOfProducts);
+                $availableSources = array_merge($availableSources, $availableSourcesTmp);
+            }
+            if (!empty($availableSources) && count($availableSources) > 0) {
+                $availableSources = array_unique($availableSources);
+                $dataAvailableSources = [];
+
+                foreach ($availableSources as $availableSourceCode) {
+                    $getSourceDataQuery = $this->connection->select()
+                        ->from($inventorySourceTbl, ['*'])
+                        ->where("source_code = ?", $availableSourceCode);
+
+                    $availableSource = $this->connection->fetchRow($getSourceDataQuery);
+                    if ($availableSource['amlocator_store'] == $currentLocationId) {
+                        $currentSourceIsAvailable = true;
+                    }
+                    if (isset($availableSource['latitude']) &&
+                        isset($availableSource['longitude']) &&
+                        isset($currentSourceData['latitude']) &&
+                        isset($currentSourceData['longitude'])) {
+                        $dataAvailableSources[] = $availableSource;
+                    }
+                }
+                if (!$currentSourceIsAvailable) {
+                    if (count($dataAvailableSources) >= 3) {
+                        usort($dataAvailableSources, function($sourceLocationA, $sourceLocationB) use ($currentSourceData) {
+                            $distanceFromAToCurrentSource = $this->calculateDistance(
+                                $sourceLocationA['latitude'],
+                                $sourceLocationA['longitude'],
+                                $currentSourceData['latitude'],
+                                $currentSourceData['longitude']
+                            );
+                            $distanceFromBToCurrentSource = $this->calculateDistance(
+                                $sourceLocationB['latitude'],
+                                $sourceLocationB['longitude'],
+                                $currentSourceData['latitude'],
+                                $currentSourceData['longitude']
+                            );
+                            return $distanceFromAToCurrentSource - $distanceFromBToCurrentSource;
+                        });
+                        $locationData = array_slice($dataAvailableSources,0, 3);
+                    }
+                }
+            }
         }
-        return $locationData;
+        return [
+            'location_data' => $locationData,
+            'current_source_is_available' => $currentSourceIsAvailable
+        ];
+    }
+
+    public function sortByDistance($sourceCodeA, $sourceCodeB, $currentSourceData) {
+
+    }
+
+    public function validateOutOfStockStatusOfProduct($currentLocationId, $productSku)
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/add_to_cart.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Starting debug validateOutOfStockStatusOfProduct function');
+        $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
+        $inventorySourceTbl = $this->resource->getTableName('inventory_source');
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $getCurrentSourceDataQuery = $this->connection->select()
+            ->from($locationSourceLinkTbl, ['*'])
+            ->join(['inventorySourceTbl' => $inventorySourceTbl], "inventorySourceTbl.source_code = $locationSourceLinkTbl.source_code")
+            ->where("location_id = ?", $currentLocationId);
+        $currentSourceData =  $this->connection->fetchRow($getCurrentSourceDataQuery);
+        if ($currentSourceData) {
+            try {
+                $getOutStockStatusOfProduct = $this->connection->select()->from($inventorySourceItemTbl, ["*"])
+                    ->where('sku = ?', $productSku)
+                    ->where("$inventorySourceItemTbl.source_code = ?", $currentSourceData['source_code']);
+                $logger->info('$getOutStockStatusOfProduct sql: ' . $getOutStockStatusOfProduct);
+                $inventorySourceItemRes = $this->connection->fetchRow($getOutStockStatusOfProduct);
+                $logger->info('Starting debug validateOutOfStockStatusOfProduct function');
+                $logger->info('Data::' . print_r($inventorySourceItemRes, true));
+                return $inventorySourceItemRes['status'];
+            } catch (\Exception $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public function checkStockStatusBySourceCodeAndSku($sku, $sourceCode)
+    {
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $getStockStatusDataQuery = $this->connection->select()
+            ->from($inventorySourceItemTbl, ['*'])
+            ->where("sku = ?", $sku)
+            ->where("source_code = ?", $sourceCode);
+        $stockStatusItem =  $this->connection->fetchRow($getStockStatusDataQuery);
+        return $stockStatusItem['status'] ?? self::NOT_HAVE_STOCK_STATUS;
+    }
+
+    public function updateStockStatusBySourceCode($skus, $sourceCode, $status)
+    {
+        $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
+        $data = ['status' => $status];
+        foreach ($skus as $sku) {
+            $where = [
+                'sku = ?' => $sku,
+                'source_code = ?' => $sourceCode
+            ];
+            $this->connection->update($inventorySourceItemTbl, $data, $where);
+        }
+    }
+
+    public function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+            return 0;
+        } else {
+            $theta = $lon1 - $lon2;
+            $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+            $dist = acos($dist);
+            $dist = rad2deg($dist);
+            $miles = $dist * 60 * 1.1515;
+            return $miles;
+        }
     }
 }

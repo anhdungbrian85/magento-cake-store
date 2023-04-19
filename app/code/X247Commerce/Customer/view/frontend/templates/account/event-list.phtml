@@ -1,5 +1,5 @@
 <?php $listEvent = $block->getEventListCustomer();
-      $yearPresent = $block->getYearPresent();
+      $listYear = $block->getListYear();
 ?>
 
 <div class="event-list-container" id="event-list-container">
@@ -51,12 +51,16 @@
                 <div class="date-area">
                     <div class="label date"><span><?= __('Date')?></span></div>
                     <select name="day" id="day">
-                        <option value=""><?= __('Select Day')?></option>
                     </select>
                     <select name="month" id="month">
-                        <option value=""><?= __('Select Month')?></option>
                     </select>
-                    <input type="number" name="year" id="year" min="<?= ((int)$yearPresent - 50) ?>" max="<?= $yearPresent ?>"/>
+                    <select name="year" id="year">
+                        <?php if (count($listYear) > 0): ?>
+                            <?php foreach($listYear as $year): ?>
+                                <option value="<?= $year?>"><?= $year?></option>
+                            <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
                 </div>
                 <div class="occassion-area">
                     <div class="label occassion"><span><?= __('Occassion')?></span></div>
@@ -66,7 +70,7 @@
                 <input type="hidden" name="customer_id" value="<?= $block->getCustomerId()?>"/>
 
                 <div class="alert-event"><span><?= __("You'll recieve an email alert from us 30 days before the events")?></span></div>
-                <div class="create-another-reminder"><button type="button">+</button><span><?= __('Create another reminder')?></span></div>
+                <!-- <div class="create-another-reminder"><button type="button">+</button><span><?= __('Create another reminder')?></span></div> -->
                 <div class="action-form"><button type="submit" id="button-save"><span><?= __('Save')?></span></button></div>
             </form>
         </div>

@@ -495,6 +495,7 @@ return [
         'Trustpilot_Reviews' => 1,
         'Ulmod_Productinquiry' => 1,
         'WeSupply_Toolbox' => 1,
+        'WebShopApps_MatrixRate' => 1,
         'WeltPixel_Backend' => 1,
         'WeltPixel_GA4' => 1,
         'WeltPixel_Quickview' => 1,

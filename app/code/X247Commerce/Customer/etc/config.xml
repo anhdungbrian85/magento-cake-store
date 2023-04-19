@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <x247commerce_customer>
+            <event>
+                <email_template>x247commerce_customer_event_email_template</email_template>
+                <send_mail_save>0</send_mail_save>
+            </event>
+        </x247commerce_customer>
+    </default>
+</config>

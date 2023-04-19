@@ -8,8 +8,9 @@ define([
     'Magento_Customer/js/customer-data',
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
+    'locationContext',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date'
-], function (ko, $, Component, customerData, pickup, pickupDataResolver) {
+], function (ko, $, Component, customerData, pickup, pickupDataResolver, locationContext) {
     'use strict';
 
     return Component.extend({
@@ -78,20 +79,20 @@ define([
                 oldValue = this.value(),
                 isOldTimeValid,
                 isCachedTimeValid;
-
+                
             if (data.date && selectedStore) {
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStore.schedule_id);
 
                 if (this.storeScheduleSelected || data.store.schedule_id) {
                     timeIntervals = timeIntervals[this.selectedDayByName];
                 }
-
+                console.log(timeIntervals)
                 if (timeIntervals) {
                     this.options(this.isTodaySelected
                         ? this.restrictTimeIntervals(timeIntervals)
                         : timeIntervals);
                 }
-
+                
                 isOldTimeValid = this.options().some(function (interval) {
                     return interval.value === oldValue;
                 });
@@ -126,9 +127,9 @@ define([
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
                 filteredIntervals;
-
+                console.log(currentStoreTime)
             filteredIntervals = intervals.filter(function (item) {
-                return item.fromInUnix > currentStoreTime + this.cartProductsDelay
+                return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
                     // && item.toInUnix <= this.sameDayCutoffTime;
             }.bind(this));
 

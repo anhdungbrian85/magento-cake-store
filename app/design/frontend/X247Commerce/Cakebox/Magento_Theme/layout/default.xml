@@ -29,7 +29,8 @@
         <referenceContainer name="header-wrapper">
             <block class="Magento\Customer\Block\Account\Link" name="header.account" template="Magento_Theme::html/account.phtml" after="top.search" />
         </referenceContainer>
-
+        <referenceBlock name="register-link" remove="true"/>
+        <referenceBlock name="my-account-link" remove="true"/>
         <move element="minicart" destination="header-wrapper" after="-" />
         <move element="register-link" destination="header.account" before="-" />
         <move element="authorization-link" destination="header.account" before="-" />

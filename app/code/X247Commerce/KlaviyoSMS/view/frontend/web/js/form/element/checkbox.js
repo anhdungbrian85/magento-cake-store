@@ -1,15 +1,13 @@
 define([
     'Magento_Ui/js/form/element/abstract',
     'jquery',
-    'mage/url'
-], function (Abstract, $, url) {
+    'mage/url',
+    'ko'
+], function (Abstract, $, url, ko) {
     'use strict';
 
     return Abstract.extend({
         onUpdate: function () {
-            this.bubble('update', this.hasChanged());
-            console.log(this.value());
-            console.log(this.id);
             $.ajax({
                 url: url.build('x247commerce_klaviyo/quote/update'),
                 data: {
@@ -21,7 +19,6 @@ define([
             }).done(function (data) {
             });
             this.validate();
-        },
-
+        }
     });
 });

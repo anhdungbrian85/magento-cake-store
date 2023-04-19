@@ -142,7 +142,7 @@ class TimeHandler extends \Amasty\StorePickupWithLocator\Model\TimeHandler
      */
     public function getDateTimestamp($date = null)
     {
-        return $this->timezone->date($date, null, false)->getTimestamp();
+        return strtotime($this->timezone->date($date, null, true)->format("Y-m-d H:i:s"));
     }
 
     /**

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\CatalogStaging\Ui\DataProvider\Catalog\Product\Form\Modifier\Eav">
+        <plugin name="x247_hide_eav_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\CatalogStaging\Ui\DataProvider\Product\Form\Modifier\Eav"/>
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AttributeSet">
+        <plugin name="x247_hide_attribute_set_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AttributeSet"/>
+    </type>
+    <type name="Magento\Review\Ui\DataProvider\Product\Form\Modifier\Review">
+        <plugin name="x247_hide_review_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Review\Ui\DataProvider\Product\Form\Modifier\Review"/>
+    </type>
+    <type name="Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier\Composite">
+        <plugin name="x247_hide_downloadable_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier\Composite"/>
+    </type>
+    <type name="Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage">
+        <plugin name="x247_hide_gift_message_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage"/>
+    </type>
+    <type name="Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage">
+        <plugin name="x247_hide_gift_message_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage"/>
+    </type>
+    <type name="Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage">
+        <plugin name="x247_hide_gift_message_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage"/>
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\General">
+        <plugin name="x247_hide_general_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\General"/>
+    </type>
+    <type name="Klevu\Search\Ui\DataProvider\Product\Form\Modifier\Attributes\ReviewCount">
+        <plugin name="x247_hide_klevu_with_staff_role"
+                type="X247Commerce\Products\Plugin\Klevu\Search\Ui\DataProvider\Product\Form\Modifier\Attributes\ReviewCount"/>
+    </type>
+    <type name="Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery">
+        <plugin name="x247_hide_gallery_with_staff_role"
+                type="X247Commerce\Products\Plugin\Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery"/>
+    </type>
+</config>
