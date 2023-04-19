@@ -9,6 +9,10 @@ namespace X247Commerce\Checkout\Api;
 interface StoreLocationContextInterface
 {
 
+    public const FREE_COLLECTION_TYPE_VALUE = 0;
+
+    public const DELIVERY_TYPE_VALUE = 1;
+
     public const STORE_LOCATION_ID = 'store_location_id';
 
     public const DELIVERY_TYPE = 'delivery_type';
@@ -48,7 +52,7 @@ interface StoreLocationContextInterface
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getCustomerPostcode();    
+    public function getCustomerPostcode();
 
     /**
      * Set Customer Geographic Coordinate to HttpContext.
