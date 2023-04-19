@@ -787,7 +787,11 @@ define([
                     clone.attr("data-validate", newValue); 
                     $("textarea.product-custom-option").replaceWith(clone);
                     $(".character-limit-note").remove();
-                    $("textarea.product-custom-option").after(note);                    
+                    $("textarea.product-custom-option").after(note);
+                    $("textarea.product-custom-option").on('keyup', function(e){
+                        $.validator.validateElement($("textarea.product-custom-option"));
+                        $("textarea.product-custom-option").val(e.target.value.slice(0, characterLimit));
+                    });
                 }
             } else {
                 if ($("textarea.product-custom-option").length !== 0) {         
