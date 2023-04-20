@@ -34,11 +34,10 @@ class LayoutProcessor
         \Magento\Checkout\Block\Checkout\LayoutProcessor $subject,
         $result
     ) {
-        $locationId = $this->storeLocationContextInterface->getStoreLocationId();
-        $locationPostcode = $locationId ? $this->locationModel->load($locationId)->getZip() : "";
-        $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-        ['shippingAddress']['children']['shipping-address-fieldset']['children']['postcode']['value'] = $locationPostcode;
-
+        if ($this->storeLocationContextInterface->getDeliveryType() == \X247Commerce\Checkout\Api\StoreLocationContextInterface::DELIVERY_TYPE_VALUE) {
+            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+            ['shippingAddress']['children']['shipping-address-fieldset']['children']['postcode']['value'] = ($this->storeLocationContextInterface->getCustomerPostcode()) ? $this->storeLocationContextInterface->getCustomerPostcode() : '';
+        }
         $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
         ['shippingAddress']['children']['shipping-address-fieldset']['children']['telephone']['validation'] = ['required-entry' => true, 'max_text_length' => 255, 'min_text_length' => 1];
 
