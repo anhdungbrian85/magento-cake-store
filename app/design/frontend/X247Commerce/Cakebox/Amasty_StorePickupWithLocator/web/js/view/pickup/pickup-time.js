@@ -86,7 +86,7 @@ define([
                 if (this.storeScheduleSelected || data.store.schedule_id) {
                     timeIntervals = timeIntervals[this.selectedDayByName];
                 }
-                console.log(timeIntervals)
+                
                 if (timeIntervals) {
                     this.options(this.isTodaySelected
                         ? this.restrictTimeIntervals(timeIntervals)
@@ -127,7 +127,7 @@ define([
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
                 filteredIntervals;
-                console.log(currentStoreTime)
+                
             filteredIntervals = intervals.filter(function (item) {
                 return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
                     // && item.toInUnix <= this.sameDayCutoffTime;

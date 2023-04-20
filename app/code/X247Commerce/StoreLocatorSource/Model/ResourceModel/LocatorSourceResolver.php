@@ -384,7 +384,6 @@ class LocatorSourceResolver
     {
         $locationData = [];
         $nearestDistance = 100000000;
-        $currentSourceIsAvailable = false;
         $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $inventorySourceTbl = $this->resource->getTableName('inventory_source');
         $inventorySourceItemTbl = $this->resource->getTableName('inventory_source_item');
@@ -405,54 +404,30 @@ class LocatorSourceResolver
             }
             if (!empty($availableSources) && count($availableSources) > 0) {
                 $availableSources = array_unique($availableSources);
-                $dataAvailableSources = [];
-
                 foreach ($availableSources as $availableSourceCode) {
                     $getSourceDataQuery = $this->connection->select()
                         ->from($inventorySourceTbl, ['*'])
                         ->where("source_code = ?", $availableSourceCode);
-
                     $availableSource = $this->connection->fetchRow($getSourceDataQuery);
-                    if ($availableSource['amlocator_store'] == $currentLocationId) {
-                        $currentSourceIsAvailable = true;
-                    }
                     if (isset($availableSource['latitude']) &&
                         isset($availableSource['longitude']) &&
                         isset($currentSourceData['latitude']) &&
                         isset($currentSourceData['longitude'])) {
-                        $dataAvailableSources[] = $availableSource;
-                    }
-                }
-                if (!$currentSourceIsAvailable) {
-                    if (count($dataAvailableSources) >= 3) {
-                        usort($dataAvailableSources, function($sourceLocationA, $sourceLocationB) use ($currentSourceData) {
-                            $distanceFromAToCurrentSource = $this->calculateDistance(
-                                $sourceLocationA['latitude'],
-                                $sourceLocationA['longitude'],
-                                $currentSourceData['latitude'],
-                                $currentSourceData['longitude']
-                            );
-                            $distanceFromBToCurrentSource = $this->calculateDistance(
-                                $sourceLocationB['latitude'],
-                                $sourceLocationB['longitude'],
-                                $currentSourceData['latitude'],
-                                $currentSourceData['longitude']
-                            );
-                            return $distanceFromAToCurrentSource - $distanceFromBToCurrentSource;
-                        });
-                        $locationData = array_slice($dataAvailableSources,0, 3);
+                        $distanceToCurrentSource = $this->calculateDistance(
+                            $availableSource['latitude'],
+                            $availableSource['longitude'],
+                            $currentSourceData['latitude'],
+                            $currentSourceData['longitude']
+                        );
+                        if ($nearestDistance > $distanceToCurrentSource) {
+                            $nearestDistance = $distanceToCurrentSource;
+                            $locationData = $availableSource;
+                        }
                     }
                 }
             }
         }
-        return [
-            'location_data' => $locationData,
-            'current_source_is_available' => $currentSourceIsAvailable
-        ];
-    }
-
-    public function sortByDistance($sourceCodeA, $sourceCodeB, $currentSourceData) {
-
+        return $locationData;
     }
 
     public function validateOutOfStockStatusOfProduct($currentLocationId, $productSku)

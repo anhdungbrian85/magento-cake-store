@@ -26,18 +26,25 @@ class HttpContext
     {
         $storeLocationId = $this->checkoutSession->getStoreLocationId();
         $deliveryType = $this->checkoutSession->getDeliveryType();
+        $customerPostcode = $this->checkoutSession->getCustomerPostcode();
         $defaultStoreLocationIdContext = 0;
         $defaultDeliveryTypeContext = 0;
+        $defaultCustomerPostcode = '';
         // $subject->setValue('store_location_id', $storeLocationId, $defaultStoreLocationIdContext);
         $this->context->setValue(
-                'store_location_id',
+            \X247Commerce\Checkout\Api\StoreLocationContextInterface::STORE_LOCATION_ID,
                 $storeLocationId,
                 $defaultStoreLocationIdContext
             );
         $this->context->setValue(
-            'delivery_type',
+            \X247Commerce\Checkout\Api\StoreLocationContextInterface::DELIVERY_TYPE,
             $deliveryType,
             $defaultDeliveryTypeContext
+        );
+        $this->context->setValue(
+            \X247Commerce\Checkout\Api\StoreLocationContextInterface::CUSTOMER_POSTCODE,
+            $customerPostcode,
+            $defaultCustomerPostcode
         );
     }
 }

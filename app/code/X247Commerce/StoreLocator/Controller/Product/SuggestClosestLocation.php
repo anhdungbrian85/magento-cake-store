@@ -44,24 +44,17 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
             }
 
             $closestLocation = $this->locatorSourceResolver->getClosestLocationHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
-            if (!empty($closestLocation['location_data'])) {
+            if (!empty($closestLocation)) {
                 $result = [
                     'status' => 200,
                     'message' => __('Okay!'),
-                    'closest_location' => $closestLocation['location_data']
+                    'closest_location' => $closestLocation
                 ];
             } else {
-                if ($closestLocation['current_source_is_available']) {
-                    $result = [
-                        'status' => 400,
-                        'message' => __('This product is in this stock')
-                    ];
-                } else {
-                    $result = [
-                        'status' => 404,
-                        'message' => __('There are no sources in the cart that match the items in the cart!')
-                    ];
-                }
+                $result = [
+                    'status' => 404,
+                    'message' => __('There are no sources in the cart that match the items in the cart!')
+                ];
             }
         } catch (\Exception $e) {
             $result = [
