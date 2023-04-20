@@ -5,7 +5,6 @@
 define([
 	'jquery',
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
-    // 'Amasty_StorePickupWithLocator/js/view/pickup/pickup-time',
     'locationContext',
     'uiRegistry',
 	'mage/translate'
@@ -13,7 +12,6 @@ define([
 ], function (
 	$,
 	pickupDataResolver,
-    // pickupTime,
     locationContext,
     registry
 ) {
@@ -21,21 +19,6 @@ define([
 
     var mixin = {
  
-        /**
-         * Set the first store work day to date field
-         *
-         * @param {Object} store
-         * @return {void}
-         */
-        setDateToFirstPickupDate: function (store) {
-            let firstPickupDate = this.getFirstPickupDate(store);
-
-            this.firstPickupDate = firstPickupDate;
-
-            // This is direct access to the element because change of value does not trigger change of datepicker input
-            $('#' + this.uid).datepicker('setDate', firstPickupDate);
-            this.onValueChange(firstPickupDate);
-        },
         /**
          * Get the first store work day
          *
@@ -87,30 +70,20 @@ define([
          */
         restrictDates: function (date) {
             var selectedStore = this.selectedStore,
-                selectedStoreData = pickupDataResolver.getCurrentStoreData(),
                 storeDateTime,
                 isToday,
                 minPickupDateWithoutTime,
                 dateWithoutTime,
+                currentDayName,
                 daySchedule,
-                scheduleArray,
-                timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
-                currentDayName = this.weekDays[date.getDay()];
-                
+                scheduleArray;
+
             if (!selectedStore) {
                 return [false, ''];
             }
 
             storeDateTime = this.currentStoreDateTime.asDateTimeObject;
             isToday = this.isDateIsStoreToday(date, storeDateTime);
-
-            if (timeIntervals[currentDayName] && isToday && selectedStoreData.schedule_id) {
-                timeIntervals = this.restrictTimeIntervals(timeIntervals[currentDayName]);
-            }
-            
-            if (isToday && timeIntervals.length == 0) {
-                return [false, ''];
-            }
 
             minPickupDateWithoutTime = new Date(
                 this.minPickupDateTime.asDateTimeObject.getUTCFullYear(),
@@ -130,6 +103,7 @@ define([
 
             if (selectedStore.schedule_id) {
                 scheduleArray = pickupDataResolver.getScheduleByScheduleId(selectedStore.schedule_id);
+                currentDayName = this.weekDays[date.getDay()];
                 daySchedule = scheduleArray[currentDayName];
 
                 // check current day status in Store Schedule object
@@ -147,23 +121,6 @@ define([
             }
 
             return [true, ''];
-        },
-        restrictTimeIntervals: function (intervals) {
-            var currentStore = pickupDataResolver.getCurrentStoreData() || {},
-                currentStoreTime = currentStore.current_timezone_time,
-                filteredIntervals = [];
-
-            for(let i = 0; i < intervals.length; i++) {
-                if (intervals[i].fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)) {
-                    filteredIntervals.push(intervals[i]);
-                }
-            }
-            // filteredIntervals = intervals.filter(function (item) {
-            //     return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
-            //         // && item.toInUnix <= this.sameDayCutoffTime;
-            // }.bind(this));
-
-            return filteredIntervals;
         },
     };
 
