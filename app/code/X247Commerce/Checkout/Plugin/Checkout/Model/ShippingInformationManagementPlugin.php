@@ -102,17 +102,23 @@ class ShippingInformationManagementPlugin
             if ($pickupQuoteData instanceof QuoteInterface) {
                 $storeLocationId = $pickupQuoteData->getStoreId();
                 if ($storeLocationId != $this->storeLocationContext->getStoreLocationId()) {
-                    
                     $quoteEntity->setStoreLocationId($storeLocationId);
-                    $this->storeLocationContext->setDeliveryType($quoteEntity->getData('delivery_type'));
-                    $this->quoteRepository->save($quoteEntity);
                     $this->storeLocationContext->setStoreLocationId($storeLocationId);
+                    
                 }
+                if ($quoteEntity->getData('delivery_type') == 1) {
+                    $quoteEntity->setData('delivery_type', 0); // as if delivery type = 2, we don't allow change the delivery type in checkout
+                    $this->storeLocationContext->setDeliveryType(0);
+                }
+                $this->quoteRepository->save($quoteEntity);
             }
+
         }   else {
-            $quoteEntity->setData('delivery_type', 1);
-            $this->quoteRepository->save($quoteEntity);
-            $this->storeLocationContext->setDeliveryType(1);
+            if ($quoteEntity->getData('delivery_type') != 1) {
+                $quoteEntity->setData('delivery_type', 1);
+                $this->quoteRepository->save($quoteEntity);
+                $this->storeLocationContext->setDeliveryType(1);
+            }
         }
 
         return $paymentDetails;

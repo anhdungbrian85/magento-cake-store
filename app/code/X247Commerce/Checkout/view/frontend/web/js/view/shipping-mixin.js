@@ -433,7 +433,7 @@ define(
                     var isShippingValid;
 
                     if (!this.allowedDynamicalSave
-                        || this.isBillingAddressFormVisible()
+                        // || this.isBillingAddressFormVisible() // As we always show billing address
                         || !shippingRegistry.isHaveUnsavedShipping()
                     ) {
                         paymentLoader(false);
