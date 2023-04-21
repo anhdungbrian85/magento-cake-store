@@ -64,7 +64,7 @@ class CustomModelShipping
 		$this->logger->info('POSTCODE '.$postcode);		
         if($quote->getShippingAddress()) {
             $shippingMethod = $quote->getShippingAddress()->getShippingMethod();            
-            if($shippingMethod == 'flatrate_flatrate'){
+            if($shippingMethod == 'cakeboxdelivery_cakeboxdelivery'){
 				if($postcode && $postcode != '-'){
 					$location = $this->getClosestStoreLocation($postcode);
 					if ($location && $location->getId()) {

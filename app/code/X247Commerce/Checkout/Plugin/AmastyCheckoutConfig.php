@@ -27,7 +27,7 @@ class AmastyCheckoutConfig
         	return \Amasty\StorePickupWithLocator\Model\Carrier\Shipping::SHIPPING_NAME;
         }
         if ($deliveryTypeContext == 1 || $deliveryTypeContext == 2) {
-        	return 'flatrate_flatrate';
+        	return 'cakeboxdelivery_cakeboxdelivery';
         }
         return $result;
     }

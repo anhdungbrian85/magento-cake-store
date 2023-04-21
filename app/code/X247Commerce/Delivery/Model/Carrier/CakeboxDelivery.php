@@ -53,11 +53,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
      */
     public function collectRates(RateRequest $request)
     {
+
         if (!$this->getConfigFlag('active')) {
-            return false;
-        }
-        $deliveryType = $this->checkoutSession->getDeliveryType() ?? $this->storeLocationContext->getDeliveryType();
-        if ($deliveryType != 1) {
             return false;
         }
 

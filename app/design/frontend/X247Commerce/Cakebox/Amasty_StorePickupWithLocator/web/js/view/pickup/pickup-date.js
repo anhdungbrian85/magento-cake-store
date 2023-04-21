@@ -67,6 +67,7 @@ define([
             this.getPickupDateFromCache();
 
             this.value = this.dateFromCache;
+            // this.dateFormat = 'dd/mm/yy';
             this.cartProductsDelay = this.cartProductsDelay
                 ? this.cartProductsDelay * 3600 // hours to seconds conversion
                 : 0;
@@ -74,7 +75,7 @@ define([
             this.options.sameDayPickupAllow = !!this.sameDayPickupAllow;
             this.options.sameDayCutoffTime = this.sameDayCutoffTime ? this.sameDayCutoffTime : null;
             this.options.beforeShowDay = this.restrictDates.bind(this);
-            this.options.dateFormat = 'dd/mm/yy';
+            // this.options.dateFormat = 'dd/mm/yy';
 
             this.prepareDateTimeFormats();
 
@@ -82,6 +83,7 @@ define([
         },
 
         onValueChange: function (value) {
+
             var datepickerDate,
                 selectedDate;
 
@@ -95,6 +97,7 @@ define([
 
             pickupDataResolver.dateData(selectedDate);
             this.getSelectedDay(datepickerDate, value);
+            console.log(value)
             this.source.trigger('amStorepickup.date.change', {
                 date: value,
                 store: this.selectedStore
@@ -106,7 +109,7 @@ define([
 
             if (this.selectedStore) {
                 this.initStoreDateTimeOptions(this.selectedStore);
-                this.setDateToFirstPickupDate(this.selectedStore);
+                // this.setDateToFirstPickupDate(this.selectedStore);
             } else {
                 this.value('');
             }
@@ -174,7 +177,7 @@ define([
             var firstPickupDate = this.getFirstPickupDate(store);
 
             this.firstPickupDate = firstPickupDate;
-
+            // console.log(firstPickupDate)
             // This is direct access to the element because change of value does not trigger change of datepicker input
             // $('#' + this.uid).datepicker('setDate', firstPickupDate);
             // this.onValueChange(firstPickupDate);
