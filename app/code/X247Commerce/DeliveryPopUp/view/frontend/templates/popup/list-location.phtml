@@ -39,8 +39,26 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
                             <span class="amasty_distance_number"><?= $deliveryHelper->calculateDistance($customerLat, $customerLng, $loLat, $loLng, $unitSetting) ?></span>
                         </div>
                     </div>
-                    <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>   
-                    </div>
+                    <!-- <div class="amlocator-store-information"><?= $location->getStoreListHtml() ?>   
+                    </div> -->
+                    <div class="amlocator-store-information"><?=$location->getStoreListHtml() ?>  
+                     
+                        <!--code for add delivery store pickup -->
+                        <?php if($location->getData('curbside_enabled') || $location->getData('enable_delivery')){?>
+                            <div style="background-color:white" >
+                                <span>
+                                    <?php if($location->getData('curbside_enabled')){?>
+                                        <strong>Collect in store &#x2705; </strong>
+                                    <?php } ?>
+                                    <?php if($location->getData('enable_delivery')){?>
+                                        <strong>&nbsp;&nbsp;Delivery &#x2705; </strong>
+                                    <?php } ?>
+
+
+                                </span>
+                            </div>
+                        <?php } ?>
+                    </div>                    
                 </div>
                 <?=
                 $block->getLayout()
@@ -48,10 +66,10 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
                     ->setData('location', $location)
                     ->toHtml();
                 ?>
-                <div class="select store lacation">
-	                <button class="select-location" data-location-id="<?= $location->getId() ?>">
-	                    <?= __('Select') ?>
-	                </button>
+                <div class="select store lacation"> 
+                    <button class="select-location" data-location-id="<?= $location->getId() ?>">
+                        <?= __('Select') ?>
+                    </button>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -61,3 +79,4 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
         <div class="amlocator-pager-container"><?= /** @escapeNotVerified */ $pager; ?></div>
     <?php endif; ?>
 </div>
+

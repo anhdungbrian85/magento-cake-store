@@ -241,7 +241,12 @@ define(
                 selectShippingMethod: function (method) {
                     if (method) {
                         if (method['carrier_code'] && method['carrier_code'] == 'amstorepickup') {
-                            locationContext.deliveryType(quote.getDeliveryType())
+                            if (quote.getDeliveryType() == 1) {
+                                locationContext.deliveryType(0);
+                            }   else {
+                                locationContext.deliveryType(quote.getDeliveryType());
+                            }
+                            
                         }   else {
                             locationContext.deliveryType(1) 
                         }
