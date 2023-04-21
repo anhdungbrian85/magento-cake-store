@@ -8,12 +8,6 @@
 				<title>Cakebox Delivery</title>
 				<name>Cakebox Delivery</name>
 				<price>0.00</price>
-				<specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-				<sallowspecific>0</sallowspecific>
-			</cakeboxdelivery>
-		</carriers>
-		<delivery>
-			<general>
 				<distance>
 					<item1>
 		                <from_distance>0</from_distance>
@@ -31,7 +25,9 @@
 		                <price>19.95</price>
 		            </item3>
 		        </distance>
-			</general>
-		</delivery>
+				<specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+				<sallowspecific>0</sallowspecific>
+			</cakeboxdelivery>
+		</carriers>
 	</default>
 </config>
