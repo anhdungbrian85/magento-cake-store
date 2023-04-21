@@ -51,6 +51,7 @@
         "klevu/module-msi": "^1.0",
         "klevu/module-search": "^3.0",
         "laminas/laminas-barcode": "^2.12",
+        "liquid/liquid": "^1.4",
         "magento/composer-root-update-plugin": "^2.0.2",
         "magento/magento-cloud-metapackage": "2.4.5",
         "magento/module-layered-navigation": "^100.4",
