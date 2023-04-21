@@ -97,7 +97,6 @@ define([
 
             pickupDataResolver.dateData(selectedDate);
             this.getSelectedDay(datepickerDate, value);
-            console.log(value)
             this.source.trigger('amStorepickup.date.change', {
                 date: value,
                 store: this.selectedStore
