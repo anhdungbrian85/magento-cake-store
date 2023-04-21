@@ -30,7 +30,8 @@ define([
             currentStoreDateTime: {},
             minPickupDateTime: {},
             required: '${$.required}',
-            dateFormat: 'mm/dd/yy'
+            dateFormat: "d/M/yy"
+
         },
 
         visibleComputed: ko.pureComputed(function () {
