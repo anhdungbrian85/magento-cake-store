@@ -78,14 +78,15 @@ class CustomModelShipping
 						}
 						$closestLocation = $this->locatorSourceResolver->getClosestLocationHasProducts($location->getId(), $productSkus);
 						$this->logger->info('LOCATION SKUCHECK '.json_encode($closestLocation));
-						if (!empty($closestLocation)) {
-							$this->storeLocationContextInterface->setStoreLocationId($location->getId());														
+						//if (!empty($closestLocation)) {
+							$this->storeLocationContextInterface->setStoreLocationId($location->getId());	
+							$quote ->setData('store_location_id', $location->getId())->save();							
 							return $collectRatesResult;	
-						}else{
-							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));							
+						//}else{
+						//	$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));							
 							
-							return $collectRatesResult;							
-						}						
+						//	return $collectRatesResult;							
+						//}						
 					}else{
 						$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));						
 						
