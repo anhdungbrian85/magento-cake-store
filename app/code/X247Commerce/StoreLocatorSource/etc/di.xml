@@ -27,6 +27,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="AssignSourceToLocation" xsi:type="object">X247Commerce\StoreLocatorSource\Console\Command\AssignSourceToLocation</item>
+                <item name="ChangePasswordUserRole" xsi:type="object">X247Commerce\StoreLocatorSource\Console\Command\ChangePasswordUserRole</item>
             </argument>
         </arguments>
     </type>

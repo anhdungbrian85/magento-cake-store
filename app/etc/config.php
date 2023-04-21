@@ -490,6 +490,7 @@ return [
         'Amasty_CheckoutDeliveryDate' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'Smsglobal_Sms' => 0,
+        'Sparsh_FacebookPixel' => 1,
         'Temando_ShippingRemover' => 1,
         'Trustpilot_Reviews' => 1,
         'Ulmod_Productinquiry' => 1,
