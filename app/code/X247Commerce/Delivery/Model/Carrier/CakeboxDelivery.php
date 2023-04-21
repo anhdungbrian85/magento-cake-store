@@ -74,7 +74,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
 
         $shippingPrice = $this->getConfigData('price');
 
-        $rateShipping = $this->deliveryData->getRateShipping() ?? [];
+        $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
+        
         $ratePrice = -1;
         foreach ($rateShipping as $item => $value) {
             if (!empty($value)) {

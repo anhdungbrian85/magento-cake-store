@@ -57,13 +57,11 @@ class CustomModelShipping
 		
 		$quote = $this->checkoutSession->getQuote();
 		// Get the shipping address
-        $shippingAddress = $quote->getShippingAddress();
-		
+        $shippingAddress = $quote->getShippingAddress();		
         
         // Get the shipping address postcode
         $postcode = $shippingAddress->getPostcode();		     
-		$this->logger->info('POSTCODE '.$postcode);
-		
+		$this->logger->info('POSTCODE '.$postcode);		
         if($quote->getShippingAddress()) {
             $shippingMethod = $quote->getShippingAddress()->getShippingMethod();            
             if($shippingMethod == 'flatrate_flatrate'){
@@ -81,22 +79,16 @@ class CustomModelShipping
 						$closestLocation = $this->locatorSourceResolver->getClosestLocationHasProducts($location->getId(), $productSkus);
 						$this->logger->info('LOCATION SKUCHECK '.json_encode($closestLocation));
 						if (!empty($closestLocation)) {
-							//$this->storeLocationContextInterface->setStoreLocationId($location->getId());
-							//return $collectRatesResult;
-							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-							$this->_quote->setTotalsCollectedFlag(false);
-							$this->_quote->collectTotals();							
+							$this->storeLocationContextInterface->setStoreLocationId($location->getId());														
 							return $collectRatesResult;	
 						}else{
-							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-							
+							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));							
 							$this->_quote->setTotalsCollectedFlag(false);
 							$this->_quote->collectTotals();
 							return $collectRatesResult;							
 						}						
 					}else{
-						$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-						
+						$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));						
 						$this->_quote->setTotalsCollectedFlag(false);
 						$this->_quote->collectTotals();
 						return $collectRatesResult;
