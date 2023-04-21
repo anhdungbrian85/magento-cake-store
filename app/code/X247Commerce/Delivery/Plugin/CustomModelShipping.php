@@ -83,14 +83,12 @@ class CustomModelShipping
 							return $collectRatesResult;	
 						}else{
 							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));							
-							$this->_quote->setTotalsCollectedFlag(false);
-							$this->_quote->collectTotals();
+							
 							return $collectRatesResult;							
 						}						
 					}else{
 						$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));						
-						$this->_quote->setTotalsCollectedFlag(false);
-						$this->_quote->collectTotals();
+						
 						return $collectRatesResult;
 					}	
 				}else{
