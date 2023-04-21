@@ -66,7 +66,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         if (isset($responseApi["rows"][0]["elements"][0]["distance"]["text"])) {           
             $distance = (float) strtok($responseApi["rows"][0]["elements"][0]["distance"]["text"], ' ');
         } else {
-            return false;
+            $distance = 1;
         }
 
         $shippingPrice = $this->getConfigData('price');
