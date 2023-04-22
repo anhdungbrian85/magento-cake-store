@@ -53,11 +53,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
      */
     public function collectRates(RateRequest $request)
     {
+
         if (!$this->getConfigFlag('active')) {
-            return false;
-        }
-        $deliveryType = $this->checkoutSession->getDeliveryType() ?? $this->storeLocationContext->getDeliveryType();
-        if ($deliveryType != 1) {
             return false;
         }
 
@@ -69,12 +66,13 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         if (isset($responseApi["rows"][0]["elements"][0]["distance"]["text"])) {           
             $distance = (float) strtok($responseApi["rows"][0]["elements"][0]["distance"]["text"], ' ');
         } else {
-            return false;
+            $distance = 1;
         }
 
         $shippingPrice = $this->getConfigData('price');
 
-        $rateShipping = $this->deliveryData->getRateShipping() ?? [];
+        $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
+        
         $ratePrice = -1;
         foreach ($rateShipping as $item => $value) {
             if (!empty($value)) {

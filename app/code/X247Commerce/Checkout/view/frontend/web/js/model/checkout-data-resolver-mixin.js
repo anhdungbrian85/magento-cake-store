@@ -122,7 +122,7 @@ define(
                     	}
                     	if (window.checkoutConfig.deliveryType ==  '1') {
                     		availableRate = _.find(ratesData, function (rate) {
-	                            return rate['carrier_code'] == 'flatrate';
+	                            return rate['carrier_code'] == 'cakeboxdelivery';
 	                        });
                     	}
                     }  

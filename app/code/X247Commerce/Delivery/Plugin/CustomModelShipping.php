@@ -57,16 +57,15 @@ class CustomModelShipping
 
 		$quote = $this->checkoutSession->getQuote();
 		// Get the shipping address
-        $shippingAddress = $quote->getShippingAddress();
 
+        $shippingAddress = $quote->getShippingAddress();
 
         // Get the shipping address postcode
         $postcode = $shippingAddress->getPostcode();
 		$this->logger->info('POSTCODE '.$postcode);
-
         if($quote->getShippingAddress()) {
             $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
-            if($shippingMethod == 'flatrate_flatrate'){
+            if($shippingMethod == 'cakeboxdelivery_cakeboxdelivery'){
 				if($postcode && $postcode != '-'){
 					$location = $this->getClosestStoreLocation($postcode);
 					if ($location && $location->getId()) {
@@ -81,25 +80,17 @@ class CustomModelShipping
 						$closestLocationRes = $this->locatorSourceResolver->getClosestLocationsHasProducts($location->getId(), $productSkus, 1);
                         $closestLocation = $closestLocationRes['location_data'];
 						$this->logger->info('LOCATION SKUCHECK '.json_encode($closestLocation));
-						if (!empty($closestLocation)) {
-							//$this->storeLocationContextInterface->setStoreLocationId($location->getId());
-							//return $collectRatesResult;
-							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-							$this->_quote->setTotalsCollectedFlag(false);
-							$this->_quote->collectTotals();
+						//if (!empty($closestLocation)) {
+							$this->storeLocationContextInterface->setStoreLocationId($location->getId());
+							$quote ->setData('store_location_id', $location->getId())->save();
 							return $collectRatesResult;
-						}else{
-							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
+						//}else{
+						//	$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
 
-							$this->_quote->setTotalsCollectedFlag(false);
-							$this->_quote->collectTotals();
-							return $collectRatesResult;
-						}
+						//	return $collectRatesResult;
+						//}
 					}else{
 						$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-
-						$this->_quote->setTotalsCollectedFlag(false);
-						$this->_quote->collectTotals();
 						return $collectRatesResult;
 					}
 				}else{

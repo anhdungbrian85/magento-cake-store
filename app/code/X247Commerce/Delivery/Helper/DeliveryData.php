@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 class DeliveryData extends AbstractHelper
 {
 	const GOOGLE_API_KEY_PATH = 'amlocator/general/api';	
-	const RATE_SHIPPING_CONFIG_PATH = 'delivery/general/distance';	
+	const RATE_SHIPPING_CONFIG_PATH = 'carriers/cakeboxdelivery/distance';	
     const API_RESPONSE_CODE_SUCCESS = 200;
     const API_RESPONSE_CODE_ERROR = 400;
 

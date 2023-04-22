@@ -140,8 +140,8 @@ class UpdateStoreLocationSelected implements ObserverInterface
 
                 }   else {
                     $dataShippingAddress = [
-                        'shipping_method' => 'flatrate_flatrate',
-                        'shipping_description' => 'Premium Delivery',
+                        'shipping_method' => 'cakeboxdelivery_cakeboxdelivery',
+                        'shipping_description' => 'Cakebox Delivery',
                         'same_as_billing' => 0
                     ];
                     $shippingAddress->addData($dataShippingAddress)->save();

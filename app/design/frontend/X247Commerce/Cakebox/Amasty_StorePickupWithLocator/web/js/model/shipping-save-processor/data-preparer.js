@@ -33,11 +33,11 @@ define([
                 keysMap = defaultKeysMap;
             }
 
-            if (pickupInfo.am_pickup_date) {
-                const toFragments = dateString => dateString ? dateString.split(/[-/]/) : dateString;
-                const dateTo_mmddyyyy = ([date, month, year], divider = "/") => `${month}${divider}${date}${divider}${year}`;
-                pickupInfo.am_pickup_date = dateTo_mmddyyyy(toFragments(pickupInfo.am_pickup_date));
-            }
+            // if (pickupInfo.am_pickup_date) {
+            //     const toFragments = dateString => dateString ? dateString.split(/[-/]/) : dateString;
+            //     const dateTo_mmddyyyy = ([date, month, year], divider = "/") => `${month}${divider}${date}${divider}${year}`;
+            //     pickupInfo.am_pickup_date = dateTo_mmddyyyy(toFragments(pickupInfo.am_pickup_date));
+            // }
             _.each(pickupInfo, function (value, key) {
                 mappedKey = keysMap[key] || key;
 

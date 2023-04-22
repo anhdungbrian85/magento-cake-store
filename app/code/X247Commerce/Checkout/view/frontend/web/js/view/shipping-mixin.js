@@ -128,7 +128,7 @@ define(
                 checkVisible: function(carrier_code) {
                     
                     if ((locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup')
-                     || (locationContext.isAsda() && carrier_code == 'flatrate') ) {
+                     || (locationContext.isAsda() && carrier_code == 'cakeboxdelivery') ) {
                         return false;
                     }
                     return true;
@@ -433,7 +433,7 @@ define(
                     var isShippingValid;
 
                     if (!this.allowedDynamicalSave
-                        || this.isBillingAddressFormVisible()
+                        // || this.isBillingAddressFormVisible() // As we always show billing address
                         || !shippingRegistry.isHaveUnsavedShipping()
                     ) {
                         paymentLoader(false);
