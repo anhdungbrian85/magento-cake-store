@@ -26,7 +26,7 @@ class CustomModelShipping
 	protected $_quote;
 	protected $request;
 	protected $locatorSourceResolver;
-    
+
     public function __construct(
        LoggerInterface $logger,
 	   DeliveryAreaHelper $deliveryAreaHelper,
@@ -48,72 +48,73 @@ class CustomModelShipping
 		$this->storeLocationContextInterface = $storeLocationContextInterface;
 		$this->locationCollectionFactory = $locationCollectionFactory;
     }
-    
+
     public function afterCollectRates(
         \Magento\Shipping\Model\Shipping $subject,
         $collectRatesResult
     ){
-		
-		
+
+
 		$quote = $this->checkoutSession->getQuote();
 		// Get the shipping address
         $shippingAddress = $quote->getShippingAddress();
-		
-        
+
+
         // Get the shipping address postcode
-        $postcode = $shippingAddress->getPostcode();		     
+        $postcode = $shippingAddress->getPostcode();
 		$this->logger->info('POSTCODE '.$postcode);
-		
+
         if($quote->getShippingAddress()) {
-            $shippingMethod = $quote->getShippingAddress()->getShippingMethod();            
+            $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
             if($shippingMethod == 'flatrate_flatrate'){
 				if($postcode && $postcode != '-'){
 					$location = $this->getClosestStoreLocation($postcode);
 					if ($location && $location->getId()) {
 						$this->logger->info('LOCATION NAME '.$location->getName());
 						$this->logger->info('LOCATION DELIVERY '.$location->getEnableDelivery());
-						
+
 						if (!empty($quote->getAllVisibleItems())) {
 							foreach ($quote->getAllVisibleItems() as $quoteItem) {
 								$productSkus[] = $quoteItem->getSku();
 							}
 						}
-						$closestLocation = $this->locatorSourceResolver->getClosestLocationHasProducts($location->getId(), $productSkus);
+						$closestLocationRes = $this->locatorSourceResolver->getClosestLocationsHasProducts($location->getId(), $productSkus, 1);
+                        $closestLocation = $closestLocationRes['location_data'];
 						$this->logger->info('LOCATION SKUCHECK '.json_encode($closestLocation));
 						if (!empty($closestLocation)) {
 							//$this->storeLocationContextInterface->setStoreLocationId($location->getId());
 							//return $collectRatesResult;
 							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
 							$this->_quote->setTotalsCollectedFlag(false);
-							$this->_quote->collectTotals();							
-							return $collectRatesResult;	
+							$this->_quote->collectTotals();
+							return $collectRatesResult;
 						}else{
 							$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-							
+
 							$this->_quote->setTotalsCollectedFlag(false);
 							$this->_quote->collectTotals();
-							return $collectRatesResult;							
-						}						
+							return $collectRatesResult;
+						}
 					}else{
 						$this->messageManager->addErrorMessage(__('There are no sources in the cart that match the items in the cart!'));
-						
+
 						$this->_quote->setTotalsCollectedFlag(false);
 						$this->_quote->collectTotals();
 						return $collectRatesResult;
-					}	
+					}
 				}else{
 					return $collectRatesResult;
 				}
 			}else{
 				return $collectRatesResult;
-			}				
+			}
         }else{
 			return $collectRatesResult;
-		}			
+		}
     }
-	
+
 	public function getClosestStoreLocation($postcode)
-    {   
+    {
         if (!$postcode) {
             return false;
         }

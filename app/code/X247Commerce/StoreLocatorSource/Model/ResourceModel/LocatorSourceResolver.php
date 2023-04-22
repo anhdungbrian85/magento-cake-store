@@ -380,10 +380,9 @@ class LocatorSourceResolver
         $this->connection->insertOnDuplicate($adminSourceTbl, $data);
     }
 
-    public function getClosestLocationHasProducts($currentLocationId, $products)
+    public function getClosestLocationsHasProducts($currentLocationId, $products, $numberLocation = 3)
     {
         $locationData = [];
-        $nearestDistance = 100000000;
         $currentSourceIsAvailable = false;
         $locationSourceLinkTbl = $this->resource->getTableName(self::LOCATION_SOURCE_LINK_TABLE);
         $inventorySourceTbl = $this->resource->getTableName('inventory_source');
@@ -440,7 +439,7 @@ class LocatorSourceResolver
                             );
                             return $distanceFromAToCurrentSource - $distanceFromBToCurrentSource;
                         });
-                        $locationData = array_slice($dataAvailableSources,0, 3);
+                        $locationData = array_slice($dataAvailableSources,0, $numberLocation);
                     }
                 }
             }
@@ -449,10 +448,6 @@ class LocatorSourceResolver
             'location_data' => $locationData,
             'current_source_is_available' => $currentSourceIsAvailable
         ];
-    }
-
-    public function sortByDistance($sourceCodeA, $sourceCodeB, $currentSourceData) {
-
     }
 
     public function validateOutOfStockStatusOfProduct($currentLocationId, $productSku)
