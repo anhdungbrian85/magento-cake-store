@@ -43,7 +43,7 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
                 }
             }
 
-            $closestLocation = $this->locatorSourceResolver->getClosestLocationHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
+            $closestLocation = $this->locatorSourceResolver->getClosestLocationsHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
             if (!empty($closestLocation['location_data'])) {
                 $result = [
                     'status' => 200,
