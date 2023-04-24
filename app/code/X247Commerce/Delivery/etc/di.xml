@@ -3,8 +3,8 @@
     <!-- <type name="X247Commerce\Delivery\Model\Carrier\CakeboxDelivery">
         <plugin disabled="false" name="X247Commerce_Delivery_Model_Shipping" sortOrder="100"
                 type="X247Commerce\Delivery\Plugin\Model\ModifyCakeboxDelivery"/>
-    </type> -->
+    </type>
 	<type name="Magento\Shipping\Model\Shipping">
         <plugin name="X247Commerce_Delivery_Model_Shipping_collect_rates" type="X247Commerce\Delivery\Plugin\CustomModelShipping" sortOrder="1" disabled="false"/>
-    </type>
+    </type>-->
 </config>
