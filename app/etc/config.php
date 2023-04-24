@@ -489,6 +489,7 @@ return [
         'OrderPdf_PdfExport' => 1,
         'Amasty_CheckoutDeliveryDate' => 1,
         'PayPal_BraintreeGraphQl' => 1,
+        'Salesorder_Refresh' => 1,
         'Smsglobal_Sms' => 0,
         'Sparsh_FacebookPixel' => 1,
         'Temando_ShippingRemover' => 1,
