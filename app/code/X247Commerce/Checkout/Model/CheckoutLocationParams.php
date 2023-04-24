@@ -74,7 +74,7 @@ class CheckoutLocationParams
             'initLeadDeliveryValue' =>  $this->getInitLeadDeliveryValue(),
             'amastySelectedPickup' => [ 
                 'am_pickup_curbside' => [],
-                'am_pickup_date' => $pickupQuote->getDate(),
+                'am_pickup_date' => date_create($pickupQuote->getDate())->format('Y-m-d'),
                 'am_pickup_store' => $this->storeLocationContext->getStoreLocationId(),
                 'am_pickup_time' => $pickupQuote->getTimeFrom().'|'.$pickupQuote->getTimeTo()
             ],

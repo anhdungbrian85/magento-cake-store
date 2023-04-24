@@ -30,8 +30,8 @@ define([
             currentStoreDateTime: {},
             minPickupDateTime: {},
             required: '${$.required}',
-            dateFormat: "d/M/yy"
-
+            dateFormat: 'dd/mm/yy',
+            
         },
 
         visibleComputed: ko.pureComputed(function () {
@@ -68,7 +68,7 @@ define([
             this.getPickupDateFromCache();
 
             this.value = this.dateFromCache;
-            // this.dateFormat = 'dd/mm/yy';
+
             this.cartProductsDelay = this.cartProductsDelay
                 ? this.cartProductsDelay * 3600 // hours to seconds conversion
                 : 0;
@@ -76,8 +76,10 @@ define([
             this.options.sameDayPickupAllow = !!this.sameDayPickupAllow;
             this.options.sameDayCutoffTime = this.sameDayCutoffTime ? this.sameDayCutoffTime : null;
             this.options.beforeShowDay = this.restrictDates.bind(this);
-            // this.options.dateFormat = 'dd/mm/yy';
-
+            
+            this.options.dateFormat = 'dd/mm/yy';
+            this.inputDateFormat = 'dd/mm/yy';
+            this.options.inputDateFormat = 'dd/mm/yy';
             this.prepareDateTimeFormats();
 
             return this;

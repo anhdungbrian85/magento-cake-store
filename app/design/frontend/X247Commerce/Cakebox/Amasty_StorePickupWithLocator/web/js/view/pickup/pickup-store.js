@@ -46,26 +46,20 @@ define([
             this._super();
 
             pickupData = pickupDataResolver.pickupData;
-            var stores = ko.computed(function() {
-                var allStores = pickupData().stores;
-                if (locationContext.deliveryType() == 2) {
-                    allStores = _.filter(allStores, function(store) {
-                        console.log(store)
-                        return !store.is_asda;
-                    })
-                }
-                return allStores;
-            });
-            
+            // var stores = ko.computed(function() {
+            //     var allStores = pickupData().stores;
+            //     if (locationContext.deliveryType() == 2) {
+            //         allStores = _.filter(allStores, function(store) {
+            //             console.log(store)
+            //             return !store.is_asda;
+            //         })
+            //     }
+            //     return allStores;
+            // });
+            var stores = pickupData().stores;
             amPickupConfig = window.checkoutConfig.amastyStorePickupConfig;
 
-            if (stores()
-                && (pickupData().website_id !== amPickupConfig.websiteId
-                    || pickupData().store_id !== amPickupConfig.storeId)
-            ) {
-                customerData.reload([ this.storesSectionName ], false);
-            }
-            this.options = stores(); 
+            this.options = stores; 
            
             this.value = pickupDataResolver.getDataByKey('am_pickup_store');
             this.visible = pickup.isPickup();
