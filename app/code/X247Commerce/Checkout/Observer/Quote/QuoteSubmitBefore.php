@@ -67,17 +67,19 @@ class QuoteSubmitBefore implements ObserverInterface
             $logger->info('PostCode:' . $postcode);
             if($postcode && $postcode != '-'){
                 $location = $this->getClosestStoreLocation($postcode);
-                $logger->info('Location Id :' . $location->getId());
                 if ($location && $location->getId()) {
+                    $logger->info('Location Id :' . $location->getId());
                     $productSkus = [];
                     if (!empty($quote->getAllVisibleItems())) {
                         foreach ($quote->getAllVisibleItems() as $quoteItem) {
                             $productSkus[] = $quoteItem->getSku();
                         }
                     }
-                    $logger->info('Location Id :' . $location->getId());
+                    $logger->info('Product Skus:');
+                    $logger->info(print_r($productSkus, true));
                     $closestLocationData = $this->locatorSourceResolver->getClosestLocationsHasProducts($location->getId(), $productSkus, 1);
-
+                    $logger->info('Closest Location Data:');
+                    $logger->info(print_r($closestLocationData, true));
                     if (isset($closestLocationData['current_source_is_available']) && $closestLocationData['current_source_is_available']) {
                         $this->storeLocationContext->setStoreLocationId($location->getId());
                     } else {
@@ -85,12 +87,11 @@ class QuoteSubmitBefore implements ObserverInterface
                             $quote->setTotalsCollectedFlag(false);
                             $quote->collectTotals();
                             throw new LocalizedException(__('There are no sources in the cart that match the items in the cart!'));
-                        }else{
+                        } else {
                             $closestLocation = $closestLocationData['location_data'][0];
                             $this->storeLocationContext->setStoreLocationId($closestLocation['amlocator_store']);
                         }
                     }
-
                 } else{
                     throw new LocalizedException(__('There are no sources in the cart that match the items in the cart!'));
                 }
