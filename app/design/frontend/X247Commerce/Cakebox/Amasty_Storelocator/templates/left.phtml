@@ -7,13 +7,20 @@
 /**
  * @var \Amasty\Storelocator\Block\Location $block
  * @var \Amasty\Storelocator\Model\Location $location
+ * 
  */
+$deliveryHelper = $this->helper('X247Commerce\DeliveryPopUp\Helper\Data');
+$customerLng = (float) $block->getData('lng');
+$customerLat = (float) $block->getData('lat');
 $locations = $block->getLocationCollection();
+$unitSetting = $deliveryHelper->getDistanceUnitSetting();
 ?>
 <div class="amlocator-wrapper">
     <div class="amlocator-stores-wrapper">
         <?php foreach ($locations as $location):
             ?>
+             <?php $loLng = (float) $location->getLng() ?>
+            <?php $loLat = (float) $location->getLat() ?>
             <div class="amlocator-store-desc" name="leftLocation"
                  data-mapid="<?= $block->escapeHtml($block->getMapId()); ?>"
                  data-amid="<?= (int)$location['id']; ?>">
@@ -39,10 +46,18 @@ $locations = $block->getLocationCollection();
                                         <?= $block->escapeUrl($location->getEmail())?>
                                     </a>
                             </div>
+
+                           <!--  <div  class="amasty_distance"
+                                 id="amasty_distance_<?= (int)$location['id'] ?>">
+                                <img src="<?php echo $this->getViewFileUrl('X247Commerce_DeliveryPopUp::images/temporary_for_store_image.jpg'); ?>">
+                                <div class="distance store location">
+                                    <span class="amasty_distance_number"><?= $deliveryHelper->calculateDistance($customerLat, $customerLng, $loLat, $loLng, $unitSetting) ?></span>
+                                </div>
+                            </div> -->
                      
-                        <div style="display: none;" class="amasty_distance"
+                        <div class="amasty_distance"
                              id="amasty_distance_<?= (int)$location['id'] ?>"><?= $block->escapeHtml(__('Distance:')) ?>
-                            <span class="amasty_distance_number"></span>
+                            <span class="amasty_distance_number"><?= $deliveryHelper->calculateDistance($customerLat, $customerLng, $loLat, $loLng, $unitSetting) ?></span>
                         </div>
                     </div>
                 </div>
