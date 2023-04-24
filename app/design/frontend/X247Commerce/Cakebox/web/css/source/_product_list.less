@@ -632,16 +632,41 @@
 		margin-bottom: 0;
 		position: inherit;
 		padding-left: 0px;
+		display: flex;
+		flex-wrap: wrap;
+
+		.block-title.filter-title {
+			text-align: end;
+		}
+
+		.filter-content {
+			order: -1;
+			width: 85%;
+		}
 
 		.filter-title strong {
-			top: 225px;
 			right: 5%;
 			left: unset;
+			display: inline-block;
+			position: relative;
+		}
+
+		.amshopby-button-wrap {
+			display: none;
+		}
+
+		.block-actions.filter-actions {
+			padding-left: 20px;
 		}
 
 		.amshopby-filter-current.filter-current {
-			width: 90%;
-			margin-top: 10px;
+			width: 92%;
+			margin: 10px 0;
+
+			.items {
+				padding-left: 20px;
+				margin-bottom: 0;
+			}
 		}
 
 		&.active .filter-title strong{
@@ -649,6 +674,7 @@
 			right: 0;
 		}
 	}
+	
     .page-products .sorter,
     .catalogsearch-result-index .custom-topmenu-mobile,
  	.catalog-category-view .custom-topmenu-mobile,
