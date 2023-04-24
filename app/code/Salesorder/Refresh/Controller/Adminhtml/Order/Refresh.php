@@ -20,17 +20,13 @@ class Refresh extends \Magento\Sales\Controller\Adminhtml\Order\Index
         $user = $_authSession->getUser();
         $loggedUserId =  $user->getId();
         if ($loggedUserId && $user->getRole()->getRoleName() == "Staff") {
-            $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface'); 
-            $baseurl = $storeManager->getStore()->getBaseUrl();
-
-            //$page = $_SERVER['PHP_SELF'];
-            //$page = 'https://staging-wwwfpgtvdjwlm-16.247docker.com/ecb-admin/sales/order';
-            $page = $baseurl."ecb-admin/sales/order";
+      
+            //$admin_base_url = $objectManager->create('Magento\Backend\Helper\Data')->getUrl('sales/order');
             $sec = "60";
 
             echo "<html>";
             echo" <head>";
-            echo " <meta http-equiv='refresh' content=".$sec.';URL='.$page.">";
+            echo " <meta http-equiv='refresh' content=".$sec.">";
             echo " </head>";
             echo "</html>";
             $resultPage = $this->_initAction();
