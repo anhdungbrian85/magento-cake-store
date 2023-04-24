@@ -45,7 +45,7 @@ $unitSetting = $deliveryHelper->getDistanceUnitSetting();
                      
                         <!--code for add delivery store pickup -->
                         <?php if($location->getData('curbside_enabled') || $location->getData('enable_delivery')){?>
-                            <div style="background-color:white" >
+                            <div>
                                 <span>
                                     <?php if($location->getData('curbside_enabled')){?>
                                         <strong>Collect in store &#x2705; </strong>
