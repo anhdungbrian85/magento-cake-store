@@ -1,8 +1,58 @@
-.amlocator-index-index #maincontent > .page-title-wrapper {
-	display: none;
+.amlocator-index-index #maincontent {
+	> .page-title-wrapper {
+		display: none;
+	}
+}
+
+#maincontent .amlocator-map-container {
+	.amlocator-button {
+		border-color: #992e80;
+		color: #992e80;
+
+		&.-nearby:hover {
+			background-color: #c14eaa;
+			color: #fff;
+		}
+	}
+
+	.amlocator-store-desc.-active {
+		background-color: #992e80;
+		
+		.amlocator-today {
+			background-color: #c14eaa;
+		}
+
+		.amlocator-location-info .amlocator-icon {
+			background-color: #992ED5;
+		}
+	}
+	
+	.amlocator-location-info .amlocator-icon {
+		background-color: #992e80;
+	}
+
+	.amlocator-schedule-container .amlocator-today:before {
+		filter: invert(23%) sepia(90%) saturate(1432%) hue-rotate(285deg) brightness(87%) contrast(90%);
+	}
 }
 
 & when (@media-common = true) {
+	.checkout-index-index #maincontent .amlocator-map-container {
+		.amlocator-button,
+		.amlocator-button.amlocator-filter-attribute {
+			background-color: #992e80;
+			color: #fff;
+
+			&:hover {
+				background-color: #c14eaa;
+			}
+		}
+
+		.amlocator-clear {
+			color: #992e80;
+		}
+	}
+
 	.amlocator-location-view {
 		.page-main > .page-title-wrapper .page-title {
 			width: 100%;
