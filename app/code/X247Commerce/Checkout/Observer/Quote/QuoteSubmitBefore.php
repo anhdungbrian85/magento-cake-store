@@ -83,6 +83,7 @@ class QuoteSubmitBefore implements ObserverInterface
                     if (isset($closestLocationData['current_source_is_available']) && $closestLocationData['current_source_is_available']) {
                         $this->storeLocationContext->setStoreLocationId($location->getId());
                         $quote->setData('store_location_id', $location->getId());
+                        $order->setData('store_location_id', $location->getId());
                     } else {
                         if (empty($closestLocationData['location_data'])) {
                             $quote->setTotalsCollectedFlag(false);
@@ -92,6 +93,7 @@ class QuoteSubmitBefore implements ObserverInterface
                             $closestLocation = $closestLocationData['location_data'][0];
                             $this->storeLocationContext->setStoreLocationId($closestLocation['amlocator_store']);
                             $quote->setData('store_location_id', $closestLocation['amlocator_store']);
+                            $order->setData('store_location_id', $closestLocation['amlocator_store']);
                         }
                     }
                 } else{
