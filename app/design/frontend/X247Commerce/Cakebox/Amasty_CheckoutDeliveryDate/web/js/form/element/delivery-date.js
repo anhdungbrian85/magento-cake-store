@@ -3,18 +3,40 @@
  */
 define([
     'ko',
+    'underscore',
     'jquery',
     'Magento_Ui/js/form/element/date',
-    'mage/translate'
-], function (ko, $, AbstractField, $t) {
+    'mage/translate',
+    'locationContext'
+], function (ko, _, $, AbstractField, $t, locationContext) {
     'use strict';
+
+    function isToday(date) {
+        const today = new Date();
+        if (today.toDateString() === date.toDateString()) {
+            return true;
+        }
+        return false;
+    }
 
     return AbstractField.extend({
         defaults: {
             amcheckout_days: [],
             amcheckout_firstDay: 0
         },
-
+        storesData: window.checkoutConfig.amastyLocations.stores,
+        deliverStoreId: ko.observable(window.checkoutConfig.storeLocationId),
+        
+        initialize: function () {
+            this._super();
+            var self = this;
+            self.deliverStore = ko.computed(function(){
+                return _.find(self.storesData, function(store) {
+                    return store.id == self.deliverStoreId()
+                })
+            }, this);
+           
+        },
         initConfig: function () {
             this._super();
             this.options.closeText = $t('Done');
@@ -98,9 +120,28 @@ define([
          * @returns {[Boolean, String]}
          */
         restrictDates: function (d) {
+            var deliverStoreData = this.deliverStore(),
+                leadDelivery = locationContext.leadDeliveryTime(),
+                today = new Date(),
+                dayEnabled = true,
+                storeCutoffTime = 16; // Hard fix cutoff time at 16:00 
+                
+            //@todo: Cutoff time by store
+
+            if (isToday(d)) {
+                var timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
+                cutOffTime = new Date(today.getFullYear(), today.getUTCMonth(), today.getUTCDate(), storeCutoffTime), 
+                cutOffTimeToInt = Date.parse(cutOffTime)/1000 - (today.getTimezoneOffset() * 60);
+                dayEnabled = timeToDeliver < cutOffTimeToInt;
+            }
+
+            if ($.inArray(d.getDay(), this.amcheckout_days) == -1) {
+                dayEnabled = false;
+            }
             return [
-                $.inArray(d.getDay(), this.amcheckout_days) != -1, ''
+                dayEnabled, ''
             ];
+
         }
     });
 });
