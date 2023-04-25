@@ -102,10 +102,13 @@ class QuoteSubmitBefore implements ObserverInterface
             }
         } else {
             $locationId = $this->storeLocationContext->getStoreLocationId() ?? $this->checkoutSession->getStoreLocationId();
+			$logger->info('Collect in Store Location: '.$locationId);
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
-                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);
+					$logger->info('Collect in Store Location SKU: '.$item->getSku());
+                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);					
                     if (!$available) {
+						$logger->info('Collect in Store Location SKU ERROR: '.$item->getSku());
                         throw new LocalizedException(__('Some of the products are out stock!'));
                     }
                 }
