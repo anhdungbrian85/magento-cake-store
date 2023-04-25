@@ -5,18 +5,14 @@ define([
     'ko',
     'jquery',
     'Magento_Ui/js/form/element/date',
-    'mage/translate',
-    'Amasty_StorePickupWithLocator/js/model/pickup'
-], function (ko, $, AbstractField, $t, pickup) {
+    'mage/translate'
+], function (ko, $, AbstractField, $t) {
     'use strict';
 
     return AbstractField.extend({
         defaults: {
             amcheckout_days: [],
-            amcheckout_firstDay: 0,
-            labelDelivery: ko.computed(function(){
-                return pickup.isPickup() == true ? $t('Pickup Date') : $t('Delivery Date');
-            })
+            amcheckout_firstDay: 0
         },
 
         initConfig: function () {
@@ -88,6 +84,8 @@ define([
             if (this.amcheckout_days.length > 0) {
                 this.options.beforeShowDay = this.restrictDates.bind(this);
             }
+            
+            this.options.dateFormat = 'dd/mm/yy';
 
             this.prepareDateTimeFormats();
 
@@ -100,7 +98,9 @@ define([
          * @returns {[Boolean, String]}
          */
         restrictDates: function (d) {
-            return [$.inArray(d.getDay(), this.amcheckout_days) != -1, ''];
+            return [
+                $.inArray(d.getDay(), this.amcheckout_days) != -1, ''
+            ];
         }
     });
 });

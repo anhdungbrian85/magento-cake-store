@@ -39,9 +39,9 @@ define([
                 if (pickupInfo) {
                     pickupInfo = { am_pickup: dataPreparer.prepareData(pickupInfo)};
                     var pickupInfoFormatTed = pickupInfo;
-                    console.log(pickupInfo)
+                    
                     pickupInfoFormatTed['am_pickup']['date'] = formatDate(pickupInfoFormatTed['am_pickup']['date']);
-                    console.log(pickupInfoFormatTed['am_pickup'])
+                    
                     _.extend(payloadWithPickupInfo.addressInformation.extension_attributes, pickupInfoFormatTed);
                     pickupInfoFormatTed = null;
                 }
