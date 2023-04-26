@@ -43,7 +43,7 @@ class SendPickupReminder
 			try {				
 				$orderDetails = $this->orderRepository->get($orderId);
 				$orderData = $orderDetails->getData();				
-				if($orderData['kl_sms_consent'] == '"1"' && $orderData['sms_reminder'] != '1'){
+				if($orderData['kl_sms_consent'] == '"1"' && $orderData['sms_reminder'] != '1' && $store_id != ''){
 					$selectStore = $connection->select()
 						->from('amasty_amlocator_location')
 						->where('id = ?', $store_id);
