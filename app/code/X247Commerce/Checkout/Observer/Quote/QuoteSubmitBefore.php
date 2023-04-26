@@ -106,7 +106,7 @@ class QuoteSubmitBefore implements ObserverInterface
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
 					$logger->info('Collect in Store Location SKU: '.$item->getSku());
-                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);					
+                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);
                     if (!$available) {
 						$logger->info('Collect in Store Location SKU ERROR: '.$item->getSku());
                         throw new LocalizedException(__('Some of the products are out stock!'));
@@ -120,6 +120,10 @@ class QuoteSubmitBefore implements ObserverInterface
 
     public function getClosestStoreLocation($postcode)
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('PostCode: ' . $postcode);
         if (!$postcode) {
             return false;
         }
@@ -131,8 +135,12 @@ class QuoteSubmitBefore implements ObserverInterface
         foreach ($deliverLocations as $deliverLocation) {
             $deliverLocationsIds[] = $deliverLocation->getStoreId();
         }
+        $logger->info('Deliver Locations Ids: ');
+        $logger->info(print_r($deliverLocationsIds, true));
+
         $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
         $location->applyDefaultFilters();
+        $logger->info('Collection query: ' . $location->getSelect());
         return $location->getFirstItem();
     }
 }
