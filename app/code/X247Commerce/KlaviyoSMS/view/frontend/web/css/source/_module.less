@@ -1,0 +1,28 @@
+//
+//  One Step Checkout Move Klaviyo
+//  _____________________________________________
+
+//
+//  Common
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+    #checkout-step-shipping {
+    	> .amcheckout-wrapper {
+    		display: flex;
+    		flex-direction: column;
+    		> .field.kl_sms_consent,
+    		> .field.kl_email_consent {
+    			order: 10;
+    		}
+    	}
+    }
+}
+
+//
+//  Tablet
+//  ---------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__s) {
+
+}
