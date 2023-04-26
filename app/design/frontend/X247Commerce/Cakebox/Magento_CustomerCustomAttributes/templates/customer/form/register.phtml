@@ -142,9 +142,9 @@ $createAccountButtonViewModel = $block->getData('create_account_button_view_mode
                    class="checkbox"/>
             <label for="terms_conditions" class="label">
                 <span><?= $block->escapeHtml(__('By signing in you are accepting')) . ' ' ?></span>
-                <a href="#" style="color: rgba(153, 46, 128, 1);"><?= $block->escapeHtml(__('Terms & Conditions')) . ' '?></a>
+                <a target="_blank" href="/terms-conditions" style="color: rgba(153, 46, 128, 1);"><?= $block->escapeHtml(__('Terms & Conditions')) . ' '?></a>
                 <span><?= __('and') ?></span>
-                <a href="#" style="color: rgba(153, 46, 128, 1);"><?= __('Privacy & Cookies Policy.') ?></a>
+                <a target="_blank" href="/privacy-policy" style="color: rgba(153, 46, 128, 1);"><?= __('Privacy & Cookies Policy.') ?></a>
             </label>
         </div>
     </fieldset>
