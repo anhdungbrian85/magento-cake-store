@@ -37,7 +37,7 @@ class SendPickupReminder
 		$result = $connection->fetchAll($select);
 		foreach ($result as $order) {		
 			$orderId = $order['order_id']; // Replace with the order ID you want to retrieve
-			$store_id = $order['store_location_id']; 
+			$store_id = $order['store_id']; 
 			$collectionTime = date('H:i:s',$order['time_from']); 
 			
 			try {				
