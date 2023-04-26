@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="custom_fields_sales_address_save" disabled="true" />
+        <observer name="X247_klaviyo_custom_fields_sales_address_save" 
+        	instance="X247Commerce\KlaviyoSMS\Observer\SaveOrderMarketingConsent" />
+    </event>
+   
+</config>
