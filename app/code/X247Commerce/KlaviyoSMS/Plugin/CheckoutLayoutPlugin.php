@@ -52,52 +52,19 @@ class CheckoutLayoutPlugin
                 'dataScope' => 'shippingAddress.custom_attributes.kl_sms_consent',
                 'label' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentLabelText(),
                 'description' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentText(),
-                'provider' => 'checkoutProvider',
                 'visible' => true,
                 'checked' => true,
                 'value' => true,
+                'additionalClasses' => 'kl_sms_consent',
                 'validation' => [],
                 'sortOrder' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentSortOrder(),
                 'id' => 'kl_sms_consent',
             ];
-            
-
-            $address = $this->_getDefaultAddressIfSetForCustomer();
-            
+                        
             $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_consent'] = $smsConsentCheckbox;
-
-            if (!$address) {
-                // $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['kl_sms_consent'] = $smsConsentCheckbox;
-                // $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['kl_sms_consent'] = $smsConsentCheckbox;
-            }
-            else {
-
-                // extra un-editable field with saved phone number to display to logged in users with default address set
-                
-                $smsConsentTelephone = [
-                    'component' => 'Magento_Ui/js/form/element/abstract',
-                    'config' =>
-                        [
-                            'customScope' => 'shippingAddress',
-                            'template' => 'ui/form/field',
-                            'elementTmpl' => 'ui/form/element/input',
-                        ],
-                    'label' => 'Phone Number',
-                    'provider' => 'checkoutProvider',
-                    'sortOrder' => '120',
-                    'disabled' => true,
-                    'visible' => true,
-                    'value' => $address->getTelephone()
-                ];
-
-                // $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_phone_number'] = $smsConsentTelephone;
-                $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_consent'] = $smsConsentCheckbox;
-                // $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['kl_sms_consent'] = $smsConsentCheckbox;
-                // $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['kl_sms_phone_number'] = $smsConsentTelephone;
-            }
         }
 
-        if (!$this->_customerSession->isLoggedIn() && $this->_klaviyoScopeSetting->getConsentAtCheckoutEmailIsActive())
+        if ($this->_klaviyoScopeSetting->getConsentAtCheckoutEmailIsActive())
         {
             $emailConsentCheckbox = [
                 'component' => 'Magento_Ui/js/form/element/abstract',
@@ -110,10 +77,10 @@ class CheckoutLayoutPlugin
                 ],
                 'dataScope' => 'shippingAddress.custom_attributes.kl_email_consent',
                 'description' => $this->_klaviyoScopeSetting->getConsentAtCheckoutEmailText(),
-                'provider' => 'checkoutProvider',
                 'visible' => true,
                 'checked' => true,
                 'value' => true,
+                'additionalClasses' => 'kl_email_consent',
                 'validation' => [],
                 'sortOrder' => $this->_klaviyoScopeSetting->getConsentAtCheckoutEmailSortOrder(),
                 'id' => 'kl_email_consent',
