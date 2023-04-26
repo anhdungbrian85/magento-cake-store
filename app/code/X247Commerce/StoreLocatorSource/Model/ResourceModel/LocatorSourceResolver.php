@@ -545,9 +545,16 @@ class LocatorSourceResolver
 
     public function getClosestStoreLocation($postcode, $lat, $lng, $radius = 50, $sortByDistance = 1)
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Start locatorSourceResolver::getClosestStoreLocation');
         if (!$postcode) {
             return false;
         }
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::postcode:' . $postcode);
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::lat:' . $lat);
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::lng:' . $lng);
         $needToPrepareCollection = false;
         $location = $this->locationCollectionFactory->create()->addFieldToFilter('enable_delivery', ['eq' => 1]);
         $deliverLocations = $this->deliveryAreaHelper->getDeliverLocations($postcode);
@@ -592,6 +599,7 @@ class LocatorSourceResolver
             $select->order('main_table.position ASC');
             $select->order('main_table.id ASC');
         }
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::location select:' . $location->getSelect());
         return $location->getFirstItem();
     }
 }

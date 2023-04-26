@@ -13,6 +13,7 @@ use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Psr\Log\LoggerInterface;
 use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
+use X247Commerce\Delivery\Helper\DeliveryData;
 
 class QuoteSubmitBefore implements ObserverInterface
 {
@@ -28,7 +29,10 @@ class QuoteSubmitBefore implements ObserverInterface
 
     protected $deliveryAreaHelper;
 
+    protected $deliveryData;
+
     public function __construct(
+        DeliveryData $deliveryData,
         DeliveryAreaHelper $deliveryAreaHelper,
         \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
         CheckoutSession $checkoutSession,
@@ -39,6 +43,7 @@ class QuoteSubmitBefore implements ObserverInterface
         StoreLocationContextInterface $storeLocationContext,
         LoggerInterface $logger
     ) {
+        $this->deliveryData = $deliveryData;
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->deliveryAreaHelper = $deliveryAreaHelper;
         $this->checkoutSession = $checkoutSession;
@@ -66,7 +71,19 @@ class QuoteSubmitBefore implements ObserverInterface
             $postcode = $shippingAddress->getPostcode();
             $logger->info('PostCode:' . $postcode);
             if($postcode && $postcode != '-'){
-                $location = $this->getClosestStoreLocation($postcode);
+                $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
+                $logger->info('locationDataFromPostCode');
+                $logger->info(print_r($locationDataFromPostCode, true));
+                if ($locationDataFromPostCode['status']) {
+                    $location = $this->locatorSourceResolver->getClosestStoreLocation(
+                                    $postcode, 
+                                    $locationDataFromPostCode['data']['lat'],
+                                    $locationDataFromPostCode['data']['lng']
+                                );
+                } else {
+                    $location = $this->getClosestStoreLocation($postcode);
+                }
+                
                 if ($location && $location->getId()) {
                     $logger->info('Location Id :' . $location->getId());
                     $productSkus = [];
