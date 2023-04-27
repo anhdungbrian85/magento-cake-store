@@ -34,21 +34,40 @@
 				.product-wrapper {
 					align-items: flex-start;
 					flex-wrap: wrap;
-					justify-content: center;
+					position: relative;
+					justify-content: space-around;
 					
 					.product-item-details {
-						width: 58%;
 						padding-left: 10px;
+						max-width: 60%;
 					}
 
 					.product-item-pricing {
-						position: static;
+						position: absolute;
 						margin: 10px 0 0 5px;
+						bottom: -15px;
+						right: 0;
 					}
 				}
 
-				.cart-details-wrapper .total-items {
-					display: block;
+				.cart-details-wrapper .subtotal {
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: center;
+					margin-top: 20px;
+					
+					.label {
+						margin-right: 10px;
+						text-transform: capitalize;
+					}
+
+					.subtotal-value {
+						text-align: end;
+					}
+
+					.total-items {
+						display: block;
+					}
 				}
 			}
 
@@ -212,7 +231,6 @@
 
 				.product-item-pricing {
 					margin: 5% 0 0 0;
-					position: static;
 				}
 			}
 
