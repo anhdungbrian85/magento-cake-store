@@ -114,7 +114,7 @@ class QuoteSubmitBefore implements ObserverInterface
                         }
                     }
                 } else{
-                    throw new LocalizedException(__('There are no sources in the cart that match the items in the cart!'));
+                    throw new LocalizedException(__('Not able to find closest store!'));
                 }
             }
         } else {
