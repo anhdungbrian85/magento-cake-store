@@ -8,6 +8,7 @@
 namespace X247Commerce\StoreLocatorSource\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Store\Model\Store;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\AdminSource\CollectionFactory as AdminSourceCollectionFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -16,6 +17,9 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use X247Commerce\Catalog\Model\ProductSourceAvailability;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory as LocationCollectionFactory;
+use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
+use Magento\Store\Model\StoreManagerInterface;
 
 class LocatorSourceResolver
 {
@@ -29,16 +33,32 @@ class LocatorSourceResolver
     const ADMIN_USER_SOURCE_LINK_TABLE = 'admin_user_source_link';
 
     protected ResourceConnection $resource;
+
     protected $connection;
     protected AdminSourceCollectionFactory $sourceLink;
+
     protected SearchCriteriaBuilder $searchCriteriaBuilder;
+
     protected SourceRepositoryInterface $sourceRepository;
+
     protected $customerSession;
+
     protected $searchCriteriaBuilderFactory;
+
     protected $productSourceAvailability;
+
     protected ScopeConfigInterface $scopeConfig;
 
+    protected $locationCollectionFactory;
+
+    protected $deliveryAreaHelper;
+
+    protected $storeManager;
+
     public function __construct(
+        StoreManagerInterface $storeManager,
+        DeliveryAreaHelper $deliveryAreaHelper,
+        LocationCollectionFactory $locationCollectionFactory,
         ResourceConnection $resource,
         AdminSourceCollectionFactory $sourceLink,
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -47,8 +67,10 @@ class LocatorSourceResolver
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         ProductSourceAvailability $productSourceAvailability,
         ScopeConfigInterface $scopeConfig
-    )
-    {
+    ) {
+        $this->storeManager = $storeManager;
+        $this->deliveryAreaHelper = $deliveryAreaHelper;
+        $this->locationCollectionFactory = $locationCollectionFactory;
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
         $this->sourceLink = $sourceLink;
@@ -519,5 +541,65 @@ class LocatorSourceResolver
             $miles = $dist * 60 * 1.1515;
             return $miles;
         }
+    }
+
+    public function getClosestStoreLocation($postcode, $lat, $lng, $radius = 50, $sortByDistance = 1)
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Start locatorSourceResolver::getClosestStoreLocation');
+        if (!$postcode) {
+            return false;
+        }
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::postcode:' . $postcode);
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::lat:' . $lat);
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::lng:' . $lng);
+        $needToPrepareCollection = false;
+        $location = $this->locationCollectionFactory->create()->addFieldToFilter('enable_delivery', ['eq' => 1]);
+        $deliverLocations = $this->deliveryAreaHelper->getDeliverLocations($postcode);
+        $deliverLocationsIds = [];
+
+        foreach ($deliverLocations as $deliverLocation) {
+            $deliverLocationsIds[] = $deliverLocation->getStoreId();
+        }
+
+        $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
+        $select = $location->getSelect();
+        $store = $this->storeManager->getStore(true)->getId();
+
+        if (!$this->storeManager->isSingleStoreMode()) {
+            $whereStore = [];
+            $storeIds = [Store::DEFAULT_STORE_ID, $store];
+            foreach ($storeIds as $storeId) {
+                $whereStore[] = 'FIND_IN_SET("' . (int)$storeId . '", `main_table`.`stores`)';
+            }
+
+            $whereStore = implode(' OR ', $whereStore);
+            $select->where($whereStore);
+        }
+
+        $select->where('main_table.status = 1');
+        if ($lat && $lng && ($sortByDistance || $radius)) {
+            if ($radius) {
+                $select->having('distance < ' . $radius);
+            }
+
+            if ($sortByDistance) {
+                $select->order("distance");
+            }
+
+            $select->columns(
+                [
+                    'distance' => 'SQRT(POW(69.1 * (main_table.lat - ' . $lat . '), 2) + '
+                        . 'POW(69.1 * (' . $lng . ' - main_table.lng) * COS(main_table.lat / 57.3), 2))'
+                ]
+            );
+        } else {
+            $select->order('main_table.position ASC');
+            $select->order('main_table.id ASC');
+        }
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::location select:' . $location->getSelect());
+        return $location->getFirstItem();
     }
 }

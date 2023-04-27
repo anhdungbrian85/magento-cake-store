@@ -13,6 +13,7 @@ use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Psr\Log\LoggerInterface;
 use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
+use X247Commerce\Delivery\Helper\DeliveryData;
 
 class QuoteSubmitBefore implements ObserverInterface
 {
@@ -28,7 +29,10 @@ class QuoteSubmitBefore implements ObserverInterface
 
     protected $deliveryAreaHelper;
 
+    protected $deliveryData;
+
     public function __construct(
+        DeliveryData $deliveryData,
         DeliveryAreaHelper $deliveryAreaHelper,
         \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
         CheckoutSession $checkoutSession,
@@ -39,6 +43,7 @@ class QuoteSubmitBefore implements ObserverInterface
         StoreLocationContextInterface $storeLocationContext,
         LoggerInterface $logger
     ) {
+        $this->deliveryData = $deliveryData;
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->deliveryAreaHelper = $deliveryAreaHelper;
         $this->checkoutSession = $checkoutSession;
@@ -66,7 +71,19 @@ class QuoteSubmitBefore implements ObserverInterface
             $postcode = $shippingAddress->getPostcode();
             $logger->info('PostCode:' . $postcode);
             if($postcode && $postcode != '-'){
-                $location = $this->getClosestStoreLocation($postcode);
+                $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
+                $logger->info('locationDataFromPostCode');
+                $logger->info(print_r($locationDataFromPostCode, true));
+                if ($locationDataFromPostCode['status']) {
+                    $location = $this->locatorSourceResolver->getClosestStoreLocation(
+                                    $postcode, 
+                                    $locationDataFromPostCode['data']['lat'],
+                                    $locationDataFromPostCode['data']['lng']
+                                );
+                } else {
+                    $location = $this->getClosestStoreLocation($postcode);
+                }
+                
                 if ($location && $location->getId()) {
                     $logger->info('Location Id :' . $location->getId());
                     $productSkus = [];
@@ -106,7 +123,7 @@ class QuoteSubmitBefore implements ObserverInterface
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
 					$logger->info('Collect in Store Location SKU: '.$item->getSku());
-                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);					
+                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);
                     if (!$available) {
 						$logger->info('Collect in Store Location SKU ERROR: '.$item->getSku());
                         throw new LocalizedException(__('Some of the products are out stock!'));
@@ -120,6 +137,10 @@ class QuoteSubmitBefore implements ObserverInterface
 
     public function getClosestStoreLocation($postcode)
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('PostCode: ' . $postcode);
         if (!$postcode) {
             return false;
         }
@@ -131,8 +152,12 @@ class QuoteSubmitBefore implements ObserverInterface
         foreach ($deliverLocations as $deliverLocation) {
             $deliverLocationsIds[] = $deliverLocation->getStoreId();
         }
+        $logger->info('Deliver Locations Ids: ');
+        $logger->info(print_r($deliverLocationsIds, true));
+
         $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
         $location->applyDefaultFilters();
+        $logger->info('Collection query: ' . $location->getSelect());
         return $location->getFirstItem();
     }
 }

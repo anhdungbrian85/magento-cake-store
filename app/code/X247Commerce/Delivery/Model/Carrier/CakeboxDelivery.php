@@ -9,6 +9,7 @@ use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Amasty\Storelocator\Model\LocationFactory;
 use X247Commerce\Delivery\Helper\DeliveryData;
+use X247Commerce\DeliveryPopUp\Helper\Data as DeliveryPopUpHelperData;
 
 class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
@@ -23,11 +24,16 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
     protected $_rateMethodFactory;
 
     protected $checkoutSession;
+
     protected $storeLocationContext;
+
     protected $locationFactory;
     protected $deliveryData;
 
+    protected $deliveryPopUpHelperData;
+
     public function __construct(
+        DeliveryPopUpHelperData $deliveryPopUpHelperData,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
         \Psr\Log\LoggerInterface $logger,
@@ -45,6 +51,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         $this->storeLocationContext = $storeLocationContext;
         $this->locationFactory = $locationFactory;
         $this->deliveryData = $deliveryData;
+        $this->deliveryPopUpHelperData = $deliveryPopUpHelperData;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -53,6 +60,10 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
      */
     public function collectRates(RateRequest $request)
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/collect_rates.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Start Debug');
 
         if (!$this->getConfigFlag('active')) {
             return false;
@@ -61,18 +72,35 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         $customerPostcode = $this->checkoutSession->getCustomerPostcode() ?? $this->storeLocationContext->getCustomerPostcode();
         $storeId = $this->checkoutSession->getStoreLocationId() ?? $this->storeLocationContext->getStoreLocationId();
         $storePostcode = $this->locationFactory->create()->load($storeId)->getZip();
-
+        $logger->info('Customer Postcode: ' . $customerPostcode);
+        $logger->info('Store Id: ' . $storeId);
+        $logger->info('Store Postcode: ' . $storePostcode);
         $responseApi = json_decode($this->deliveryData->calculateDistance($customerPostcode, $storePostcode), true);
-        if (isset($responseApi["rows"][0]["elements"][0]["distance"]["text"])) {           
-            $distance = (float) strtok($responseApi["rows"][0]["elements"][0]["distance"]["text"], ' ');
+        $customerLocationData = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
+        $storeLocationData = $this->deliveryData->getLongAndLatFromPostCode($storePostcode);
+        $logger->info('Customer Location Data::' . print_r($customerLocationData, true));
+        $logger->info('Store Location Data::' . print_r($storeLocationData, true));
+        if ($customerLocationData['status'] && $storeLocationData['status']) {
+            $distance = $this->deliveryPopUpHelperData->calculateDistanceWithOutUnit(
+                $customerLocationData['data']['lat'],
+                $customerLocationData['data']['lng'],
+                $storeLocationData['data']['lat'],
+                $storeLocationData['data']['lng'],
+                'miles'
+            );
         } else {
-            $distance = 1;
+            if (isset($responseApi["rows"][0]["elements"][0]["distance"]["text"])) {
+                $distance = (float) strtok($responseApi["rows"][0]["elements"][0]["distance"]["text"], ' ');
+            } else {
+                $distance = 1;
+            }
         }
 
+        $logger->info('Distance: ' . $distance);
         $shippingPrice = $this->getConfigData('price');
 
         $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
-        
+
         $ratePrice = -1;
         foreach ($rateShipping as $item => $value) {
             if (!empty($value)) {
@@ -89,7 +117,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
 
         $result = $this->_rateResultFactory->create();
 
-        if ($shippingPrice !== false) {
+        if ($shippingPrice != false) {
             $method = $this->_rateMethodFactory->create();
 
             $method->setCarrier($this->_code);

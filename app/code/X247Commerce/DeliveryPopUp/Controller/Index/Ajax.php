@@ -47,11 +47,15 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         $this->storeLocationContextInterface->setDeliveryType($deliveryType);
         $destCode = $this->getRequest()->getParam('dest');
         $this->storeLocationContextInterface->setCustomerPostcode($destCode);
-
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/popup_ajax.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('PostCode: ' . $destCode);
         $resultJson = $this->resultJsonFactory->create();
         if ($deliveryType == 1) {
-            
+
             $location = $this->getClosestStoreLocation($destCode);
+            $logger->info('Location: ' . $location->getId());
             if ($location && $location->getId()) {
                 if ($location->getEnableDelivery() == 0) {
                     return $resultJson->setData(['enable_delivery' => 0]);
@@ -82,7 +86,11 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
     }
 
     public function getClosestStoreLocation($postcode)
-    {   
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/popup_ajax.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('PostCode: ' . $postcode);
         if (!$postcode) {
             return false;
         }
@@ -94,8 +102,12 @@ class Ajax extends \Amasty\Storelocator\Controller\Index\Ajax
         foreach ($deliverLocations as $deliverLocation) {
             $deliverLocationsIds[] = $deliverLocation->getStoreId();
         }
+        $logger->info('Deliver Locations Ids: ');
+        $logger->info(print_r($deliverLocationsIds, true));
+
         $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
         $location->applyDefaultFilters();
+        $logger->info('Collection query: ' . $location->getSelect());
         return $location->getFirstItem();
     }
 }
