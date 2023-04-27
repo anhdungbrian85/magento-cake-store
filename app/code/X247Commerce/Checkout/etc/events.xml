@@ -12,4 +12,7 @@
     <event name="sales_order_shipment_save_after">
         <observer name="inventory_sales_source_deduction_processor" disabled="true"/>
     </event>
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="clear_session_and_http_context_after_order1" instance="X247Commerce\Checkout\Observer\Order\ClearAfterOrder" disabled="false"/>
+    </event>
 </config>

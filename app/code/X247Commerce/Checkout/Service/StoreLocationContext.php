@@ -33,6 +33,12 @@ class StoreLocationContext implements StoreLocationContextInterface
         $this->checkoutSession->setStoreLocationId($storeLocationId);
     }
 
+    public function unSetStoreLocationId()
+    {
+        $this->httpContext->unsValue(StoreLocationContextInterface::STORE_LOCATION_ID);
+        $this->checkoutSession->unsStoreLocationId();
+    }
+
     /**
      * @inheritdoc
      */
@@ -45,6 +51,12 @@ class StoreLocationContext implements StoreLocationContextInterface
     {
         $this->httpContext->setValue(StoreLocationContextInterface::CUSTOMER_POSTCODE, $postcode, 0);
         $this->checkoutSession->setCustomerPostcode($postcode);
+    }
+
+    public function unSetCustomerPostcode()
+    {
+        $this->httpContext->unsValue(StoreLocationContextInterface::CUSTOMER_POSTCODE);
+        $this->checkoutSession->unsCustomerPostcode();
     }
 
     public function getCustomerPostcode()
@@ -69,6 +81,12 @@ class StoreLocationContext implements StoreLocationContextInterface
     {
         $this->httpContext->setValue(StoreLocationContextInterface::DELIVERY_TYPE, $deliveryType, 0);
         $this->checkoutSession->setDeliveryType($deliveryType);
+    }
+
+    public function unSetDeliveryType()
+    {
+        $this->httpContext->unsValue(StoreLocationContextInterface::DELIVERY_TYPE);
+        $this->checkoutSession->unsDeliveryType();        
     }
 
     /**

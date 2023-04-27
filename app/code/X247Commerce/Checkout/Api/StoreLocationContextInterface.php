@@ -22,13 +22,21 @@ interface StoreLocationContextInterface
     public const GEOGRAPHIC_COORDINATE = 'geographic_coordinate';
 
     /**
-     * Set Store localtion id to HttpContext.
+     * Set Store localtion id to HttpContext and CheckoutSession.
      *
      * @param int $storeLocationId
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function setStoreLocationId($storeLocationId);
+    public function setStoreLocationId($storeLocationId);    
+    /**
+     * unset Store localtion id to HttpContext and CheckoutSession.
+     *
+     * @param int $storeLocationId
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function unSetStoreLocationId();
 
     /**
      * Get Store localtion id from HttpContext.
@@ -38,13 +46,21 @@ interface StoreLocationContextInterface
      */
     public function getStoreLocationId();
     /**
-     * Set Customer Postcode to HttpContext.
+     * Set Customer Postcode to HttpContext and CheckoutSession.
      *
      * @param int $storeLocationId
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function setCustomerPostcode($postcode);
+    /**
+     * UnSet Customer Postcode to HttpContext and CheckoutSession.
+     *
+     * @param int $storeLocationId
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function unSetCustomerPostcode();
 
     /**
      * Get Customer Postcode from HttpContext.
@@ -56,7 +72,7 @@ interface StoreLocationContextInterface
     public function getCustomerPostcode();
 
     /**
-     * Set Customer Geographic Coordinate to HttpContext.
+     * Set Customer Geographic Coordinate to HttpContext and CheckoutSession.
      *
      * @param int $storeLocationId
      * @return void
@@ -65,7 +81,7 @@ interface StoreLocationContextInterface
     public function setCustomerGeographicCoordinate($lat, $lng);
 
     /**
-     * Get Customer Geographic Coordinate from HttpContext.
+     * Get Customer Geographic Coordinate from HttpContext and CheckoutSession.
      *
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -82,10 +98,17 @@ interface StoreLocationContextInterface
     public function setDeliveryType($deliveryType);
 
     /**
-     * Get Delivery Type from HttpContext.
+     * Get Delivery Type from HttpContext and CheckoutSession.
      *
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getDeliveryType();
+    /**
+     * Unset Delivery Type in HttpContext and CheckoutSession.
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function unSetDeliveryType();
 }
