@@ -25,6 +25,7 @@
 /grunt-config.json
 /Gruntfile.js
 /lib/
+!/lib/internal/Mageplaza/
 /LICENSE*
 /node_modules/
 /phpserver/
