@@ -1,0 +1,25 @@
+<?php
+
+$role = $block->isStaffUser();
+
+?>
+
+<style>
+    body.catalog-product-edit.staff-user .fieldset-wrapper[data-index="configurable"] table.admin__dynamic-rows th.data-grid-th:nth-last-child(2),
+    body.catalog-product-edit.staff-user .fieldset-wrapper[data-index="configurable"] button,
+    body.catalog-product-edit.staff-user .fieldset-wrapper[data-index="configurable"] table.admin__dynamic-rows td[data-index="actionsList"] {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+require([ 'jquery', 'jquery/ui'], function($){ 
+    $(document).ready(function($) {
+        var userrole = '<?php echo $role; ?>';
+        if(userrole == 'Staff') {
+            $('body').addClass('staff-user');
+        }
+    });
+});
+</script>
+

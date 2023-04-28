@@ -1,0 +1,19 @@
+body.staff-user td.collection {
+    background-color: #F154FF;
+}
+
+body.staff-user td.delivery {
+    background-color: #F6C241;
+}
+
+body.staff-user td.kiosks {
+    background-color: #7dc242;
+}
+
+body.staff-user td.red-canceled {
+    background-color: rgb(255, 49, 49);
+}
+
+body.staff-user td.grey-printed {
+    background-color: rgb(161, 161, 161);
+}
