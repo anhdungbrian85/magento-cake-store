@@ -13,7 +13,7 @@
 $columnsLimit = $block->getColumnsLimit() ?: 0;
 $_menuHtml = $block->getHtml('level-top', 'submenu', $columnsLimit)
 ?>
-<div class="category-top">
+<div class="category-top" style="display:none;">
     <h2 class="label-menu-mobile"><?= __('Categories')?></h2>
     <nav class="navigation" data-action="navigation">
         <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
