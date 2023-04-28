@@ -59,24 +59,18 @@ class DeliveryData extends AbstractHelper
 
     public function getLongAndLatFromPostCode($postCode)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/long_lat_api.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
 
         $apiUriEndpoint = "https://maps.googleapis.com/maps/api/geocode/json?address={$postCode}&units=imperial&key={$this->getGoogleApiKey()}";
         $response = $this->doRequest(
             $apiUriEndpoint,
         );
-        $logger->info('API URL: ' . $apiUriEndpoint);
 
         $status = $response->getStatusCode();
-        $logger->info('Status API::' . print_r($status, true));
         if ($status == self::API_RESPONSE_CODE_SUCCESS) {
             $responseBody = $response->getBody();
             $responseContent = $responseBody->getContents();
 
             $responseContentData = json_decode($responseContent, true);
-            $logger->info('Response Content::' . print_r($responseContentData['results'][0]['geometry']['location'], true));
             if (isset($responseContentData['results'][0]['geometry']['location'])) {
                 return [
                     'status' => true,
@@ -94,7 +88,6 @@ class DeliveryData extends AbstractHelper
             }
 
         }   else {
-            $logger->info('API getList error: ' . $response->getReasonPhrase());
             $this->logger->error('API getList error: '. $response->getReasonPhrase());
             return [
                 'status' => false,

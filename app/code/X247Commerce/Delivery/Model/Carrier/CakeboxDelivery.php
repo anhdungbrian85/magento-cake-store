@@ -60,63 +60,100 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
      */
     public function collectRates(RateRequest $request)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/collect_rates.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info('Start Debug');
-
         if (!$this->getConfigFlag('active')) {
             return false;
-        }
-
-        $customerPostcode = $this->checkoutSession->getCustomerPostcode() ?? $this->storeLocationContext->getCustomerPostcode();
-        $storeId = $this->checkoutSession->getStoreLocationId() ?? $this->storeLocationContext->getStoreLocationId();
-        $storePostcode = $this->locationFactory->create()->load($storeId)->getZip();
-        $logger->info('Customer Postcode: ' . $customerPostcode);
-        $logger->info('Store Id: ' . $storeId);
-        $logger->info('Store Postcode: ' . $storePostcode);
-        $responseApi = json_decode($this->deliveryData->calculateDistance($customerPostcode, $storePostcode), true);
-        $customerLocationData = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
-        $storeLocationData = $this->deliveryData->getLongAndLatFromPostCode($storePostcode);
-        $logger->info('Customer Location Data::' . print_r($customerLocationData, true));
-        $logger->info('Store Location Data::' . print_r($storeLocationData, true));
-        if ($customerLocationData['status'] && $storeLocationData['status']) {
-            $distance = $this->deliveryPopUpHelperData->calculateDistanceWithOutUnit(
-                $customerLocationData['data']['lat'],
-                $customerLocationData['data']['lng'],
-                $storeLocationData['data']['lat'],
-                $storeLocationData['data']['lng'],
-                'miles'
-            );
-        } else {
-            if (isset($responseApi["rows"][0]["elements"][0]["distance"]["text"])) {
-                $distance = (float) strtok($responseApi["rows"][0]["elements"][0]["distance"]["text"], ' ');
-            } else {
-                $distance = 1;
-            }
-        }
-
-        $logger->info('Distance: ' . $distance);
-        $shippingPrice = $this->getConfigData('price');
+        }   
 
         $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
 
-        $ratePrice = -1;
-        foreach ($rateShipping as $item => $value) {
-            if (!empty($value)) {
-                if ($distance > $value["from_distance"] && $distance <= $value["to_distance"]) {
-                    $ratePrice = (float) $value["price"];
-                }
+        $defaultShippingPrice = $this->getConfigData('price');
+        if (empty($rateShipping)) {
+            return $this->setShippingRate($defaultShippingPrice, $request);
+        }
+
+        $customerPostcode = ($request->getDestPostcode() && $request->getDestPostcode() != '-') ? $request->getDestPostcode() : $this->checkoutSession->getCustomerPostcode();
+        $storeLocationId = $this->checkoutSession->getStoreLocationId() ?: $this->storeLocationContext->getStoreLocationId();
+        $storeLocation = $this->locationFactory->create()->load($storeLocationId);
+        $storePostcode = $storeLocation->getZip();
+
+        if ($storePostcode == $customerPostcode) {
+            $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
+            return $this->setShippingRate($minimumShippingPrice, $request);
+        }
+
+        $storeLatLng = $this->getStoreLatLng($storeLocation);
+        $customerLocationData = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
+
+        $distance = $this->getDistance($customerLocationData, $storeLatLng, $customerPostcode, $storePostcode);
+        $maximumShippingPrice = (float)array_values($rateShipping)[(count($rateShipping)-1)]['price'];
+
+        if (empty($distance)) {
+            return $this->setShippingRate($maximumShippingPrice, $request);
+        }
+        
+        $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
+
+        $ratePrice = $maximumShippingPrice;
+        foreach ($rateShipping as $value) {
+            if ($distance > $value["from_distance"] && $distance <= $value["to_distance"]) {
+                $ratePrice = (float) $value["price"];
             }
         }
-        if ($ratePrice < 0) {
-            return false;
+
+        return $this->setShippingRate($ratePrice, $request);
+    }
+
+    /**
+     * get Distance by lat, lng or postcode
+     **/
+    protected function getDistance($customerLocationData, $storeLatLng, $customerPostcode, $storePostcode) {
+        $distance = false;
+        if ($customerLocationData['status'] && $storeLatLng) {
+            // get Distance by Lat, Lng
+            $distance = $this->deliveryPopUpHelperData->calculateDistanceWithOutUnit(
+                $customerLocationData['data']['lat'],
+                $customerLocationData['data']['lng'],
+                $storeLatLng['lat'],
+                $storeLatLng['lng'],
+                'miles'
+            );
         } else {
-            $shippingPrice = $ratePrice;
+            // if there is not lat, long data, then get Distance by postcode
+            $responseApi = json_decode($this->deliveryData->calculateDistance($customerPostcode, $storePostcode), true);
+            
+            if (isset($responseApi["rows"][0]["elements"][0]["distance"]["text"])) {
+                $distance = (float) strtok($responseApi["rows"][0]["elements"][0]["distance"]["text"], ' ');
+            }
         }
+        return $distance;
+    }
 
+    /**
+     * get store location lat, lng
+     **/
+    protected function getStoreLatLng($storeLocation)
+    {
+        if ($storeLocation->getData('lat') && $storeLocation->getData('lng')) {
+            return [
+                'lat' => $storeLocation->getData('lat'),
+                'lng' => $storeLocation->getData('lng')
+            ];
+        }   else {
+            $storeLocationData = $this->deliveryData->getLongAndLatFromPostCode($storePostcode);
+            if ($storeLocationData['status']) {
+                return [
+                    'lat' => $storeLocationData['data']['lat'],
+                    'lng' => $storeLocationData['data']['lng']
+                ];
+            }
+        }
+        return false;
+    }
+
+
+    protected function setShippingRate($shippingPrice, $request)
+    {
         $result = $this->_rateResultFactory->create();
-
         if ($shippingPrice != false) {
             $method = $this->_rateMethodFactory->create();
 
@@ -135,10 +172,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
 
             $result->append($method);
         }
-
         return $result;
     }
-
     /**
      * getAllowedMethods
      *
