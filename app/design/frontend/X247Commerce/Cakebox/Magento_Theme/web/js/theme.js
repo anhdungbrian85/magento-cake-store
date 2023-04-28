@@ -56,6 +56,12 @@ define([
         }
     });
 
+    $(function() {
+        setTimeout(function(){
+            $(".custom-topmenu-mobile .category-top").show();
+        }, 2000);
+    });
+
     if ( $( window ).width() < 767 ) {
         $('.am-filter-items-color, .am-ranges.price-ranges').parents('.filter-options-item').hide();
         $('.swatch-layered.size_servings .swatch-option.text').each( function (){
