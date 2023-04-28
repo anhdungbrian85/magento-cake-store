@@ -315,18 +315,18 @@ define(
 				if(isCheckDelivery == 'amstorepickup_amstorepickup') {
 					if($('input[name="am_pickup_date"]').val()=='' || $('input[name="am_pickup_time"]').val()=='') 
 					{
-							errorMessage = $.mage.__('Pickup date/time is required.');
-									alert({ content: errorMessage });
+							errorMessage = $.mage.__('Please select pickup delivery time / date');
+							alert({ content: errorMessage });
 							$('input[name="am_pickup_date"]').css("border","1px solid red");
 							$('input[name="am_pickup_time"]').css("border","1px solid red");
 							return;
 					}
 				}
 				else {
-					if($('input[name="date"]').val()=='' || $('input[name="time"]').val()=='') 
+					if($('input[name="date"]').val()=='' || $('input[name="time"] option:selected').val() =='-1') 
 					{
-							errorMessage = $.mage.__('Pickup date/time is required.');
-									alert({ content: errorMessage });
+							errorMessage = $.mage.__('Please select pickup delivery time / date');
+							alert({ content: errorMessage });
 							$('input[name="am_pickup_date"]').css("border","1px solid red");
 							$('input[name="am_pickup_time"]').css("border","1px solid red");
 							return;
