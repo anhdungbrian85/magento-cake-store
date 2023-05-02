@@ -92,29 +92,107 @@ class DeliveryArea extends AbstractHelper
 
     public function getDeliverLocations($postcode)
     {
+        $postcode = mb_strtolower($postcode);
         $isFullyPostcode = strpos(trim($postcode), ' ') !== false;
         $prefix = $isFullyPostcode ? explode(' ', $postcode)[0] : $postcode;
-
-        $blDeliveryArea = $this->deliveryAreaCollection->create();
-        $blDeliveryArea->getSelect()
-            ->where("
-                ((status = 0 AND matching_strategy = 'Match Exact' AND postcode = '$postcode')
-                OR (status = 0 AND matching_strategy = 'Match Prefix' AND postcode = '$prefix'))
-            ");
-        $blackListAreas = $blDeliveryArea->getAllIds();
-
         $wlDeliveryArea = $this->deliveryAreaCollection->create();
 
-        if (!empty($blackListAreas)) {
-            $wlDeliveryArea->addFieldtoFilter(
-                'id', ['nin' => $blackListAreas] // Ignore black list
-            );
+        if ($isFullyPostcode) {
+            $blDeliveryAreasExact = $this->deliveryAreaCollection->create();
+            // get exact blacklist
+            $blDeliveryAreasExact->getSelect()
+                                    ->where("status = ?", 0)
+                                    ->where("matching_strategy = ?", 'Match Exact')
+                                    ->where("lower(postcode) = ?", $postcode);
+
+            $blDeliveryAreasExact = $blDeliveryAreasExact->getColumnValues('store_id');
+           
+            
+            $wlDeliveryArea->getSelect()
+                            ->where("status = 1 AND matching_strategy = 'Match Exact' AND lower(postcode) = '$postcode'")
+                            ->orWhere("status = 1 AND matching_strategy = 'Match Prefix' AND lower(postcode) = '$prefix'");
+
+            if (!empty($blDeliveryAreasExact)) {
+                $wlDeliveryArea->getSelect()->where(
+                    'store_id not in (?)', implode(',', $blDeliveryAreasExact)
+                );
+            }
+        }   else {
+            $blDeliveryAreasPrefix = $this->deliveryAreaCollection->create();
+            // get prefix blacklist
+            $blDeliveryAreasPrefix->getSelect()
+                                    ->where("status = ?", 0)
+                                    ->where("matching_strategy = ?", 'Match Prefix')
+                                    ->where("lower(postcode) = ?", $prefix);
+
+            $blDeliveryAreasPrefix = $blDeliveryAreasPrefix->getColumnValues('store_id');
+
+            $blStoreIdsPrefix = implode(',', $blDeliveryAreasPrefix);
+
+            $wlDeliveryArea->getSelect()
+                                ->where("(status = 1 AND matching_strategy = 'Match Exact' AND lower(postcode) = '$postcode')");
+
+            if (empty($blDeliveryAreasPrefix)) {
+                $wlDeliveryArea->getSelect()
+                                    ->orWhere("(status = 1 AND matching_strategy = 'Match Prefix' AND lower(postcode) = '$prefix')");
+            }   else {
+                $wlDeliveryArea->getSelect()
+                                    ->orWhere("(status = 1 AND matching_strategy = 'Match Prefix' AND lower(postcode) = '$prefix') AND store_id not in ($blStoreIdsPrefix)");
+            }
+                    
         }
-        // Add whitelist filter
-        $wlDeliveryArea->getSelect()->where("
-            ((status = 1 AND matching_strategy = 'Match Exact' AND postcode = '$postcode')
-            OR (status = 1 AND matching_strategy = 'Match Prefix' AND postcode = '$prefix'))
-        ");
+
         return $wlDeliveryArea;
+    }
+
+    public function checkPostcodeWithStore($postcode, $storeId) 
+    {
+        $postcode = mb_strtolower($postcode);
+        $isFullyPostcode = strpos(trim($postcode), ' ') !== false;
+        $prefix = $isFullyPostcode ? explode(' ', $postcode)[0] : $postcode;
+        
+        $blDeliveryAreasExact = $this->deliveryAreaCollection->create();
+        $blDeliveryAreasExact->getSelect()
+                                    ->where("status = ?", 0)
+                                    ->where("matching_strategy = ?", 'Match Exact')
+                                    ->where("lower(postcode) = ?", $postcode)
+                                    ->where('store_id = ?', $storeId);
+        if ($blDeliveryAreasExact->count()) {
+            // store blacklist exact
+            return false;
+        }
+
+        $wlDeliveryAreaExact = $this->deliveryAreaCollection->create();
+        $wlDeliveryAreaExact->getSelect()
+                            ->where("(status = 1 AND matching_strategy = 'Match Exact' AND lower(postcode) = '$postcode' )")
+                            ->where('store_id = ?', $storeId);
+        if ($wlDeliveryAreaExact->count()) {
+            // store whitelist exact
+            return true;
+        }
+
+        $blDeliveryAreasPrefix = $this->deliveryAreaCollection->create();
+        $blDeliveryAreasPrefix->getSelect()
+                                    ->where("store_id = ?", $storeId)
+                                    ->where("status = ?", 0)
+                                    ->where("matching_strategy = ?", 'Match Prefix')
+                                    ->where("lower(postcode) = ?", $prefix);
+
+        if ($blDeliveryAreasPrefix->count()) {
+            // store blacklist prefix
+            return false;
+        }    
+
+        $wlDeliveryAreaPrefix = $this->deliveryAreaCollection->create();
+        $wlDeliveryAreaPrefix->getSelect()
+                                    ->where("status = 1 AND matching_strategy = 'Match Prefix' AND lower(postcode) = '$prefix'")
+                                    ->where("store_id = ?", $storeId);
+
+        if ($wlDeliveryAreaPrefix->count()) {
+            // store whitelist prefix
+            return true;
+        } 
+        
+        return false;
     }
 }
