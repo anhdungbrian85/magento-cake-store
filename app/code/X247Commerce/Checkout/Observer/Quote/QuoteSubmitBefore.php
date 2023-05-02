@@ -129,6 +129,9 @@ class QuoteSubmitBefore implements ObserverInterface
                         throw new LocalizedException(__('Some of the products are out stock!'));
                     }
                 }
+                if ($quote->getData('store_location_id')) {
+                    $order->setData('store_location_id', $quote->getData('store_location_id'));
+                }
             } else {
                 throw new LocalizedException(__('Please choose a store!'));
             }
