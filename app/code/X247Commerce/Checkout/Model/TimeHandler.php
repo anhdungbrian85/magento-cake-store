@@ -48,10 +48,12 @@ class TimeHandler extends \Amasty\StorePickupWithLocator\Model\TimeHandler
                 $breakTo = $storeTime[ScheduleDataProvider::END_BREAK_TIME][ScheduleDataProvider::HOURS]
                     . ':' . $storeTime[ScheduleDataProvider::END_BREAK_TIME][ScheduleDataProvider::MINUTES];
 
-                $to = ($storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::HOURS] - 1)
+                $to = ($storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::HOURS])
                     . ':' . $storeTime[ScheduleDataProvider::CLOSE_TIME][ScheduleDataProvider::MINUTES];
 
-                $result[$day] = $this->getTimeRange($from, $breakFrom, $breakTo, $to);
+                $timeRangeByDay = $this->getTimeRange($from, $breakFrom, $breakTo, $to);
+                array_pop($timeRangeByDay);// remove last time range
+                $result[$day] = $timeRangeByDay; 
             }
         }
 
