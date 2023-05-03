@@ -86,13 +86,14 @@ define([
                 selectedStoreData = pickupDataResolver.getCurrentStoreData(),
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
                 currentDayName = this.weekDays[today.getDay()],
-                minDate = today;
+                minDate = today, 
+                timeIntervalsToday = [];
 
             if (timeIntervals[currentDayName] && selectedStoreData.schedule_id) {
-                timeIntervals = this.restrictTimeIntervals(timeIntervals[currentDayName]);
+                timeIntervalsToday = this.restrictTimeIntervals(timeIntervals[currentDayName]);
             }    
             
-            if (!timeIntervals.length) {
+            if (!timeIntervalsToday.length) {
                 minDate.setDate(minDate.getDate()+1);
             }
             this.options.minDate = minDate;
