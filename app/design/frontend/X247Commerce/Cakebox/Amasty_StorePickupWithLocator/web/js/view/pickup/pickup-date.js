@@ -9,9 +9,10 @@ define([
     'Amasty_StorePickupWithLocator/js/model/pickup',
     'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
     'uiRegistry',
+    'locationContext',
     'Amasty_StorePickupWithLocator/js/view/pickup/pickup-store',
     'mage/calendar'
-], function (ko, $, _, Component, pickup, pickupDataResolver, registry) {
+], function (ko, $, _, Component, pickup, pickupDataResolver, registry, locationContext) {
     'use strict';
 
     return Component.extend({
@@ -80,8 +81,23 @@ define([
             this.options.dateFormat = 'dd/mm/yy';
             this.inputDateFormat = 'dd/mm/yy';
             this.options.inputDateFormat = 'dd/mm/yy';
-            this.prepareDateTimeFormats();
+            
+            var today = new Date(),
+                selectedStoreData = pickupDataResolver.getCurrentStoreData(),
+                timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
+                currentDayName = this.weekDays[today.getDay()],
+                minDate = today;
 
+            if (timeIntervals[currentDayName] && selectedStoreData.schedule_id) {
+                timeIntervals = this.restrictTimeIntervals(timeIntervals[currentDayName]);
+            }    
+            
+            if (!timeIntervals.length) {
+                minDate.setDate(minDate.getDate()+1);
+            }
+            this.options.minDate = minDate;
+
+            this.prepareDateTimeFormats();
             return this;
         },
 
