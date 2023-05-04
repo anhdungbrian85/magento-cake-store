@@ -127,8 +127,7 @@ define(
                 },
                 checkVisible: function(carrier_code) {
                     
-                    if ((locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup')
-                     || (locationContext.isAsda() && carrier_code == 'cakeboxdelivery') ) {
+                    if (locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup') {
                         return false;
                     }
                     return true;
