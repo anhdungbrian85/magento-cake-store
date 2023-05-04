@@ -20,7 +20,42 @@
 	.page-wrapper .custom-topmenu-mobile {
 		width: 100%;
 		box-sizing: border-box;
-
+		.category-top {
+			.navigation{
+				&>ul{
+					display: flex;
+					flex-wrap: nowrap;
+					overflow: scroll;
+					li{
+						a{
+							font-size: 14px;
+							text-transform: capitalize;
+							font-weight: 600;
+							margin-right: 10px;
+							display: flex;
+							align-items: center;
+							white-space: normal;
+							padding: 6px 12px 6px 6px;
+							border: 1px solid #D9D9D9;
+							border-radius: 6px;
+							span{
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								position: relative;
+								line-height: 29px;
+								padding-left: 35px;
+								font-size: 14px;
+								font-weight: 400;
+							}
+						}
+						.submenu{
+							display: none;
+						}
+					}	
+				}
+			}
+		}
 		.label-menu-mobile {
 			font-size: 18px;
 			color: #282828;
