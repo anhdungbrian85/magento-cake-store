@@ -21,6 +21,16 @@ interface StoreLocationContextInterface
 
     public const GEOGRAPHIC_COORDINATE = 'geographic_coordinate';
 
+    public const POPUP_CLOSED = 'popup_closed';
+
+    /**
+     * Unset all context/session.
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function unsetAllContexts();
+
     /**
      * Set Store localtion id to HttpContext and CheckoutSession.
      *
@@ -111,4 +121,29 @@ interface StoreLocationContextInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function unSetDeliveryType();
+
+
+     /**
+     * Set popup_closed to context/session.
+     * @param bool $isClosed
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setPopupClosed($isClosed);
+
+     /**
+     * Get popup_closed data.
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getPopupClosed();
+
+    /**
+     * Unset popup_closed context/session.
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function unSetPopupClosed();
 }

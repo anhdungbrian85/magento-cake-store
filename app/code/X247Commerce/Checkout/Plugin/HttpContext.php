@@ -27,10 +27,13 @@ class HttpContext
         $storeLocationId = $this->checkoutSession->getStoreLocationId();
         $deliveryType = $this->checkoutSession->getDeliveryType();
         $customerPostcode = $this->checkoutSession->getCustomerPostcode();
+        $popupClosed = $this->checkoutSession->getPopupClosed();
+        
         $defaultStoreLocationIdContext = 0;
         $defaultDeliveryTypeContext = 0;
         $defaultCustomerPostcode = '';
         // $subject->setValue('store_location_id', $storeLocationId, $defaultStoreLocationIdContext);
+
         $this->context->setValue(
             \X247Commerce\Checkout\Api\StoreLocationContextInterface::STORE_LOCATION_ID,
                 $storeLocationId,
@@ -45,6 +48,11 @@ class HttpContext
             \X247Commerce\Checkout\Api\StoreLocationContextInterface::CUSTOMER_POSTCODE,
             $customerPostcode,
             $defaultCustomerPostcode
+        );
+        $this->context->setValue(
+            \X247Commerce\Checkout\Api\StoreLocationContextInterface::POPUP_CLOSED,
+            $popupClosed,
+            false
         );
     }
 }

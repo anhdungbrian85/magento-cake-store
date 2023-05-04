@@ -18,9 +18,7 @@ class ClearAfterOrder implements ObserverInterface
 
     public function execute(EventObserver $observer)
     {
-        $this->storeLocationContext->unSetStoreLocationId();
-        $this->storeLocationContext->unSetCustomerPostcode();
-        $this->storeLocationContext->unSetDeliveryType();
+        $this->storeLocationContext->unsetAllContexts();
         return $this;
     }
 }

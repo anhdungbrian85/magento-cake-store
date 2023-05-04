@@ -53,7 +53,8 @@ define([
 
             this.element.data('catalog-addtocart-initialized', 1);
             this.element.on('submit', function (e) {
-                e.preventDefault();                
+                e.preventDefault();     
+
                 self.submitForm($(this));
             });
         },
@@ -88,6 +89,9 @@ define([
          * @param {jQuery} form
          */
         submitForm: function (form) {
+            if (window.preventAddToCartAction) {
+                return;
+            }
             var self = this,
                 optionValues = [],
                 deliveryType = window.localStorage.getItem('delivery_type') ?? 0,
@@ -191,6 +195,7 @@ define([
 
                 /** @inheritdoc */
                 beforeSend: function () {
+
                     if (self.isLoaderEnabled()) {
                         $('body').trigger(self.options.processStart);
                     }
@@ -379,6 +384,6 @@ define([
 
         },
     });
-
+    
     return $.mage.catalogAddToCart;
 });

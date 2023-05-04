@@ -24,6 +24,17 @@ class StoreLocationContext implements StoreLocationContextInterface
         $this->checkoutSession = $checkoutSession;
     }
 
+     /**
+     * @inheritdoc
+     */
+    public function unsetAllContexts()
+    {
+        $this->unSetStoreLocationId();
+        $this->unSetDeliveryType();
+        $this->unSetPopupClosed();
+        $this->unSetCustomerPostcode();
+    }
+
     /**
      * @inheritdoc
      */
@@ -97,4 +108,29 @@ class StoreLocationContext implements StoreLocationContextInterface
         return $this->httpContext->getValue(StoreLocationContextInterface::DELIVERY_TYPE);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function setPopupClosed($isClosed)
+    {
+        $this->httpContext->setValue(StoreLocationContextInterface::POPUP_CLOSED, $isClosed, false);
+        $this->checkoutSession->setPopupClosed($isClosed);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPopupClosed()
+    {
+        return $this->httpContext->getValue(StoreLocationContextInterface::POPUP_CLOSED);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function unSetPopupClosed()
+    {
+        $this->httpContext->unsValue(StoreLocationContextInterface::POPUP_CLOSED);
+        $this->checkoutSession->unsPopupClosed(); 
+    }
 }

@@ -34,13 +34,25 @@ class Index extends \Magento\Framework\App\Action\Action
 	public function execute()
 	{
 		$resultJson = $this->resultJsonFactory->create();
-		$resultJson->setData(['showPopup' => $this->shouldShowPopup()]);
+		$resultJson->setData(
+			[
+				'showPopup' => $this->shouldShowPopup(),
+				'enableAddToCart' => $this->shouldEnableAddToCart()
+			]
+		);
+		
 		return $resultJson;	
 	}
 
 	private function shouldShowPopup()
     {        
         return !$this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID) 
+        	&& !$this->httpContext->getValue(StoreLocationContextInterface::POPUP_CLOSED)
         	&& $this->popupHelper->isEnabledPopup();
+    }
+
+    private function shouldEnableAddToCart()
+    {        
+        return !empty($this->httpContext->getValue(StoreLocationContextInterface::STORE_LOCATION_ID)) || !$this->popupHelper->isEnabledPopup();
     }
 }
