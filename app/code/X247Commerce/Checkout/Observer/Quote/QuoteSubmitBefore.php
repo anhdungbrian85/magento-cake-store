@@ -61,7 +61,6 @@ class QuoteSubmitBefore implements ObserverInterface
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info('Start debugging!'); // Print string type data
-        throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address !'));
 
         $order = $observer->getEvent()->getOrder();
         $quote = $observer->getEvent()->getQuote();
