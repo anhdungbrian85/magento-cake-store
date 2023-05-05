@@ -17,10 +17,20 @@ define([
                 buttons: [{
                     text: $.mage.__('Close'),
                     class: '',
-                    click: function () {
-                        this.closeModal();
-                    }
-                }]
+                }],
+                closed: function() {
+                    $.ajax({
+                        url: urlBuilder.build('deliverypopup/index/close'),
+                        method: "POST",
+                        dataType: "json",
+                        success: function(res) {
+                            
+                        }
+                    })
+                }, 
+                opened: function() {
+                    $('html').css('height', 'auto');
+                }
             };
             var popup = modal(options, $('#custom-delivery-popup-modal'));
 
@@ -44,16 +54,7 @@ define([
                 }
             })
 
-            $('#custom-delivery-popup-modal').on('modalclosed', function () {
-                $.ajax({
-                    url: urlBuilder.build('deliverypopup/index/close'),
-                    method: "POST",
-                    dataType: "json",
-                    success: function(res) {
-                        
-                    }
-                })
-            });
+            
 
 
         },
