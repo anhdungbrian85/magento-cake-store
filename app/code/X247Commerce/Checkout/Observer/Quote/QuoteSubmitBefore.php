@@ -114,7 +114,7 @@ class QuoteSubmitBefore implements ObserverInterface
                         }
                     }
                 } else{
-                    throw new LocalizedException(__('Not able to find closest store!'));
+                    throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address !'));
                 }
             }
         } else {
