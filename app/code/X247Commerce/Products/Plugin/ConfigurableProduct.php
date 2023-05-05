@@ -43,31 +43,24 @@ class ConfigurableProduct
     ) {
         
         $resultArr = json_decode($result, true);
-        $deliveryType = $this->storeLocationContext->getDeliveryType() ?? $this->checkoutSession->getDeliveryType();
-        $clickCollect = $this->checkoutSession->getClickCollect();
-        $categoryUrlKey = "click-collect-1-hour";        
-        $categoryClickCollect = $this->getCategoryByUrlKey($categoryUrlKey);
-        $categoryClickCollectId = $categoryClickCollect->getEntityId();
-        $allCategoryIds = [];
+        $isOneHourCollection = $subject->getData('is_one_hour_collection');
         $resultArr['skus'] = [];
         $resultArr['lead_delivery'] = [];
         $hideId = [];
         $characterLimit = [];
+
         foreach ($subject->getAllowProducts() as $product) {
-          
             $resultArr['skus'][$product->getId()] = $product->getSku();
             $resultArr['lead_delivery'][$product->getId()] = $product->getLeadDelivery();
             if ($product->getCharacterLimit()) {
                 $characterLimit['character_limit'][$product->getId()] = $product->getCharacterLimit();
             }
-            if ($product->getLeadDelivery() != 1) {
+            if ($product->getLeadDelivery() != 1 && $isOneHourCollection) {
                 $hideId[] = $product->getId();
             }
-            $productCategoryIds = $product->getCategoryIds();
-            $allCategoryIds = array_merge($allCategoryIds, $productCategoryIds);
         }
 
-        if (($deliveryType == 2 && in_array($categoryClickCollectId, $allCategoryIds)) || ($deliveryType != 2 && $clickCollect)) {
+        if ($isOneHourCollection) {
             foreach ($resultArr["attributes"] as &$attributes) {
                 foreach ($attributes["options"] as &$value) {
                     $value["products"] = array_diff($value["products"], $hideId);
@@ -79,29 +72,5 @@ class ConfigurableProduct
         $config = array_merge($resultArr, $characterLimit);
         return $this->jsonEncoder->encode($config);
     }
-    public function getCategoryByUrlKey($urlKey)
-    {
-        $category = $this->categoryCollection
-                                ->create()
-                                ->addAttributeToFilter('url_key', $urlKey)
-                                ->getFirstItem();
-        return $category;
-    }
-    public function getRefererUrl()
-    {
-        return $redirectUrl = $this->redirect->getRefererUrl();
-    }
-
-    public function getBreadcrumbPath() {
-        return $this->catalogHelper->getBreadcrumbPath();
-    }
-    /**
-     * Return current category object
-     *
-     * @return \Magento\Catalog\Model\Category|null
-     */
-    public function getCategory()
-    {
-        return $this->catalogHelper->getCategory();
-    }
+   
 }

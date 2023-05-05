@@ -322,6 +322,10 @@ define([
                     clickCollect = true;
                 }
             };
+            if (location.href.includes('click-collect-1-hour/')) {
+                clickCollect = true;
+            }
+
             $.ajax({
                 url: configurableProductUrl,
                 type: 'POST',

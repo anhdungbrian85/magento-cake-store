@@ -64,7 +64,10 @@ class ConfigurableProduct extends Action
         $this->checkoutSession->setClickCollect($clickCollect);
         if ($productId) {
             $product = $this->productFactory->create()->load($productId);
-            return $this->blockConfigurable->setProduct($product)->getJsonConfig();
+            return $this->blockConfigurable
+                ->setProduct($product)
+                ->setData('is_one_hour_collection', $clickCollect)
+                ->getJsonConfig();
         }
         return '';
     }
