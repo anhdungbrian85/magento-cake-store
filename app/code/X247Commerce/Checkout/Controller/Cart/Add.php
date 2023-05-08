@@ -114,6 +114,10 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
      */
     public function execute()
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/add_to_cart_x247.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Starting debug execute function');
         if (!$this->_formKeyValidator->validate($this->getRequest())) {
             $this->messageManager->addErrorMessage(
                 __('Your session has expired')
@@ -140,7 +144,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             if (!$product) {
                 return $this->goBack();
             }
-
+            $logger->info('Param add to cart');
+            $logger->info(print_r($params, true));
             $this->cart->addProduct($product, $params);
             if (!empty($related)) {
                 $this->cart->addProductsByIds(explode(',', $related));

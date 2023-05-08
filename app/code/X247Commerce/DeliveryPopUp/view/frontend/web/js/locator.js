@@ -56,7 +56,12 @@ define([
             let self = this;
             url.setBaseUrl(BASE_URL);
             var redirectUrl = url.build('celebration-cakes/click-collect-1-hour.html');
-
+            let isProductPage = false;
+            let addToCartFormData = '';
+            if ($('#product_addtocart_form').length) {
+                isProductPage = true;
+                addToCartFormData = $('#product_addtocart_form').serialize();
+            }
             $(document).on('click', '.select-location', function() {
                 const location_id = $(this).data('location-id');
                 const delivery_type = $('[name="delivery-type"]:checked').val()
@@ -65,7 +70,9 @@ define([
                     type: 'POST',
                     data: {
                         'location_id': location_id,
-                        'delivery_type': delivery_type
+                        'delivery_type': delivery_type,
+                        'is_product_page': isProductPage,
+                        'add_to_cart_form_data': addToCartFormData
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
@@ -86,7 +93,7 @@ define([
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    
+
                     if (!self.mapContainer.find('.amlocator-text').val()) {
                         self.latitude = position.coords.latitude;
                         self.longitude = position.coords.longitude;
@@ -163,14 +170,14 @@ define([
                 data: params,
                 showLoader: true
             }).done($.proxy(function (response) {
-                
+
                 if (response.store_location_id) {
                     if (response.redirect_url) {
                         window.location.href = response.redirect_url;
                     }   else {
                         window.location.reload();
                     }
-                    
+
                 } else if (response.delivery_status == false) {
                     if ($('[name="delivery-type"]:checked').val() == 1) {
                         $('.delivery-popup.text').append(errorMessage);
@@ -181,7 +188,7 @@ define([
                     self.getIdentifiers();
                     self.Amastyload();
                 }
-                
+
             }));
         },
 
@@ -324,7 +331,7 @@ define([
 
             self.mapContainer.find(this.selectors.searchSelector).on('click', self.searchLocations.bind(this));
             self.mapContainer.find(this.selectors.addressSelector).on('keydown', function (e) {
-                
+
                 if (e.keyCode !== 13) {
                     return;
                 }
