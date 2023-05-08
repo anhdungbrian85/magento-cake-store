@@ -76,14 +76,14 @@ class QuoteSubmitBefore implements ObserverInterface
                 $logger->info(print_r($locationDataFromPostCode, true));
                 if ($locationDataFromPostCode['status']) {
                     $location = $this->locatorSourceResolver->getClosestStoreLocation(
-                                    $postcode, 
+                                    $postcode,
                                     $locationDataFromPostCode['data']['lat'],
                                     $locationDataFromPostCode['data']['lng']
                                 );
                 } else {
                     $location = $this->getClosestStoreLocation($postcode);
                 }
-                
+
                 if ($location && $location->getId()) {
                     $logger->info('Location Id :' . $location->getId());
                     $productSkus = [];
