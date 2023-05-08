@@ -76,14 +76,14 @@ class QuoteSubmitBefore implements ObserverInterface
                 $logger->info(print_r($locationDataFromPostCode, true));
                 if ($locationDataFromPostCode['status']) {
                     $location = $this->locatorSourceResolver->getClosestStoreLocation(
-                                    $postcode, 
+                                    $postcode,
                                     $locationDataFromPostCode['data']['lat'],
                                     $locationDataFromPostCode['data']['lng']
                                 );
                 } else {
                     $location = $this->getClosestStoreLocation($postcode);
                 }
-                
+
                 if ($location && $location->getId()) {
                     $logger->info('Location Id :' . $location->getId());
                     $productSkus = [];
@@ -97,11 +97,11 @@ class QuoteSubmitBefore implements ObserverInterface
                     $closestLocationData = $this->locatorSourceResolver->getClosestLocationsHasProducts($location->getId(), $productSkus, 1);
                     $logger->info('Closest Location Data:');
                     $logger->info(print_r($closestLocationData, true));
-                    //if (isset($closestLocationData['current_source_is_available']) && $closestLocationData['current_source_is_available']) {
-                    //    $this->storeLocationContext->setStoreLocationId($location->getId());
-                    //    $quote->setData('store_location_id', $location->getId());
-                    //    $order->setData('store_location_id', $location->getId());
-                    //} else {
+                    if (isset($closestLocationData['current_source_is_available']) && $closestLocationData['current_source_is_available']) {
+                        $this->storeLocationContext->setStoreLocationId($location->getId());
+                        $quote->setData('store_location_id', $location->getId());
+                        $order->setData('store_location_id', $location->getId());
+                    } else {
                         if (empty($closestLocationData['location_data'])) {
                             $quote->setTotalsCollectedFlag(false);
                             $quote->collectTotals();
@@ -112,7 +112,7 @@ class QuoteSubmitBefore implements ObserverInterface
                             $quote->setData('store_location_id', $closestLocation['amlocator_store']);
                             $order->setData('store_location_id', $closestLocation['amlocator_store']);
                         }
-                    //}
+                    }
                 } else{
                     throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address !'));
                 }
