@@ -469,7 +469,6 @@ return [
         'Amasty_StorePickupWithLocator' => 1,
         'Amasty_StorePickupWithLocatorMSI' => 1,
         'Amasty_StorelocatorIndexer' => 1,
-        'Ebizmarts_MailChimp' => 1,
         'Fastly_Cdn' => 1,
         'Klaviyo_Reclaim' => 1,
         'Klevu_Logger' => 1,
