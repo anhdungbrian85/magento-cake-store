@@ -2,14 +2,15 @@ define([
     'jquery',
     'mage/url',
     'Amasty_Storelocator/js/model/states-storage',
+    'Magento_Customer/js/customer-data',
     'mage/translate',
     'Amasty_Storelocator/vendor/chosen/chosen.min',
     'Amasty_Storelocator/vendor/jquery.ui.touch-punch.min',
     'Magento_Ui/js/lib/knockout/bindings/range',
     'Magento_Ui/js/modal/modal',
     'jquery/jquery-ui',
-    'jquery-ui-modules/slider'
-], function ($, url, statesStorage) {
+    'jquery-ui-modules/slider',
+], function ($, url, statesStorage, customerData) {
     $.widget('mage.amLocator', {
         options: {},
         url: null,
@@ -56,13 +57,15 @@ define([
             let self = this;
             url.setBaseUrl(BASE_URL);
             var redirectUrl = url.build('celebration-cakes/click-collect-1-hour.html');
-            let isProductPage = false;
-            let addToCartFormData = '';
-            if ($('#product_addtocart_form').length) {
-                isProductPage = true;
-                addToCartFormData = $('#product_addtocart_form').serialize();
-            }
+
             $(document).on('click', '.select-location', function() {
+                let isProductPage = false;
+                let addToCartFormData = '';
+                if ($('#product_addtocart_form').length) {
+                    isProductPage = true;
+                    addToCartFormData = $('#product_addtocart_form').serialize();
+                    console.log(addToCartFormData);
+                }
                 const location_id = $(this).data('location-id');
                 const delivery_type = $('[name="delivery-type"]:checked').val()
                 $.ajax({
@@ -76,6 +79,9 @@ define([
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
+                    var sections = ['cart'];
+                    customerData.invalidate(sections);
+                    customerData.reload(sections, true);
                     window.localStorage.setItem('delivery_type', delivery_type)
                     if (delivery_type != 2) {
                         window.location.reload();
