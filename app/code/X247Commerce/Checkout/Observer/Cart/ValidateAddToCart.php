@@ -57,23 +57,22 @@ class ValidateAddToCart implements ObserverInterface
     }
 
     public function execute(EventObserver $observer)
-    {            
+    {
         $deliveryType = $this->storeLocationContext->getDeliveryType();
         $postValues = $this->request->getPostValue();
-        $productId = $postValues['product'];
         $addProduct = $observer->getProduct();
 
-        if ($deliveryType == 2) {      
+        if ($deliveryType == 2) {
             $product = null;
-            if ($addProduct->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) 
+            if ($addProduct->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE)
             {
-                $attributes = $postValues['super_attribute'];                
-                
+                $attributes = $postValues['super_attribute'];
+
                 $product = $this->configurableproduct->getProductByAttributes($attributes, $addProduct);
             } else {
                 $product = $addProduct;
             }
-            
+
             // $this->logger->log('600', 'Selected attributes '.print_r($product->getAttributeSetId(), true));
 
             if ($product->getLeadDelivery() > 1) {
@@ -81,7 +80,7 @@ class ValidateAddToCart implements ObserverInterface
                 $this->checkoutSession->setDeliveryType(0);
             }
         }
-        return;        
+        return;
     }
     public function getCategoryByUrlKey($urlKey)
     {

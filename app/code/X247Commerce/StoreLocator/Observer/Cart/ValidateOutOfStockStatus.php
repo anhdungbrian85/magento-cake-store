@@ -30,7 +30,7 @@ class ValidateOutOfStockStatus implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/add_to_cart.log');
+            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/add_to_cart.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info('Starting debug');
@@ -41,7 +41,7 @@ class ValidateOutOfStockStatus implements ObserverInterface
         $quoteItem = $observer->getEvent()->getQuoteItem();
         $logger->info('Current Produc Sku: ' . $currentProduct->getSku() );
         $logger->info('Product Type: ' . $currentProduct->getTypeId());
-        $logger->info('Quote Item Id: ' . get_class($quoteItem));
+        $logger->info('Quote Item Id: ' . $quote->getId());
 
         if (!$this->locatorSourceResolver->validateOutOfStockStatusOfProduct($selectedLocationId, $currentProduct->getSku())) {
             $logger->info('Error current product: ' . $currentProduct->getSku() );
