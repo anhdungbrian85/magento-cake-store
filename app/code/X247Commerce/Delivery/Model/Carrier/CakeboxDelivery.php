@@ -95,8 +95,6 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 );
                 if ($location->getId()) {
                     $this->storeLocationContext->setStoreLocationId($location->getId());
-                } else {
-                    throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address!'));
                 }
             }
 
