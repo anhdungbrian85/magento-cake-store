@@ -137,6 +137,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             }
         } catch (\Exception $e) {
             $logger->info('Start collectRates:: ' . $e->getMessage());
+            return false;
         }
 
         return $this->setShippingRate($ratePrice, $request);
