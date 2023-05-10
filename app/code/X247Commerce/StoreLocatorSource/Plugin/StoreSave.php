@@ -29,10 +29,9 @@ class StoreSave
     }
     public function beforeExecute(\Amasty\Storelocator\Controller\Adminhtml\Location\Save $subject)
     {
-		
+
 		$data = $subject->getRequest()->getPostValue();
-		// var_dump($data);die();
-		$id = (int)$subject->getRequest()->getParam('id');
+ 		$id = (int)$subject->getRequest()->getParam('id');
 
 		$nameSource = isset($data["amlocator_source"]) ? $data["amlocator_source"] : false;
 		if ($nameSource) {
@@ -41,12 +40,12 @@ class StoreSave
 			$collection = $this->sourceFactory->create()->getCollection();
 			$storeCollection = $this->locationFactory->create()->getCollection();
 			foreach ($collection as $value) {
-				
+
 				if ($value->getAmlocatorStore()==$id) {
 					$value->setData("amlocator_store",'NULL')->save();
 
 				}
-			}	
+			}
 			foreach ($storeCollection as $value) {
 				if ($value->getAmlocatorSource()==$idSource) {
 					$value->setData("amlocator_source",'NULL')->save();
@@ -61,12 +60,12 @@ class StoreSave
 		}
 		$oldParentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($data["id"]);
 		$newParentLocationId = isset($data["amlocator_store"]) ? $data["amlocator_store"] : '';
-		
+
 		if ($oldParentLocationId != $newParentLocationId) {
 			$this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent($oldParentLocationId, $data["id"]);
 			if (!empty($newParentLocationId)) {
 				$this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent($newParentLocationId, $data["id"]);
 			}
-		}		
+		}
 	}
 }

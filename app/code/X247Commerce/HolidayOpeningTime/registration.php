@@ -5,8 +5,5 @@
  */
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(
-    ComponentRegistrar::MODULE,
-    'X247Commerce_HolidayOpeningTime',
-    __DIR__
-);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'X247Commerce_HolidayOpeningTime', __DIR__);
+

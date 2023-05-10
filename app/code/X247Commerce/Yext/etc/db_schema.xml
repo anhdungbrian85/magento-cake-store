@@ -21,7 +21,7 @@
             table="amasty_amlocator_holiday_hours" column="store_id"
             referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/>
     </table>    
-    <table name="amasty_amlocator_temporarily_closed">
+    <!-- <table name="amasty_amlocator_temporarily_closed">
         <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
                 comment="Entity Id"/>
         <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="true" identity="false"
@@ -33,6 +33,6 @@
         <constraint xsi:type="foreign" referenceId="AMASTY_AMLOCATOR_STORE_TEMPORARILY_CLOSED"
             table="amasty_amlocator_temporarily_closed" column="store_id"
             referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE"/> 
-    </table>
+    </table> -->
 
 </schema>
