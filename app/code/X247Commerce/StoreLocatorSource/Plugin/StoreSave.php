@@ -51,6 +51,7 @@ class StoreSave
 					$value->setData("amlocator_store", 'NULL')->save();
 				}
 			}
+			}
 			foreach ($storeCollection as $value) {
 				if ($value->getAmlocatorSource() == $idSource) {
 					$value->setData("amlocator_source", 'NULL')->save();
@@ -68,6 +69,7 @@ class StoreSave
 			if (!empty($newParentLocationId)) {
 				$this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent($newParentLocationId, $data["id"]);
 			}
+		}
 		}
 	}
 }

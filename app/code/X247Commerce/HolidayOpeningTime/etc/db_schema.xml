@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="store_location_holiday" resource="default" engine="innodb" comment="Store Location Holiday Management">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Id"/>
+        <column xsi:type="varchar" name="title" nullable="true" length="255" comment="Holiday title"/>
+        <column xsi:type="date" name="date" comment="Holiday date" nullable="false" />
+        <column xsi:type="varchar" name="open_time" nullable="true" comment="Holiday open time"/>
+        <column xsi:type="varchar" name="closed_time" nullable="true" comment="Holiday closed time"/>
+        <column xsi:type="smallint" name="disable_delivery" unsigned="true" nullable="true" comment="Disable delivery "/>
+        <column xsi:type="smallint" name="disable_pickup" unsigned="true" nullable="true" comment="Disable pickup "/>
+        <column xsi:type="int" name="store_location_id" unsigned="true" padding="10" nullable="false"
+                comment="Store Location Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="STORE_LOCATION_HOLIDAY_STORE_LOCATION_ID_AMASTY_AMLOCATOR_LOCATION_ID" table="store_location_holiday" column="store_location_id" referenceTable="amasty_amlocator_location" referenceColumn="id" onDelete="CASCADE" />
+
+        <constraint xsi:type="unique" referenceId="STORE_LOCATION_HOLIDAY_DATE_STORE_LOCATION_ID">
+            <column name="date"/>
+            <column name="store_location_id"/>
+        </constraint>
+    </table>
+</schema>

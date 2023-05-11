@@ -1,0 +1,18 @@
+{
+    "store_location_holiday": {
+        "column": {
+            "id": true,
+            "title": true,
+            "date": true,
+            "open_time": true,
+            "closed_time": true,
+            "disable_delivery": true,
+            "disable_pickup": true,
+            "store_location_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "STORE_LOCATION_HOLIDAY_DATE_STORE_LOCATION_ID": true
+        }
+    }
+}

@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">store_location_holiday_form.storelocationholiday_form_data_source</item>
+		</item>
+		<item name="label" xsi:type="string" translate="true">General Information</item>
+		<item name="template" xsi:type="string">templates/form/collapsible</item>
+	</argument>
+	<settings>
+		<buttons>
+			<button name="back" class="X247Commerce\HolidayOpeningTime\Block\Adminhtml\StoreLocationHoliday\Edit\BackButton"/>
+			<button name="delete" class="X247Commerce\HolidayOpeningTime\Block\Adminhtml\StoreLocationHoliday\Edit\DeleteButton"/>
+			<button name="save" class="X247Commerce\HolidayOpeningTime\Block\Adminhtml\StoreLocationHoliday\Edit\SaveButton"/>
+			<button name="save_and_continue" class="X247Commerce\HolidayOpeningTime\Block\Adminhtml\StoreLocationHoliday\Edit\SaveAndContinueButton"/>
+		</buttons>
+		<namespace>store_location_holiday_form</namespace>
+		<dataScope>data</dataScope>
+		<deps>
+			<dep>store_location_holiday_form.storelocationholiday_form_data_source</dep>
+		</deps>
+	</settings>
+	<dataSource name="storelocationholiday_form_data_source">
+		<argument name="data" xsi:type="array">
+			<item name="js_config" xsi:type="array">
+				<item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+			</item>
+		</argument>
+		<settings>
+			<submitUrl path="*/*/save"/>
+		</settings>
+		<dataProvider name="storelocationholiday_form_data_source" class="X247Commerce\HolidayOpeningTime\Model\StoreLocationHoliday\DataProvider">
+			<settings>
+				<requestFieldName>id</requestFieldName>
+				<primaryFieldName>id</primaryFieldName>
+			</settings>
+		</dataProvider>
+	</dataSource>
+	<fieldset name="general">
+		<settings>
+			<label>General</label>
+		</settings>
+		<field name="title" formElement="input" sortOrder="20">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">StoreLocationHoliday</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Title</label>
+				<dataScope>title</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="date" formElement="date" sortOrder="30">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">StoreLocationHoliday</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Date</label>
+				<dataScope>date</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="open_time" formElement="input" sortOrder="40">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">StoreLocationHoliday</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Open time</label>
+				<dataScope>open_time</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="closed_time" formElement="input" sortOrder="50">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">StoreLocationHoliday</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Closed time</label>
+				<dataScope>closed_time</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="disable_delivery" formElement="select" sortOrder="60">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">StoreLocationHoliday</item>
+				</item>
+                <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Disable delivery</label>
+				<dataScope>disable_delivery</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+		<field name="disable_pickup" formElement="select" sortOrder="70">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">StoreLocationHoliday</item>
+				</item>
+                <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+            </argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Disable pickup</label>
+				<dataScope>disable_pickup</dataScope>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">false</rule>
+				</validation>
+			</settings>
+		</field>
+<!--		<field name="store_location_id" formElement="input" sortOrder="80">-->
+<!--			<argument name="data" xsi:type="array">-->
+<!--				<item name="config" xsi:type="array">-->
+<!--					<item name="source" xsi:type="string">StoreLocationHoliday</item>-->
+<!--				</item>-->
+<!--			</argument>-->
+<!--			<settings>-->
+<!--				<dataType>text</dataType>-->
+<!--				<label translate="true">Store location</label>-->
+<!--				<dataScope>store_location_id</dataScope>-->
+<!--				<validation>-->
+<!--					<rule name="required-entry" xsi:type="boolean">false</rule>-->
+<!--				</validation>-->
+<!--			</settings>-->
+<!--		</field>-->
+        <field name="store_location_id" component="X247Commerce_StoreLocator/js/components/select-store">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocator\UiComponent\Form\StoreList</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Store location</item>
+                    <item name="source" xsi:type="string">StoreLocationHoliday</item>
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="multiple" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="number">90</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                    <item name="dataScope" xsi:type="string">store_location_id</item>
+                    <item name="componentType" xsi:type="string">field</item>
+                </item>
+
+            </argument>
+            <settings>
+                <listens>
+                    <link name="${ $.namespace }.${ $.namespace }:responseData">setParsed</link>
+                </listens>
+            </settings>
+        </field>
+	</fieldset>
+</form>

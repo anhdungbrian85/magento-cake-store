@@ -15,27 +15,21 @@ class StoreList implements ArrayInterface
         \Magento\Backend\Model\Auth\Session $adminSession,
         \X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver $locatorSourceResolver
     )
-    {    
+    {
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->adminSession = $adminSession;
         $this->locatorSourceResolver = $locatorSourceResolver;
     }
 
-    /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
-    {
-        $locationArr = [];
 
+    private function getStoreCollection()
+    {
         $roleData = $this->adminSession->getUser()->getRole()->getData();
         $userData = $this->adminSession->getUser()->getData();
-        
+
         $roleId = (int) $roleData['role_id'];
         $userStore = [];
-        
+
         if ($roleId != 1) {
             $userStore = $this->getAssignStore($userData['user_id']);
 
@@ -44,6 +38,17 @@ class StoreList implements ArrayInterface
         } else {
             $collection = $this->locationCollectionFactory->create();
         }
+        return $collection;
+    }
+    /**
+     * Options getter
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        $locationArr = [];
+        $collection = $this->getStoreCollection();
 
         foreach ($collection as $item) {
             $locationArr[] = [
@@ -51,6 +56,16 @@ class StoreList implements ArrayInterface
             ];
         }
 
+        return $locationArr;
+    }
+
+    public function toArray()
+    {
+        $locationArr = [];
+        $collection = $this->getStoreCollection();
+        foreach ($collection as $item) {
+            $locationArr[$item->getId()] = $item->getName();
+        }
         return $locationArr;
     }
 
