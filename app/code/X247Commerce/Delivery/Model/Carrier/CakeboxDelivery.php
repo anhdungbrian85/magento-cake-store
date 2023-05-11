@@ -95,24 +95,6 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 );
                 if ($location->getId()) {
                     $this->storeLocationContext->setStoreLocationId($location->getId());
-                } else {
-                    $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_shipping.log');
-                    $logger = new \Zend_Log();
-                    $logger->addWriter($writer);
-                    $logger->info('No location has');
-                    $result = $this->_rateResultFactory->create();
-                    /** @var \Magento\Quote\Model\Quote\Address\RateResult\Error $error */
-                    $error = $this->_rateErrorFactory->create(
-                        [
-                            'data' => [
-                                'carrier' => $this->_code,
-                                'carrier_title' => __('Test'),
-                                'error_message' => __('No location has '),
-                            ],
-                        ]
-                    );
-                    $result->append($error);
-                    return $result;
                 }
             }
 

@@ -71,50 +71,31 @@ class QuoteSubmitBefore implements ObserverInterface
             $postcode = $shippingAddress->getPostcode();
             $logger->info('PostCode:' . $postcode);
             if($postcode && $postcode != '-'){
-                $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
-                $logger->info('locationDataFromPostCode');
-                $logger->info(print_r($locationDataFromPostCode, true));
-                if ($locationDataFromPostCode['status']) {
-                    $location = $this->locatorSourceResolver->getClosestStoreLocation(
-                                    $postcode,
-                                    $locationDataFromPostCode['data']['lat'],
-                                    $locationDataFromPostCode['data']['lng']
-                                );
-                } else {
-                    $location = $this->getClosestStoreLocation($postcode);
-                }
-
-                if ($location && $location->getId()) {
-                    $logger->info('Location Id :' . $location->getId());
-                    $productSkus = [];
-                    if (!empty($quote->getAllVisibleItems())) {
-                        foreach ($quote->getAllVisibleItems() as $quoteItem) {
-                            $productSkus[] = $quoteItem->getSku();
-                        }
+                $productSkus = [];
+                if (!empty($quote->getAllVisibleItems())) {
+                    foreach ($quote->getAllVisibleItems() as $quoteItem) {
+                        $productSkus[] = $quoteItem->getSku();
                     }
-                    $logger->info('Product Skus:');
-                    $logger->info(print_r($productSkus, true));
-                    $closestLocationData = $this->locatorSourceResolver->getClosestLocationsHasProducts($location->getId(), $productSkus, 1);
-                    $logger->info('Closest Location Data:');
-                    $logger->info(print_r($closestLocationData, true));
-                    if (isset($closestLocationData['current_source_is_available']) && $closestLocationData['current_source_is_available']) {
-                        $this->storeLocationContext->setStoreLocationId($location->getId());
+                }
+                $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
+                $logger->info('$customerPostcode' . $postcode);
+                $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
+                if ($locationDataFromPostCode['status']) {
+                    $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
+                        $postcode,
+                        $locationDataFromPostCode['data']['lat'],
+                        $locationDataFromPostCode['data']['lng'],
+                        $productSkus
+                    );
+                    if ($location->getId()) {
                         $quote->setData('store_location_id', $location->getId());
                         $order->setData('store_location_id', $location->getId());
+                        $this->storeLocationContext->setStoreLocationId($location->getId());
                     } else {
-                        if (empty($closestLocationData['location_data'])) {
-                            $quote->setTotalsCollectedFlag(false);
-                            $quote->collectTotals();
-                            throw new LocalizedException(__('There are no sources in the cart that match the items in the cart!'));
-                        } else {
-                            $closestLocation = $closestLocationData['location_data'][0];
-                            $this->storeLocationContext->setStoreLocationId($closestLocation['amlocator_store']);
-                            $quote->setData('store_location_id', $closestLocation['amlocator_store']);
-                            $order->setData('store_location_id', $closestLocation['amlocator_store']);
-                        }
+                        $quote->setTotalsCollectedFlag(false);
+                        $quote->collectTotals();
+                        throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address!'));
                     }
-                } else{
-                    throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address !'));
                 }
             }
         } else {
