@@ -48,12 +48,23 @@ class ValidateDeliveryPostcode extends Action
         $storeLocationId = $this->getRequest()->getParam('store_location_id');
         if (!$postcode) {
             return $resultJson->setData(
-                ['valid' => -1]
+                ['status' => -1]
             );
         }
         $wlAreaCollection = $this->deliveryAreaHelper->getDeliverLocations($postcode);
+        if (!$wlAreaCollection->count()) {
+            return $resultJson->setData(
+                [
+                    'status' => false,
+                    'message' => __('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address!')
+                ]
+            );
+        }
+
         return $resultJson->setData(
-            ['valid' => (bool) $wlAreaCollection->count()]
+            [
+                'status' => true
+            ]
         );
     }
 }

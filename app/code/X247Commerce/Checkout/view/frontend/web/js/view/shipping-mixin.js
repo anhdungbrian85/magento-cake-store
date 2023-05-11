@@ -151,8 +151,8 @@ define(
                                 store_location_id: storeLocationId
                             },
                             success: function (response) {
-                                if (!response.valid) {
-                                    amalert({ content: $t('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address!') })
+                                if (!response.status) {
+                                    amalert({ content: response.message })
                                 }
                             },
                             always: function () {
