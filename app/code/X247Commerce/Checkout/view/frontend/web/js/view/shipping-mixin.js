@@ -137,11 +137,11 @@ define(
                 },
 
                 validateDeliveryPostcode: function (postcode) {
-                    console.log(quote.shippingMethod())
-                    $('body').trigger('processStart');
+
                     var storeLocationId = locationContext.storeLocationId();
                     if (quote.shippingMethod()['carrier_code'] === "cakeboxdelivery" && postcode && storeLocationId) {
                         //@TODO build action class
+                        $('body').trigger('processStart');
                         $.ajax({
                             url: urlBuilder.build('checkout/shipping/validateDeliveryPostcode'), //@TODO build web api url
                             dataType: 'json',
