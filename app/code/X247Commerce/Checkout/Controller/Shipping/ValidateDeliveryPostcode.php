@@ -46,14 +46,14 @@ class ValidateDeliveryPostcode extends Action
         $resultJson = $this->resultJsonFactory->create();
         $postcode = $this->getRequest()->getParam('postcode');
         $storeLocationId = $this->getRequest()->getParam('store_location_id');
-        if (!$postcode || !$storeLocationId) {
+        if (!$postcode) {
             return $resultJson->setData(
                 ['valid' => -1]
             );
         }
-
+        $wlAreaCollection = $this->deliveryAreaHelper->getDeliverLocations($postcode);
         return $resultJson->setData(
-            ['valid' => $this->deliveryAreaHelper->checkPostcodeWithStore($postcode, $storeLocationId)]
+            ['valid' => (bool) $wlAreaCollection->count()]
         );
     }
 }
