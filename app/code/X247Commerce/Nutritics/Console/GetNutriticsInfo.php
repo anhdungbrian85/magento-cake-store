@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace X247Commerce\Nutritics\Console;
 
 use \Symfony\Component\Console\Command\Command;
@@ -78,30 +78,30 @@ class GetNutriticsInfo extends Command
         $maxId = $input->getOption('max-id');
 
         if ($minId && $maxId) {
-            
+
             $this->processWithRangeProductId($minId, $maxId);
         } else {
-            
-            $this->processWithProductSku($sku);            
+
+            $this->processWithProductSku($sku);
         }
 
     }
 
      /**
      * Process Product Nutritic In Range Product Id not set value in nutritics_product_attribute_value
-     * @param 
+     * @param
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     public function processWithRangeProductId($minId, $maxId)
     {
-        try {            
+        try {
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/nutricsclirangid.log');
             $logger = new \Zend_Log();
             $logger->addWriter($writer);
 
-            
+
             $products = $this->getProductCollectionInRangeProductId($minId, $maxId);
-                
+
             if ($products->getSize() > 0) {
                 $filterAttr = $this->configHelper->getProductApiAttributeFilter();
 
@@ -138,7 +138,7 @@ class GetNutriticsInfo extends Command
                 // if (!empty($allNutricInfo)) {
                 //     $this->insertMultiNutriticsInfo($allProductIds, $allNutricInfo);
                 // }
-            }      
+            }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -146,13 +146,13 @@ class GetNutriticsInfo extends Command
 
      /**
      * Process Product Nutritic with given sku or All product not set value in nutritics_product_attribute_value
-     * @param 
+     * @param
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     public function processWithProductSku($sku = null)
     {
 
-        try {            
+        try {
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/nutricsclisku.log');
             $logger = new \Zend_Log();
             $logger->addWriter($writer);
@@ -160,7 +160,7 @@ class GetNutriticsInfo extends Command
             $i = 1;
             while(true) {
                 $products = $this->getProductCollection($i, $sku);
-                
+
                 if ($products->getSize() > ($i - 1)*100) {
                     $filterAttr = $this->configHelper->getProductApiAttributeFilter();
 
@@ -202,7 +202,7 @@ class GetNutriticsInfo extends Command
                 }
 
                 $i++;
-            }        
+            }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -211,10 +211,10 @@ class GetNutriticsInfo extends Command
     /**
      * Get Insert Product Nutritics Info to table nutritics_product_attribute_value
      * @param $productRowIds, array $nutricInfo
-     * @return 
+     * @return
      */
     public function insertNutriticsInfo($productRowIds, $nutricInfo)
-    { 
+    {
         $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
         if ($productRowIds && $nutricInfo) {
             $insertData = [];
@@ -225,37 +225,36 @@ class GetNutriticsInfo extends Command
                 if ($key != 'id') {
                     if (isset($value['name'])) {
                         if ($value['val']) {
-                            $nutrics = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $value['name'], 'value' => $value['val'], 'attribute_unit' => $value['unit'], 
+                            $nutrics = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $value['name'], 'value' => $value['val'], 'attribute_unit' => $value['unit'],
                                         'percent_ri' => $value['percentRI']];
                         }
-                        
+
                     }
                     if (isset($value['contains'])) {
-                        $allergens = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '', 
+                        $allergens = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '',
                         'percent_ri' => ''];
                     }
                     if ($key == 'quid' && isset($nutricInfo[$key])) {
-                        $ingredients = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $key, 'value' => $value, 'attribute_unit' => '', 
+                        $ingredients = ['row_id' => $productRowIds, 'attribute_code' => $key, 'attribute_name' => $key, 'value' => $value, 'attribute_unit' => '',
                         'percent_ri' => ''];
                     }
                     if (!empty($nutrics) || !empty($allergens) || !empty($ingredients)) {
                         $insertData[] = array_merge($nutrics, $allergens, $ingredients);
                     }
                 }
-                
+
             }
-            
+
             if ($insertData) {
                 return $this->connection->insertMultiple($table, $insertData);
             }
-            return;
         }
     }
 
     /**
      * Get Insert Product Nutritics Info to table nutritics_product_attribute_value
      * @param array $productRowIds, array $nutricInfo
-     * @return 
+     * @return
      */
     public function insertMultiNutriticsInfo($productRowIds, $nutricInfo)
     {
@@ -263,30 +262,30 @@ class GetNutriticsInfo extends Command
             $table = $this->resource->getTableName(self::TABLE_NUTRITICS_PRODUCT_ATTRIBUTE_VALUE);
 
             $insertData = [];
-            
+
             for ($i=0; $i < count($productRowIds); $i++)
-            {                
-                
+            {
+
                 foreach ($nutricInfo[$i + 1] as $key => $value) {
                     $nutrics = [];
                     $allergens = [];
                     if ($key != 'id') {
                         if (isset($value['name'])) {
                             if ($value['val']) {
-                                $nutrics = ['row_id' => $productRowIds[$i], 'attribute_code' => $key, 'attribute_name' => $value['name'], 'value' => $value['val'], 'attribute_unit' => $value['unit'], 
+                                $nutrics = ['row_id' => $productRowIds[$i], 'attribute_code' => $key, 'attribute_name' => $value['name'], 'value' => $value['val'], 'attribute_unit' => $value['unit'],
                                             'percent_ri' => $value['percentRI']];
                             }
-                            
+
                         }
                         if (isset($value['contains'])) {
-                            $allergens = ['row_id' => $productRowIds[$i], 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '', 
+                            $allergens = ['row_id' => $productRowIds[$i], 'attribute_code' => $key, 'attribute_name' => $key, 'value' => json_encode($value), 'attribute_unit' => '',
                             'percent_ri' => ''];
                         }
                         if (!empty($nutrics) || !empty($allergens)) {
                             $insertData[] = array_merge($nutrics, $allergens);
                         }
                     }
-                    
+
                 }
             }
             // var_dump($insertData);die();
@@ -297,10 +296,10 @@ class GetNutriticsInfo extends Command
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
-        
+
     }
 
-    public function getNutriticsInfo($filterCode) 
+    public function getNutriticsInfo($filterCode)
     {
         // $getNutriticsEnergy = $this->getNutriticsEnergy($filterCode);
         // $getNutriticsMacro = $this->getNutriticsMacro($filterCode);
@@ -310,7 +309,7 @@ class GetNutriticsInfo extends Command
         // $getNutriticsVitamins = $this->getNutriticsVitamins($filterCode);
         // $getNutriticsOther = $this->getNutriticsOther($filterCode);
         // $getNutriticsMiscellaneous = $this->getNutriticsMiscellaneous($filterCode);
-        // $return = array_merge($getNutriticsEnergy, $getNutriticsMacro, $getNutriticsCarbohydrates, $getNutriticsFats, $getNutriticsMinerals, 
+        // $return = array_merge($getNutriticsEnergy, $getNutriticsMacro, $getNutriticsCarbohydrates, $getNutriticsFats, $getNutriticsMinerals,
         //                         $getNutriticsVitamins, $getNutriticsFats, $getNutriticsMinerals, $getNutriticsVitamins, $getNutriticsOther, $getNutriticsMiscellaneous);
 
         $params = ['energyKcal', 'energyKj', 'carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol', 'starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose', 'satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol', 'sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine', 'vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv', 'niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc', 'gi','gl','caffeine', 'allergens', 'quid'];
@@ -323,8 +322,8 @@ class GetNutriticsInfo extends Command
         }
         return $return;
     }
-    
-    public function getNutriticsReportUrl($filterCode) 
+
+    public function getNutriticsReportUrl($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode), true);
         $reporturl = $nutriticsInfo[1]['reporturl'];
@@ -333,10 +332,10 @@ class GetNutriticsInfo extends Command
 
     /**
      * Get Energy info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsEnergy($filterCode) 
+    public function getNutriticsEnergy($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['energyKcal', 'energyKj']), true);
         if (!is_array($filterCode)) {
@@ -344,15 +343,15 @@ class GetNutriticsInfo extends Command
         } else {
             $return = $nutriticsInfo;
         }
-        
+
         return $return;
     }
     /**
      * Get Macronutrients info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsMacro($filterCode) 
+    public function getNutriticsMacro($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['carbohydrate', 'protein', 'fat', 'water', 'waterDr', 'alcohol']), true);
         if (!is_array($filterCode)) {
@@ -364,10 +363,10 @@ class GetNutriticsInfo extends Command
     }
     /**
      * Get Carbohydrates info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsCarbohydrates($filterCode) 
+    public function getNutriticsCarbohydrates($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['starch','oligosaccharide','fibre','nsp','sugars','freesugars','glucose','galactose','fructose','sucrose','maltose','lactose']), true);
         if (!is_array($filterCode)) {
@@ -379,10 +378,10 @@ class GetNutriticsInfo extends Command
     }
     /**
      * Get Fats (Lipid Components) info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsFats($filterCode) 
+    public function getNutriticsFats($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['satfat','monos','cismonos','poly','n3poly','n6poly','cispoly','trans','cholesterol']), true);
         if (!is_array($filterCode)) {
@@ -394,10 +393,10 @@ class GetNutriticsInfo extends Command
     }
     /**
      * Get Minerals and Trace Elements info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsMinerals($filterCode) 
+    public function getNutriticsMinerals($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['sodium','potassium','chloride','calcium','phosphorus','magnesium','iron','zinc','copper','manganese','selenium','iodine']), true);
         if (!is_array($filterCode)) {
@@ -409,30 +408,30 @@ class GetNutriticsInfo extends Command
     }
     /**
      * Get Vitamins info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsVitamins($filterCode) 
+    public function getNutriticsVitamins($filterCode)
     {
         $nutriticsInfo1 = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['vita','retinol','carotene','vitd','vite','vitk','thiamin','riboflavin','niacineqv']), true);
-        
+
         $nutriticsInfo2 = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['niacin','tryptophan','pantothenate','vitb6','folate','vitb12','biotin','vitc']), true);
         if (!is_array($filterCode)) {
             $return1  = isset($nutriticsInfo1[1]) ? $nutriticsInfo1[1] : [] ;
             $return2  = isset($nutriticsInfo2[1]) ? $nutriticsInfo2[1] : [] ;
-            
+
             return array_merge($return1, $return2);
         } else {
-            
+
             return array_merge($nutriticsInfo1, $nutriticsInfo2);
         }
     }
     /**
      * Get Other info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsOther($filterCode) 
+    public function getNutriticsOther($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['gi','gl','caffeine']), true);
         if (!is_array($filterCode)) {
@@ -444,10 +443,10 @@ class GetNutriticsInfo extends Command
     }
     /**
      * Get Miscellaneous info of Product by product's ifcCode or productSku
-     * @param 
+     * @param
      * @return array
      */
-    public function getNutriticsMiscellaneous($filterCode) 
+    public function getNutriticsMiscellaneous($filterCode)
     {
         $nutriticsInfo = json_decode($this->nutriticsApi->getNutriticsInfo($filterCode, ['allergens']), true);
         if (!is_array($filterCode)) {
@@ -460,7 +459,7 @@ class GetNutriticsInfo extends Command
 
     /**
      * Get Product Collection not set value in nutritics_product_attribute_value
-     * @param 
+     * @param
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     public function getProductCollection($page, $sku = null)
@@ -485,7 +484,7 @@ class GetNutriticsInfo extends Command
     }
     /**
      * Get Product Collection In Range Product Id not set value in nutritics_product_attribute_value
-     * @param 
+     * @param
      * @return Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     public function getProductCollectionInRangeProductId($minId, $maxId)

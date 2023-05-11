@@ -15,8 +15,9 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Psr\Log\LoggerInterface;
 
 class NutriticsApi
-{    
-    // Example API endpoint: https://[USERNAME]:[PASSWORD]@www.nutritics.com/api/v1.2/LIST/user=314515&recipe=code=abcdex
+{
+    // Example API endpoint:            https://[USERNAME]:[PASSWORD]@www.nutritics.com/api/v1.2/LIST/user=314515&recipe=code=CXM9CHB2XX
+    // Updated API Endpoint 11 May 2023 https://[USERNAME]:[PASSWORD]@www.nutritics.com/api/v1.2/LIST/user=314515&recipe=code:CXM9CHB2XX
     const NUTRITICS_API_RESPONSE_CODE_SUCCESS = 200;
     const NUTRITICS_API_RESPONSE_CODE_ERROR = 400;
 
@@ -49,12 +50,12 @@ class NutriticsApi
 
     /**
      * Build required params for API request
-     * @param array $params 
+     * @param array $params
      * @return string|null
      */
     public function buildQueryParams($params)
     {
-        try {   
+        try {
             $username = $this->configHelper->getNutriticsAccountUsername();
             $password = $this->configHelper->getNutriticsAccountPassword();
             $limit = $this->configHelper->getLimit();
@@ -85,11 +86,11 @@ class NutriticsApi
      * Build API endpoint URI for GET method (read only API)
      * @param string $requestFunction LIST, DELETE, DETAIL, CREATE, MODIFY
      * @param (string) $requestObject client, food, recipe, activity, menu
-     * @param array $params 
+     * @param array $params
      * @return string
      */
     public function buildApiUri($requestFunction, $requestObject, $params = [])
-    {   
+    {
         $username = $this->configHelper->getNutriticsAccountUsername();
         $password = $this->configHelper->getNutriticsAccountPassword();
         $userId = $this->configHelper->getUserId();
@@ -109,7 +110,7 @@ class NutriticsApi
      * @param (string) $object client, food, recipe, activity, menu
      * @param array $params
      * @return string
-     * @see 
+     * @see
      */
     public function getList($object, array $params = [])
     {
@@ -122,22 +123,22 @@ class NutriticsApi
             // Request::HTTP_METHOD_GET
         );
 
-        $status = $response->getStatusCode(); 
-        
+        $status = $response->getStatusCode();
+
         if ($status == self::NUTRITICS_API_RESPONSE_CODE_SUCCESS) {
             $responseBody = $response->getBody();
-            $responseContent = $responseBody->getContents(); 
+            $responseContent = $responseBody->getContents();
             return $responseContent;
         }   else {
             $this->logger->error('Nutritics API getList error: '. $response->getReasonPhrase());
             return false;
-        }        
+        }
     }
 
     /**
      * Get Nutritics Info data by ifc (IFC: International Food Code) or product sku
      * @param array || string $filterValue
-     * @param array $params 
+     * @param array $params
      * @param $fields
      * @return string
      */
@@ -146,31 +147,31 @@ class NutriticsApi
     {
         $objDataType = $this->configHelper->getProductApiType();
         $objDataType = $objDataType == ConfigHelper::NUTRITICS_CONFIG_API_TYPE_FOOD ? 'food' : 'recipe';
-        
+
         $filterAttr = $this->configHelper->getProductApiAttributeFilter();
         $filterAttr = $filterAttr == ConfigHelper::NUTRITICS_CONFIG_API_ATTRIBUTE_IFC ? 'ifc' : 'code';
 
         if (!is_array($filterValue)) {
-            $apiUriEndpoint = $this->buildApiUri('LIST', $objDataType.'='.$filterAttr.'='.$filterValue, $params);
+            $apiUriEndpoint = $this->buildApiUri('LIST', $objDataType.'='.$filterAttr.':'.$filterValue, $params);
         } else {
             $request = $objDataType.'=';
             foreach ($filterValue as $value) {
                 $request .= ' '.$filterAttr.'='.$value;
             }
             $apiUriEndpoint = $this->buildApiUri('LIST', $request, $params);
-        }        
-        
+        }
+
         $response = $this->doRequest(
             $apiUriEndpoint,
             // [], // all params is already included in endpoint with GET method
             // Request::HTTP_METHOD_GET
         );
 
-        $status = $response->getStatusCode(); 
-        
+        $status = $response->getStatusCode();
+
         if ($status == self::NUTRITICS_API_RESPONSE_CODE_SUCCESS) {
             $responseBody = $response->getBody();
-            $responseContent = $responseBody->getContents(); 
+            $responseContent = $responseBody->getContents();
             return $responseContent;
         }   else {
             $this->logger->error('Nutritics API get item error: '. $response->getReasonPhrase());
