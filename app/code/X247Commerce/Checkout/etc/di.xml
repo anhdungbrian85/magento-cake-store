@@ -15,10 +15,8 @@
 
     <preference for="X247Commerce\Checkout\Api\StoreLocationContextInterface" type="X247Commerce\Checkout\Service\StoreLocationContext"/>
 
-    <!-- Set delivery date options -->
-    <type name="Amasty\CheckoutDeliveryDate\Model\ConfigProvider">
-        <plugin name="x247checkout_edit_config_delivery_date" type="X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider" sortOrder="20" disabled="false" />
-    </type>
+    <preference for="Amasty\CheckoutDeliveryDate\Model\ConfigProvider" type="X247Commerce\Checkout\Model\Config\DeliveryConfigProvider"/>
+
 
     <!-- Change delivery date value label -->
     <type name="Amasty\CheckoutDeliveryDate\Block\Sales\Order\Info\Delivery">

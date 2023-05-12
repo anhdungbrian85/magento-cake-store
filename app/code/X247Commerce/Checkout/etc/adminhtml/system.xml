@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author 247Commerce team
+ * @package One Step Checkout Delivery Date Addon weekend
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="amasty_checkout">
+            <group id="delivery_date" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="weekend_available_hours" translate="label comment" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Weekend Available Hours</label>
+                    <comment><![CDATA[Please specify the timeframe available for delivery on Saturday and Sunday. Example: 8-12, 14-18, 20-24<br/>]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

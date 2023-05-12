@@ -509,7 +509,7 @@ return [
         'X247Commerce_CustomerInquiry' => 1,
         'X247Commerce_Delivery' => 1,
         'X247Commerce_DeliveryPopUp' => 1,
-        'X247Commerce_HolidayOpeningTime' => 1,
+        'X247Commerce_StoreLocator' => 1,
         'X247Commerce_KlaviyoSMS' => 1,
         'X247Commerce_Nutritics' => 1,
         'X247Commerce_OrderDetails' => 1,
@@ -519,7 +519,7 @@ return [
         'X247Commerce_ReadMoreDescriptionCategory' => 0,
         'X247Commerce_StoreLocatorSource' => 1,
         'X247Commerce_ShopBy' => 1,
-        'X247Commerce_StoreLocator' => 1,
+        'X247Commerce_HolidayOpeningTime' => 1,
         'X247Commerce_Sales' => 1,
         'X247Commerce_Theme' => 1,
         'X247Commerce_Yext' => 1
