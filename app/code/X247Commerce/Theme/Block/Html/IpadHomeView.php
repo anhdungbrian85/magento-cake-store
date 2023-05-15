@@ -30,6 +30,7 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
     protected $categoryRepository;
 
     protected $_storeManager;
+
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Catalog\Model\Layer\Resolver $layerResolver
@@ -41,7 +42,7 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Catalog\Model\Layer\Resolver $layerResolver,
         \Magento\Framework\Registry $registry,
-        \Magento\Catalog\Helper\Category $categoryHelper,
+        \X247Commerce\Theme\Helper\CategoryHelper $categoryHelper,
         \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
         \Magento\Catalog\Model\CategoryRepository $categoryRepository,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -73,7 +74,12 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
     }
 
     public function getCurrentCategory(){
-        $categoryId = 74;
+        $categoryId = $this->getCateIdAvailable();
         return $this->categoryRepository->get($categoryId, $this->_storeManager->getStore()->getId());
+    }
+
+    protected function getCateIdAvailable()
+    {
+        return $this->_categoryHelper->getCateIDIpadHomeView() ?? null;
     }
 }
