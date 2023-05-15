@@ -1,6 +1,18 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-
+        <section id="x247commerce_theme" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Theme</label>
+            <tab>x247commerce</tab>
+            <resource>X247Commerce_Theme::theme_config</resource>
+            <group id="ipad_home_page" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Ipad home page</label>
+                <field id="category_ipad_home_page" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Category</label>
+                    <source_model>X247Commerce\Theme\Model\Config\Source\CategoryOptions</source_model>
+                </field>
+            </group>
+        </section>
     </system>
 </config>
