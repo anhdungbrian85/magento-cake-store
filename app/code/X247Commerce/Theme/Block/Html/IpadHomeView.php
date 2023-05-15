@@ -80,6 +80,14 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
 
     protected function getCateIdAvailable()
     {
-        return $this->_categoryHelper->getCateIDIpadHomeView() ?? null;
+        $categoryId = $this->_categoryHelper->getCateIDIpadHomeView();
+        if(!$categoryId){
+            $cateCollection = $this->categoryCollectionFactory
+                                ->create()
+                                ->addAttributeToSelect('*')
+                                ->setStore($this->_storeManager->getStore());
+            $categoryId = $cateCollection->getFirstItem()->getId();
+        }
+        return $categoryId;
     }
 }
