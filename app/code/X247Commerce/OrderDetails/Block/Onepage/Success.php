@@ -10,7 +10,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
     protected $_categoryCollectionFactory;
     protected $orderAmastyFactory;
     protected $orderInterface;
-    protected $connfigTimeDelivery;
+    protected $configTimeDelivery;
     protected $deliveryAmastyFactory;
 
     public function __construct(
@@ -23,13 +23,13 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         \Magento\Catalog\Model\ProductRepository $productRepository,
         \Amasty\StorePickupWithLocator\Model\ResourceModel\Order\CollectionFactory $orderAmastyFactory,
         \Amasty\CheckoutDeliveryDate\Model\ResourceModel\Delivery\CollectionFactory $deliveryAmastyFactory,
-        \Amasty\CheckoutDeliveryDate\Model\ConfigProvider $connfigTimeDelivery,
+        \Amasty\CheckoutDeliveryDate\Model\ConfigProvider $configTimeDelivery,
         \Magento\Sales\Model\Order\Address\Renderer $renderer,
         array $data = []
     ) {
         $this->orderInterface = $orderInterface;
         $this->orderAmastyFactory = $orderAmastyFactory;
-        $this->connfigTimeDelivery = $connfigTimeDelivery;
+        $this->configTimeDelivery = $configTimeDelivery;
         $this->deliveryAmastyFactory = $deliveryAmastyFactory;
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
         $this->_productRepository = $productRepository;
@@ -39,8 +39,8 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         );
     }
 
-    public function getOrder($id) 
-    {    
+    public function getOrder($id)
+    {
         return $this->orderInterface->loadByIncrementId($id);
     }
 
@@ -79,8 +79,9 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
     {
         if (array_key_exists('time', $deliveryDayTime)) {
             $key = $deliveryDayTime['time'];
-            $arrayHoursValue = $this->connfigTimeDelivery->getDeliveryHours();
-    
+            $isWeekendTimeSlot = ($key == \X247Commerce\Checkout\Model\Config\DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START);
+            $arrayHoursValue = $this->configTimeDelivery->getDeliveryHours(null, $isWeekendTimeSlot);
+
             return $arrayHoursValue[array_search($key, array_column($arrayHoursValue, 'value'))]['label'];
         }
 
@@ -99,7 +100,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         $categoryIds = $product->getCategoryIds();
         $categories = $this->getCategoryCollection()
                             ->addAttributeToFilter('entity_id', $categoryIds);
-                            
+
         foreach ($categories as $category) {
             return $category->getName();
         }
@@ -108,28 +109,28 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
     public function getCategoryCollection($isActive = true, $level = false, $sortBy = false, $pageSize = false)
     {
         $collection = $this->_categoryCollectionFactory->create();
-        $collection->addAttributeToSelect('*');        
-        
+        $collection->addAttributeToSelect('*');
+
         // select only active categories
         if ($isActive) {
             $collection->addIsActiveFilter();
         }
-                
+
         // select categories of certain level
         if ($level) {
             $collection->addLevelFilter($level);
         }
-        
+
         // sort categories by some value
         if ($sortBy) {
             $collection->addOrderField($sortBy);
         }
-        
+
         // select certain number of categories
         if ($pageSize) {
-            $collection->setPageSize($pageSize); 
-        }    
-        
+            $collection->setPageSize($pageSize);
+        }
+
         return $collection;
     }
 }
