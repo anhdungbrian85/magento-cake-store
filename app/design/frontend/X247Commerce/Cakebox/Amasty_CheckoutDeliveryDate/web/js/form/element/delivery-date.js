@@ -149,13 +149,19 @@ define([
                 var TimeComponent = registry.get('checkout.steps.shipping-step.amcheckout-delivery-date.time'),
                     dateSelected = this.getDateFromValue(this.value()),
                     isWeekend = (dateSelected.getDay() === 0 || dateSelected.getDay() === 6),
-                    TimeOptions= isWeekend ?
-                        this.createTimeOption(this.timeSlotsWeekendConfig) :
-                        this.createTimeOption(this.timeSlotsWeekdayConfig);
-
+                    TimeOptionWeekday = this.createTimeOption(this.timeSlotsWeekdayConfig),
+                    TimeOptionWeekend = this.createTimeOption(this.timeSlotsWeekendConfig);
+                
                 //@TODO: holiday hours
-                TimeComponent.options.pop();
-                TimeComponent.options.push(TimeOptions);
+                TimeComponent.options.splice(1,2);
+                if (isWeekend) {
+                    TimeComponent.options.push(TimeOptionWeekend);
+                    TimeComponent.options.push(TimeOptionWeekday);
+                }   else {
+                    TimeComponent.options.push(TimeOptionWeekday);
+                }
+                
+                
             }
         },
 

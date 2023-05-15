@@ -77,14 +77,10 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
 
     public function getDeliveryHours($deliveryDayTime)
     {
-        $deliveryDate = $deliveryDayTime['date'];
-        $deliveryDate = new \DateTime($deliveryDate);
-        $weekDay = $deliveryDate->format('N');
-        $isWeekend = $weekDay == 6 || $weekDay == 7;
-
         if (array_key_exists('time', $deliveryDayTime)) {
             $key = $deliveryDayTime['time'];
-            $arrayHoursValue = $this->configTimeDelivery->getDeliveryHours(null, $isWeekend);
+            $isWeekendTimeSlot = ($key == \X247Commerce\Checkout\Model\Config\DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START);
+            $arrayHoursValue = $this->configTimeDelivery->getDeliveryHours(null, $isWeekendTimeSlot);
 
             return $arrayHoursValue[array_search($key, array_column($arrayHoursValue, 'value'))]['label'];
         }

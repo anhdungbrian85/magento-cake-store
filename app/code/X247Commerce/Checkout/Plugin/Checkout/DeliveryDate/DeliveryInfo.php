@@ -18,16 +18,14 @@ class DeliveryInfo
         $result
     ) {
         foreach ($result as $deliveryInfo) {
-            if ($deliveryInfo['label'] == __('Delivery Date')) {
-                $deliveryDate = new \DateTime($deliveryInfo['value']);
-                $dayOfWeek = $deliveryDate->format('N');
-                $isWeekend = $dayOfWeek == 6 || $dayOfWeek == 7;
+            if ($deliveryInfo['label'] == __('Delivery Time')) {
+                $isWeekendTimeSlot = (int)(explode(':', trim(explode( '-', $deliveryInfo['value'])[0]))[0])  == \X247Commerce\Checkout\Model\Config\DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START;
             }
         }
 
     	foreach ($result as &$deliveryInfo) {
     		if ($deliveryInfo['label'] ==  __('Delivery Time') ) {
-    			$deliveryInfo['value'] = $this->deliveryConfigProvider->getDeliveryHours(null, $isWeekend)[1]['label'];
+    			$deliveryInfo['value'] = $this->deliveryConfigProvider->getDeliveryHours(null, $isWeekendTimeSlot)[1]['label'];
     		}
     	}
         return $result;
