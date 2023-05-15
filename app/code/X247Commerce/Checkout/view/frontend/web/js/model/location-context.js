@@ -5,7 +5,7 @@ define([
 	'use strict';
 
 	var storeLocationId = ko.observable(window.checkoutConfig.storeLocationId);
-	
+
 	var deliveryType = ko.observable(window.checkoutConfig.deliveryType);
 
 	var isAsda = ko.computed(function() {
@@ -28,12 +28,13 @@ define([
      	}
     });
 
-	//@todo change leadDeliveryTime when the cart items change.
-	var locationContext = {
-		storeLocationId: storeLocationId,
-		deliveryType: deliveryType,
-		isAsda: isAsda,
-		leadDeliveryTime: leadDeliveryTime
-	}
-	return locationContext;
+    var deliveryPostcode = ko.observable(window.checkoutConfig.deliveryPostcode);
+
+    return {
+        storeLocationId: storeLocationId,
+        deliveryType: deliveryType,
+        isAsda: isAsda,
+        leadDeliveryTime: leadDeliveryTime,
+        deliveryPostcode: deliveryPostcode
+    };
 })

@@ -1,50 +1,74 @@
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-<fieldset name="general">
-	<field name="amlocator_source" sortOrder="10">
-        <argument name="data" xsi:type="array">
-            <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorSource</item>
-            <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">Locator source</item>
-                <item name="formElement" xsi:type="string">select</item>
-                <item name="visible" xsi:type="boolean">true</item>
-                <item name="dataType" xsi:type="string">select</item>
-                <item name="validation" xsi:type="array">
-                    <item name="required-entry" xsi:type="boolean">true</item>
+    <fieldset name="general">
+        <field name="amlocator_source" sortOrder="10">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorSource</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Locator source</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="disabled" xsi:type="boolean">1</item>
                 </item>
-                <item name="disabled" xsi:type="boolean">1</item>
-            </item>
-        </argument>
-    </field>
-    <field name="amlocator_store" sortOrder="10">
-        <argument name="data" xsi:type="array">
-            <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorStore</item>
-            <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">Parent Locator (for ASDA Store only)</item>
-                <item name="formElement" xsi:type="string">select</item>
-                <item name="visible" xsi:type="boolean">true</item>
-                <item name="dataType" xsi:type="string">select</item>
-                <item name="validation" xsi:type="array">
-                    <item name="required-entry" xsi:type="boolean">false</item>
+            </argument>
+        </field>
+        <field name="amlocator_store" sortOrder="10">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">X247Commerce\StoreLocatorSource\Model\OptionsLocatorStore</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Parent Locator (for ASDA Store only)</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="dataScope" xsi:type="string">amlocator_store</item>
+                    <item name="disabled" xsi:type="boolean">0</item>
                 </item>
-                <item name="dataScope" xsi:type="string">amlocator_store</item>
-                <item name="disabled" xsi:type="boolean">0</item>
-            </item>
-        </argument>
-    </field>
+            </argument>
+        </field>
 
-    <field name="enable_delivery" formElement="select">
-        <settings>
-            <dataType>int</dataType>
-            <label translate="true">Delivery</label>
-            <dataScope>enable_delivery</dataScope>
-        </settings>
-        <formElements>
-            <select>
-                <settings>
-                    <options class="\Magento\Config\Model\Config\Source\Yesno"/>
-                </settings>
-            </select>
-        </formElements>
-    </field>
-</fieldset>
+        <field name="enable_delivery" formElement="select">
+            <settings>
+                <dataType>int</dataType>
+                <label translate="true">Delivery</label>
+                <dataScope>enable_delivery</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="\Magento\Config\Model\Config\Source\Yesno"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="holiday_action" formElement="multiselect">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Holiday action</label>
+                <dataScope>holiday_action</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options>
+                            <option name="delivery" xsi:type="array">
+                                <item name="value" xsi:type="string">1</item>
+                                <item name="label" xsi:type="string">Don't offer delivery</item>
+                            </option>
+                            <option name="pickup" xsi:type="array">
+                                <item name="value" xsi:type="string">2</item>
+                                <item name="label" xsi:type="string">Don't offer pickup</item>
+                            </option>
+                        </options>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+    </fieldset>
 </form>

@@ -69,17 +69,19 @@ class CheckoutLocationParams
         $quote = $this->checkoutSession->getQuote();
         $pickupQuote = $this->pickupQuoteRepository->getByAddressId($quote->getShippingAddress()->getId());
         return [
-            'storeLocationId' => $this->storeLocationContext->getStoreLocationId(), 
+            'storeLocationId' => $this->storeLocationContext->getStoreLocationId(),
             'deliveryType' => $this->storeLocationContext->getDeliveryType(),
             'initLeadDeliveryValue' =>  $this->getInitLeadDeliveryValue(),
-            'amastySelectedPickup' => [ 
+            'amastySelectedPickup' => [
                 'am_pickup_curbside' => [],
                 'am_pickup_date' => '',
                 'am_pickup_store' => $this->storeLocationContext->getStoreLocationId(),
                 'am_pickup_time' => ''
             ],
             'amastyLocations' => $this->getLocationData(),
-            'asdaLocationIds' => $this->getAsdaLocationId()
+            'asdaLocationIds' => $this->getAsdaLocationId(),
+            'deliveryPostcode' => $this->storeLocationContext->getDeliveryType() == 1 ?
+                    $this->checkoutSession->getCustomerPostcode() : ''
         ];
     }
 
@@ -119,7 +121,7 @@ class CheckoutLocationParams
 
     public function getAsdaLocationId() {
         // $locationItems = $this->locationProvider->getPreparedCollection();
-        // foreach ($locationItems as $location) {            
+        // foreach ($locationItems as $location) {
         // }
         $connection = $this->_resource->getConnection();
         $tableName = $connection->getTableName('store_location_asda_link');
