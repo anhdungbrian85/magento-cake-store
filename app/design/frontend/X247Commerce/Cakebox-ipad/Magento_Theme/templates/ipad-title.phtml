@@ -1,0 +1,16 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php
+$category = $block->getCurrentCategory();
+$titleBlock = $block->getLayout()->getBlock('page.main.title');
+if($titleBlock){
+    $titleBlock->setPageTitle($this->getCurrentCategory()->getName());
+}
+?>
+<?= $block->getLayout()->getBlock('page.main.title')->toHtml(); ?>
