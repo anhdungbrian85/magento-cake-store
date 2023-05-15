@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="catalog-category-view"/>
+        <referenceBlock name="best-seller-home" remove="true"/>
+        <referenceContainer name="columns.top">
+            <container name="category.header.fullwidth" htmlTag="div" htmlClass="category-header full-width" >
+                <container name="category.page.header" htmlTag="div" htmlClass="category-page-header container" >
+                    <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="home.ipad.title" template="Magento_Theme::ipad-title.phtml" />
+                    <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.image" template="Magento_Catalog::category/image.phtml">
+                        <arguments>
+                            <argument name="image" xsi:type="object">Magento\Catalog\ViewModel\Category\Image</argument>
+                            <argument name="output" xsi:type="object">Magento\Catalog\ViewModel\Category\Output</argument>
+                        </arguments>
+                    </block>
+                </container>
+            </container>
+        </referenceContainer>
+        <referenceContainer name="main">
+            <container name="category.view.container" htmlTag="div" htmlClass="category-view" after="-">
+                <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.description" template="Magento_Catalog::category/description.phtml"/>
+                <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.cms" template="Magento_Catalog::category/cms.phtml"/>
+            </container>
+        </referenceContainer>
+        <move element="breadcrumbs" destination="category.page.header" after="-" />
+        <move element="trustpilot-carousel" destination="category.view.container" after="-" />
+        <!-- <move element="category.image" destination="category.page.header" after="-" /> -->
+        <!-- <move element="category.view.container" destination="main" before="-"/> -->
+    </body>
+</page>
