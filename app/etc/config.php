@@ -506,6 +506,7 @@ return [
         'X247Commerce_Checkout' => 1,
         'X247Commerce_CustomUlmodProductinquiry' => 1,
         'X247Commerce_Customer' => 1,
+        'X247Commerce_CustomerAddressAutocomplete' => 1,
         'X247Commerce_CustomerInquiry' => 1,
         'X247Commerce_Delivery' => 1,
         'X247Commerce_DeliveryPopUp' => 1,
