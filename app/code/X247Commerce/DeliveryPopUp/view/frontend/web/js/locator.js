@@ -129,6 +129,12 @@ define([
                                     }
                                 },
                             });
+                    } else {
+                        if (delivery_type != 2) {
+                            window.location.reload();
+                        } else {
+                            window.location.href = redirectUrl;
+                        }
                     }
 
                 }));
