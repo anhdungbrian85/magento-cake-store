@@ -87,6 +87,7 @@ define([
                     if (response.confirmation_popup_content) {
                         let confirmation_popup_content = response.confirmation_popup_content;
                         let parentBody = window.parent.document.body;
+                        $("#custom-delivery-popup-modal").modal("closeModal");
                         $('<div />').html(confirmation_popup_content)
                             .modal({
                                 autoOpen: true,
