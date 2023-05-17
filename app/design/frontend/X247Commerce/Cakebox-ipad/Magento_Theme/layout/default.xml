@@ -10,5 +10,8 @@
         <referenceBlock name="header.account" remove="true"/>
         <referenceBlock name="minicart" remove="true"/>
         <referenceBlock name="deliverypopup_display" remove="true"/>
+        <referenceBlock name="store.link" remove="true"/>
+        <block class="Magento\Framework\View\Element\Template" name="categories-reveal" template="Magento_Theme::categories-reveal.phtml" after="ammenu.logo" />
+        <move element="categories-reveal" destination="header-wrapper" after="ammenu.logo" />
     </body>
 </page>
