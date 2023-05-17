@@ -1,0 +1,19 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Feedback</title>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Feedback</argument>
+            </action>
+        </referenceBlock>
+        <attribute name="class" value="cms-page-view"/>
+        <referenceContainer name="content">
+            <block class="X247Commerce\Feedback\Block\Success\Index" name="success" template="X247Commerce_Feedback::success.phtml">
+            </block>
+        </referenceContainer>
+        <referenceBlock name="catalog.compare.link" remove="true"/>
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+    </body>
+</page>
