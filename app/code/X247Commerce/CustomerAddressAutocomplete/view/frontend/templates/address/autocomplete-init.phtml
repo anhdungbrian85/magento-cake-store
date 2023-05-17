@@ -1,0 +1,76 @@
+
+<?php $autocompleteHelper = $this->helper(\X247Commerce\CustomerAddressAutocomplete\Helper\Data::class);?>
+
+<script type="text/javascript">
+    <?php if ($autocompleteHelper->getGoogleApiKey()): ?>
+    require([
+        'jquery',
+        'domReady!',
+        'mage/loader',
+        'https://maps.googleapis.com/maps/api/js?libraries=places&key=<?=$autocompleteHelper->getGoogleApiKey()?>&callback=Function.prototype'
+    ], function ($) {
+        var autocompleteOptions = {
+                <?php if ($autocompleteHelper->getAllowedCountries()): ?>
+                componentRestrictions: { country: [
+                    <?php 
+                        foreach (explode(',', $autocompleteHelper->getAllowedCountries()) as $country):
+                            echo "'$country',";
+                        endforeach;
+                    ?> 
+                ]},
+
+                <?php endif ?>
+                fields: [ 'geometry.location', 'address_components' ],
+            };
+        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('street_1'), autocompleteOptions);
+            autocomplete.addListener('place_changed', function () {
+                const place = autocomplete.getPlace();
+                const components = place.address_components;
+
+                if (typeof components !== 'undefined') {
+                    var mainAddress = '';
+                    for (component of components) {
+                        const type = component.types[0];
+                        const longName = component.long_name;
+                        const shortName = component.short_name;
+
+                        switch (type) {
+                            case 'street_number':
+                                mainAddress += longName
+                                break;
+                            case 'route':
+                                mainAddress += " " + longName;
+                                break;
+                            case 'sublocality_level_2':
+                                mainAddress += " " + shortName;
+                                break;
+                            case 'sublocality_level_1':
+                                mainAddress += " " + shortName;
+                                break;
+                            // case 'locality':
+                                
+                            //     $("#locality").val(shortName);
+                            //     break;
+                            case 'postal_town':
+                                $("#city").val(longName);
+                                break;
+                            case 'postal_code':
+                            case 'postal_code_prefix':
+                                $('#zip').val(longName);
+                                break;
+                            case 'administrative_area_level_2':
+                               $("#region").val(longName);
+                                break;
+                            case 'administrative_area_level_1':                            
+                                $("#state").val(longName);
+                                break;
+
+                        }
+                    }
+                }
+                $("#street_1").val(mainAddress)
+            });
+        
+    })
+    <?php endif ?>
+</script>
