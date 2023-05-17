@@ -7,6 +7,7 @@
 /** @var \Magento\Review\Block\Product\Review $block */
 
 $product = $block->getProduct();
+if ($product):
 $sku = $product->getSku();
 $rangeSkus = $product->getRangeSkus();
 $skuTruspilot = $rangeSkus ? $rangeSkus . ',' . $sku : $sku;
@@ -27,3 +28,4 @@ $skuTruspilot = $rangeSkus ? $rangeSkus . ',' . $sku : $sku;
         }
     }
 </script>
+<?php endif ?>

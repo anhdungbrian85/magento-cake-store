@@ -23,14 +23,12 @@
             </container>
         </referenceContainer>
         <referenceContainer name="main">
-            <container name="category.view.container" htmlTag="div" htmlClass="category-view" after="-">
+            <container name="category.view.container" htmlTag="div" htmlClass="category-view container" after="-">
                 <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.description" template="Magento_Catalog::category/description.phtml"/>
                 <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.cms" template="Magento_Catalog::category/cms.phtml"/>
             </container>
         </referenceContainer>
         <move element="breadcrumbs" destination="category.page.header" after="-" />
         <move element="trustpilot-carousel" destination="category.view.container" after="-" />
-        <!-- <move element="category.image" destination="category.page.header" after="-" /> -->
-        <!-- <move element="category.view.container" destination="main" before="-"/> -->
     </body>
 </page>

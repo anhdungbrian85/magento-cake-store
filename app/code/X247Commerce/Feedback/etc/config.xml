@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <feedback>
+            <general>
+                <success_text>Thank you for your valued feedback. If necessary, we will be in touch as soon as possible</success_text>
+            </general>
+        </feedback>
+    </default>
+</config>

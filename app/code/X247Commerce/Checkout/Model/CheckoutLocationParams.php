@@ -2,23 +2,25 @@
 
 namespace X247Commerce\Checkout\Model;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Amasty\Storelocator\Model\LocationFactory;
 use Amasty\StorePickupWithLocator\Model\QuoteFactory as PickupQuoteFactory;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Amasty\StorePickupWithLocator\Api\QuoteRepositoryInterface as PickupQuoteRepositoryInterface;
-use Amasty\StorePickupWithLocator\CustomerData\LocationData;
 use Amasty\StorePickupWithLocator\Model\Location\LocationsAvailability;
 use Amasty\StorePickupWithLocator\Model\LocationProvider;
 use Amasty\StorePickupWithLocator\Model\ConfigProvider;
 use Amasty\StorePickupWithLocator\Model\ScheduleProvider;
-use Magento\Customer\CustomerData\SectionSourceInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+
 class CheckoutLocationParams
 {
+    const XML_PATH_DELIVERY_WEEKDAY_TIMESLOT = 'amasty_checkout/delivery_date/available_hours';
+    const XML_PATH_DELIVERY_WEEKEND_TIMESLOT = 'amasty_checkout/delivery_date/weekend_available_hours';
+
     protected $checkoutSession;
     protected $storeLocationContext;
     protected $logger;
@@ -33,6 +35,7 @@ class CheckoutLocationParams
     protected $scheduleProvider;
     protected $locationsAvailability;
     protected $_resource;
+    protected ScopeConfigInterface $scopeConfig;
 
     public function __construct(
         CheckoutSession $checkoutSession,
@@ -47,7 +50,8 @@ class CheckoutLocationParams
         ScheduleProvider $scheduleProvider,
         LocationsAvailability $locationsAvailability,
         \Psr\Log\LoggerInterface $logger,
-        ResourceConnection $resource
+        ResourceConnection $resource,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->storeLocationContext = $storeLocationContext;
@@ -62,8 +66,15 @@ class CheckoutLocationParams
         $this->locationsAvailability = $locationsAvailability;
         $this->logger = $logger;
         $this->_resource = $resource;
+        $this->scopeConfig = $scopeConfig;
 
     }
+
+    /**
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getConfig()
     {
         $quote = $this->checkoutSession->getQuote();
@@ -81,10 +92,15 @@ class CheckoutLocationParams
             'amastyLocations' => $this->getLocationData(),
             'asdaLocationIds' => $this->getAsdaLocationId(),
             'deliveryPostcode' => $this->storeLocationContext->getDeliveryType() == 1 ?
-                    $this->checkoutSession->getCustomerPostcode() : ''
+                    $this->checkoutSession->getCustomerPostcode() : '',
+            'deliveryDateTimeSlots' => $this->getDeliveryDateTimeSlots()
+
         ];
     }
 
+    /**
+     * @return array
+     */
     private function getLocationData() {
         $locationItems = $this->locationProvider->getLocationCollection();
         $scheduleToLocationsMap = [];
@@ -140,6 +156,11 @@ class CheckoutLocationParams
         return $this->urlBuilder->getUrl('contact');
     }
 
+    /**
+     * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function getInitLeadDeliveryValue()
     {
         $quote = $this->checkoutSession->getQuote();
@@ -150,6 +171,15 @@ class CheckoutLocationParams
             }
         }
         return $leadDelivery;
+    }
+
+
+    private function getDeliveryDateTimeSlots()
+    {
+        return [
+            'weekday' => $this->scopeConfig->getValue(self::XML_PATH_DELIVERY_WEEKDAY_TIMESLOT, ScopeConfigInterface::SCOPE_TYPE_DEFAULT),
+            'weekend' => $this->scopeConfig->getValue(self::XML_PATH_DELIVERY_WEEKEND_TIMESLOT, ScopeConfigInterface::SCOPE_TYPE_DEFAULT)
+        ];
     }
 
 

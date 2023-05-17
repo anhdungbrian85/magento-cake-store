@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<x247commerce_address_autocomplete>
+			<general>
+				<google_api_key>AIzaSyDDFuWug8oL8wW--4H-gflSuGFQAX1ePSs</google_api_key>
+				<allowspecific>1</allowspecific>
+				<specificcountry>GB</specificcountry>
+			</general>
+		</x247commerce_address_autocomplete>
+	</default>
+</config>

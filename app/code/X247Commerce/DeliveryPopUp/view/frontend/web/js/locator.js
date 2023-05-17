@@ -79,15 +79,65 @@ define([
                     },
                     showLoader: true
                 }).done($.proxy(function (response) {
-                    var sections = ['cart'];
+                    const sections = ['cart'];
                     customerData.invalidate(sections);
                     customerData.reload(sections, true);
-                    window.localStorage.setItem('delivery_type', delivery_type)
-                    if (delivery_type != 2) {
-                        window.location.reload();
+                    window.localStorage.setItem('delivery_type', delivery_type);
+                    console.log('response', response);
+                    if (response.confirmation_popup_content) {
+                        let confirmation_popup_content = response.confirmation_popup_content;
+                        let parentBody = window.parent.document.body;
+                        $("#custom-delivery-popup-modal").modal("closeModal");
+                        $('<div />').html(confirmation_popup_content)
+                            .modal({
+                                autoOpen: true,
+                                modalClass: 'wp-confirmation-popup-wrapper',
+                                modalCloseBtn: '.mfp-close',
+                                closed: function (e) {
+                                    console.log('closed');
+                                    if (delivery_type != 2) {
+                                        window.location.reload();
+                                    } else {
+                                        window.location.href = redirectUrl;
+                                    }
+                                },
+                                buttons: [{
+                                    text: "Continue Shopping",
+                                    attr: {
+                                        'data-action': 'confirm'
+                                    },
+                                    'class': 'action primary',
+                                    click: function () {
+                                        this.closeModal();
+                                        $('.mfp-close', parentBody).trigger('click');
+                                    }
+                                },
+                                    {
+                                        text: "Go To Checkout",
+                                        attr: {
+                                            'data-action': 'cancel'
+                                        },
+                                        'class': 'action primary',
+                                        click: function () {
+                                            parent.window.location = window.location.origin + '/checkout'
+                                        }
+                                    }],
+
+                                callbacks: {
+                                    beforeClose: function() {
+                                        console.log('beforeClose');
+                                        $('[data-block="minicart"]').trigger('contentLoading');
+                                    }
+                                },
+                            });
                     } else {
-                        window.location.href = redirectUrl;
+                        if (delivery_type != 2) {
+                            window.location.reload();
+                        } else {
+                            window.location.href = redirectUrl;
+                        }
                     }
+
                 }));
             })
         },

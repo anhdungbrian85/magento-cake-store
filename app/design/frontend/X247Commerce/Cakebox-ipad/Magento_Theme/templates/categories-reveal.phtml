@@ -1,0 +1,13 @@
+<div class="categories-reveal">
+    CATEGORIES
+</div>
+
+<script>
+    require([
+        'jquery',
+    ], function ($) {
+        $('.categories-reveal').on('click', function(){
+            $('button.ammenu-button.-hamburger.-trigger').trigger('click');
+        });
+    });
+</script>
