@@ -69,7 +69,7 @@ class CheckoutLocationParams
         $quote = $this->checkoutSession->getQuote();
         $pickupQuote = $this->pickupQuoteRepository->getByAddressId($quote->getShippingAddress()->getId());
         return [
-            'storeLocationId' => $this->storeLocationContext->getStoreLocationId(),
+            'storeLocationId' => $pickupQuote->getData('store_id'),
             'deliveryType' => $this->storeLocationContext->getDeliveryType(),
             'initLeadDeliveryValue' =>  $this->getInitLeadDeliveryValue(),
             'amastySelectedPickup' => [
