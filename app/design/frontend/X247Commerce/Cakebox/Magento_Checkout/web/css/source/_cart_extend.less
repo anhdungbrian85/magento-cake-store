@@ -1,0 +1,57 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+@mobile-cart-padding: 15px;
+@cart-price-color: @color-gray40;
+@cart-item-cell-padding-top: 20px;
+
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common =true) {
+
+    //  Products table
+    .cart {
+        &.table-wrapper {
+            .col {
+                &.qty {
+                    padding: @indent__base 11px @indent__s;
+                    text-align: center !important;
+
+                    .field {
+                        margin: auto;
+                        float: none !important;
+
+                        label {
+                            display: inline-flex;
+                        }
+
+                        .label {
+                            &:extend(.abs-visually-hidden all);
+                        }
+
+                        .input-text {
+                            font-size: 1.8rem;
+                            font-weight: 700;
+                            height: 30px;
+                            width: 40px;
+                            opacity: 1 !important;
+                            border: none;
+                        }
+
+                        .more,
+                        .less {
+                            font-size: x-large;
+                            line-height: 17px;
+                            color: #585858;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
