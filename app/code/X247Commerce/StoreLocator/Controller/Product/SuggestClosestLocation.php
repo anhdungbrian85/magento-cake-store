@@ -33,6 +33,7 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         try {
+
             $params = $this->getRequest()->getParams();
             $quote = $this->checkoutSession->getQuote();
             $productSkus = [$params['currentProductSku']];
@@ -42,27 +43,34 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
                     $productSkus[] = $quoteItem->getSku();
                 }
             }
-
-            $closestLocation = $this->locatorSourceResolver->getClosestLocationsHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
-            if (!empty($closestLocation['location_data'])) {
+            if ($this->storeLocationContext->getDeliveryType() == 1) {
                 $result = [
-                    'status' => 200,
-                    'message' => __('Okay!'),
-                    'closest_location' => $closestLocation['location_data']
+                    'status' => 400,
+                    'message' => __('Hide block for delivery')
                 ];
-            } else {
-                if ($closestLocation['current_source_is_available']) {
+            }   else {
+                $closestLocation = $this->locatorSourceResolver->getClosestLocationsHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
+                if (!empty($closestLocation['location_data'])) {
                     $result = [
-                        'status' => 400,
-                        'message' => __('This product is in this stock')
+                        'status' => 200,
+                        'message' => __('Okay!'),
+                        'closest_location' => $closestLocation['location_data']
                     ];
                 } else {
-                    $result = [
-                        'status' => 404,
-                        'message' => __('There are no sources in the cart that match the items in the cart!')
-                    ];
+                    if ($closestLocation['current_source_is_available']) {
+                        $result = [
+                            'status' => 400,
+                            'message' => __('This product is in this stock')
+                        ];
+                    } else {
+                        $result = [
+                            'status' => 404,
+                            'message' => __('There are no sources in the cart that match the items in the cart!')
+                        ];
+                    }
                 }
             }
+            
         } catch (\Exception $e) {
             $result = [
                 'status' => 500,
