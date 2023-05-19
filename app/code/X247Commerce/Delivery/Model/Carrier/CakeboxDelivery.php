@@ -93,7 +93,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                     $locationDataFromPostCode['data']['lng'],
                     $productSkus
                 );
-                if ($location->getId()) {
+                if($location->getId() && $quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery') {
                     $this->storeLocationContext->setStoreLocationId($location->getId());
                 }
             }

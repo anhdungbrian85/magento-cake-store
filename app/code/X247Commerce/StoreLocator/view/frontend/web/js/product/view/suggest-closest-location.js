@@ -47,8 +47,13 @@ define([
                             $('.closest-location_message').text('');
                             $('.closest-location_title').html('');
                         } else {
-                            $('.closest-location_message').text(result.message);
-                            $('.closest-location_title').html('');
+                            if(parseInt(currentStoreLocationId)){
+                                $('.closest-location_message').text(result.message);
+                                $('.closest-location_title').html('');
+                            }else{
+                                $('.closest-location_message').text('');
+                                $('.closest-location_title').html('');
+                            }
                         }
                     }
                 }
