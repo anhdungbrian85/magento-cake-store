@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="X247Commerce_HolidayOpeningTime::StoreLocationHoliday" title="StoreLocationHoliday" sortOrder="10">
+					<resource id="X247Commerce_HolidayOpeningTime::StoreLocationHoliday_save" title="Save StoreLocationHoliday" sortOrder="10"/>
+					<resource id="X247Commerce_HolidayOpeningTime::StoreLocationHoliday_delete" title="Delete StoreLocationHoliday" sortOrder="20"/>
+					<resource id="X247Commerce_HolidayOpeningTime::StoreLocationHoliday_update" title="Update StoreLocationHoliday" sortOrder="30"/>
+					<resource id="X247Commerce_HolidayOpeningTime::StoreLocationHoliday_view" title="View StoreLocationHoliday" sortOrder="40"/>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

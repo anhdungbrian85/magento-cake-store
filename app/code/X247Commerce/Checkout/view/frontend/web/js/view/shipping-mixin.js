@@ -23,7 +23,9 @@ define(
         'uiRegistry',
         'rjsResolver',
         'mage/translate',
-        'locationContext'
+        'locationContext',
+        'Amasty_CheckoutStyleSwitcher/js/model/amalert',
+        'mage/url'
     ],
     function (
         _,
@@ -49,7 +51,9 @@ define(
         registry,
         onLoad,
         $t,
-        locationContext
+        locationContext,
+        amalert,
+        urlBuilder
     ) {
         'use strict';
 
@@ -124,9 +128,44 @@ define(
                             this.validateAndSaveIfChanged();
                         }
                     }, this);
+
+                    quote.shippingAddress.subscribe(function () {
+                        locationContext.deliveryPostcode(quote.shippingAddress().postcode)
+                    }, this);
+
+                    locationContext.deliveryPostcode.subscribe(this.validateDeliveryPostcode.bind(this))
                 },
+
+                validateDeliveryPostcode: function (postcode) {
+
+                    var storeLocationId = locationContext.storeLocationId();
+                    if (quote.shippingMethod()['carrier_code'] === "cakeboxdelivery" && postcode && storeLocationId) {
+                        //@TODO build action class
+                        $('body').trigger('processStart');
+                        $.ajax({
+                            url: urlBuilder.build('checkout/shipping/validateDeliveryPostcode'), //@TODO build web api url
+                            dataType: 'json',
+                            method: 'GET',
+                            data: {
+                                postcode: postcode,
+                                store_location_id: storeLocationId
+                            },
+                            success: function (response) {
+                                if (!response.status) {
+                                    amalert({ content: response.message })
+                                }
+                            },
+                            always: function () {
+                                $('body').trigger('processStop');
+                            }
+                        })
+                    }
+
+
+                },
+
                 checkVisible: function(carrier_code) {
-                    
+
                     if (locationContext.deliveryType() == 2 && carrier_code != 'amstorepickup') {
                         return false;
                     }
@@ -245,9 +284,9 @@ define(
                             }   else {
                                 locationContext.deliveryType(quote.getDeliveryType());
                             }
-                            
+
                         }   else {
-                            locationContext.deliveryType(1) 
+                            locationContext.deliveryType(1)
                         }
                     }
 
@@ -255,7 +294,7 @@ define(
                     this._super(method);
                     instance.validateAndSaveIfChanged();
                     delete window.loaderIsNotAllowed;
-                    
+
                     return true;
                 },
 
@@ -288,7 +327,7 @@ define(
                         if ($(loginFormSelector + ' input[name=username]').length) {
                             emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
                         }
-                        
+
                     }
 
                     if (this.isFormInline) {
@@ -309,6 +348,12 @@ define(
                             this.focusInvalid();
 
                             return false;
+                        }
+
+                        if (quote.shippingMethod()['method_code'] === 'amstorepickup') {
+                            if (!$('[name="am_pickup_date"]').val() || !$('[name="am_pickup_time"]').val()) {
+                                return false;
+                            }
                         }
 
                         shippingAddress = quote.shippingAddress();
@@ -454,6 +499,7 @@ define(
                      will set shipping address and this observer will be executed.
                      validateShippingInformation - also validate email, which is not part of Shipping information.
                     */
+
                     if (isShippingValid || (this.isFormInline && !this.source.get('params.invalid'))) {
                         window.loaderIsNotAllowed = true;
                         setShippingInformationAction();

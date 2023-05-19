@@ -7,16 +7,15 @@ define([
     'jquery',
     'Magento_Ui/js/form/element/date',
     'mage/translate',
-    'locationContext'
-], function (ko, _, $, AbstractField, $t, locationContext) {
+    'locationContext',
+    'uiRegistry'
+], function (ko, _, $, AbstractField, $t, locationContext, registry) {
     'use strict';
 
     function isToday(date) {
         const today = new Date();
-        if (today.toDateString() === date.toDateString()) {
-            return true;
-        }
-        return false;
+        return today.toDateString() === date.toDateString();
+
     }
 
     return AbstractField.extend({
@@ -26,7 +25,8 @@ define([
         },
         storesData: window.checkoutConfig.amastyLocations.stores,
         deliverStoreId: ko.observable(window.checkoutConfig.storeLocationId),
-        
+        timeSlotsWeekdayConfig: window.checkoutConfig.deliveryDateTimeSlots.weekday,
+        timeSlotsWeekendConfig: window.checkoutConfig.deliveryDateTimeSlots.weekend,
         initialize: function () {
             this._super();
             var self = this;
@@ -35,7 +35,7 @@ define([
                     return store.id == self.deliverStoreId()
                 })
             }, this);
-           
+
         },
         initConfig: function () {
             this._super();
@@ -106,7 +106,7 @@ define([
             if (this.amcheckout_days.length > 0) {
                 this.options.beforeShowDay = this.restrictDates.bind(this);
             }
-            
+
             this.options.dateFormat = 'dd/mm/yy';
 
             this.prepareDateTimeFormats();
@@ -124,13 +124,13 @@ define([
                 leadDelivery = locationContext.leadDeliveryTime(),
                 today = new Date(),
                 dayEnabled = true,
-                storeCutoffTime = 16; // Hard fix cutoff time at 16:00 
-                
+                storeCutoffTime = 16; // Hard fix cutoff time at 16:00
+
             //@todo: Cutoff time by store
 
             if (isToday(d)) {
                 var timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
-                cutOffTime = new Date(today.getFullYear(), today.getUTCMonth(), today.getUTCDate(), storeCutoffTime), 
+                cutOffTime = new Date(today.getFullYear(), today.getUTCMonth(), today.getUTCDate(), storeCutoffTime),
                 cutOffTimeToInt = Date.parse(cutOffTime)/1000 - (today.getTimezoneOffset() * 60);
                 dayEnabled = timeToDeliver < cutOffTimeToInt;
             }
@@ -142,6 +142,50 @@ define([
                 dayEnabled, ''
             ];
 
+        },
+
+        onValueChange: function() {
+            if (this.value()) {
+                var TimeComponent = registry.get('checkout.steps.shipping-step.amcheckout-delivery-date.time'),
+                    dateSelected = this.getDateFromValue(this.value()),
+                    isWeekend = (dateSelected.getDay() === 0 || dateSelected.getDay() === 6),
+                    TimeOptionWeekday = this.createTimeOption(this.timeSlotsWeekdayConfig),
+                    TimeOptionWeekend = this.createTimeOption(this.timeSlotsWeekendConfig);
+                
+                //@TODO: holiday hours
+                TimeComponent.options.splice(1,2);
+                if (isWeekend) {
+                    TimeComponent.options.push(TimeOptionWeekend);
+                    TimeComponent.options.push(TimeOptionWeekday);
+                }   else {
+                    TimeComponent.options.push(TimeOptionWeekday);
+                }
+                
+                
+            }
+        },
+
+        createTimeOption: function (timeConfig) {
+            var Times = timeConfig.split('-'),
+                TimeFrameStart = Times[0],
+                TimeFrameEnd = Times[1];
+            return {
+                label: TimeFrameStart+':00 - '+TimeFrameEnd+ ':00',
+                labeltitle: TimeFrameStart+':00 - '+TimeFrameEnd+ ':00',
+                value: TimeFrameStart
+            };
+        },
+
+        /**
+         *
+         * @param dateString
+         * @returns {Date}
+         */
+        getDateFromValue: function (dateString) {
+            var DateComponent = dateString.split('/');
+            DateComponent.reverse();
+            return new Date(DateComponent.join('/'));
         }
+
     });
 });

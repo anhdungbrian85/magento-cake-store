@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
-<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
 
     <table name="inventory_source">
-        <column xsi:type="varchar" name="amlocator_store" nullable="true"
-                comment="amlocator store ids" />
+        <column xsi:type="varchar" name="amlocator_store" nullable="true" comment="amlocator store ids" />
         <index referenceId="INVENTORY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="amlocator_store"/>
         </index>
@@ -60,5 +58,6 @@
         <index referenceId="DELIVERY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="enable_delivery"/>
         </index>
+        <column xsi:type="text" name="holiday_action" nullable="true" comment="holiday actions" />
     </table>
 </schema>

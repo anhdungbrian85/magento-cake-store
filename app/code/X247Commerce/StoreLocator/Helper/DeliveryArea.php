@@ -195,4 +195,15 @@ class DeliveryArea extends AbstractHelper
         
         return false;
     }
+
+    public function correctPostcode($postcode)
+    {
+        $postcode = mb_strtoupper(trim($postcode));
+        if (strpos($postcode, ' ') === false && mb_strlen($postcode) > 4) {
+            $incode  = substr($postcode, -3);
+            $postcode = str_replace($incode, ' '.$incode, $postcode);
+        }
+
+        return $postcode;
+    }
 }
