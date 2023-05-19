@@ -34,10 +34,10 @@ function isHttpHost($host)
     return $_SERVER['HTTP_HOST'] ===  $host;
 }
 
-if (isHttpHost("ipad.integration-5ojmyuq-wwwfpgtvdjwlm.eu-3.magentosite.cloud")) {
+if (isHttpHost("ipad.mcstaging.cakebox.com")) {
     $_SERVER["MAGE_RUN_CODE"] = "ipad";
     $_SERVER["MAGE_RUN_TYPE"] = "website";
-} elseif (isHttpHost("integration-5ojmyuq-wwwfpgtvdjwlm.eu-3.magentosite.cloud")) {
+} elseif (isHttpHost("mcstaging.cakebox.com")) {
     $_SERVER["MAGE_RUN_CODE"] = "base";
     $_SERVER["MAGE_RUN_TYPE"] = "website";
 }
