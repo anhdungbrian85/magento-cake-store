@@ -49,6 +49,8 @@ web:
                     allow: true
                 ^/sitemap(.*)\.xml$:
                     passthru: "/media/sitemap$1.xml"
+                ^/.well-known/(.*)$:
+                    passthru: "/.well-known/$1"    
         "/media":
             root: "pub/media"
             allow: true
