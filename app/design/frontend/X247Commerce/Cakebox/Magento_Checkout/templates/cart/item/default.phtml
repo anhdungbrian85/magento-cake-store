@@ -100,13 +100,19 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
                     <label for="cart-<?= $block->escapeHtmlAttr($_item->getId()) ?>-qty">
                         <span class="label"><?= $block->escapeHtml(__('Qty')) ?></span>
                         <div class="less">-</div>
-                        <input id="cart-<?php /* @escapeNotVerified */echo $_item->getId() ?>-qty"
-                            name="cart[<?php /* @escapeNotVerified */echo $_item->getId() ?>][qty]"
-                            data-cart-item-id="<?php /* @escapeNotVerified */echo $_item->getSku() ?>"
-                            value="<?php /* @escapeNotVerified */echo $block->getQty() ?>" type="number" size="4"
-                            title="<?php echo $block->escapeHtml(__('Qty')); ?>" class="input-text qty" maxlength="12"
-                            data-validate="{required:true,'validate-greater-than-zero':true}" data-role="cart-item-qty"
-                            disabled />
+                        <input id="cart-<?= $block->escapeHtmlAttr($_item->getId()) ?>-qty"
+                               name="cart[<?= $block->escapeHtmlAttr($_item->getId()) ?>][qty]"
+                               data-cart-item-id="<?= $block->escapeHtmlAttr($_item->getSku()) ?>"
+                               value="<?= $block->escapeHtmlAttr($block->getQty()) ?>"
+                               type="number"
+                               size="4"
+                               step="any"
+                               title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+                               class="input-text qty"
+                               data-validate="{required:true,'validate-greater-than-zero':true}"
+                               data-item-qty="<?= $block->escapeHtmlAttr($block->getQty()) ?>"
+                               data-role="cart-item-qty"
+                               style="color: #666666;"/>
                         <div class="more">+</div>
                     </label>
                 </div>
