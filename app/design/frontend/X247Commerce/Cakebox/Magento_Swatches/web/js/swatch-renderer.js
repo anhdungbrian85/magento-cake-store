@@ -331,7 +331,8 @@ define([
                 type: 'POST',
                 data: {
                     productId : $widget.options.parentProductId,
-                    clickCollect : clickCollect
+                    clickCollect : clickCollect,
+                    form_key: this.options.formkey
                 },
                 success: function(response) {     
                     // var newHtmls = $.parseJSON(response);

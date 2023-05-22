@@ -35,7 +35,8 @@ if ( $product->getData('shape') ) {
                 "jsonSwatchImageSizeConfig": <?= /* @noEscape */ $block->getJsonSwatchSizeConfig() ?>,
                 "showTooltip": <?= $block->escapeJs($configurableViewModel->getShowSwatchTooltip()) ?>,
                 "shapeImage": "<?= $shapeImage ?>",
-                "shapeLabel": "<?= $label ?>"
+                "shapeLabel": "<?= $label ?>",
+				"formkey": "<?= $block->getBlockHtml('formkey') ?>"
             }
         },
         "*" : {
