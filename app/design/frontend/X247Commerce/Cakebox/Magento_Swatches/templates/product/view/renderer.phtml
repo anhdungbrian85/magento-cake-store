@@ -38,7 +38,7 @@ $formKey = $objectManager->get(\Magento\Framework\Data\Form\FormKey::class);
                 "showTooltip": <?= $block->escapeJs($configurableViewModel->getShowSwatchTooltip()) ?>,
                 "shapeImage": "<?= $shapeImage ?>",
                 "shapeLabel": "<?= $label ?>",
-                "form_key": "<?= $formKey ?>"
+                "form_key": "<?= $formKey->getFormKey() ?>"
 
             }
         },

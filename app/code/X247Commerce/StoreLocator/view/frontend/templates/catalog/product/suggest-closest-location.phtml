@@ -35,5 +35,5 @@ $formKey = $objectManager->get(\Magento\Framework\Data\Form\FormKey::class);
     window.currentProductSku = "<?= $block->getCurrentProductSku() ?>";
     window.currentProductType = "<?= $block->getCurrentProductType() ?>";
     window.currentStoreLocationId = "<?= $block->getCurrentStoreLocationId() ?>";
-    window.formkey = "<?= $formKey; ?>";
+    window.formkey = "<?= $formKey->getFormKey(); ?>";
 </script>
