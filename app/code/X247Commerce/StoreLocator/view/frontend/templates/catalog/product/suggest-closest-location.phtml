@@ -3,6 +3,10 @@
  * @var X247Commerce\StoreLocator\Block\Catalog\Product\SuggestClosestLocation $block
  */
 ?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$formKey = $objectManager->get(\Magento\Framework\Data\Form\FormKey::class);
+?>
 <div class="closest-location-container">
     <div class="closest-location_message"></div>
     <div class="closest-location_title">
@@ -15,7 +19,8 @@
                 "suggestClosestLocationAjaxUrl": "<?= $block->getSuggestClosestLocationAjaxUrl() ?>",
                 "currentProductSku": "<?= $block->getCurrentProductSku() ?>",
                 "currentProductType": "<?= $block->getCurrentProductType() ?>",
-                "currentStoreLocationId": "<?= $block->getCurrentStoreLocationId() ?>"
+                "currentStoreLocationId": "<?= $block->getCurrentStoreLocationId() ?>",
+                "formkey": "<?= $block->getBlockHtml('formkey') ?>"
             }
         }
     }
@@ -30,4 +35,5 @@
     window.currentProductSku = "<?= $block->getCurrentProductSku() ?>";
     window.currentProductType = "<?= $block->getCurrentProductType() ?>";
     window.currentStoreLocationId = "<?= $block->getCurrentStoreLocationId() ?>";
+    window.formkey = "<?= $formKey; ?>";
 </script>
