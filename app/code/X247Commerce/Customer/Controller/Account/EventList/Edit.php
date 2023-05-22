@@ -28,48 +28,42 @@ class Edit extends \Magento\Framework\App\Action\Action
 	public function execute()
 	{
 		try {
-			$formKey = $this->getRequest()->getParam('form_key');
-			if (!$this->formKeyValidator->validate($formKey)) {
-				$this->messageManager->addErrorMessage(__('Please refresh the page and try again!.'));
-			}else{
-				$array = [];
-				$data = $this->request->getParams();
+			$array = [];
+			$data = $this->request->getParams();
 
-				if (!$data) {
-					$this->messageManager->addErrorMessage(__('Please choose the Event to Edit.'));
-				} else {
-					$array['occasion'] = $data['occasion'];
-					$array['their_name'] = $data['name'];
-					$array['date'] =  $data['year'] . '-' . $data['month'] . '-' . $data['day'];
-					$array['customer_id'] = $data['customer_id'];
+			if (!$data) {
+				$this->messageManager->addErrorMessage(__('Please choose the Event to Edit.'));
+			} else {
+				$array['occasion'] = $data['occasion'];
+				$array['their_name'] = $data['name'];
+				$array['date'] =  $data['year'] . '-' . $data['month'] . '-' . $data['day'];
+				$array['customer_id'] = $data['customer_id'];
+				
+				if (!in_array("", $array)) {
+					$eventFactory = $this->eventFactory->create();
+					$valueConfigSendMail = $this->configValue->getValue(
+						'x247commerce_customer/event/send_mail_save',
+						\Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+					);;
 					
-					if (!in_array("", $array)) {
-						$eventFactory = $this->eventFactory->create();
-						$valueConfigSendMail = $this->configValue->getValue(
-							'x247commerce_customer/event/send_mail_save',
-							\Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-						);;
-						
-						if ($data['id'] != null) {
-							$array['id'] = $data['id'];
-							$eventFactory->setData($array)->save();
-							if ($valueConfigSendMail) {
-								$this->SentMailAlertEvent->execute(1, $array['id']);
-							}
-						} else {
-							$eventFactory->setData($array)->save();
-							if ($valueConfigSendMail) {
-								$this->SentMailAlertEvent->execute(1, null, $array['customer_id']);
-							}
+					if ($data['id'] != null) {
+						$array['id'] = $data['id'];
+						$eventFactory->setData($array)->save();
+						if ($valueConfigSendMail) {
+							$this->SentMailAlertEvent->execute(1, $array['id']);
 						}
-						
-						$this->messageManager->addSuccessMessage(__('Save Event successful'));
 					} else {
-						$this->messageManager->addErrorMessage(__('The Event was unable to be Save. Please try again.'));
+						$eventFactory->setData($array)->save();
+						if ($valueConfigSendMail) {
+							$this->SentMailAlertEvent->execute(1, null, $array['customer_id']);
+						}
 					}
+					
+					$this->messageManager->addSuccessMessage(__('Save Event successful'));
+				} else {
+					$this->messageManager->addErrorMessage(__('The Event was unable to be Save. Please try again.'));
 				}
 			}
-			
 		} catch (\Exception $e) {
 		}
 
