@@ -32,8 +32,8 @@ class Edit extends \Magento\Framework\App\Action\Action
 	public function execute()
 	{
 		try {
-			$formKey = $this->getRequest()->getParam('form_key');
-			if (!$this->formKeyValidator->validate($formKey)) {
+			//$formKey = $this->getRequest()->getParam('form_key');
+			if (!$this->formKeyValidator->validate($this->getRequest())) {
 				$this->messageManager->addErrorMessage(__('Please refresh the page and try again!.'));
 			}else{
 				$array = [];

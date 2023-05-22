@@ -63,8 +63,8 @@ class ConfigurableProduct extends Action
 
     public function getJsonConfig()
     {
-		$formKey = $this->getRequest()->getParam('form_key');
-		if (!$this->formKeyValidator->validate($formKey)) {
+		//$formKey = $this->getRequest()->getParam('form_key');
+		if (!$this->formKeyValidator->validate($this->getRequest())) {
 			return '';
 		}
         $productId = $this->getRequest()->getParam('productId', false);

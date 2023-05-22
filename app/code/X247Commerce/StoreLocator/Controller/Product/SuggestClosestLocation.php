@@ -37,8 +37,8 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         try {
-			$formKey = $this->getRequest()->getParam('form_key');
-			if (!$this->formKeyValidator->validate($formKey)) {
+			//$formKey = $this->getRequest()->getParam('form_key');
+			if (!$this->formKeyValidator->validate($this->getRequest())) {
 				$result = [
 					'status' => 500,
 					'message' => __('There are no sources in the cart that match the items in the cart!'),
