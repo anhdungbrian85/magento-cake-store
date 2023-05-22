@@ -1,7 +1,7 @@
 <?php
 
 namespace X247Commerce\StoreLocator\Controller\Product;
-
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\App\Action\Context;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 
@@ -15,18 +15,22 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
     protected $checkoutSession;
 
     protected $locatorSourceResolver;
+	
+	protected $formKeyValidator;
 
     public function __construct(
         \X247Commerce\Checkout\Api\StoreLocationContextInterface $storeLocationContext,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
         LocatorSourceResolver $locatorSourceResolver,
+		FormKeyValidator $formKeyValidator,
         Context $context
     ) {
         parent::__construct($context);
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->checkoutSession = $checkoutSession;
         $this->quoteRepository = $quoteRepository;
+		$this->formKeyValidator = $formKeyValidator;
         $this->storeLocationContext = $storeLocationContext;
     }
 

@@ -2,6 +2,7 @@
 namespace X247Commerce\Customer\Controller\Account\EventList;
 
 use X247Commerce\Customer\Cron\SentMailAlertEvent;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 
 class Edit extends \Magento\Framework\App\Action\Action
 {
@@ -9,12 +10,14 @@ class Edit extends \Magento\Framework\App\Action\Action
 	public $eventFactory;
 	public $SentMailAlertEvent;
 	public $configValue;
+	protected $formKeyValidator;
 
 	public function __construct(
 		\Magento\Framework\App\Action\Context $context,
 		SentMailAlertEvent $SentMailAlertEvent,
 		\Magento\Framework\App\Request\Http $request,
 		\X247Commerce\Customer\Model\EventFactory $eventFactory,
+		FormKeyValidator $formKeyValidator,
 		\Magento\Framework\App\Config\ScopeConfigInterface $configValue
 	)
 	{
@@ -22,6 +25,7 @@ class Edit extends \Magento\Framework\App\Action\Action
 		$this->configValue = $configValue;
 		$this->request = $request;
 		$this->eventFactory = $eventFactory;
+		$this->formKeyValidator = $formKeyValidator;
 		return parent::__construct($context);
 	}
 

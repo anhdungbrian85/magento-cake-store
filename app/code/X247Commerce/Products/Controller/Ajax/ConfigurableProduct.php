@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Json\EncoderInterface;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 
 class ConfigurableProduct extends Action
 {
@@ -23,6 +24,7 @@ class ConfigurableProduct extends Action
     protected $storeLocationContext;
     protected $checkoutSession;
     protected $blockConfigurable;
+	protected $formKeyValidator;
 
     public function __construct(
         Context $context,
@@ -33,6 +35,7 @@ class ConfigurableProduct extends Action
         EncoderInterface $jsonEncoder,
         StoreLocationContextInterface $storeLocationContext,
         CheckoutSession $checkoutSession,
+		FormKeyValidator $formKeyValidator,
          \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable $blockConfigurable
     ) {
         parent::__construct($context);
@@ -40,6 +43,7 @@ class ConfigurableProduct extends Action
         $this->logger = $logger;
         $this->productRepository = $productRepository;
         $this->productFactory = $productFactory;
+		$this->formKeyValidator = $formKeyValidator;
         $this->jsonEncoder = $jsonEncoder;
         $this->storeLocationContext  = $storeLocationContext ;
         $this->checkoutSession = $checkoutSession;
