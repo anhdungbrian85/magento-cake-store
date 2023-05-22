@@ -79,20 +79,20 @@ define([
                 oldValue = this.value(),
                 isOldTimeValid,
                 isCachedTimeValid;
-                
+
             if (data.date && selectedStore) {
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStore.schedule_id);
 
                 if (this.storeScheduleSelected || data.store.schedule_id) {
                     timeIntervals = timeIntervals[this.selectedDayByName];
                 }
-                
+
                 if (timeIntervals) {
                     this.options(this.isTodaySelected
                         ? this.restrictTimeIntervals(timeIntervals)
                         : timeIntervals);
                 }
-                
+
                 isOldTimeValid = this.options().some(function (interval) {
                     return interval.value === oldValue;
                 });
@@ -127,7 +127,7 @@ define([
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
                 filteredIntervals;
-                
+
             filteredIntervals = intervals.filter(function (item) {
                 return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
                     // && item.toInUnix <= this.sameDayCutoffTime;
