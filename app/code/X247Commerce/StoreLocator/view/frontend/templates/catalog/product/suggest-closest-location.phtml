@@ -20,7 +20,7 @@ $formKey = $objectManager->get(\Magento\Framework\Data\Form\FormKey::class);
                 "currentProductSku": "<?= $block->getCurrentProductSku() ?>",
                 "currentProductType": "<?= $block->getCurrentProductType() ?>",
                 "currentStoreLocationId": "<?= $block->getCurrentStoreLocationId() ?>",
-                "formkey": "<?= $block->getBlockHtml('formkey') ?>"
+                "formkey": "<?= $formKey->getFormKey(); ?>"
             }
         }
     }
