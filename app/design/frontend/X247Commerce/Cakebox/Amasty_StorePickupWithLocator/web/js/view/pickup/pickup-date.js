@@ -32,7 +32,7 @@ define([
             minPickupDateTime: {},
             required: '${$.required}',
             dateFormat: 'dd/mm/yy',
-            
+
         },
 
         visibleComputed: ko.pureComputed(function () {
@@ -46,7 +46,9 @@ define([
                 this.onChangeStore(pickupDataResolver.storeId());
                 this.getDataFromCache = true;
             }
-
+            locationContext.isAsda.subscribe(function (data) {
+                this.cleanDateTimeData();
+            }, this)
             return this;
         },
 
@@ -77,25 +79,25 @@ define([
             this.options.sameDayPickupAllow = !!this.sameDayPickupAllow;
             this.options.sameDayCutoffTime = this.sameDayCutoffTime ? this.sameDayCutoffTime : null;
             this.options.beforeShowDay = this.restrictDates.bind(this);
-            
+
             this.options.dateFormat = 'dd/mm/yy';
             this.inputDateFormat = 'dd/mm/yy';
             this.options.inputDateFormat = 'dd/mm/yy';
-            
+
             var today = new Date(),
                 selectedStoreData = pickupDataResolver.getCurrentStoreData(),
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
                 currentDayName = this.weekDays[today.getDay()],
-                minDate = today, 
+                minDate = today,
                 timeIntervalsToday = [];
 
             if (timeIntervals[currentDayName] && selectedStoreData.schedule_id) {
                 timeIntervalsToday = this.restrictTimeIntervals(timeIntervals[currentDayName]);
-            }    
-            
+            }
             if (!timeIntervalsToday.length) {
                 minDate.setDate(minDate.getDate()+1);
             }
+
             this.options.minDate = minDate;
 
             this.prepareDateTimeFormats();
@@ -122,7 +124,12 @@ define([
                 store: this.selectedStore
             });
         },
+        cleanDateTimeData: function () {
+            $('[name="am_pickup_date"]').datepicker('setDate', '');
+            $('[name="am_pickup_time"]').val('');
 
+
+        },
         onChangeStore: function () {
             this.selectedStore = pickupDataResolver.getCurrentStoreData();
 

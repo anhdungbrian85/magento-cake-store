@@ -77,13 +77,14 @@ script;
             if ($this.siblings('.cart-item-qty').val() >= 1) {
                 var currentQty = $this.siblings('.cart-item-qty').val();
                 if ($this.hasClass('more')) {
-                    console.log(parseInt(currentQty) + parseInt(1));
                     var newAdd = parseInt(currentQty) + parseInt(1);
                     $this.siblings('.cart-item-qty').val(newAdd);
+                    $this.siblings('.cart-item-qty').keyup();
                 } else {
                     if ($this.siblings('.cart-item-qty').val() > 1) {
                         var newAdd = parseInt(currentQty) - parseInt(1);
                         $this.siblings('.cart-item-qty').val(newAdd);
+                        $this.siblings('.cart-item-qty').keyup();
                     }
                 }
             }

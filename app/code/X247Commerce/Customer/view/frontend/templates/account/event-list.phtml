@@ -44,6 +44,7 @@
                 <h2><?= __('Set up a free email alert reminder, its quick & free')?></h2>
             </div>
             <form class="form-edit" action="<?= $block->getUrl('*/*/edit') ?>" method="post">
+			<?= $block->getBlockHtml('formkey'); ?>
                 <div class="their-name-area">
                     <div class="label name"><span><?= __('Their name')?></span></div>
                     <input name="name" id="name" placeholder="<?= __('Name')?>"/>
