@@ -20,7 +20,7 @@ define([
     'use strict';
 
     var mixin = {
- 
+
         /**
          * Set the first store work day to date field
          *
@@ -96,18 +96,19 @@ define([
                 scheduleArray,
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
                 currentDayName = this.weekDays[date.getDay()];
-                
+
             if (!selectedStore) {
                 return [false, ''];
             }
 
             storeDateTime = this.currentStoreDateTime.asDateTimeObject;
+
             isToday = this.isDateIsStoreToday(date, storeDateTime);
 
             if (timeIntervals[currentDayName] && isToday && selectedStoreData.schedule_id) {
                 timeIntervals = this.restrictTimeIntervals(timeIntervals[currentDayName]);
             }
-            
+
             if (isToday && timeIntervals.length == 0) {
                 return [false, ''];
             }
@@ -144,6 +145,22 @@ define([
 
             if (isToday && locationContext.isAsda()) {
                 return [false, ''];
+            }
+
+            let today = storeDateTime,
+                tomorrow = new Date();
+                tomorrow.setDate(today.getDate() + 1);
+            var isTomorrow = tomorrow.toDateString() === date.toDateString();
+
+            if (isTomorrow && locationContext.isAsda()) {
+
+                var currentStore = pickupDataResolver.getCurrentStoreData() || {},
+                    currentStoreTime = currentStore.current_timezone_time,
+                    minPickupTime = currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600,
+                    asdaCutOffTimeTmr = new Date(storeDateTime.getFullYear(), storeDateTime.getUTCMonth(), storeDateTime.getUTCDate(), 16),
+                    cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60);
+
+                return [minPickupTime < cutOffTimeToInt, ''];
             }
 
             return [true, ''];
