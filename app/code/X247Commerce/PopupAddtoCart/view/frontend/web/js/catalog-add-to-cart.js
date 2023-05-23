@@ -140,7 +140,7 @@ define([
             if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1 && deliveryType == 2 && alreadyInCart == false) {
                 confirmation({
                     title: $.mage.__('Notice!'),
-                    content: 'This product takes longer than 1 hour to make, do you want to continue?',
+                    content: 'This product is not available for collection in 1 hour. Do you want to continue?',
                     actions: {
                         confirm: function() {
                             self.ajaxSubmit(form);
@@ -159,7 +159,7 @@ define([
                             this.closeModal(event);
                         }
                     }, {
-                        text: $.mage.__('Continue'),
+                        text: $.mage.__('Add to basket'),
                         class: 'action-primary action-accept',
                         click: function (event) {
                             this.closeModal(event, true);

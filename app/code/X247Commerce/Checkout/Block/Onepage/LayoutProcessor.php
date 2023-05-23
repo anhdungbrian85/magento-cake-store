@@ -224,6 +224,11 @@ class LayoutProcessor extends \Amasty\CheckoutCore\Block\Onepage\LayoutProcessor
                 ) {
                     $componentsData[$path][$field]['skipValidation'] = !$config->getIsRequired();
                 }
+                if (isset($componentsData[$path][$field]) && $field == 'telephone') {
+                    $componentsData[$path][$field]['validation']['validate-number'] = true;
+                    $componentsData[$path][$field]['validation']['max_text_length'] = 12;
+                    $componentsData[$path][$field]['validation']['min_text_length'] = 10;
+                }
             }
         }
 

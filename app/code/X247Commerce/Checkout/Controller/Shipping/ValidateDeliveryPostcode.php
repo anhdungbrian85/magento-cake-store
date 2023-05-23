@@ -72,7 +72,7 @@ class ValidateDeliveryPostcode extends Action
             return $resultJson->setData(
                 [
                     'status' => false,
-                    'message' => __('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address!')
+                    'message' => __('Choose ‘Collect In Store’ or use another delivery address. Please check the post code you entered includes a space before the last three digits e.g. CV21 9HG')
                 ]
             );
         } else {
