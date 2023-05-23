@@ -17,6 +17,8 @@ if ( $product->getData('shape') ) {
     $shapeImage = $helperSwatch->getDataSwatchSponge($product->getData('shape'));
     $label = $product->getResource()->getAttribute('shape')->getFrontend()->getValue($product);
 }
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$formKey = $objectManager->get(\Magento\Framework\Data\Form\FormKey::class);
 ?>
 <div class="swatch-opt" data-role="swatch-options"></div>
 
@@ -35,7 +37,9 @@ if ( $product->getData('shape') ) {
                 "jsonSwatchImageSizeConfig": <?= /* @noEscape */ $block->getJsonSwatchSizeConfig() ?>,
                 "showTooltip": <?= $block->escapeJs($configurableViewModel->getShowSwatchTooltip()) ?>,
                 "shapeImage": "<?= $shapeImage ?>",
-                "shapeLabel": "<?= $label ?>"
+                "shapeLabel": "<?= $label ?>",
+                "form_key": "<?= $formKey->getFormKey() ?>"
+
             }
         },
         "*" : {
