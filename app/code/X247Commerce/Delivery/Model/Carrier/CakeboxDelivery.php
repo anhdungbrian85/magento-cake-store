@@ -74,8 +74,10 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             if (!$this->getConfigFlag('active')) {
                 return false;
             }
-            $logger->info('Pass active');
+
             $customerPostcode = ($request->getDestPostcode() && $request->getDestPostcode() != '-') ? $request->getDestPostcode() : $this->checkoutSession->getCustomerPostcode();
+
+
             $quote = $this->checkoutSession->getQuote();
             $productSkus = [];
             if (!empty($quote->getAllVisibleItems())) {
@@ -84,6 +86,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 }
             }
             $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
+
             $logger->info('$customerPostcode' . $customerPostcode);
             $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
             if ($locationDataFromPostCode['status']) {
@@ -94,7 +97,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                     $productSkus
                 );
 
-                if($location->getId() && $quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery') {
+                if ($location->getId() && $quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery') {
                     $quote->setData('store_location_id', $location->getId());
                     $quote->setData('delivery_type', 1);
                     $quote->save();
@@ -102,6 +105,11 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             }
 
             $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
+            $maximumShippingPrice = (float)array_values($rateShipping)[(count($rateShipping)-1)]['price'];
+            if (!$customerPostcode) {
+                // when empty delivery postcode
+                return $this->setShippingRate($maximumShippingPrice, $request);
+            }
 
             $defaultShippingPrice = $this->getConfigData('price');
             if (empty($rateShipping)) {
@@ -109,20 +117,17 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             }
             $logger->info('$rateShipping'.print_r($rateShipping, true));
 
-            $storeLocationId = $this->checkoutSession->getStoreLocationId() ?: $this->storeLocationContext->getStoreLocationId();
-            $storeLocation = $this->locationFactory->create()->load($storeLocationId);
-            $storePostcode = $storeLocation->getZip();
+            $storePostcode = $location->getZip();
 
             if (strtolower($storePostcode) == strtolower($customerPostcode)) {
                 $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
                 return $this->setShippingRate($minimumShippingPrice, $request);
             }
 
-            $storeLatLng = $this->getStoreLatLng($storeLocation);
+            $storeLatLng = $this->getStoreLatLng($location);
             $customerLocationData = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
 
             $distance = $this->getDistance($customerLocationData, $storeLatLng, $customerPostcode, $storePostcode);
-            $maximumShippingPrice = (float)array_values($rateShipping)[(count($rateShipping)-1)]['price'];
 
             if (empty($distance)) {
                 return $this->setShippingRate($maximumShippingPrice, $request);
@@ -158,6 +163,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 $storeLatLng['lng'],
                 'miles'
             );
+
         } else {
             // if there is not lat, long data, then get Distance by postcode
             $responseApi = json_decode($this->deliveryData->calculateDistance($customerPostcode, $storePostcode), true);
