@@ -106,7 +106,7 @@ class ImportDeliveryPostcode extends Command
        			$rowInsert = [
        				'name' => $rowPostcode[2],
        				'postcode' => $rowPostcode[3],
-       				'status' =>  $rowPostcode[0] == 'WhiteListed' ? 1 : 0, 
+       				'status' => (strpos($rowPostcode[0], 'White') !== FALSE) ? 1 : 0, 
        				'matching_strategy' => $rowPostcode[1],
        				'store_id' => $this->findStoreLocation($rowPostcode[4])
        			];
