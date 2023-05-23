@@ -2,29 +2,17 @@
 
 namespace X247Commerce\Checkout\Controller\Shipping;
 
-use Magento\Checkout\Controller\Checkout;
-use Magento\Checkout\Model\Cart as CustomerCart;
 use Magento\Checkout\Model\Session;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Amasty\Storelocator\Model\LocationFactory;
-use Amasty\Storelocator\Model\ResourceModel\Location\Collection as LocationCollection;
-use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Data\Form\FormKey\Validator;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Model\StoreManagerInterface;
-use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use X247Commerce\Delivery\Helper\DeliveryData;
 use X247Commerce\StoreLocator\Helper\DeliveryArea;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 
 class ValidateDeliveryPostcode extends Action
 {
-
-    protected StoreLocationContextInterface $storeLocationContext;
 
     protected LocationFactory $locationFactory;
 
@@ -40,17 +28,15 @@ class ValidateDeliveryPostcode extends Action
 
     public function __construct(
         Context $context,
-        StoreLocationContextInterface $storeLocationContext,
         LocationFactory $locationFactory,
         DeliveryArea $deliveryAreaHelper,
         JsonFactory $resultJsonFactory,
         DeliveryData $deliveryData,
         LocatorSourceResolver $locatorSourceResolver,
-        \Magento\Checkout\Model\Session $checkoutSession
+        Session $checkoutSession
     ) {
         parent::__construct($context);
         $this->deliveryData = $deliveryData;
-        $this->storeLocationContext = $storeLocationContext;
         $this->locationFactory = $locationFactory;
         $this->deliveryAreaHelper = $deliveryAreaHelper;
         $this->resultJsonFactory = $resultJsonFactory;

@@ -78,21 +78,22 @@ class CheckoutLocationParams
     public function getConfig()
     {
         $quote = $this->checkoutSession->getQuote();
-        $pickupQuote = $this->pickupQuoteRepository->getByAddressId($quote->getShippingAddress()->getId());
+        $locationId = $quote->getStoreLocationId();
+        $deliveryType = $quote->getDeliveryType();
+
         return [
-            'storeLocationId' => $this->storeLocationContext->getStoreLocationId(),
-            'deliveryType' => $this->storeLocationContext->getDeliveryType(),
+            'storeLocationId' => $locationId,
+            'deliveryType' => $deliveryType,
             'initLeadDeliveryValue' =>  $this->getInitLeadDeliveryValue(),
             'amastySelectedPickup' => [
                 'am_pickup_curbside' => [],
                 'am_pickup_date' => '',
-                'am_pickup_store' => $this->storeLocationContext->getStoreLocationId(),
+                'am_pickup_store' => $locationId,
                 'am_pickup_time' => ''
             ],
             'amastyLocations' => $this->getLocationData(),
             'asdaLocationIds' => $this->getAsdaLocationId(),
-            'deliveryPostcode' => $this->storeLocationContext->getDeliveryType() == 1 ?
-                    $this->checkoutSession->getCustomerPostcode() : '',
+            'deliveryPostcode' => $deliveryType == 1 ? $this->checkoutSession->getCustomerPostcode() : '',
             'deliveryDateTimeSlots' => $this->getDeliveryDateTimeSlots()
 
         ];

@@ -46,7 +46,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
 
     public function execute(EventObserver $observer)
     {
-         
+
         if ($locationId = $this->storeLocationContext->getStoreLocationId()) {
             try {
                 $quote = $this->checkoutSession->getQuote()
@@ -56,7 +56,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     ->setData('kl_email_consent', 1)
                     ->save();
 
-                $quote = $this->checkoutSession->getQuote(); 
+                $quote = $this->checkoutSession->getQuote();
                 // $this->logger->info('quote id: '. $this->checkoutSession->getQuote()->getId());
                 // $this->logger->info('shippingAddress id: '. $quote->getShippingAddress()->getId());
                 $shippingAddress = $this->addressFactory->create()->load($quote->getShippingAddress()->getId());
@@ -65,7 +65,6 @@ class UpdateStoreLocationSelected implements ObserverInterface
                 $deliveryType = $this->storeLocationContext->getDeliveryType();
                 if ($deliveryType == 0 || $deliveryType == 2) {
                     $dataShippingAddress = [
-                        'street' => $location->getData('address'),
                         'city' => $location->getData('city'),
                         'region' => $location->getData('state'),
                         'postcode' => $location->getData('zip'),
@@ -78,7 +77,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     ];
 
                     $shippingAddress->addData($dataShippingAddress)->save();
-                    
+
                     $pickupQuote = $this->pickupQuoteRepository->getByAddressId($quote->getShippingAddress()->getId());
                     if (!$pickupQuote->getId()) {
                         $pickupQuote = $this->pickupQuoteFactory->create();
@@ -88,7 +87,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     $pickupDate = $today ;
 
                     $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
-                    
+
                     if ($workingTime) {
                         $openTime = explode(' - ', array_values($workingTime)[0])[0];
                         $closeTime = explode(' - ', array_values($workingTime)[0])[1];
@@ -105,7 +104,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     if (1 < $nowM && $nowM <= 30) {
                         $nearHalfTime = "$nowH:30";
                         $openTime = $nearHalfTime;
-                    }  
+                    }
                     if ($nowM > 30) {
                         $nowH++;
                         $nearHalfTime = "$nowH:00";
@@ -114,11 +113,11 @@ class UpdateStoreLocationSelected implements ObserverInterface
 
                     $openTime = strtotime($pickupDate->format('Y-m-d ') .$openTime);
                     $closeTime = strtotime($pickupDate->format('Y-m-d ') .$closeTime);
-                    
+
                     if ($openTime >= $closeTime) {
                         $pickupDate = $this->timezone->date(new \DateTime('+1 day'));
                         $workingTime = $location->getWorkingTime(strtolower($pickupDate->format('l')));
-                    
+
                         if ($workingTime) {
                             $openTime = explode(' - ', array_values($workingTime)[0])[0] + 3600;
                         }   else {
@@ -135,7 +134,7 @@ class UpdateStoreLocationSelected implements ObserverInterface
                         'time_to' =>  (int) $openTime
 
                     ]);
-                    
+
                     $pickupQuote->save();
 
                 }   else {
@@ -146,13 +145,13 @@ class UpdateStoreLocationSelected implements ObserverInterface
                     ];
                     $shippingAddress->addData($dataShippingAddress)->save();
                 }
-                
+
             } catch (\Exception $e) {
                 $this->logger->info('Cannot update shipping method: ' . $e->getMessage());
             }
-            
+
         }
-        
+
         return $this;
     }
 
