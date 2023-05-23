@@ -147,15 +147,15 @@ define([
 
             for (var location in this.options.jsonLocations.items) {
                 var distance = MarkerClusterer.prototype.distanceBetweenPoints_(
-                        new google.maps.LatLng(
-                            lat,
-                            lng
-                        ),
-                        new google.maps.LatLng(
-                            this.options.jsonLocations.items[location].lat,
-                            this.options.jsonLocations.items[location].lng
-                        )
+                    new google.maps.LatLng(
+                        lat,
+                        lng
                     ),
+                    new google.maps.LatLng(
+                        this.options.jsonLocations.items[location].lat,
+                        this.options.jsonLocations.items[location].lng
+                    )
+                ),
 
                     measurementLabel = $.mage.__('km');
 
@@ -212,9 +212,9 @@ define([
 
         initializeMap: function () {
             var myOptions = {
-                    zoom: 9,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                },
+                zoom: 9,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            },
 
                 self = this;
 
@@ -227,7 +227,7 @@ define([
                 var address = self.mapContainer.find('.amlocator-text')[0],
                     autocompleteOptions = {
                         componentRestrictions: { country: self.options.allowedCountries },
-                        fields: [ 'geometry.location' ]
+                        fields: ['geometry.location']
                     },
                     autocomplete = new google.maps.places.Autocomplete(address, autocompleteOptions);
 
@@ -399,6 +399,7 @@ define([
 
             this.storeListIdentifier = this.mapContainer.find('.amlocator-store-list');
             this.mapIdentifier = this.mapContainer.find('.amlocator-map');
+
         },
 
         processLocation: function () {
@@ -440,7 +441,10 @@ define([
                     alert($.mage.__('Sorry, no locations were found.'));
                 });
             }
-
+            if (locations.totalRecords > 0) {
+                self.gotoPoint(locations.items[0].id);
+                self.map[self.options.mapId].setZoom(self.options.mapZoom);
+            }
             if (self.storeListIdentifier) {
                 self.storeListIdentifier.html(locations.block);
 
