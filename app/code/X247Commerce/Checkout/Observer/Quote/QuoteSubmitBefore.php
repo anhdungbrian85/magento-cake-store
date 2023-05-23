@@ -90,7 +90,6 @@ class QuoteSubmitBefore implements ObserverInterface
                     if ($location->getId()) {
                         $quote->setData('store_location_id', $location->getId());
                         $order->setData('store_location_id', $location->getId());
-                        $this->storeLocationContext->setStoreLocationId($location->getId());
                     } else {
                         $quote->setTotalsCollectedFlag(false);
                         $quote->collectTotals();
@@ -99,7 +98,7 @@ class QuoteSubmitBefore implements ObserverInterface
                 }
             }
         } else {
-            $locationId = $this->storeLocationContext->getStoreLocationId() ?? $this->checkoutSession->getStoreLocationId();
+            $locationId = $quote->getData('store_location_id');
 			$logger->info('Collect in Store Location: '.$locationId);
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
