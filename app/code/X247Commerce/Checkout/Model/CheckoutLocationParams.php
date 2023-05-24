@@ -78,8 +78,9 @@ class CheckoutLocationParams
     public function getConfig()
     {
         $quote = $this->checkoutSession->getQuote();
-        $locationId = $quote->getStoreLocationId();
-        $deliveryType = $quote->getDeliveryType();
+
+        $locationId =  $this->storeLocationContext->getStoreLocationId() ?? $quote->getStoreLocationId();
+        $deliveryType = $this->storeLocationContext->getDeliveryType() ??  $quote->getDeliveryType();
 
         return [
             'storeLocationId' => $locationId,

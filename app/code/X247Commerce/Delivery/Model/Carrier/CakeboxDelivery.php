@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace X247Commerce\Delivery\Model\Carrier;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
+use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Shipping\Model\Rate\Result;
+use Magento\Shipping\Model\Rate\ResultFactory;
+use Psr\Log\LoggerInterface;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Amasty\Storelocator\Model\LocationFactory;
@@ -39,11 +44,11 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
     public function __construct(
         LocatorSourceResolver $locatorSourceResolver,
         DeliveryPopUpHelperData $deliveryPopUpHelperData,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
-        \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
+        ScopeConfigInterface $scopeConfig,
+        ErrorFactory $rateErrorFactory,
+        LoggerInterface $logger,
+        ResultFactory $rateResultFactory,
+        MethodFactory $rateMethodFactory,
         CheckoutSession $checkoutSession,
         StoreLocationContextInterface $storeLocationContext,
         LocationFactory $locationFactory,
@@ -69,7 +74,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
-        $logger->info('Start collectRates');
+
         try {
             if (!$this->getConfigFlag('active')) {
                 return false;
@@ -79,6 +84,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
 
 
             $quote = $this->checkoutSession->getQuote();
+            $logger->info('$quoteId' . $quote->getId());
             $productSkus = [];
             if (!empty($quote->getAllVisibleItems())) {
                 foreach ($quote->getAllVisibleItems() as $quoteItem) {
@@ -90,17 +96,20 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             $logger->info('$customerPostcode' . $customerPostcode);
             $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
             if ($locationDataFromPostCode['status']) {
+
                 $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
                     $customerPostcode,
                     $locationDataFromPostCode['data']['lat'],
                     $locationDataFromPostCode['data']['lng'],
                     $productSkus
                 );
-
-                if ($location->getId() && $quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery') {
-                    $quote->setData('store_location_id', $location->getId());
-                    $quote->setData('delivery_type', 1);
-                    $quote->save();
+                $logger->info('$locationId' . $location->getId());
+                if ($location->getId()) {
+                    if ($quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery') {
+                        $quote->setData('store_location_id', $location->getId());
+                        $quote->setData('delivery_type', 1);
+                        $quote->save();
+                    }
                 }
             }
 
@@ -116,8 +125,12 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 return $this->setShippingRate($defaultShippingPrice, $request);
             }
             $logger->info('$rateShipping'.print_r($rateShipping, true));
-
+            if (empty($storePostcode) || empty($customerPostcode)) {
+                return $this->setShippingRate($maximumShippingPrice, $request);
+            }
             $storePostcode = $location->getZip();
+            $logger->info('$storePostcode'.print_r($storePostcode, true));
+            $logger->info('$customerPostcode'.print_r($customerPostcode, true));
 
             if (strtolower($storePostcode) == strtolower($customerPostcode)) {
                 $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
