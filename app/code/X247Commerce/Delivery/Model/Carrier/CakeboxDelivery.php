@@ -128,7 +128,9 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             $logger->info('$rateShipping'.print_r($rateShipping, true));
 
             $storePostcode = $location->getZip();
-
+            if ($storePostcode == null || $customerPostcode == null) {
+                return false;
+            }
             if (strtolower($storePostcode) == strtolower($customerPostcode)) {
                 $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
                 return $this->setShippingRate($minimumShippingPrice, $request);
