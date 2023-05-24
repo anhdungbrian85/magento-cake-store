@@ -71,7 +71,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
      */
     public function collectRates(RateRequest $request)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/quote_merged.log');
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
 
@@ -84,6 +84,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
 
 
             $quote = $this->checkoutSession->getQuote();
+            $logger->info('$quoteId' . $quote->getId());
             $productSkus = [];
             if (!empty($quote->getAllVisibleItems())) {
                 foreach ($quote->getAllVisibleItems() as $quoteItem) {
@@ -92,8 +93,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             }
             $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
 
-//            $logger->info('$customerPostcode' . $customerPostcode);
-//            $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
+            $logger->info('$customerPostcode' . $customerPostcode);
+            $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
             if ($locationDataFromPostCode['status']) {
 
                 $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
@@ -102,15 +103,13 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                     $locationDataFromPostCode['data']['lng'],
                     $productSkus
                 );
-
-                if (
-                    $location->getId() &&
-                    $quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery'
-
-                ) {
-                    $quote->setData('store_location_id', $location->getId());
-                    $quote->setData('delivery_type', 1);
-                    $quote->save();
+                $logger->info('$locationId' . $location->getId());
+                if ($location->getId()) {
+                    if ($quote->getShippingAddress()->getShippingMethod() == 'cakeboxdelivery_cakeboxdelivery') {
+                        $quote->setData('store_location_id', $location->getId());
+                        $quote->setData('delivery_type', 1);
+                        $quote->save();
+                    }
                 }
             }
 
@@ -126,11 +125,13 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 return $this->setShippingRate($defaultShippingPrice, $request);
             }
             $logger->info('$rateShipping'.print_r($rateShipping, true));
-
-            $storePostcode = $location->getZip();
-            if ($storePostcode == null || $customerPostcode == null) {
-                return false;
+            if (empty($storePostcode) || empty($customerPostcode)) {
+                return $this->setShippingRate($maximumShippingPrice, $request);
             }
+            $storePostcode = $location->getZip();
+            $logger->info('$storePostcode'.print_r($storePostcode, true));
+            $logger->info('$customerPostcode'.print_r($customerPostcode, true));
+
             if (strtolower($storePostcode) == strtolower($customerPostcode)) {
                 $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
                 return $this->setShippingRate($minimumShippingPrice, $request);
