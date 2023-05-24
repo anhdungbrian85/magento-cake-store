@@ -27,6 +27,7 @@ define([
         deliverStoreId: ko.observable(window.checkoutConfig.storeLocationId),
         timeSlotsWeekdayConfig: window.checkoutConfig.deliveryDateTimeSlots.weekday,
         timeSlotsWeekendConfig: window.checkoutConfig.deliveryDateTimeSlots.weekend,
+
         initialize: function () {
             this._super();
             var self = this;
@@ -151,17 +152,35 @@ define([
                     isWeekend = (dateSelected.getDay() === 0 || dateSelected.getDay() === 6),
                     TimeOptionWeekday = this.createTimeOption(this.timeSlotsWeekdayConfig),
                     TimeOptionWeekend = this.createTimeOption(this.timeSlotsWeekendConfig);
-                
+
                 //@TODO: holiday hours
                 TimeComponent.options.splice(1,2);
                 if (isWeekend) {
-                    TimeComponent.options.push(TimeOptionWeekend);
+                    if (!this.isOverFirstWeekendCutoffTime(dateSelected)) {
+                        TimeComponent.options.push(TimeOptionWeekend);
+                    }
+
+                    // no need to remove this because the date should be disabled if both time slots are removed
                     TimeComponent.options.push(TimeOptionWeekday);
                 }   else {
                     TimeComponent.options.push(TimeOptionWeekday);
                 }
-                
-                
+            }
+        },
+
+        isOverFirstWeekendCutoffTime: function (dateSelected) {
+            if (isToday(dateSelected)) {
+                var leadDelivery = locationContext.leadDeliveryTime(),
+                    today = new Date(),
+                    firstCutoffTime = this.getFirstStartWeekendTimeslot(),
+                    deliverStoreData = this.deliverStore(),
+                    timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
+                    cutOffTime = new Date(today.getFullYear(), today.getUTCMonth(), today.getUTCDate(), firstCutoffTime),
+                    cutOffTimeToInt = Date.parse(cutOffTime)/1000 - (today.getTimezoneOffset() * 60);
+                return timeToDeliver > cutOffTimeToInt;
+            }   else {
+                // dateSelected is future date
+                return false;
             }
         },
 
@@ -175,7 +194,9 @@ define([
                 value: TimeFrameStart
             };
         },
-
+        getFirstStartWeekendTimeslot: function () {
+            return parseInt(this.timeSlotsWeekendConfig.split('-')[0]);
+        },
         /**
          *
          * @param dateString

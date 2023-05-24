@@ -52,14 +52,26 @@ class ImportDeliveryPostcode extends Command
              ->setDescription('Import delivery postcode');
 
         $this->addArgument('file', InputArgument::OPTIONAL, __('Type a custom csv file path'));
+        $this->addOption(
+                'skip-clean',
+                null,
+                InputOption::VALUE_NONE,
+                'Skip Remove All Old Record before Import New Record'
+            );
         parent::configure();
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/not-exits-store.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Not Exists Store:');
 
         $output->writeln('Importing...');	
         $file = $input->getArgument('file');
+        $skipRemoveOldRecord = $input->getOption('skip-clean');
+
         if (!$file) {
         	$file = self::DELIVERY_FILE_NAME;
         }
@@ -68,37 +80,44 @@ class ImportDeliveryPostcode extends Command
         $filePath = $this->filesystem
                 ->getDirectoryRead(DirectoryList::VAR_DIR)
                 ->getAbsolutePath(). self::DELIVERY_FILE_FOLDER. $file;
-        
+
        	if ($this->fileDriver->isExists($filePath)) {
        		$this->file = $filePath;
        		$dataPostcode = $this->readDataPostcodeFromFile();
 
-       		if (!empty($dataPostcode)) {
+       		if (!empty($dataPostcode) && !$skipRemoveOldRecord) {
        			$this->connection->delete($deliveryTable);
        		}
        		foreach ($dataPostcode as $rowPostcode) {
        			if ($rowPostcode[0] == "ID") {
        				continue;
        			}
-
-       			if (empty($rowPostcode[5])) {
+                if ($rowPostcode[0] == "Status") {
+                    continue;
+                }
+       			if (empty($rowPostcode[4])) {
        				continue;
        			}
+                if (!$this->findStoreLocation($rowPostcode[4])) {
+                    $logger->info(print_r($rowPostcode[4], true));
+                    continue;
+                }
 
        			$rowInsert = [
-       				'name' => $rowPostcode[3],
-       				'postcode' => $rowPostcode[4],
-       				'status' =>  $rowPostcode[1] == 'WhiteListed' ? 1 : 0, 
-       				'matching_strategy' => $rowPostcode[2],
-       				'store_id' => $this->findStoreLocation($rowPostcode[5])
+       				'name' => $rowPostcode[2],
+       				'postcode' => $rowPostcode[3],
+       				'status' => (strpos($rowPostcode[0], 'White') !== FALSE) ? 1 : 0, 
+       				'matching_strategy' => $rowPostcode[1],
+       				'store_id' => $this->findStoreLocation($rowPostcode[4])
        			];
+                
        			try {
        				$this->connection->insert(
        					$deliveryTable,
        					$rowInsert
        				);
        			} catch (\Exception $e) {
-       				$output->writeln('Cannot insert row '. $rowPostcode[3] . ' - '. $e->getMessage());
+       				$output->writeln('Cannot insert row '. $rowPostcode[2] . ' - '. $e->getMessage());
        			}
        		}
 
@@ -107,11 +126,19 @@ class ImportDeliveryPostcode extends Command
        	}
     }
 
-    protected function findStoreLocation($oldStoreName)
+    protected function findStoreLocation($storeNameCsv)
     {	
     	$locationTbl = $this->connection->getTableName('amasty_amlocator_location');
+        $storeNameCsv = implode(' ',array_unique(explode(' ', $storeNameCsv)));
+        $storeNameCsv = trim($storeNameCsv);
+        if (strpos($storeNameCsv, 'Cake Box') !== FALSE) {
+            $storeName = $storeNameCsv;
+        } else {
+            $storeName = "Cake Box $storeNameCsv";
+        }
+        
     	return $this->connection->fetchOne(
-    		"SELECT ID FROM $locationTbl WHERE name='Cake Box $oldStoreName';"
+    		"SELECT ID FROM $locationTbl WHERE name='$storeName';"
     	);
     }
 
