@@ -57,16 +57,12 @@ class ConfigurableProduct extends Action
     public function execute()
     {
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $resultData = [];            
+        $resultData = [];
         return $result->setData(['jsonConfig' => $this->getJsonConfig()]);
     }
 
     public function getJsonConfig()
     {
-		//$formKey = $this->getRequest()->getParam('form_key');
-		if (!$this->formKeyValidator->validate($this->getRequest())) {
-			return '';
-		}
         $productId = $this->getRequest()->getParam('productId', false);
         $clickCollect = $this->getRequest()->getParam('clickCollect', false);
         $this->checkoutSession->setClickCollect($clickCollect);

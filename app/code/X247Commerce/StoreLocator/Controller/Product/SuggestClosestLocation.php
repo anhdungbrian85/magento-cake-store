@@ -15,7 +15,7 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
     protected $checkoutSession;
 
     protected $locatorSourceResolver;
-	
+
 	protected $formKeyValidator;
 
     public function __construct(
@@ -42,7 +42,6 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
 				$result = [
 					'status' => 500,
 					'message' => __('There are no sources in the cart that match the items in the cart!'),
-					'debug_note' => $e->getMessage()
 				];
 			}else{
 
@@ -83,7 +82,7 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
 					}
 				}
 			}
-            
+
         } catch (\Exception $e) {
             $result = [
                 'status' => 500,
