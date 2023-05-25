@@ -79,9 +79,17 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             if (!$this->getConfigFlag('active')) {
                 return false;
             }
+            $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
+            $maximumShippingPrice = (float)array_values($rateShipping)[(count($rateShipping)-1)]['price'];
+            $defaultShippingPrice = $this->getConfigData('price');
+            $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
 
             $customerPostcode = ($request->getDestPostcode() && $request->getDestPostcode() != '-') ? $request->getDestPostcode() : $this->checkoutSession->getCustomerPostcode();
 
+            if (!$customerPostcode) {
+                // when empty delivery postcode
+                return $this->setShippingRate($maximumShippingPrice, $request);
+            }
 
             $quote = $this->checkoutSession->getQuote();
             $logger->info('$quoteId' . $quote->getId());
@@ -113,27 +121,17 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                 }
             }
 
-            $rateShipping = $this->deliveryData->getRateShipping() ? json_decode($this->deliveryData->getRateShipping(), true) : [];
-            $maximumShippingPrice = (float)array_values($rateShipping)[(count($rateShipping)-1)]['price'];
-            if (!$customerPostcode) {
-                // when empty delivery postcode
-                return $this->setShippingRate($maximumShippingPrice, $request);
-            }
-
-            $defaultShippingPrice = $this->getConfigData('price');
             if (empty($rateShipping)) {
                 return $this->setShippingRate($defaultShippingPrice, $request);
             }
-            $logger->info('$rateShipping'.print_r($rateShipping, true));
-            if (empty($storePostcode) || empty($customerPostcode)) {
+
+            $storePostcode = $location->getZip();
+
+            if (empty($storePostcode)) {
                 return $this->setShippingRate($maximumShippingPrice, $request);
             }
-            $storePostcode = $location->getZip();
-            $logger->info('$storePostcode'.print_r($storePostcode, true));
-            $logger->info('$customerPostcode'.print_r($customerPostcode, true));
 
             if (strtolower($storePostcode) == strtolower($customerPostcode)) {
-                $minimumShippingPrice = (float)array_values($rateShipping)[0]['price'];
                 return $this->setShippingRate($minimumShippingPrice, $request);
             }
 
