@@ -22,9 +22,9 @@ define([
 
                          element.find('.file-uploaded').html(html);
                          element.find('.file-label').hide();
-                              for (let file of this.files) {
-                                   dt.items.add(file);
-                              }
+                              // for (let file of this.files) {
+                              //      dt.items.add(file);
+                              // }
                     } else {
                          element.find('.file-uploaded').html('');
                          element.find('.file-label').show();

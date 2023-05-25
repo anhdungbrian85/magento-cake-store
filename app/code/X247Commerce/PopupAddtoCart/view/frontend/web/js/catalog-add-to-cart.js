@@ -38,7 +38,6 @@ define([
             if (this.options.bindSubmit) {
                 this._bindSubmit();
             }
-            $(this.options.addToCartButtonSelector).prop('disabled', false);
         },
 
         /**
@@ -312,6 +311,7 @@ define([
                                 if (res.state() === 'rejected') {
                                     location.reload();
                                 }
+                                $(self.options.addToCartButtonSelector).prop('disabled', false);
                             }
                         });
                     } else {
