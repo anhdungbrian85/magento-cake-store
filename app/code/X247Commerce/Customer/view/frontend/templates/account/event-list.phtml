@@ -16,8 +16,8 @@
             </tr>
             <?php foreach($listEvent as $item): ?>
                 <tr class="tb-item">
-                    <td class="tb-item-value"><span class="name-value"><?= $item->getTheirName()?></span></td>
-                    <td class="tb-item-value"><span class="occasion-value"><?= $item->getOccasion()?></span></td>
+                    <td class="tb-item-value"><span class="name-value"><?= $this->escaper->escapeHtml($item->getTheirName())?></span></td>
+                    <td class="tb-item-value"><span class="occasion-value"><?= $this->escaper->escapeHtml($item->getOccasion())?></span></td>
                     <td class="tb-item-value"><span class="day-value"><?= $block->separateDate($item->getDate())[2]?></span></td>
                     <td class="tb-item-value"><span class="month-value" data-value="<?= $block->separateDate($item->getDate())[1]?>"><?= $block->getMonthLabel($block->separateDate($item->getDate())[1])?></span></td>
                     <td class="tb-item-value"><span class="year-value"><?= $block->separateDate($item->getDate())[0]?></span></td>
@@ -44,6 +44,7 @@
                 <h2><?= __('Set up a free email alert reminder, its quick & free')?></h2>
             </div>
             <form class="form-edit" action="<?= $block->getUrl('*/*/edit') ?>" method="post">
+			<?= $block->getBlockHtml('formkey'); ?>
                 <div class="their-name-area">
                     <div class="label name"><span><?= __('Their name')?></span></div>
                     <input name="name" id="name" placeholder="<?= __('Name')?>"/>

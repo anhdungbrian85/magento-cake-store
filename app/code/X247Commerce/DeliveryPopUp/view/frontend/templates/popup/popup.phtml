@@ -5,10 +5,10 @@
 <div id="custom-delivery-popup-modal" class="custom-delivery-popup-modal" >
     <div class="amlocator-map-container delivery-popup" id="map-container-delivery-popup">
         <div class="title">
-            <span><?= __("FIND YOUR NEAREST STORE")?></span>
+            <span><?= __("LET’S FIND YOUR NEAREST STORE")?></span>
         </div>
         <div class="amlocator-wrapper ">
-            <div class="delivery-popup text"><span><?= __("Simply enter your postcode or location and let us know if you want to collect in-store or arrange delivery.")?></span>
+            <div class="delivery-popup text"><span><?= __("Your postcode helps us find your local Cake Box menu and offers. Choose Collection or Delivery method and select your preferred store.")?></span>
             </div>
             <input type="text" value="" class="amlocator-text postcode"
                    name="address" placeholder="<?= $block->escapeHtml(__('Enter postcode, address')); ?>"
@@ -37,13 +37,13 @@
                 <input id="delivery-type-free" checked type="radio" name="delivery-type" value="0">
                 <label class="label" for="delivery-type-free"><?= __("Free<br />Collection")?></label>
             </div>
-            <div class="premium delivery">
-                <input id="delivery-type-premium"  type="radio" name="delivery-type" value="1">
-                <label class="label" for="delivery-type-premium"><?= __("Premium<br />Delivery")?></label>
-            </div>
             <div class="express delivery">
                 <input id="delivery-type-express"  type="radio" name="delivery-type" value="2">
-                <label class="label" for="delivery-type-express"><?= __("Express 1 Hour<br />Collection")?></label>
+                <label class="label" for="delivery-type-express"><?= __("1 Hour<br />Collection")?></label>
+            </div>
+            <div class="premium delivery">
+                <input id="delivery-type-premium"  type="radio" name="delivery-type" value="1">
+                <label class="label" for="delivery-type-premium"><?= __("Delivery<br /> (from £9.95)")?></label>
             </div>
         </div>
 

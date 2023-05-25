@@ -88,7 +88,7 @@
                                         data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
 
                                     <td class="col col-carrier"
-                                        data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code, 'colspan': $parent.getColspanCarrier(method)}"></td>
+                                        data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code, 'colspan': $parent.getColspanCarrier(method)}, hidden:true"></td>
 
                                     <!-- ko if: $parent.isShippingMethodTooltip(method) -->
                                     <td class="col col-comment">
