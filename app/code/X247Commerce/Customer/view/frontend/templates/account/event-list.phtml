@@ -16,13 +16,13 @@
             </tr>
             <?php foreach($listEvent as $item): ?>
                 <tr class="tb-item">
-                    <td class="tb-item-value"><span class="name-value"><?= $this->escaper->escapeHtml($item->getTheirName())?></span></td>
-                    <td class="tb-item-value"><span class="occasion-value"><?= $this->escaper->escapeHtml($item->getOccasion())?></span></td>
-                    <td class="tb-item-value"><span class="day-value"><?= $block->separateDate($item->getDate())[2]?></span></td>
-                    <td class="tb-item-value"><span class="month-value" data-value="<?= $block->separateDate($item->getDate())[1]?>"><?= $block->getMonthLabel($block->separateDate($item->getDate())[1])?></span></td>
-                    <td class="tb-item-value"><span class="year-value"><?= $block->separateDate($item->getDate())[0]?></span></td>
-                    <td class="tb-item-value-button-delete"><a href="<?= $block->getUrl('*/*/delete', ['_secure' => true, '_current' => true,'_use_rewrite' => true, 'id' => $item->getId()])?>"><span style="color:#000">X</span></a></td>
-                    <td class="tb-item-value-button-edit"><a type="button" class="button-edit" data-value="<?= $item->getId()?>"><span><?= __('Edit')?></span></a></td>
+                    <td data-th="Their Name" class="tb-item-value"><span class="name-value"><?= $item->getTheirName()?></span></td>
+                    <td data-th="Occassion" class="tb-item-value"><span class="occasion-value"><?= $item->getOccasion()?></span></td>
+                    <td data-th="Day" class="tb-item-value"><span class="day-value"><?= $block->separateDate($item->getDate())[2]?></span></td>
+                    <td data-th="Month" class="tb-item-value"><span class="month-value" data-value="<?= $block->separateDate($item->getDate())[1]?>"><?= $block->getMonthLabel($block->separateDate($item->getDate())[1])?></span></td>
+                    <td data-th="Year" class="tb-item-value"><span class="year-value"><?= $block->separateDate($item->getDate())[0]?></span></td>
+                    <td data-th="Delete" class="tb-item-value-button-delete"><a href="<?= $block->getUrl('*/*/delete', ['_secure' => true, '_current' => true,'_use_rewrite' => true, 'id' => $item->getId()])?>"><span style="color:#000">X</span></a></td>
+                    <td data-th="Edit" class="tb-item-value-button-edit"><a type="button" class="button-edit" data-value="<?= $item->getId()?>"><span><?= __('Edit')?></span></a></td>
                 </tr>
             <?php endforeach; ?>
         </table>
