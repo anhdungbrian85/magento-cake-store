@@ -12,6 +12,10 @@ use Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider;
 class Data extends AbstractHelper
 {
 
+    const PICKUP_SHIPPING_METHOD = 1;
+
+    const DELIVERY_SHIPPING_METHOD = 2;
+
     protected $directory;
     protected $catalogImageHelper;
 
@@ -93,7 +97,7 @@ class Data extends AbstractHelper
             $logger->info('Before check empty items data!');
             $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
             $deliveryOrderHtml = '';
-            if (strpos($orderData['order_no'], 'DEL') >= 0) {
+            if ($orderData['delivery_type'] == self::DELIVERY_SHIPPING_METHOD) {
                 $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
                 $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
                 $shippingAddress = $order->getShippingAddress();
@@ -395,7 +399,8 @@ class Data extends AbstractHelper
             'delivery_time_from' => $this->timeHandler->convertTime($amastyOrderEntity->getTimeFrom()),
             'delivery_time_to' => $this->timeHandler->convertTime($amastyOrderEntity->getTimeTo()),
             'delivery_time' => $this->timeHandler->convertTime($amastyOrderEntity->getTimeFrom()) . ' - ' . $this->timeHandler->convertTime($amastyOrderEntity->getTimeTo()),
-            'grand_total'=>$orderobj->getGrandTotal()
+            'grand_total'=>$orderobj->getGrandTotal(),
+            'delivery_type' => ($orderobj->getShippingMethod() == 'amstorepickup_amstorepickup') ? self::PICKUP_SHIPPING_METHOD : self::DELIVERY_SHIPPING_METHOD
         ];
         return $orderDetails;
     }
