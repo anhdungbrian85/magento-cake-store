@@ -22,17 +22,19 @@ define([
 
                          element.find('.file-uploaded').html(html);
                          element.find('.file-label').hide();
-                              for (let file of this.files) {
-                                   dt.items.add(file);
-                              }
+                              // for (let file of this.files) {
+                              //      dt.items.add(file);
+                              // }
                     } else {
                          element.find('.file-uploaded').html('');
                          element.find('.file-label').show();
                     }
                } );
 
-               $('.icon-delete-file').on('click', function(e) {
+               $(document).on('click', '.icon-delete-file',  function(e) {
                     e.preventDefault();
+                    element.find('.file-uploaded').html('')
+                    element.find('.file-label').show();
                     input.val('');
                });
           }

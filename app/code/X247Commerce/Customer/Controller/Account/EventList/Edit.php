@@ -3,6 +3,7 @@ namespace X247Commerce\Customer\Controller\Account\EventList;
 
 use X247Commerce\Customer\Cron\SentMailAlertEvent;
 use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
+use Magento\Framework\Escaper;
 
 class Edit extends \Magento\Framework\App\Action\Action
 {
@@ -11,6 +12,7 @@ class Edit extends \Magento\Framework\App\Action\Action
 	public $SentMailAlertEvent;
 	public $configValue;
 	protected $formKeyValidator;
+	protected $escaper;
 
 	public function __construct(
 		\Magento\Framework\App\Action\Context $context,
@@ -18,12 +20,14 @@ class Edit extends \Magento\Framework\App\Action\Action
 		\Magento\Framework\App\Request\Http $request,
 		\X247Commerce\Customer\Model\EventFactory $eventFactory,
 		FormKeyValidator $formKeyValidator,
+		Escaper $escaper,
 		\Magento\Framework\App\Config\ScopeConfigInterface $configValue
 	)
 	{
 		$this->SentMailAlertEvent = $SentMailAlertEvent;
 		$this->configValue = $configValue;
 		$this->request = $request;
+		$this->escaper = $escaper;
 		$this->eventFactory = $eventFactory;
 		$this->formKeyValidator = $formKeyValidator;
 		return parent::__construct($context);
@@ -42,8 +46,8 @@ class Edit extends \Magento\Framework\App\Action\Action
 				if (!$data) {
 					$this->messageManager->addErrorMessage(__('Please choose the Event to Edit.'));
 				} else {
-					$array['occasion'] = $data['occasion'];
-					$array['their_name'] = $data['name'];
+					$array['occasion'] = $this->escaper->escapeHtml($data['occasion']);
+					$array['their_name'] = $this->escaper->escapeHtml($data['name']);
 					$array['date'] =  $data['year'] . '-' . $data['month'] . '-' . $data['day'];
 					$array['customer_id'] = $data['customer_id'];
 					

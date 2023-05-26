@@ -156,6 +156,10 @@
 		& ~ input[type="file"] {
 			opacity: 0;
 			position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
 		}
 
 		span {
@@ -179,10 +183,10 @@
 
 		.icon-delete-file {
 			position: absolute;
-			position: absolute;
 			right: 30px;
 			top: ~'calc( (100% - 14px )/2 )';
-
+            z-index: 10;
+            cursor: pointer;
 			svg {
 				width: 14px;
 				height: 14px;
@@ -193,7 +197,16 @@
 
 	.product-add-form .product-options-wrapper .fieldset .field .control {
 		width: 100%;
+
 	}
+
+    .product-options-wrapper .fieldset .field {
+        &.file {
+           .control {
+                position: relative;
+           }
+        }
+    }
 
 
 	.box-tocart {
@@ -246,7 +259,7 @@
 			margin-top: 0;
 		}
 	}
-	
+
 	.swatch-option-lists {
 		.swatch-option {
 			&.disabled {
@@ -254,7 +267,7 @@
 			}
 		}
 	}
-	
+
 }
 
 //

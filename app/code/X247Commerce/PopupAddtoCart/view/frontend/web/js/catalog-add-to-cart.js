@@ -35,10 +35,7 @@ define([
 
         /** @inheritdoc */
         _create: function () {
-            if (this.options.bindSubmit) {
-                this._bindSubmit();
-            }
-            $(this.options.addToCartButtonSelector).prop('disabled', false);
+
         },
 
         /**
@@ -140,7 +137,7 @@ define([
             if (lead_delivery[productId] != undefined && lead_delivery[productId] > 1 && deliveryType == 2 && alreadyInCart == false) {
                 confirmation({
                     title: $.mage.__('Notice!'),
-                    content: 'This product takes longer than 1 hour to make, do you want to continue?',
+                    content: 'This product is not available for collection in 1 hour. Do you want to continue?',
                     actions: {
                         confirm: function() {
                             self.ajaxSubmit(form);
@@ -159,7 +156,7 @@ define([
                             this.closeModal(event);
                         }
                     }, {
-                        text: $.mage.__('Continue'),
+                        text: $.mage.__('Add to basket'),
                         class: 'action-primary action-accept',
                         click: function (event) {
                             this.closeModal(event, true);
@@ -269,9 +266,13 @@ define([
 
                             /** @inheritdoc */
                             success: function (res) {
-                                
-                                $('#addmore-sidebar').html(res.output);
+                                var addmoreSidebar = $('#addmore-sidebar').html(res.output);
+                                var tocartForms = addmoreSidebar.find('.popup-tocart.tocart-form')
 
+                                tocartForms.on('submit', function(e){
+                                    e.preventDefault();
+                                    self.submitForm($(this));
+                                })
                                     $('#addmore-sidebar .product-tab:first-child()').addClass('active');
                                     $('#addmore-sidebar .product-tab:first-child() .tab-content').slideDown();
                                     var options = {
@@ -312,6 +313,7 @@ define([
                                 if (res.state() === 'rejected') {
                                     location.reload();
                                 }
+                                $(self.options.addToCartButtonSelector).prop('disabled', false);
                             }
                         });
                     } else {
