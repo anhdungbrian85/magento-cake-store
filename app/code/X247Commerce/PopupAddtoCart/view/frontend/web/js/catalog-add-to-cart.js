@@ -35,10 +35,7 @@ define([
 
         /** @inheritdoc */
         _create: function () {
-            if (this.options.bindSubmit) {
-                this._bindSubmit();
-            }
-            $(this.options.addToCartButtonSelector).prop('disabled', false);
+
         },
 
         /**
@@ -269,9 +266,13 @@ define([
 
                             /** @inheritdoc */
                             success: function (res) {
-                                
-                                $('#addmore-sidebar').html(res.output);
+                                var addmoreSidebar = $('#addmore-sidebar').html(res.output);
+                                var tocartForms = addmoreSidebar.find('.popup-tocart.tocart-form')
 
+                                tocartForms.on('submit', function(e){
+                                    e.preventDefault();
+                                    self.submitForm($(this));
+                                })
                                     $('#addmore-sidebar .product-tab:first-child()').addClass('active');
                                     $('#addmore-sidebar .product-tab:first-child() .tab-content').slideDown();
                                     var options = {
@@ -312,6 +313,7 @@ define([
                                 if (res.state() === 'rejected') {
                                     location.reload();
                                 }
+                                $(self.options.addToCartButtonSelector).prop('disabled', false);
                             }
                         });
                     } else {

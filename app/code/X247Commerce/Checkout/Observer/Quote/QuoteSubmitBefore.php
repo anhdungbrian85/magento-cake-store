@@ -98,7 +98,7 @@ class QuoteSubmitBefore implements ObserverInterface
                 }
             }
         } else {
-            $locationId = $quote->getData('store_location_id');
+            $locationId = $quote->getData('store_location_id') ?? $this->storeLocationContext->getStoreLocationId();
 			$logger->info('Collect in Store Location: '.$locationId);
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
@@ -116,31 +116,5 @@ class QuoteSubmitBefore implements ObserverInterface
                 throw new LocalizedException(__('Please choose a store!'));
             }
         }
-    }
-
-    public function getClosestStoreLocation($postcode)
-    {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info('PostCode: ' . $postcode);
-        if (!$postcode) {
-            return false;
-        }
-        $needToPrepareCollection = false;
-        $location = $this->locationCollectionFactory->create()->addFieldToFilter('enable_delivery', ['eq' => 1]);
-        $deliverLocations = $this->deliveryAreaHelper->getDeliverLocations($postcode);
-        $deliverLocationsIds = [];
-
-        foreach ($deliverLocations as $deliverLocation) {
-            $deliverLocationsIds[] = $deliverLocation->getStoreId();
-        }
-        $logger->info('Deliver Locations Ids: ');
-        $logger->info(print_r($deliverLocationsIds, true));
-
-        $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
-        $location->applyDefaultFilters();
-        $logger->info('Collection query: ' . $location->getSelect());
-        return $location->getFirstItem();
     }
 }

@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace X247Commerce\StoreLocator\Console;
 
 use \Symfony\Component\Console\Command\Command;
@@ -68,7 +68,7 @@ class ImportDeliveryPostcode extends Command
         $logger->addWriter($writer);
         $logger->info('Not Exists Store:');
 
-        $output->writeln('Importing...');	
+        $output->writeln('Importing...');
         $file = $input->getArgument('file');
         $skipRemoveOldRecord = $input->getOption('skip-clean');
 
@@ -106,18 +106,18 @@ class ImportDeliveryPostcode extends Command
        			$rowInsert = [
        				'name' => $rowPostcode[2],
        				'postcode' => $rowPostcode[3],
-       				'status' => (strpos($rowPostcode[0], 'White') !== FALSE) ? 1 : 0, 
+       				'status' => (strpos($rowPostcode[0], 'White') !== FALSE) ? 1 : 0,
        				'matching_strategy' => $rowPostcode[1],
        				'store_id' => $this->findStoreLocation($rowPostcode[4])
        			];
-                
+
        			try {
        				$this->connection->insert(
        					$deliveryTable,
        					$rowInsert
        				);
        			} catch (\Exception $e) {
-       				$output->writeln('Cannot insert row '. $rowPostcode[2] . ' - '. $e->getMessage());
+       				$output->writeln('Cannot insert row '. $rowPostcode[2] . ' - postcode: '.$rowPostcode[3].  $e->getMessage());
        			}
        		}
 
@@ -127,7 +127,7 @@ class ImportDeliveryPostcode extends Command
     }
 
     protected function findStoreLocation($storeNameCsv)
-    {	
+    {
     	$locationTbl = $this->connection->getTableName('amasty_amlocator_location');
         $storeNameCsv = implode(' ',array_unique(explode(' ', $storeNameCsv)));
         $storeNameCsv = trim($storeNameCsv);
@@ -136,13 +136,13 @@ class ImportDeliveryPostcode extends Command
         } else {
             $storeName = "Cake Box $storeNameCsv";
         }
-        
+
     	return $this->connection->fetchOne(
     		"SELECT ID FROM $locationTbl WHERE name='$storeName';"
     	);
     }
 
-    protected function readDataPostcodeFromFile() 
+    protected function readDataPostcodeFromFile()
     {
     	if (!$this->dataPostcode) {
 			if (($handle = fopen($this->file, "r")) !== FALSE) {

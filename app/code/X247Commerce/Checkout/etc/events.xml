@@ -15,4 +15,9 @@
     <event name="checkout_onepage_controller_success_action">
         <observer name="clear_session_and_http_context_after_order1" instance="X247Commerce\Checkout\Observer\Order\ClearAfterOrder" disabled="false"/>
     </event>
+
+    <event name="sales_quote_merge_before">
+        <observer name="x247_handle_after_quote_merged" instance="X247Commerce\Checkout\Observer\Quote\QuoteMergeHandler" disabled="false"/>
+    </event>
+
 </config>
