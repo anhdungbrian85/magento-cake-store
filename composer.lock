@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "288b22aa287136140327bf38a0c0af2e",
+    "content-hash": "d93b4dc04f2daa7dc8df04faed4e855d",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -915,16 +915,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.271.2",
+            "version": "3.271.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "17d7df5b89bb06e915931a65f643cf3469f8994c"
+                "reference": "f481134d37b8303fa2e82ca7fe2a3124144057f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/17d7df5b89bb06e915931a65f643cf3469f8994c",
-                "reference": "17d7df5b89bb06e915931a65f643cf3469f8994c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f481134d37b8303fa2e82ca7fe2a3124144057f6",
+                "reference": "f481134d37b8303fa2e82ca7fe2a3124144057f6",
                 "shasum": ""
             },
             "require": {
@@ -1004,9 +1004,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.271.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.271.3"
             },
-            "time": "2023-05-25T18:19:34+00:00"
+            "time": "2023-05-26T18:20:00+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -3666,16 +3666,16 @@
         },
         {
             "name": "klevu/module-metadata",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klevu/metadata.git",
-                "reference": "064f8b044ea0c6a3a13677d1c3ca6f00d610d69d"
+                "reference": "fcaae36f45ae67189bb4511c5d1e23f0e7617297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klevu/metadata/zipball/064f8b044ea0c6a3a13677d1c3ca6f00d610d69d",
-                "reference": "064f8b044ea0c6a3a13677d1c3ca6f00d610d69d",
+                "url": "https://api.github.com/repos/klevu/metadata/zipball/fcaae36f45ae67189bb4511c5d1e23f0e7617297",
+                "reference": "fcaae36f45ae67189bb4511c5d1e23f0e7617297",
                 "shasum": ""
             },
             "require": {
@@ -3713,9 +3713,9 @@
             "description": "Klevu Metadata",
             "support": {
                 "issues": "https://github.com/klevu/metadata/issues",
-                "source": "https://github.com/klevu/metadata/tree/1.4.0"
+                "source": "https://github.com/klevu/metadata/tree/1.4.1"
             },
-            "time": "2023-04-27T08:20:01+00:00"
+            "time": "2023-05-26T13:15:50+00:00"
         },
         {
             "name": "klevu/module-msi",
@@ -3771,22 +3771,22 @@
         },
         {
             "name": "klevu/module-productsearch",
-            "version": "3.3.1",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klevu/productsearch.git",
-                "reference": "06dad2835ff5380e6aaf463162e4dd85723e1d75"
+                "reference": "fb0e773ee814d205ff01af0511909ab8b350775c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klevu/productsearch/zipball/06dad2835ff5380e6aaf463162e4dd85723e1d75",
-                "reference": "06dad2835ff5380e6aaf463162e4dd85723e1d75",
+                "url": "https://api.github.com/repos/klevu/productsearch/zipball/fb0e773ee814d205ff01af0511909ab8b350775c",
+                "reference": "fb0e773ee814d205ff01af0511909ab8b350775c",
                 "shasum": ""
             },
             "require": {
                 "klevu/module-frontend-js": "^2.0.0",
                 "klevu/module-logger": "^1.0.0|^2.0.0",
-                "klevu/module-metadata": "^1.3.0",
+                "klevu/module-metadata": "^1.4.1",
                 "magento/framework": ">=102.0.0",
                 "magento/module-backend": "@stable",
                 "magento/module-catalog": "@stable",
@@ -3821,9 +3821,9 @@
             "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
             "support": {
                 "issues": "https://github.com/klevu/productsearch/issues",
-                "source": "https://github.com/klevu/productsearch/tree/3.3.1"
+                "source": "https://github.com/klevu/productsearch/tree/3.3.2"
             },
-            "time": "2023-05-03T10:25:21+00:00"
+            "time": "2023-05-26T13:21:52+00:00"
         },
         {
             "name": "klevu/module-registry",
@@ -3867,22 +3867,22 @@
         },
         {
             "name": "klevu/module-search",
-            "version": "3.3.1",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klevu/klevu-smart-search-M2.git",
-                "reference": "da340dcfff1038ee68ddbe6a40c2e66504446830"
+                "reference": "47dce312992f8a78d0f911f557770b6c11a7b796"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klevu/klevu-smart-search-M2/zipball/da340dcfff1038ee68ddbe6a40c2e66504446830",
-                "reference": "da340dcfff1038ee68ddbe6a40c2e66504446830",
+                "url": "https://api.github.com/repos/klevu/klevu-smart-search-M2/zipball/47dce312992f8a78d0f911f557770b6c11a7b796",
+                "reference": "47dce312992f8a78d0f911f557770b6c11a7b796",
                 "shasum": ""
             },
             "require": {
                 "klevu/module-addtocart": "3.1.0",
                 "klevu/module-content": "3.1.0",
-                "klevu/module-productsearch": "3.3.1",
+                "klevu/module-productsearch": "3.3.2",
                 "klevu/module-troubleshoot": "1.2.0"
             },
             "suggest": {
@@ -3904,9 +3904,9 @@
             ],
             "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
             "support": {
-                "source": "https://github.com/klevu/klevu-smart-search-M2/tree/3.3.1"
+                "source": "https://github.com/klevu/klevu-smart-search-M2/tree/3.3.2"
             },
-            "time": "2023-05-03T10:26:56+00:00"
+            "time": "2023-05-26T11:13:25+00:00"
         },
         {
             "name": "klevu/module-troubleshoot",
@@ -4293,28 +4293,28 @@
         },
         {
             "name": "laminas/laminas-dependency-plugin",
-            "version": "2.5.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-dependency-plugin.git",
-                "reference": "8f2d10199381cdc7d0843bfadad55f8485df9e38"
+                "reference": "73cfb63ddca9d6bfedad5e0a038f6d55063975a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-dependency-plugin/zipball/8f2d10199381cdc7d0843bfadad55f8485df9e38",
-                "reference": "8f2d10199381cdc7d0843bfadad55f8485df9e38",
+                "url": "https://api.github.com/repos/laminas/laminas-dependency-plugin/zipball/73cfb63ddca9d6bfedad5e0a038f6d55063975a3",
+                "reference": "73cfb63ddca9d6bfedad5e0a038f6d55063975a3",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": ">=1.1.0 <2.3.0",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
+                "composer-plugin-api": "^1.1 || ^2.0",
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
             "require-dev": {
-                "composer/composer": ">=1.9.0 <2.3.0",
-                "laminas/laminas-coding-standard": "~2.4.0",
-                "mikey179/vfsstream": "^1.6.11",
+                "composer/composer": "^1.9 || ^2.0",
+                "laminas/laminas-coding-standard": "^2.2.1",
+                "mikey179/vfsstream": "^1.6.10@alpha",
                 "phpunit/phpunit": "^9.5.5",
-                "psalm/plugin-phpunit": "^0.17.0",
+                "psalm/plugin-phpunit": "^0.15.1",
                 "roave/security-advisories": "dev-master",
                 "vimeo/psalm": "^4.5"
             },
@@ -4334,7 +4334,7 @@
             "description": "Replace zendframework and zfcampus packages with their Laminas Project equivalents.",
             "support": {
                 "issues": "https://github.com/laminas/laminas-dependency-plugin/issues",
-                "source": "https://github.com/laminas/laminas-dependency-plugin/tree/2.5.0"
+                "source": "https://github.com/laminas/laminas-dependency-plugin/tree/2.2.0"
             },
             "funding": [
                 {
@@ -4342,7 +4342,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-10-16T14:45:47+00:00"
+            "time": "2021-09-08T17:51:35+00:00"
         },
         {
             "name": "laminas/laminas-di",
@@ -23987,16 +23987,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.66.0",
+            "version": "2.67.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "496712849902241f04902033b0441b269effe001"
+                "reference": "c1001b3bc75039b07f38a79db5237c4c529e04c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/496712849902241f04902033b0441b269effe001",
-                "reference": "496712849902241f04902033b0441b269effe001",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/c1001b3bc75039b07f38a79db5237c4c529e04c8",
+                "reference": "c1001b3bc75039b07f38a79db5237c4c529e04c8",
                 "shasum": ""
             },
             "require": {
@@ -24085,7 +24085,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-29T18:53:47+00:00"
+            "time": "2023-05-25T22:09:47+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -26382,16 +26382,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "bb7b7988c898c94f5338e16403c52b5a3cae1d93"
+                "reference": "4645e032d0963fb614969398ca28e47605b1a7da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/bb7b7988c898c94f5338e16403c52b5a3cae1d93",
-                "reference": "bb7b7988c898c94f5338e16403c52b5a3cae1d93",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/4645e032d0963fb614969398ca28e47605b1a7da",
+                "reference": "4645e032d0963fb614969398ca28e47605b1a7da",
                 "shasum": ""
             },
             "require": {
@@ -26451,7 +26451,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v5.4.23"
+                "source": "https://github.com/symfony/dependency-injection/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -26467,7 +26467,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-21T15:04:16+00:00"
+            "time": "2023-05-05T14:42:55+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -26974,16 +26974,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac"
+                "reference": "3c59f97f6249ce552a44f01b93bfcbd786a954f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/af9fbb378f5f956c8f29d4886644c84c193780ac",
-                "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/3c59f97f6249ce552a44f01b93bfcbd786a954f5",
+                "reference": "3c59f97f6249ce552a44f01b93bfcbd786a954f5",
                 "shasum": ""
             },
             "require": {
@@ -27030,7 +27030,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v5.4.23"
+                "source": "https://github.com/symfony/http-foundation/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -27046,7 +27046,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-18T06:30:11+00:00"
+            "time": "2023-05-19T07:21:23+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -28279,16 +28279,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "9a8a5b6d6508928174ded2109e29328a55342a42"
+                "reference": "8e12706bf9c68a2da633f23bfdc15b4dce5970b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/9a8a5b6d6508928174ded2109e29328a55342a42",
-                "reference": "9a8a5b6d6508928174ded2109e29328a55342a42",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/8e12706bf9c68a2da633f23bfdc15b4dce5970b3",
+                "reference": "8e12706bf9c68a2da633f23bfdc15b4dce5970b3",
                 "shasum": ""
             },
             "require": {
@@ -28297,7 +28297,6 @@
                 "symfony/polyfill-php80": "^1.16"
             },
             "conflict": {
-                "phpunit/phpunit": "<5.4.3",
                 "symfony/console": "<4.4"
             },
             "require-dev": {
@@ -28348,7 +28347,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v5.4.23"
+                "source": "https://github.com/symfony/var-dumper/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -28364,7 +28363,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-18T09:26:27+00:00"
+            "time": "2023-05-25T13:05:00+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -29272,5 +29271,5 @@
         "composer-plugin-api": "^2.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
