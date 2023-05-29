@@ -58,6 +58,6 @@
         <index referenceId="DELIVERY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="enable_delivery"/>
         </index>
-        <column xsi:type="text" name="holiday_action" nullable="true" comment="holiday actions" />
+        <column xsi:type="varchar" name="holiday_action" nullable="true" comment="holiday actions" />
     </table>
 </schema>

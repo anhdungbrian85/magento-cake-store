@@ -8,6 +8,7 @@
             "closed_time": true,
             "disable_delivery": true,
             "disable_pickup": true,
+            "type": true,
             "store_location_id": true
         },
         "constraint": {

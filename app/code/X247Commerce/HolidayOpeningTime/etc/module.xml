@@ -3,6 +3,7 @@
 	<module name="X247Commerce_HolidayOpeningTime">
         <sequence>
             <module name="X247Commerce_StoreLocator"/>
+            <module name="X247Commerce_Yext"/>
         </sequence>
     </module>
 </config>

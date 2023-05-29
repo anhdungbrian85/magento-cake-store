@@ -11,6 +11,8 @@
         <column xsi:type="varchar" name="closed_time" nullable="true" comment="Holiday closed time"/>
         <column xsi:type="smallint" name="disable_delivery" unsigned="true" nullable="true" comment="Disable delivery "/>
         <column xsi:type="smallint" name="disable_pickup" unsigned="true" nullable="true" comment="Disable pickup "/>
+        <column xsi:type="int" name="type" unsigned="true" padding="10" nullable="true"
+                comment="Holiday type"/>
         <column xsi:type="int" name="store_location_id" unsigned="true" padding="10" nullable="false"
                 comment="Store Location Id"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
