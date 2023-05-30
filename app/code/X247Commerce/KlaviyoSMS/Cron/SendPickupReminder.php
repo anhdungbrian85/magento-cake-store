@@ -43,8 +43,8 @@ class SendPickupReminder
 			$time2 = date('H:i:s');
 			
 			// Create DateTime objects for the two times
-			$dateTime1 = DateTime::createFromFormat('H:i:s', $collectionTime);
-			$dateTime2 = DateTime::createFromFormat('H:i:s', $time2);
+			$dateTime1 = \DateTime::createFromFormat('H:i:s', $collectionTime);
+			$dateTime2 = \DateTime::createFromFormat('H:i:s', $time2);
 
 			// Calculate the difference between the two DateTime objects
 			$interval = $dateTime1->diff($dateTime2);
@@ -133,8 +133,8 @@ class SendPickupReminder
 			$deliverytime2 = date('H:i:s');
 			
 			// Create DateTime objects for the two times
-			$deliverydateTime1 = DateTime::createFromFormat('H:i:s', $deliveryTime);
-			$deliverydateTime2 = DateTime::createFromFormat('H:i:s', $deliverytime2);
+			$deliverydateTime1 = \DateTime::createFromFormat('H:i:s', $deliveryTime);
+			$deliverydateTime2 = \DateTime::createFromFormat('H:i:s', $deliverytime2);
 
 			// Calculate the difference between the two DateTime objects
 			$deliveryinterval = $deliverydateTime1->diff($deliverydateTime2);
