@@ -38,65 +38,79 @@ class SendPickupReminder
 		foreach ($result as $order) {		
 			$orderId = $order['order_id']; // Replace with the order ID you want to retrieve
 			$store_id = $order['store_id']; 
-			$collectionTime = date('H:i:s',$order['time_from']); 
+			$collectionTime = date('H:i:s',$order['time_from']);			
 			
-			try {				
-				$orderDetails = $this->orderRepository->get($orderId);
-				$orderData = $orderDetails->getData();				
-				if($orderData['kl_sms_consent'] == '"1"' && $orderData['sms_reminder'] != '1' && $store_id != ''){
-					$selectStore = $connection->select()
-						->from('amasty_amlocator_location')
-						->where('id = ?', $store_id);
-					$resultStore = $connection->fetchAll($selectStore);
-					$storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
-					$storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
-					$storePostcode = isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : '';
-				
-					$billingAddress = $orderDetails->getBillingAddress();				
-					$telephone = $billingAddress->getTelephone();			
+			$time2 = date('H:i:s');
+			
+			// Create DateTime objects for the two times
+			$dateTime1 = DateTime::createFromFormat('H:i:s', $collectionTime);
+			$dateTime2 = DateTime::createFromFormat('H:i:s', $time2);
+
+			// Calculate the difference between the two DateTime objects
+			$interval = $dateTime1->diff($dateTime2);
+
+			// Get the difference in hours
+			$hoursDifference = $interval->h;			
+			
+			try {
+				if($hoursDifference > 0 && $hoursDifference < 2){
+					$orderDetails = $this->orderRepository->get($orderId);
+					$orderData = $orderDetails->getData();				
+					if($orderData['kl_sms_consent'] == '"1"' && $orderData['sms_reminder'] != '1' && $store_id != ''){
+						$selectStore = $connection->select()
+							->from('amasty_amlocator_location')
+							->where('id = ?', $store_id);
+						$resultStore = $connection->fetchAll($selectStore);
+						$storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
+						$storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
+						$storePostcode = isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : '';
 					
-					if (substr($telephone, 0, 1) === "0") {
-						$telephone = substr_replace($telephone, "+44", 0, 1);
-					}else{
-						$telephone ="+44".$telephone;
-					}
-					
-					// Do something with the order data
-					// Send Klaviyo event
-					echo $klaviyoApiParams = '{
-					  "data": {
-						"type": "event",
-						"attributes": {
-						  "profile": {
-							"$email": "'.$orderData['customer_email'].'",
-							"$phone_number":"'.$telephone.'",
-							"$country":"United Kingdom",
-							"$pickup_date":"'.date('d-m-Y').'"
-						  },
-						  "metric": {
-							"name": "Delivery date",
-							"service": "'.date('d-m-Y').'" 
-						  },
-						  "properties": {                
-							"OrderNumber": "'.$orderData['increment_id'].'",
-							"OrderType": "collection",
-							"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
-							"CollectionDate": "'.date('d-m-Y').'",						
-							"CollectionTime": "'.$collectionTime.'",							
-							"StoreName": "'.$storeName.'",							
-							"StoreAddress": "'.$storeAddress.'",							
-							"StorePostcode": "'.$storePostcode.'"						
-						  },
-						  "value": '.$orderData['grand_total'].',
-						  "unique_id": "'.$orderData['increment_id'].'" 
+						$billingAddress = $orderDetails->getBillingAddress();				
+						$telephone = $billingAddress->getTelephone();			
+						
+						if (substr($telephone, 0, 1) === "0") {
+							$telephone = substr_replace($telephone, "+44", 0, 1);
+						}else{
+							$telephone ="+44".$telephone;
 						}
-					  }
-					}';	   
-					$this->logger->info($klaviyoApiParams);
-					$this->sendRequest($klaviyoApiParams);
-					$orderDetails->setSmsReminder('1');
-					$orderDetails->save();
-				}
+						
+						// Do something with the order data
+						// Send Klaviyo event
+						echo $klaviyoApiParams = '{
+						  "data": {
+							"type": "event",
+							"attributes": {
+							  "profile": {
+								"$email": "'.$orderData['customer_email'].'",
+								"$phone_number":"'.$telephone.'",
+								"$country":"United Kingdom",
+								"$pickup_date":"'.date('d-m-Y').'"
+							  },
+							  "metric": {
+								"name": "Delivery date",
+								"service": "'.date('d-m-Y').'" 
+							  },
+							  "properties": {                
+								"OrderNumber": "'.$orderData['increment_id'].'",
+								"OrderType": "collection",
+								"CutsomerName": "'.$billingAddress->getFirstname().' '.$billingAddress->getLastname().'",
+								"CollectionDate": "'.date('d-m-Y').'",						
+								"CollectionTime": "'.$collectionTime.'",							
+								"StoreName": "'.$storeName.'",							
+								"StoreAddress": "'.$storeAddress.'",							
+								"StorePostcode": "'.$storePostcode.'"						
+							  },
+							  "value": '.$orderData['grand_total'].',
+							  "unique_id": "'.$orderData['increment_id'].'" 
+							}
+						  }
+						}';	   
+						$this->logger->info($klaviyoApiParams);
+						$this->sendRequest($klaviyoApiParams);
+						$orderDetails->setSmsReminder('1');
+						$orderDetails->save();
+					}					
+				}				
 			} catch (\Exception $e) {
 				echo $e->getMessage();
 				$this->logger->error('Klaviyo STOREPICKUP SMS reminder Order id'.$orderId.' Error '.$e->getMessage());
@@ -113,66 +127,81 @@ class SendPickupReminder
 		foreach ($resultDelivery as $orderDelivery) {		
 			$orderDeliveryId = $orderDelivery['order_id']; // Replace with the order ID you want to retrieve
 			$orderDeliveryTime = $orderDelivery['time']; 
-			$orderDeliveryDate = $orderDelivery['date']; 
+			$orderDeliveryDate = $orderDelivery['date'];
 			
-			try {				
-				$orderDetailDelivery = $this->orderRepository->get($orderDeliveryId);
-				$orderDeliveryData = $orderDetailDelivery->getData();				
-				if($orderDeliveryData['kl_sms_consent'] == '"1"' && $orderDeliveryData['sms_reminder'] != '1'){
-				
-					$billingDeliveryAddress = $orderDetailDelivery->getBillingAddress();				
-					$delierytelephone = $billingDeliveryAddress->getTelephone();
+			$deliveryTime = $orderDeliveryTime.':00:00';
+			$deliverytime2 = date('H:i:s');
+			
+			// Create DateTime objects for the two times
+			$deliverydateTime1 = DateTime::createFromFormat('H:i:s', $deliveryTime);
+			$deliverydateTime2 = DateTime::createFromFormat('H:i:s', $deliverytime2);
 
-					$selectStore = $connection->select()
-						->from('amasty_amlocator_location')
-						->where('id = ?', $orderDeliveryData['store_location_id']);
-					$resultStore = $connection->fetchAll($selectStore);	
-					$storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
-					$storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
-					$storePostcode = isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : '';
+			// Calculate the difference between the two DateTime objects
+			$deliveryinterval = $deliverydateTime1->diff($deliverydateTime2);
+
+			// Get the difference in hours
+			$deliveryhoursDifference = $deliveryinterval->h;
+			
+			try {
+				if($deliveryhoursDifference > 0 && $deliveryhoursDifference < 2){	
+					$orderDetailDelivery = $this->orderRepository->get($orderDeliveryId);
+					$orderDeliveryData = $orderDetailDelivery->getData();				
+					if($orderDeliveryData['kl_sms_consent'] == '"1"' && $orderDeliveryData['sms_reminder'] != '1'){
 					
-					
-					if (substr($delierytelephone, 0, 1) === "0") {
-						$delierytelephone = substr_replace($delierytelephone, "+44", 0, 1);
-					}else{
-						$delierytelephone ="+44".$delierytelephone;
-					}
-					
-					// Do something with the order data
-					// Send Klaviyo event
-					echo $klaviyoDelieryApiParams = '{
-					  "data": {
-						"type": "event",
-						"attributes": {
-						  "profile": {
-							"$email": "'.$orderDeliveryData['customer_email'].'",
-							"$phone_number":"'.$delierytelephone.'",
-							"$country":"United Kingdom",
-							"$pickup_date":"'.date('d-m-Y').'"
-						  },
-						  "metric": {
-							"name": "Delivery date",
-							"service": "'.date('d-m-Y').'" 
-						  },
-						  "properties": {                
-							"OrderNumber": "'.$orderDeliveryData['increment_id'].'",
-							"OrderType": "delivery",
-							"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
-							"DeliveryDate": "'.date('d-m-Y').'",							
-							"DeliveryTime": "'.$orderDeliveryTime.':00:00",
-							"StoreName": "'.$storeName.'",							
-							"StoreAddress": "'.$storeAddress.'",							
-							"StorePostcode": "'.$storePostcode.'"						
-						  },
-						  "value": '.$orderDeliveryData['grand_total'].',
-						  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
+						$billingDeliveryAddress = $orderDetailDelivery->getBillingAddress();				
+						$delierytelephone = $billingDeliveryAddress->getTelephone();
+
+						$selectStore = $connection->select()
+							->from('amasty_amlocator_location')
+							->where('id = ?', $orderDeliveryData['store_location_id']);
+						$resultStore = $connection->fetchAll($selectStore);	
+						$storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
+						$storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
+						$storePostcode = isset($resultStore[0]['zip']) ? $resultStore[0]['zip'] : '';
+						
+						
+						if (substr($delierytelephone, 0, 1) === "0") {
+							$delierytelephone = substr_replace($delierytelephone, "+44", 0, 1);
+						}else{
+							$delierytelephone ="+44".$delierytelephone;
 						}
-					  }
-					}';	
-					$this->logger->info($klaviyoDelieryApiParams);				
-					$this->sendRequest($klaviyoDelieryApiParams);
-					$orderDetailDelivery->setSmsReminder('1');
-					$orderDetailDelivery->save();
+						
+						// Do something with the order data
+						// Send Klaviyo event
+						echo $klaviyoDelieryApiParams = '{
+						  "data": {
+							"type": "event",
+							"attributes": {
+							  "profile": {
+								"$email": "'.$orderDeliveryData['customer_email'].'",
+								"$phone_number":"'.$delierytelephone.'",
+								"$country":"United Kingdom",
+								"$pickup_date":"'.date('d-m-Y').'"
+							  },
+							  "metric": {
+								"name": "Delivery date",
+								"service": "'.date('d-m-Y').'" 
+							  },
+							  "properties": {                
+								"OrderNumber": "'.$orderDeliveryData['increment_id'].'",
+								"OrderType": "delivery",
+								"CutsomerName": "'.$billingDeliveryAddress->getFirstname().' '.$billingDeliveryAddress->getLastname().'",							
+								"DeliveryDate": "'.date('d-m-Y').'",							
+								"DeliveryTime": "'.$orderDeliveryTime.':00:00",
+								"StoreName": "'.$storeName.'",							
+								"StoreAddress": "'.$storeAddress.'",							
+								"StorePostcode": "'.$storePostcode.'"						
+							  },
+							  "value": '.$orderDeliveryData['grand_total'].',
+							  "unique_id": "'.$orderDeliveryData['increment_id'].'" 
+							}
+						  }
+						}';	
+						$this->logger->info($klaviyoDelieryApiParams);				
+						$this->sendRequest($klaviyoDelieryApiParams);
+						$orderDetailDelivery->setSmsReminder('1');
+						$orderDetailDelivery->save();
+					}
 				}
 			} catch (\Exception $e) {
 				echo $e->getMessage();
