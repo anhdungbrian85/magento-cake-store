@@ -4,6 +4,7 @@ namespace X247Commerce\KlaviyoSMS\Plugin;
 use Klaviyo\Reclaim\Helper\ScopeSetting;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session;
+use Magento\Framework\Escaper;
 
 
 class CheckoutLayoutPlugin
@@ -11,7 +12,7 @@ class CheckoutLayoutPlugin
     public function __construct(
         ScopeSetting $klaviyoScopeSetting,
         Session $customerSession,
-        CustomerFactory $customerFactory
+        CustomerFactory $customerFactory,
     ) {
         $this->_klaviyoScopeSetting = $klaviyoScopeSetting;
         $this->_customerSession = $customerSession;
@@ -36,22 +37,21 @@ class CheckoutLayoutPlugin
     }
 
     public function afterProcess(\Magento\Checkout\Block\Checkout\LayoutProcessor $processor, $jsLayout)
-    {	
+    {
 
-        if ($this->_klaviyoScopeSetting->getConsentAtCheckoutSMSIsActive())
-        {
+        if ($this->_klaviyoScopeSetting->getConsentAtCheckoutSMSIsActive()) {
             $smsConsentCheckbox = [
                 'component' => 'X247Commerce_KlaviyoSMS/js/form/element/checkbox',
                 'config' => [
                     'customScope' => 'shippingAddress.custom_attributes',
                     'template' => 'ui/form/field',
-                    'elementTmpl' => 'ui/form/element/checkbox',
+                    'elementTmpl' => 'X247Commerce_KlaviyoSMS/form/element/checkbox',
                     'options' => [],
                     'id' => 'kl_sms_consent',
                 ],
                 'dataScope' => 'shippingAddress.custom_attributes.kl_sms_consent',
                 'label' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentLabelText(),
-                'description' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentText(),
+                'description' => html_entity_decode($this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentText()),
                 'visible' => true,
                 'checked' => true,
                 'value' => true,
@@ -60,18 +60,17 @@ class CheckoutLayoutPlugin
                 'sortOrder' => $this->_klaviyoScopeSetting->getConsentAtCheckoutSMSConsentSortOrder(),
                 'id' => 'kl_sms_consent',
             ];
-                        
+
             $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_sms_consent'] = $smsConsentCheckbox;
         }
 
-        if ($this->_klaviyoScopeSetting->getConsentAtCheckoutEmailIsActive())
-        {
+        if ($this->_klaviyoScopeSetting->getConsentAtCheckoutEmailIsActive()) {
             $emailConsentCheckbox = [
                 'component' => 'Magento_Ui/js/form/element/abstract',
                 'config' => [
                     'customScope' => 'shippingAddress.custom_attributes',
                     'template' => 'ui/form/field',
-                    'elementTmpl' => 'ui/form/element/checkbox',
+                    'elementTmpl' => 'X247Commerce_KlaviyoSMS/form/element/checkbox',
                     'options' => [],
                     'id' => 'kl_email_consent',
                 ],
@@ -85,7 +84,7 @@ class CheckoutLayoutPlugin
                 'sortOrder' => $this->_klaviyoScopeSetting->getConsentAtCheckoutEmailSortOrder(),
                 'id' => 'kl_email_consent',
             ];
-           
+
 
             $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']['shippingAddress']['children']['before-form']['children']['kl_email_consent'] = $emailConsentCheckbox;
         }
