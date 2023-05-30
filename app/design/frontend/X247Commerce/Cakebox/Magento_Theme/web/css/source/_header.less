@@ -682,3 +682,18 @@
 		}
 	}
 }
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break =  @screen__xl) {
+	.custom-mega-menu{
+		.pagebuilder-column-line{
+			justify-content: space-between;
+			.pagebuilder-column{
+				display: none !important;
+			}
+			.pagebuilder-column.category-list{
+				display: block !important;
+
+			}
+		}
+	}
+}
