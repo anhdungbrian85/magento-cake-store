@@ -40,4 +40,7 @@ if (isHttpHost("ipad.mcstaging.cakebox.com")) {
 } elseif (isHttpHost("mcstaging.cakebox.com")) {
     $_SERVER["MAGE_RUN_CODE"] = "base";
     $_SERVER["MAGE_RUN_TYPE"] = "website";
+}elseif (isHttpHost("ipad.cakebox.com")) {
+    $_SERVER["MAGE_RUN_CODE"] = "ipad";
+    $_SERVER["MAGE_RUN_TYPE"] = "website";
 }
