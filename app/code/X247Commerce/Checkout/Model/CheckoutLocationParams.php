@@ -95,8 +95,8 @@ class CheckoutLocationParams
             'amastyLocations' => $this->getLocationData(),
             'asdaLocationIds' => $this->getAsdaLocationId(),
             'deliveryPostcode' => $deliveryType == 1 ? $this->checkoutSession->getCustomerPostcode() : '',
-            'deliveryDateTimeSlots' => $this->getDeliveryDateTimeSlots()
-
+            'deliveryDateTimeSlots' => $this->getDeliveryDateTimeSlots(),
+            'store_location_holiday' => $this->getStoreHoliday($locationId)
         ];
     }
 
@@ -147,6 +147,17 @@ class CheckoutLocationParams
         $query = $connection->select()->from($tableName, ['asda_location_id']);
 
         $fetchData = $connection->fetchCol($query);
+        return $fetchData;
+    }
+
+    public function getStoreHoliday() {
+        
+        $connection = $this->_resource->getConnection();
+        $tableName = $connection->getTableName('store_location_holiday');
+
+        $query = $connection->select()->from($tableName);
+
+        $fetchData = $connection->fetchAll($query);
         return $fetchData;
     }
 
