@@ -167,6 +167,18 @@
                 <options class="Magento\Config\Model\Config\Source\Yesno"/>
             </settings>
 		</column>
+		<!-- <column name="type" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Holiday type</label>
+                <visible>false</visible>
+                <options class="X247Commerce\HolidayOpeningTime\Model\Source\HolidayHour\Type"/>
+            </settings>
+		</column> -->
 		<column name="store_location_id" component="Magento_Ui/js/grid/columns/select">
 			<settings>
 				<filter>select</filter>

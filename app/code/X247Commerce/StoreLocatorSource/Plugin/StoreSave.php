@@ -30,12 +30,12 @@ class StoreSave
 	public function beforeExecute(\Amasty\Storelocator\Controller\Adminhtml\Location\Save $subject)
 	{
 		$data = $subject->getRequest()->getPostValue();
-		// var_dump($data);die();
 		$modelStore = $this->locationFactory->create();
 		$id = (int) $subject->getRequest()->getParam('id');
-		
-		$hodidayAction = isset($data["holiday_action"]) ? $data["holiday_action"] : false;
+
+		$hodidayAction = !empty($data["holiday_action"]) ? $data["holiday_action"] : false;
 		if ($hodidayAction) {
+            $hodidayAction = array_filter($hodidayAction);
 			$data['holiday_action'] = ',' . implode(',', array_filter($hodidayAction)) . ',';
 			$subject->getRequest()->setPostValue($data);
 		}
@@ -61,13 +61,17 @@ class StoreSave
 			$store = $this->locationResource->load($modelStore, $id);
 			$modelStore->setData("amlocator_source", $nameSource)->save();
 		}
-		$oldParentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($data["id"]);
-		$newParentLocationId = isset($data["amlocator_store"]) ? $data["amlocator_store"] : '';
-		if ($oldParentLocationId != $newParentLocationId) {
-			$this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent($oldParentLocationId, $data["id"]);
-			if (!empty($newParentLocationId)) {
-				$this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent($newParentLocationId, $data["id"]);
+
+		if (!empty($data["id"])) {
+			$oldParentLocationId = $this->locatorSourceResolver->getAsdaLocationParentLocation($data["id"]);
+			$newParentLocationId = isset($data["amlocator_store"]) ? $data["amlocator_store"] : '';
+			if ($oldParentLocationId != $newParentLocationId) {
+				$this->locatorSourceResolver->unAssignAsdaAmLocatorStoreToParent($oldParentLocationId, $data["id"]);
+				if (!empty($newParentLocationId)) {
+					$this->locatorSourceResolver->assignAsdaAmLocatorStoreToParent($newParentLocationId, $data["id"]);
+				}
 			}
 		}
+
 	}
 }

@@ -90,7 +90,6 @@ class QuoteSubmitBefore implements ObserverInterface
                     if ($location->getId()) {
                         $quote->setData('store_location_id', $location->getId());
                         $order->setData('store_location_id', $location->getId());
-                        $this->storeLocationContext->setStoreLocationId($location->getId());
                     } else {
                         $quote->setTotalsCollectedFlag(false);
                         $quote->collectTotals();

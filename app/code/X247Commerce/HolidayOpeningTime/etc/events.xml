@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="yext_webhook_location_edit_after"> 
+        <observer name="yext_webhook_location_edit_after_create_holiday" instance="X247Commerce\HolidayOpeningTime\Observer\SyncHoliday" /> 
+    </event>
+</config>

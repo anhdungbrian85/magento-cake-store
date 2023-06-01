@@ -7,18 +7,22 @@ class Index extends \Magento\Framework\View\Element\Template
 	public $eventFactory;
 	public $customerSession;
 	public $date;
- 	public function __construct(
- 		\Magento\Framework\View\Element\Template\Context $context,
+	public $escaper;
+
+	public function __construct(
+		\Magento\Framework\View\Element\Template\Context $context,
+		\Magento\Framework\Escaper $escaper,
 		\X247Commerce\Customer\Model\EventFactory $eventFactory,
 		\Magento\Customer\Model\Session $customerSession,
 		\Magento\Framework\Stdlib\DateTime\DateTime $date,
-        array $data = []
- 	) {
- 		parent::__construct($context, $data);
+		array $data = [],
+	) {
+		parent::__construct($context, $data);
+		$this->escaper = $escaper;
 		$this->eventFactory = $eventFactory;
 		$this->customerSession = $customerSession;
 		$this->date = $date;
- 	}
+	}
 
 	public function getEventListCustomer()
 	{
@@ -29,7 +33,7 @@ class Index extends \Magento\Framework\View\Element\Template
 	{
 		$date = explode(" ", $date)[0];
 		$data = explode("-", $date);
-		
+
 		return $data;
 	}
 
@@ -43,7 +47,7 @@ class Index extends \Magento\Framework\View\Element\Template
 		$date = $this->date->gmtDate();
 		$year = explode("-", $date);
 
-		return (int)$year[0];
+		return (int) $year[0];
 	}
 
 	public function getListYear()
@@ -76,4 +80,4 @@ class Index extends \Magento\Framework\View\Element\Template
 
 		return $arrayMonth[$value];
 	}
-} 
+}

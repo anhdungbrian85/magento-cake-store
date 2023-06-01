@@ -1,4 +1,4 @@
-& when (@media-common = true) {
+& when (@media-common =true) {
 	.x247commerce_customer-account_eventlist-index {
 
 		a[type="button"],
@@ -26,9 +26,9 @@
 				border-bottom: 1px solid rgba(38, 38, 38, 0.3);
 			}
 		}
-		
+
 		#button-add {
-			
+
 			display: block;
 			padding: 15px 25px;
 			background: #F48222;
@@ -37,61 +37,61 @@
 			text-transform: uppercase;
 			font-weight: 700;
 			width: fit-content;
-			margin-top: 35px;			
+			margin-top: 35px;
 		}
 
 		#edit-container {
 
 			position: fixed;
-		    top: 0;
-		    left: 0;
-		    background: rgba(15, 15, 15, 0.75);
-		    width: 100%;
-		    height: 100%;
-		    transition: all 0.25s ease-out;
+			top: 0;
+			left: 0;
+			background: rgba(15, 15, 15, 0.75);
+			width: 100%;
+			height: 100%;
+			transition: all 0.25s ease-out;
 
-		    &.active {
+			&.active {
 
-		    	z-index: 99 !important;
-		    	opacity: 1 !important;
-		    }
+				z-index: 99 !important;
+				opacity: 1 !important;
+			}
 
-		    .edit-container-main {
-		    	
-		    	margin: 4% auto;
-			    width: 72%;
-			    background: #fff;
+			.edit-container-main {
 
-			    .edit-container-header {
+				margin: 4% auto;
+				width: 72%;
+				background: #fff;
 
-			    	display: flex;
-    				justify-content: space-between;
-    				background: #992E80;
+				.edit-container-header {
 
-    				h1 {
+					display: flex;
+					justify-content: space-between;
+					background: #992E80;
 
-    					margin-bottom: 0;
-					    padding: 30px;
-					    text-transform: uppercase;
-					    font-weight: 700;
-					    font-size: 27px;
-					    letter-spacing: -0.5px;
-					    color: #fff;
-    				}
+					h1 {
 
-    				#close {
+						margin-bottom: 0;
+						padding: 30px;
+						text-transform: uppercase;
+						font-weight: 700;
+						font-size: 27px;
+						letter-spacing: -0.5px;
+						color: #fff;
+					}
 
-    					border: 0;
-    					background: #992E80;
-    					font-size: 20px;
-    					padding: 14px 18px;
-    				}
-			    }
+					#close {
 
-			    .edit-container-content {
+						border: 0;
+						background: #992E80;
+						font-size: 20px;
+						padding: 14px 18px;
+					}
+				}
+
+				.edit-container-content {
 
 					margin: auto;
-    				width: 32%;
+					width: 32%;
 
 					.edit-container-content-title {
 
@@ -103,10 +103,10 @@
 					.form-edit {
 
 						.label {
-							
+
 							text-align: center;
 							font-weight: 600;
-    						font-size: 13px;
+							font-size: 13px;
 							margin-bottom: 4px;
 							width: 100%;
 						}
@@ -142,10 +142,10 @@
 						}
 
 						.alert-event {
-							
+
 							margin-top: 20px;
 							color: #F58223;
-    						font-weight: 200;
+							font-weight: 200;
 						}
 
 						.create-another-reminder {
@@ -193,20 +193,88 @@
 							}
 						}
 					}
-			    }
-		    }
+				}
+			}
 		}
 	}
 }
 
-.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) { 
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__m) {
 	.x247commerce_customer-account_eventlist-index #edit-container.edit-container .edit-container-main {
-
 		width: 85%;
 
-		.edit-container-content{
+		.edit-container-content {
 			width: 90%;
 		}
 	}
-	
+
+	#event-list-container {
+		width: 100%;
+		position: relative;
+		margin-bottom: 20px;
+
+		.event-list-content {
+			width: 100%;
+			border-collapse: collapse;
+			border-spacing: 0;
+			max-width: 100%;
+			border: none;
+			display: block;
+
+			tbody {
+				display: block;
+
+				.tb-head {
+					display: none;
+				}
+
+				tr {
+					border-top: 1px solid #cccccc;
+					padding-top: 15px;
+					display: block;
+					height: fit-content;
+
+					td {
+						border-bottom: none;
+						display: block;
+						padding: 5px 10px;
+
+						&:before {
+							padding-right: 10px;
+							content: attr(data-th) ': ';
+							display: inline-block;
+							color: #111111;
+							font-weight: 700;
+						}
+
+						a {
+							span {
+								color: #992e80 !important;
+							}
+						}
+					}
+
+					.tb-item-value-button-edit {
+						&:before {
+							padding-right: 10px;
+							content: "|";
+							display: inline-block;
+							color: #9d9d9d;
+							font-weight: 100;
+						}
+					}
+
+					.tb-item-value-button-delete {
+						float: left;
+
+						&:before {
+							padding-right: 10px;
+							content: none;
+							font-weight: 700;
+						}
+					}
+				}
+			}
+		}
+	}
 }

@@ -4,11 +4,11 @@ namespace X247Commerce\HolidayOpeningTime\Model\Source\HolidayHour;
 
 class Type implements \Magento\Framework\Option\ArrayInterface
 {
-    const OPEN_VALUE = 0;
-    const SPLIT_VALUE = 1;
-    const FULL_TIME_VALUE = 2;
-    const CLOSED_VALUE = 3;
-    const REGULAR_HOURS_VALUE = 4;
+    public const OPEN_VALUE = 0;
+    public const SPLIT_VALUE = 1;
+    public const FULL_TIME_VALUE = 2;
+    public const CLOSED_VALUE = 3;
+    public const REGULAR_HOURS_VALUE = 4;
 
     public function toOptionArray()
     {

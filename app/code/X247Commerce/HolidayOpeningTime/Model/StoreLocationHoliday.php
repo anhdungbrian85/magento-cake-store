@@ -19,6 +19,7 @@ class StoreLocationHoliday extends AbstractModel
     const DISABLE_DELIVERY = 'disable_delivery';
     const DISABLE_PICKUP = 'disable_pickup';
     const STORE_LOCATION_ID = 'store_location_id';
+    const TYPE = 'type';
 
 
     /**
@@ -156,6 +157,22 @@ class StoreLocationHoliday extends AbstractModel
     public function setStoreLocationId($storeLocationId)
     {
         return $this->setData(self::STORE_LOCATION_ID, $storeLocationId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getType()
+    {
+        return $this->getData(self::STORE_LOCATION_ID);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setType($type)
+    {
+        return $this->setData(self::TYPE, $type);
     }
 
     public function afterLoad()
