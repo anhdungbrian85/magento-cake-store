@@ -448,6 +448,7 @@ return [
         'Amasty_CheckoutCore' => 1,
         'Amasty_CheckoutGiftWrap' => 1,
         'Amasty_CheckoutLayoutBuilder' => 1,
+        'Amasty_CheckoutProPackage' => 1,
         'Amasty_CheckoutStyleSwitcher' => 1,
         'Amasty_CheckoutThankYouPage' => 1,
         'Amasty_Checkout' => 1,
@@ -467,7 +468,7 @@ return [
         'Amasty_SocialLoginLite' => 1,
         'Amasty_Storelocator' => 1,
         'Amasty_StorePickupWithLocator' => 1,
-        'Amasty_StorePickupWithLocatorMSI' => 1,
+        'Amasty_StorePickupWithLocatorMSI' => 0,
         'Amasty_StorelocatorIndexer' => 1,
         'Fastly_Cdn' => 1,
         'Klaviyo_Reclaim' => 1,
@@ -491,7 +492,6 @@ return [
         'PayPal_BraintreeGraphQl' => 1,
         'Salesorder_Refresh' => 1,
         'Smsglobal_Sms' => 0,
-        'Sparsh_FacebookPixel' => 1,
         'Temando_ShippingRemover' => 1,
         'Trustpilot_Reviews' => 1,
         'Ulmod_Productinquiry' => 1,
@@ -521,9 +521,9 @@ return [
         'X247Commerce_ReadMoreDescriptionCategory' => 0,
         'X247Commerce_StoreLocatorSource' => 1,
         'X247Commerce_ShopBy' => 1,
-        'X247Commerce_HolidayOpeningTime' => 1,
+        'X247Commerce_Yext' => 1,
         'X247Commerce_Sales' => 1,
         'X247Commerce_Theme' => 1,
-        'X247Commerce_Yext' => 1
+        'X247Commerce_HolidayOpeningTime' => 1
     ]
 ];
