@@ -33,10 +33,9 @@ class StoreSave
 		$modelStore = $this->locationFactory->create();
 		$id = (int) $subject->getRequest()->getParam('id');
 
-		$hodidayAction = isset($data["holiday_action"]) ? $data["holiday_action"] : false;
-
-		$hodidayAction = array_filter($hodidayAction);
+		$hodidayAction = !empty($data["holiday_action"]) ? $data["holiday_action"] : false;
 		if ($hodidayAction) {
+            $hodidayAction = array_filter($hodidayAction);
 			$data['holiday_action'] = ',' . implode(',', array_filter($hodidayAction)) . ',';
 			$subject->getRequest()->setPostValue($data);
 		}
@@ -73,6 +72,6 @@ class StoreSave
 				}
 			}
 		}
-		
+
 	}
 }
