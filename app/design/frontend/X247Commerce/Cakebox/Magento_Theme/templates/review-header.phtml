@@ -7,3 +7,10 @@
 		<!-- End TrustBox widget -->
 	</div>
 </div>
+<script>
+	requirejs(['jquery'], function ($) {
+		$('.trustpilot-header .trustpilot-widget').on('click', function(){
+			window.open('<?=$block->getUrl("reviews") ?>', '_blank');
+		});
+	});
+</script>
