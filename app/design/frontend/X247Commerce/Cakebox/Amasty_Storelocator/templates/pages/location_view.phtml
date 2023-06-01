@@ -16,6 +16,7 @@ $galleryImages = $block->getLocationGallery();
 $adressString = $location->getCity() . ', ' . $location->getAddress() . ', ' . $location->getZip();
 
 $blockLocationCollection= $block->getLayout()->createBlock('\Amasty\Storelocator\Block\Location');
+$urlConfigProvider = $blockLocationCollection->configProvider->getUrl();
 $allLocation = $blockLocationCollection->getLocationCollection();
 $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
@@ -194,7 +195,7 @@ $placeholderImageUrl = $imageHelper->getDefaultPlaceholderUrl('image');
 
                 <div class="amlocator-stores-collection">
                     <?php foreach ($allLocation as $item): ?>
-                        <a class="amlocator-store-link" href="<?= $item->getLocationUrl() ?>">
+                        <a class="amlocator-store-link" href="<?= $block->getUrl($urlConfigProvider . '/' . $item->getUrlKey()); ?>">
                             <div class="amlocator-block-store">
                                 <?php if ($baseImage = $blockLocationCollection->getLocationImage($item)):?>
                                     <div class="amlocator-store-image"
