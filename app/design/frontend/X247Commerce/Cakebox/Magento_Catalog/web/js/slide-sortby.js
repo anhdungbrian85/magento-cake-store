@@ -10,27 +10,26 @@ define([
         },
 
         _showFilter: function() {
-            $(document).on('click','.filter-by .filter-label', function() {
+            $('.filter-by .filter-label').unbind('click');
+            $('.filter-by .filter-label').bind('click', function() {
                 if (!$(this).hasClass('active')) {
                     $(this).addClass('active');
                 }
 
                 if($(this).css("margin-right") == "400px") {
-                    $('.sidebar.sidebar-main').animate({"margin-right": '-=400'});
+                    $('.sidebar.sidebar-main').animate({"margin-right": '-400'});
                 } else {
-                    $('.sidebar.sidebar-main').animate({"margin-right": '+=400'});
+                    $('.sidebar.sidebar-main').animate({"margin-right": '0'});
                 }
             });
         },
 
         _hideFilter: function() {
-            $(document).on('click','.close-desktop', function() {
-                if($(".filter-label").hasClass('active')){
-                    $('.sidebar.sidebar-main').animate({"margin-right": '-=400'});
+            $('.close-desktop').unbind('click');
+            $('.close-desktop').bind('click',function() {
+                    $('.sidebar.sidebar-main').animate({"margin-right": '-400'});
                     $('.filter-label').removeClass('active');
-                } else {
-                    $('.sidebar.sidebar-main').animate({"margin-right": '-=400'});
-                }
+        
             });
         },
     });
