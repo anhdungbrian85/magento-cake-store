@@ -91,15 +91,6 @@ class Category extends \Magento\Catalog\Model\ResourceModel\Category
      */
     protected function _afterSave(\Magento\Framework\DataObject $object)
     {
-        /**
-         * Add identifier for new category
-         */
-        if (substr((string)$object->getPath(), -1) == '/') {
-            $object->setPath($object->getPath() . $object->getId());
-            $this->_savePath($object);
-        }
-
-        $this->_saveCategoryProducts($object);
         $this->_saveCategoryProductsPopup($object);
         return parent::_afterSave($object);
     }

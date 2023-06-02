@@ -84,6 +84,9 @@ define([
                     customerData.reload(sections, true);
                     window.localStorage.setItem('delivery_type', delivery_type);
                     console.log('response', response);
+                    window.onbeforeunload = function () {
+                      window.scrollTo(0, 0);
+                    }
                     if (response.confirmation_popup_content) {
                         let confirmation_popup_content = response.confirmation_popup_content;
                         let parentBody = window.parent.document.body;
