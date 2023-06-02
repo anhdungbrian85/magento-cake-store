@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -34,11 +34,28 @@ class AfterCalculateSalesDashboard
         $isStaffUser = $this->userHelper->isStaffUser($user);
 
         $amLocatorStoresByUser = $this->locatorSourceResolver->getAmLocatorStoresByUser($user);
-        
+
         if ($isStaffUser) {
             $result->getSelect()
                     ->joinleft(['slsso' => 'sales_order'], 'main_table.entity_id=slsso.entity_id', [])
-                    ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);            
+                    ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);
+        }
+        return $result;
+    }
+
+    public function afterCalculateTotals(
+        \Magento\Reports\Model\ResourceModel\Order\Collection $subject,
+        $result
+    ) {
+        $user = $this->_adminSession->getUser();
+        $isStaffUser = $this->userHelper->isStaffUser($user);
+
+        $amLocatorStoresByUser = $this->locatorSourceResolver->getAmLocatorStoresByUser($user);
+
+        if ($isStaffUser) {
+            $result->getSelect()
+                ->join(['slsso' => 'sales_order'], 'main_table.entity_id=slsso.entity_id', [])
+                ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);
         }
         return $result;
     }
@@ -47,16 +64,16 @@ class AfterCalculateSalesDashboard
         \Magento\Reports\Model\ResourceModel\Order\Collection $subject,
         $result
     ) {
-        
+
         $user = $this->_adminSession->getUser();
         $isStaffUser = $this->userHelper->isStaffUser($user);
 
         $amLocatorStoresByUser = $this->locatorSourceResolver->getAmLocatorStoresByUser($user);
-        
+
         if ($isStaffUser) {
             $result->getSelect()
                     ->joinleft(['slsso' => 'sales_order'], 'main_table.entity_id=slsso.entity_id', [])
-                    ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);            
+                    ->where('slsso.store_location_id IN (?)', $amLocatorStoresByUser);
         }
         return $result;
     }
