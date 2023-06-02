@@ -3,4 +3,5 @@
     <type name="Magento\Reports\Model\ResourceModel\Order\Collection">
         <plugin name="calculate_sales_dashboard" type="X247Commerce\Sales\Plugin\AfterCalculateSalesDashboard" sortOrder="10" />
     </type>
+    <preference for="Magento\Backend\Block\Dashboard\Totals" type="X247Commerce\Sales\Plugin\Block\Dashboard\Totals"/>
 </config>
