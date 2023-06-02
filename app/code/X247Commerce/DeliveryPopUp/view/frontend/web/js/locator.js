@@ -67,7 +67,11 @@ define([
                     console.log(addToCartFormData);
                 }
                 const location_id = $(this).data('location-id');
-                const delivery_type = $('[name="delivery-type"]:checked').val()
+                const delivery_type = $('[name="delivery-type"]:checked').val();
+                
+                setTimeout(() => {
+                    window.scroll({ top: -1, left: 0, behavior: "smooth" });
+                }, 1);
                 $.ajax({
                 url: self.ajaxSelectUrl,
                     type: 'POST',
@@ -84,9 +88,6 @@ define([
                     customerData.reload(sections, true);
                     window.localStorage.setItem('delivery_type', delivery_type);
                     console.log('response', response);
-                    window.onbeforeunload = function () {
-                      window.scrollTo(0, 0);
-                    }
                     if (response.confirmation_popup_content) {
                         let confirmation_popup_content = response.confirmation_popup_content;
                         let parentBody = window.parent.document.body;
