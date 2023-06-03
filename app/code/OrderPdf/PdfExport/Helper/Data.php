@@ -8,6 +8,7 @@ use Amasty\StorePickupWithLocator\Api\OrderRepositoryInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Amasty\StorePickupWithLocator\Model\TimeHandler;
 use Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider;
+use X247Commerce\Checkout\Model\Config\DeliveryConfigProvider;
 
 class Data extends AbstractHelper
 {
@@ -98,8 +99,17 @@ class Data extends AbstractHelper
             $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
             $deliveryOrderHtml = '';
             if ($orderData['delivery_type'] == self::DELIVERY_SHIPPING_METHOD) {
-                $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
-                $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
+                $time =  $delivery->getData('time');
+                $date = $delivery->getData('date');
+                $dateInWeek = (new \DateTime($date))->format('w');
+                $isWeekend = ($dateInWeek == 0 || $dateInWeek == 6);
+                $deliveryTime = DeliveryConfigProvider::WEEKDAY_DELIVERY_TIMESLOT;
+
+                if ($isWeekend && $time == DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START) {
+                    $deliveryTime = DeliveryConfigProvider::WEEKEND_DELIVERY_TIMESLOT;
+                }
+                
+                
                 $shippingAddress = $order->getShippingAddress();
                 $streetData = $shippingAddress->getStreet();
                 $shippingAddressHtml = $streetData[0] . ', ' . $shippingAddress->getPostcode();
