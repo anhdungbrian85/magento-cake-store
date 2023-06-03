@@ -501,6 +501,7 @@ return [
         'WeltPixel_GA4' => 1,
         'WeltPixel_Quickview' => 1,
         'X247Commerce_AdminStaff' => 1,
+        'X247Commerce_CancelOrderEmail' => 1,
         'X247Commerce_Catalog' => 1,
         'X247Commerce_ChangeOrderStatus' => 1,
         'X247Commerce_Checkout' => 1,

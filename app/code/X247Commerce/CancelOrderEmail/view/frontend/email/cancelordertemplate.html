@@ -1,0 +1,25 @@
+<!--@subject {{var template_subject}} @-->
+{{template config_path="design/email/header_template"}}
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+        <td align="center" valign="top" style="padding:10px 0 10px 0">
+            <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650">
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" width="650">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" valign="top" style="font-size:13px;padding:0 9px 9px 9px;">
+                                        <p>{{trans "Dear"}} {{var customername}},</p>
+                                        {{var email_content|raw}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}
