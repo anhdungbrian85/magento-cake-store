@@ -1,6 +1,7 @@
 <?php
 
 namespace OrderPdf\PdfExport\Helper;
+
 use Magento\Framework\App\Filesystem\DirectoryList;
 use \Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
@@ -8,6 +9,7 @@ use Amasty\StorePickupWithLocator\Api\OrderRepositoryInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Amasty\StorePickupWithLocator\Model\TimeHandler;
 use Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider;
+use X247Commerce\Checkout\Model\Config\DeliveryConfigProvider;
 
 class Data extends AbstractHelper
 {
@@ -73,7 +75,7 @@ class Data extends AbstractHelper
         $this->swatchHelper = $swatchHelper;
     }
 
-    public function createOrderPdf($order,$_fileFactory)
+    public function createOrderPdf($order, $_fileFactory)
     {
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/order_pdf.log');
         $logger = new \Zend_Log();
@@ -98,8 +100,17 @@ class Data extends AbstractHelper
             $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
             $deliveryOrderHtml = '';
             if ($orderData['delivery_type'] == self::DELIVERY_SHIPPING_METHOD) {
-                $deliveryTime = $delivery->getData('time') . ':00 - ' . (($delivery->getData('time')) + 1) . ':00';
-                $deliveryTime = \X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\ConfigProvider::DEFAULT_DELIVERY_TIMESLOT;
+                $time =  $delivery->getData('time');
+                $date = $delivery->getData('date');
+                $dateInWeek = (new \DateTime($date))->format('w');
+                $isWeekend = ($dateInWeek == 0 || $dateInWeek == 6);
+                $deliveryTime = DeliveryConfigProvider::WEEKDAY_DELIVERY_TIMESLOT;
+
+                if ($isWeekend && $time == DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START) {
+                    $deliveryTime = DeliveryConfigProvider::WEEKEND_DELIVERY_TIMESLOT;
+                }
+                
+                
                 $shippingAddress = $order->getShippingAddress();
                 $streetData = $shippingAddress->getStreet();
                 $shippingAddressHtml = $streetData[0] . ', ' . $shippingAddress->getPostcode();
@@ -113,7 +124,7 @@ class Data extends AbstractHelper
                     <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
                     <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Time</span>: <span class='text-size-20'>{$orderData['delivery_time']}</span></div>";
             }
-            if(isset($itemsData) && $itemsData!=null) {
+            if (isset($itemsData) && $itemsData != null) {
                 $logger->info('During check empty items data!');
                 $tmp = 0;
                 foreach ($itemsData as $item) {
@@ -127,12 +138,28 @@ class Data extends AbstractHelper
                         $sku = $parentProduct->getSku();
                         $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl();
                     }
-                    $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape'):" ";
-                    $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge'):" ";
-                    $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings'):" ";
-                    $base  = substr($sponge, 0, 1);//position,count V
-                    $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
-                    $colour = $product->getAttributeText('color') ? $product->getAttributeText('color'):"";
+                    $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape') : " ";
+                    $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge') : " ";
+                    $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings') : " ";
+                    switch ($sponge) {
+                        case 'Victoria Base':
+                            $base = 'VC';
+                            break;
+                        case 'Red Velvet Base':
+                            $base = 'RV';
+                            break;
+                        case 'Mango Base':
+                            $base = 'MB';
+                            break;
+                        case 'Chocolate Base':
+                            $base = 'CH';
+                            break;
+                        case 'Caramel Base':
+                            $base = 'CA';
+                            break;
+                    }
+                    $size = str_replace('" serves ', "x", $size_serving); // 10 6
+                    $colour = $product->getAttributeText('color') ? $product->getAttributeText('color') : "";
                     $colorOption = $product->getResource()->getAttribute('color')->getSource()->getSpecificOptions($product->getData('color'));
                     $colourOptionId = 0;
                     $colorHexCode = '';
@@ -150,7 +177,7 @@ class Data extends AbstractHelper
                         }
                     }
 
-                    $options = $item->getProductOptions() ? $item->getProductOptions() : " ";//custom options value
+                    $options = $item->getProductOptions() ? $item->getProductOptions() : " "; //custom options value
                     $orderPath = [];
                     $orderPath['message'] = '';
                     $orderPath['photo'] = '';
@@ -159,18 +186,18 @@ class Data extends AbstractHelper
                     $logger->info('Before check empty options!');
                     if (isset($options['options']) && !empty($options['options'])) {
                         foreach ($options['options'] as $option) {
-                            $response = $this->isJson(''.$option['option_value'] . '', true);
+                            $response = $this->isJson('' . $option['option_value'] . '', true);
                             if (!empty($response) && !empty($response->fullpath)) {
-                                $orderPath['photo'] =  $response->fullpath;
+                                $orderPath['photo'] = $response->fullpath;
                             } else {
                                 if ($option['label'] == 'Personalised Message On Cake') {
-                                    $orderPath['message']  = $option['option_value'];
+                                    $orderPath['message'] = $option['option_value'];
                                 } else {
                                     if ($option['label'] == 'Number') {
-                                        $orderPath['number']  = $option['value'];
+                                        $orderPath['number'] = $option['value'];
                                     } else {
                                         if ($option['label'] == 'Number Shape') {
-                                            $orderPath['number_shape']  = $option['value'];
+                                            $orderPath['number_shape'] = $option['value'];
                                         }
                                     }
                                 }
@@ -192,7 +219,7 @@ class Data extends AbstractHelper
                     $logger->info('After check empty options!');
                     $logger->info('Before render order info!');
                     $iconShapeHtml = '';
-                    if ($shape != 'Number' ){
+                    if ($shape != 'Number') {
                         $iconShape = "OrderPdf_PdfExport::images/{$shape}.png";
                         $iconShapeHtml = "<img class='shape-icon' style='vertical-align: top'
                                                 src='{$this->assetRepo->getUrlWithParams($iconShape, [])}?t=png' width='80' /><br>{$shape}<br>{$orderPath['number_shape']}";
@@ -208,7 +235,7 @@ class Data extends AbstractHelper
                         <div class='order-info-image'><img class='order-info-image-icon' style='vertical-align: top' src='{$imageUrl}?t=jpg' /></div>
                         <div class='order-info-content'>
                             <div style='margin-top: 10px;' class='order-number-title'><span class='text-bold text-size-10'>Order number</span>: <span class='text-size-20'>{$orderData['order_no']}</span></div>"
-                                . $deliveryOrderHtml ."
+                        . $deliveryOrderHtml . "
                             <div style='margin-top: 10px;'><span class='text-bold text-size-10'>Billing Name</span>     : {$orderData['firstname']} {$orderData['lastname']}</div>
                             <div style='margin-top: 10px;'><span class='text-bold text-size-10'>Billing Tel</span>      : {$orderData['phone_no']}</div>
                             <div style='margin-top: 10px;'><span class='text-bold text-size-10'>Billing Email</span>    : {$orderData['email']}</div>
@@ -333,7 +360,7 @@ class Data extends AbstractHelper
                 <br />
             </div>";
             $mpdf = new \Mpdf\Mpdf([
-                'tempDir' =>  $this->directory->getPath('var') . '/log/tmp/mpdf',
+                'tempDir' => $this->directory->getPath('var') . '/log/tmp/mpdf',
                 'margin_left' => 10,
                 'margin_right' => 5,
                 'margin_top' => 25,
@@ -389,17 +416,17 @@ class Data extends AbstractHelper
         $amastyOrderEntity = $this->orderRepository->getByOrderId($orderobj->getId());
         $orderDetails = [
             'order_id' => $orderobj->getId(),
-            'order_no'=>$orderobj->getData('increment_id'),
-            'date_time'=>$orderobj->getData('created_at'),
-            'firstname'=>$orderobj->getData('customer_firstname'),
-            'lastname'=>$orderobj->getData('customer_lastname'),
-            'email'=>$orderobj->getData('customer_email'),
-            'phone_no'=>$orderobj->getBillingAddress()->getTelephone(),
+            'order_no' => $orderobj->getData('increment_id'),
+            'date_time' => $orderobj->getData('created_at'),
+            'firstname' => $orderobj->getData('customer_firstname'),
+            'lastname' => $orderobj->getData('customer_lastname'),
+            'email' => $orderobj->getData('customer_email'),
+            'phone_no' => $orderobj->getBillingAddress()->getTelephone(),
             'delivery_date' => $this->timezone->formatDate($amastyOrderEntity->getDate(), \IntlDateFormatter::FULL, false),
             'delivery_time_from' => $this->timeHandler->convertTime($amastyOrderEntity->getTimeFrom()),
             'delivery_time_to' => $this->timeHandler->convertTime($amastyOrderEntity->getTimeTo()),
             'delivery_time' => $this->timeHandler->convertTime($amastyOrderEntity->getTimeFrom()) . ' - ' . $this->timeHandler->convertTime($amastyOrderEntity->getTimeTo()),
-            'grand_total'=>$orderobj->getGrandTotal(),
+            'grand_total' => $orderobj->getGrandTotal(),
             'delivery_type' => ($orderobj->getShippingMethod() == 'amstorepickup_amstorepickup') ? self::PICKUP_SHIPPING_METHOD : self::DELIVERY_SHIPPING_METHOD
         ];
         return $orderDetails;
@@ -407,18 +434,19 @@ class Data extends AbstractHelper
 
     public function getOrderItemData($orderobj)
     {
-        $orderItems=[];
+        $orderItems = [];
         $orderItems = $orderobj->getAllVisibleItems();
         // echo count($orderItems);
         return $orderItems;
     }
 
-    public function isJson($string,$return_data = false) {
+    public function isJson($string, $return_data = false)
+    {
         $data = json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE) ? ($return_data ? $data : TRUE) : FALSE;
     }
 
-    public function getOptionIdByLabel($product, $attributeCode,$optionLabel)
+    public function getOptionIdByLabel($product, $attributeCode, $optionLabel)
     {
         $isAttributeExist = $product->getResource()->getAttribute($attributeCode);
         $optionId = '';
