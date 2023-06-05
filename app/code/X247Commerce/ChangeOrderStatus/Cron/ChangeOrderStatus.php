@@ -36,6 +36,7 @@ class ChangeOrderStatus
 		$collection = $this->orderCollectionFactory->create()
 			->addFieldToSelect('*')
 			->addFieldToFilter('status', ['in' => $statuses] );
+		$collection->getSelect()->limit(50);
 		$dayToChangeOrder = (int) $this->changeOrderStatusHelper->getNumberDayChangeStatus();
 		
 		foreach ($collection as $order) {
