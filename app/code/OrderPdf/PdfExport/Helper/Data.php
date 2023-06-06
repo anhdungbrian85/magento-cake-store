@@ -143,7 +143,7 @@ class Data extends AbstractHelper
                     $size_serving = $product->getAttributeText('size_servings') ? $product->getAttributeText('size_servings') : " ";
                     switch ($sponge) {
                         case 'Victoria Base':
-                            $base = 'VC';
+                            $base = 'VS';
                             break;
                         case 'Red Velvet Base':
                             $base = 'RV';
@@ -158,8 +158,7 @@ class Data extends AbstractHelper
                             $base = 'CA';
                             break;
                     }
-                    $size = str_replace('" serves ', "x", $size_serving); // 10 6
-                    $size = str_replace('Cupcakes serves ', "x ", $size); // 10 6
+                    $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color') : "";
                     $colorOption = $product->getResource()->getAttribute('color')->getSource()->getSpecificOptions($product->getData('color'));
                     $colourOptionId = 0;
