@@ -159,6 +159,7 @@ class Data extends AbstractHelper
                             break;
                     }
                     $size = str_replace('" serves ', "x", $size_serving); // 10 6
+                    $size = str_replace('Cupcakes serves ', "x ", $size); // 10 6
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color') : "";
                     $colorOption = $product->getResource()->getAttribute('color')->getSource()->getSpecificOptions($product->getData('color'));
                     $colourOptionId = 0;
