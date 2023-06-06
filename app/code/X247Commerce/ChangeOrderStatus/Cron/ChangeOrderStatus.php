@@ -11,6 +11,7 @@ class ChangeOrderStatus
 	protected $convertOrder;
 	protected $changeOrderStatusHelper;
 	protected $transaction;
+    protected $resourceConnection;
 
 	public function __construct(
 		\Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
@@ -18,7 +19,8 @@ class ChangeOrderStatus
 		\Magento\Sales\Model\Service\InvoiceService $invoiceService,
 		\Magento\Sales\Model\Convert\Order $convertOrder,
 		\X247Commerce\ChangeOrderStatus\Helper\Data $changeOrderStatusHelper,
-		\Magento\Framework\DB\Transaction $transaction
+		\Magento\Framework\DB\Transaction $transaction,
+        \Magento\Framework\App\ResourceConnection $resourceConnection
 	) {
 		$this->orderCollectionFactory = $orderCollectionFactory;
 		$this->amsOrderRepository = $amsOrderRepository;
@@ -26,6 +28,7 @@ class ChangeOrderStatus
 		$this->convertOrder = $convertOrder;
 		$this->changeOrderStatusHelper = $changeOrderStatusHelper;
 		$this->transaction = $transaction;
+        $this->resourceConnection = $resourceConnection;
 	}
 
 
@@ -103,11 +106,21 @@ class ChangeOrderStatus
                         $order->save();
                     }
                 }   catch (\Exception $e) {
-                    $logger->info('cannot complete order: '.$order->getId(). ' - '.$e->getMessage());
-                    $order->setData('auto_complete_flag', 1);
-                    $order->save();
+                    $logger->info('Cannot complete order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' - '.$e->getMessage());
+                    $connection = $this->resourceConnection->getConnection();
+                    $tableName = $this->resourceConnection->getTableName('sales_order');
+                    $data = ["auto_complete_flag" => 1];
+                    $where = ['entity_id = ?' => $order->getId()];
+                    $connection->update($tableName, $data, $where);
                 }
-			}
+			} else {
+                $logger->info('Cannot complete order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' because this order do not have delivery_date or pickup_date');
+                $connection = $this->resourceConnection->getConnection();
+                $tableName = $this->resourceConnection->getTableName('sales_order');
+                $data = ["auto_complete_flag" => 1];
+                $where = ['entity_id = ?' => $order->getId()];
+                $connection->update($tableName, $data, $where);
+            }
 		}
 	}
 }
