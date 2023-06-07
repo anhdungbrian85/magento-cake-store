@@ -41,35 +41,37 @@ class CancelOrder implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         try {
-            $order = $observer->getEvent()->getOrder();
-            $custEmail = $observer->getEvent()->getOrder()->getCustomer_email(); 
-            $autoReplyEmailSender = [
-                'name' => $this->_escaper->escapeHtml($this->configData->getAutoReplySenderName()),
-                'email' => $this->_escaper->escapeHtml($this->configData->getAutoReplySenderEmail()),
-            ];
-            $templateId = $this->dataHelper->getConfigValue('sales_email/order_cancel/template');
-            $this->inlineTranslation->suspend();
-            $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-            $sendTo = $custEmail;
-            $transport = $this->transportBuilder
-                ->setTemplateIdentifier($templateId)
-                ->setTemplateOptions(
-                    [
-                        'area' => 'frontend',
-                        'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
-                    ]
-                )
-                ->setTemplateVars([
-                    'order_data' => [
-                        'customer_name' => $observer->getEvent()->getOrder()->getCustomer_firstname(),
-                        'increment_id' => $order->getIncrement_id(),
-                    ]
-                ])
-                ->setFrom($autoReplyEmailSender)
-                ->addTo(array($sendTo))
-                ->getTransport();
-            $transport->sendMessage();
-            $this->inlineTranslation->resume();
+            if ($this->dataHelper->getConfigValue('sales_email/order_cancel/enabled') == '1') {
+                $order = $observer->getEvent()->getOrder();
+                $custEmail = $observer->getEvent()->getOrder()->getCustomer_email();
+                $autoReplyEmailSender = [
+                    'name' => $this->_escaper->escapeHtml($this->configData->getAutoReplySenderName()),
+                    'email' => $this->_escaper->escapeHtml($this->configData->getAutoReplySenderEmail()),
+                ];
+                $templateId = $this->dataHelper->getConfigValue('sales_email/order_cancel/template');
+                $this->inlineTranslation->suspend();
+                $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+                $sendTo = $custEmail;
+                $transport = $this->transportBuilder
+                    ->setTemplateIdentifier($templateId)
+                    ->setTemplateOptions(
+                        [
+                            'area' => 'frontend',
+                            'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+                        ]
+                    )
+                    ->setTemplateVars([
+                        'order_data' => [
+                            'customer_name' => $observer->getEvent()->getOrder()->getCustomer_firstname(),
+                            'increment_id' => $order->getIncrement_id(),
+                        ]
+                    ])
+                    ->setFrom($autoReplyEmailSender)
+                    ->addTo(array($sendTo))
+                    ->getTransport();
+                $transport->sendMessage();
+                $this->inlineTranslation->resume();
+            }
         } catch (\Exception $e) {
             $this->logLoggerInterface->debug($e->getMessage());
             exit;

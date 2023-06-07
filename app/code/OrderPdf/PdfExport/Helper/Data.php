@@ -109,8 +109,8 @@ class Data extends AbstractHelper
                 if ($isWeekend && $time == DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START) {
                     $deliveryTime = DeliveryConfigProvider::WEEKEND_DELIVERY_TIMESLOT;
                 }
-                
-                
+
+
                 $shippingAddress = $order->getShippingAddress();
                 $streetData = $shippingAddress->getStreet();
                 $shippingAddressHtml = $streetData[0] . ', ' . $shippingAddress->getPostcode();
@@ -158,7 +158,13 @@ class Data extends AbstractHelper
                             $base = 'CA';
                             break;
                     }
-                    $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
+                    if (strpos($size_serving, '" serves ')) {
+                        $size = str_replace('" serves ', "x", $size_serving); // 10 6
+                    } else if(strpos($size_serving, 'Cupcakes serves')) {
+                        $size = str_replace('Cupcakes serves ', " x ", $size_serving); // 10 6
+                    } else {
+                        $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
+                    }
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color') : "";
                     $colorOption = $product->getResource()->getAttribute('color')->getSource()->getSpecificOptions($product->getData('color'));
                     $colourOptionId = 0;
