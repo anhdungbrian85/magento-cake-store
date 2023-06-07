@@ -52,27 +52,34 @@ class SuggestClosestLocation extends \Magento\Framework\App\Action\Action
 					'status' => 400,
 					'message' => __('Hide block for delivery')
 				];
-			}   else {
-				$closestLocation = $this->locatorSourceResolver->getClosestLocationsHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
-				if (!empty($closestLocation['location_data'])) {
-					$result = [
-						'status' => 200,
-						'message' => __('Okay!'),
-						'closest_location' => $closestLocation['location_data']
-					];
-				} else {
-					if ($closestLocation['current_source_is_available']) {
-						$result = [
-							'status' => 400,
-							'message' => __('This product is in this stock')
-						];
-					} else {
-						$result = [
-							'status' => 404,
-							'message' => __('There are no sources in the cart that match the items in the cart!')
-						];
-					}
-				}
+			} else {
+                if (!$this->storeLocationContext->getStoreLocationId()) {
+                    $result = [
+                        'status' => 400,
+                        'message' => __('Hide block for delivery')
+                    ];
+                } else {
+                    $closestLocation = $this->locatorSourceResolver->getClosestLocationsHasProducts($this->storeLocationContext->getStoreLocationId(), $productSkus);
+                    if (!empty($closestLocation['location_data'])) {
+                        $result = [
+                            'status' => 200,
+                            'message' => __('Okay!'),
+                            'closest_location' => $closestLocation['location_data']
+                        ];
+                    } else {
+                        if ($closestLocation['current_source_is_available']) {
+                            $result = [
+                                'status' => 400,
+                                'message' => __('This product is in this stock')
+                            ];
+                        } else {
+                            $result = [
+                                'status' => 404,
+                                'message' => __('There are no sources in the cart that match the items in the cart!')
+                            ];
+                        }
+                    }
+                }
 			}
 
         } catch (\Exception $e) {
