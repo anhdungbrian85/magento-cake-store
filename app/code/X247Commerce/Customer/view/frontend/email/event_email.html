@@ -7,22 +7,13 @@
 } @-->
 
 {{template config_path="design/email/header_template"}}
+<div style="padding-bottom: 50px;">{{trans "Dear %_customer_name" _customer_name=$customer_name}}</div>
 <div>
-	<span>	{{trans "You have a reminder today (%_date)" _date=$event_date }}
-			{{trans " with Occasion is %_occasion" _occasion=$occasion}}
-			{{trans " for %_their_name ." _their_name=$their_name}}
-	</span>
-	<div>
-		<span>{{trans "Date : "}}</span>
-		<span>{{var event_date}}</span>
-	</div>
-	<div>
-		<span>{{trans "Occasion : "}}</span>
-		<span>{{var occasion}}</span>
-	</div>
-	<div>
-		<span>{{trans "Their Name : "}}</span>
-		<span>{{var their_name}}</span>
-	</div>
+	{{trans 
+	"We wanted to remind you of a special occasion that you have saved with us - %_their_name has an upcoming %_occasion on %_event_date! We know that celebrating your loved ones' milestones is important to you, and we would love to help make this %_occasion extra special with our mouth-watering cakes. "
+	_their_name=$their_name
+	_occasion=$occasion
+	_event_date=$event_date
+	}}
 </div>
 {{template config_path="design/email/footer_template"}}
