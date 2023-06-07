@@ -47,7 +47,7 @@ class SentMailAlertEvent
                 foreach ($events as $event) {
                     if ($this->timezone->date(new \DateTime($event->getDate()))->format('Y-m-d') == $runCronDay) {
                         $this->sendMail($event);
-                    }
+                    }   
                 }
             } else {
                 $event = $this->getEvent($eventId, $customerId);
@@ -87,7 +87,7 @@ class SentMailAlertEvent
             $storeId = $this->_storeManager->getStore()->getId();
             $customerFactory = $this->customerFactory->create()->load(empty($event->getData()[0]) ? $event->getCustomerId() : $event->getData()[0]['customer_id']);
             $emailTemplateIdentifier = $this->scopeConfig->getValue('x247commerce_customer/event/email_template', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-            $eventDate = $this->timezone->date(new \DateTime(empty($event->getData()[0]) ? $event->getDate() : $event->getData()[0]['date']))->format('Y-m-d');
+            $eventDate = $this->timezone->date(new \DateTime(empty($event->getData()[0]) ? $event->getDate() : $event->getData()[0]['date']))->format('d m');
             $sentToEmail = $customerFactory->getEmail();
             $sender = [
                 'name' => 'Alert Reminder Notification Email',
