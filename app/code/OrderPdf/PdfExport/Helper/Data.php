@@ -158,13 +158,12 @@ class Data extends AbstractHelper
                             $base = 'CA';
                             break;
                     }
-                    if (strpos($size_serving, '" serves ')) {
-                        $size = str_replace('" serves ', "x", $size_serving); // 10 6
-                    } else if(strpos($size_serving, 'Cupcakes serves')) {
+                    if(strpos($size_serving, 'Cupcakes serves')) {
                         $size = str_replace('Cupcakes serves ', " x ", $size_serving); // 10 6
                     } else {
-                        $size = str_replace('"'," ",substr($size_serving, 0, 3)); // 10 6
+                        $size = str_replace('"'," ",substr($size_serving, 0, 3));
                     }
+
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color') : "";
                     $colorOption = $product->getResource()->getAttribute('color')->getSource()->getSpecificOptions($product->getData('color'));
                     $colourOptionId = 0;
@@ -368,6 +367,7 @@ class Data extends AbstractHelper
             $mpdf = new \Mpdf\Mpdf([
                 'tempDir' => $this->directory->getPath('var') . '/log/tmp/mpdf',
                 'margin_left' => 10,
+                'margin_right' => 5,
                 'margin_right' => 5,
                 'margin_top' => 25,
                 'margin_bottom' => 25,
