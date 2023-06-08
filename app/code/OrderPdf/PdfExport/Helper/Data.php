@@ -157,6 +157,11 @@ class Data extends AbstractHelper
                         case 'Caramel Base':
                             $base = 'CA';
                             break;
+                        case 'Mix':
+                            $base = 'M';
+                            break;
+                        default:
+                            $base = '';
                     }
                     if(strpos($size_serving, 'Cupcakes serves')) {
                         $size = str_replace('Cupcakes serves ', " x ", $size_serving); // 10 6

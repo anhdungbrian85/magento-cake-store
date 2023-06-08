@@ -4,7 +4,6 @@ namespace X247Commerce\ChangeOrderStatus\Cron;
 
 class ChangeOrderStatus
 {
-
 	protected $orderCollectionFactory;
 	protected $amsOrderRepository;
 	protected $invoiceService;
@@ -35,6 +34,11 @@ class ChangeOrderStatus
 	public function execute()
 	{
 		$statuses = array( 'pending', 'processing' );
+        $dayToChangeOrder = (int) $this->changeOrderStatusHelper->getNumberDayChangeStatus();
+        $thisdate = date_create(date('Y-m-d'));
+        $compareDay = date_sub($thisdate, date_interval_create_from_date_string("$dayToChangeOrder days"));
+        $compareDay = date_format($compareDay, 'Y-m-d');;
+        
 		$collection = $this->orderCollectionFactory->create()
 			->addFieldToSelect('*')
 			->addFieldToFilter('status', ['in' => $statuses] )
@@ -51,17 +55,15 @@ class ChangeOrderStatus
             'aso.order_id = main_table.entity_id',
             ['pickup_date' => 'date']
         );
+        $collection->getSelect()->where('aam.date <= ? OR aso.date <= ?', $compareDay);
+        
         $collection->getSelect()->limit(50);
-
-		$dayToChangeOrder = (int) $this->changeOrderStatusHelper->getNumberDayChangeStatus();
-
 		foreach ($collection as $order) {
-
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/autocomplete-order.log');
             $logger = new \Zend_Log();
             $logger->addWriter($writer);
 
-			$date = $order->getData('delivery_date');
+			$date = (strpos($order->getIncrementId(), 'DEL') !== false) ? $order->getData('delivery_date') : '';
             if (empty($date)) {
                 $date = $order->getData('pickup_date');
             }
@@ -101,7 +103,6 @@ class ChangeOrderStatus
                             $order->setStatus('complete');
                             $order->setState('complete');
                         }
-
                         $order->setData('auto_complete_flag', 1);
                         $order->save();
                     }
