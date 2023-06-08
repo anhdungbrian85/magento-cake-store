@@ -10,7 +10,7 @@
 <script>
 	requirejs(['jquery'], function ($) {
 		$('.trustpilot-header .trustpilot-widget').on('click', function(){
-			window.open('<?=$block->getUrl("reviews") ?>', '_blank');
+			window.location = '<?=$block->getUrl("reviews") ?>';
 		});
 	});
 </script>
