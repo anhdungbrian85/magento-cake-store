@@ -7,9 +7,9 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="content">
+        <!-- <referenceContainer name="content">
             <block name="best-seller-home" class="X247Commerce\Theme\Block\Html\BestSellerHome" template="X247Commerce_Theme::html/best-sellers-home.phtml" after="-"/>
-        </referenceContainer>
+        </referenceContainer> -->
         <referenceContainer name="top.container">
             <container name="custom.menu.mobile" label="Categories" htmlTag="div" htmlClass="custom-topmenu-mobile" after="-">
                 <block class="X247Commerce\Theme\Block\Html\Topmenu" name="catalog.topnav.mobile" template="X247Commerce_Theme::html/topmenu.phtml" before="-"/>
