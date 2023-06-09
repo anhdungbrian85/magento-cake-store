@@ -9,7 +9,7 @@
     <body>
         <referenceContainer name="content">
 
-            <block class="Magento\Cms\Block\Block" name="trustpilot-carousel" after="best-seller-home"> 
+            <block class="Magento\Cms\Block\Block" name="trustpilot-carousel" after="-"> 
                 <arguments> 
                     <argument name="block_id" xsi:type="string">trustpilot-carousel</argument> 
                 </arguments> 
