@@ -4,4 +4,19 @@
             background: #992E80;
         }
 	}
+
+}
+
+.media-width(@extremum, @break) when (@extremum='max') and (@break = @screen__m) {
+    .amcheckout-main-container.-modern {
+        position: relative;
+        .payment_method.amcheckout-block:last-child {
+            position: absolute;
+            top: 100%;
+            margin: 0;
+            width: 100%;
+        }
+
+    }
+
 }
