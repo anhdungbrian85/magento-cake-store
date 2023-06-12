@@ -102,14 +102,15 @@ class Data extends AbstractHelper
             if ($orderData['delivery_type'] == self::DELIVERY_SHIPPING_METHOD) {
                 $time =  $delivery->getData('time');
                 $date = $delivery->getData('date');
-                $dateInWeek = (new \DateTime($date))->format('w');
-                $isWeekend = ($dateInWeek == 0 || $dateInWeek == 6);
+
                 $deliveryTime = DeliveryConfigProvider::WEEKDAY_DELIVERY_TIMESLOT;
-
-                if ($isWeekend && $time == DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START) {
-                    $deliveryTime = DeliveryConfigProvider::WEEKEND_DELIVERY_TIMESLOT;
+                if ($date && $time) {
+                    $dateInWeek = (new \DateTime($date))->format('w');
+                    $isWeekend = ($dateInWeek == 0 || $dateInWeek == 6);
+                    if ($isWeekend && $time == DeliveryConfigProvider::WEEKEND_DELIVERY_TIME_START) {
+                        $deliveryTime = DeliveryConfigProvider::WEEKEND_DELIVERY_TIMESLOT;
+                    }
                 }
-
 
                 $shippingAddress = $order->getShippingAddress();
                 $streetData = $shippingAddress->getStreet();
