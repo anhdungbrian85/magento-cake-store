@@ -14,5 +14,13 @@
         "column": {
             "interval": true
         }
+    },
+    "amasty_deliverydate_time_intervals_set_relation": {
+        "column": {
+            "id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
     }
 }

@@ -7,5 +7,15 @@
         <column xsi:type="int" name="store_location_id" nullable="true" comment="Store Location ID"/>
         <column xsi:type="smallint" name="delivery_type" nullable="true" comment="Delivery type"/>
     </table>
-    
+
+    <!-- Swat report fix -->
+    <table name="amasty_deliverydate_time_intervals_set_relation">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="primary id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+
 </schema>

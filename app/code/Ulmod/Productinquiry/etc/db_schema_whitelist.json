@@ -39,13 +39,15 @@
     "ulmod_productinquiry_store": {
         "column": {
             "inquiry_id": true,
-            "store_id": true
+            "store_id": true,
+            "id": true
         },
         "constraint": {
             "ULMOD_PRODUCTINQUIRY_STORE_ULMOD_PRODUCTINQUIRY_DATA_INQUIRY_ID": true,
             "ULMOD_PRODUCTINQUIRY_STORE_STORE_STORE_ID": true,
             "FK_C855AE55097A1EBA9BED968EA31E2CCE": true,
-            "ULMOD_PRODUCTINQUIRY_STORE_STORE_ID_STORE_STORE_ID": true
+            "ULMOD_PRODUCTINQUIRY_STORE_STORE_ID_STORE_STORE_ID": true,
+            "PRIMARY": true
         },
         "index": {
             "ULMOD_PRODUCTINQUIRY_STORE_STORE_ID": true
