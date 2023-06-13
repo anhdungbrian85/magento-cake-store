@@ -526,5 +526,16 @@ return [
         'X247Commerce_Sales' => 1,
         'X247Commerce_Theme' => 1,
         'X247Commerce_HolidayOpeningTime' => 1
+    ],
+    'system' => [
+        'websites' => [
+            'base' => [
+                'advanced' => [
+                    'modules_disable_output' => [
+                        'Magento_Banner' => '1'
+                    ]
+                ]
+            ]
+        ]
     ]
 ];
