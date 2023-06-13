@@ -164,8 +164,9 @@ class Data extends AbstractHelper
                         default:
                             $base = '';
                     }
-                    if(strpos($size_serving, 'Box of')) {
-                        $size = str_replace('"'," ",substr($size_serving, 0, 9)); // 10 6
+       
+                    if(strpos($size_serving, 'Box of') >= 0) {
+                        $size = substr($size_serving, 0, 9); // 10 6
                     } else {
                         $size = str_replace('"'," ",substr($size_serving, 0, 3));
                     }
