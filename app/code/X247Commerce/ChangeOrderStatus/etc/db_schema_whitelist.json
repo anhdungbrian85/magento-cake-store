@@ -1,0 +1,10 @@
+{
+    "sales_order": {
+        "column": {
+            "auto_complete_flag": true
+        },
+        "index": {
+            "SALES_ORDER_AUTO_COMPLETE_FLAG": true
+        }
+    }
+}

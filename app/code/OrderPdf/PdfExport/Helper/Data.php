@@ -43,6 +43,7 @@ class Data extends AbstractHelper
 
     protected $addressConfig;
 
+    protected $orderGiftRepo;
     public function __construct(
         \Magento\Customer\Model\Address\Config $addressConfig,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
@@ -57,7 +58,8 @@ class Data extends AbstractHelper
         TimezoneInterface $timezone,
         OrderRepositoryInterface $orderRepository,
         \Magento\Swatches\Helper\Data $swatchHelper,
-        Context $context
+        Context $context,
+        \Magento\GiftMessage\Api\OrderRepositoryInterface $orderGiftRepo
     ) {
         parent::__construct($context);
         $this->addressConfig = $addressConfig;
@@ -73,6 +75,7 @@ class Data extends AbstractHelper
         $this->directory = $directory;
         $this->fileFactory = $fileFactory;
         $this->swatchHelper = $swatchHelper;
+        $this->orderGiftRepo = $orderGiftRepo;
     }
 
     public function createOrderPdf($order, $_fileFactory)
@@ -99,8 +102,11 @@ class Data extends AbstractHelper
             $logger->info('Before check empty items data!');
             $delivery = $this->deliveryDateProvider->findByOrderId($orderData['order_id']);
             $deliveryOrderHtml = '';
+            $deliveryFee = '';
+            $deliveryClass = '';
             if ($orderData['delivery_type'] == self::DELIVERY_SHIPPING_METHOD) {
-                $time =  $delivery->getData('time');
+
+                $time = $delivery->getData('time');
                 $date = $delivery->getData('date');
 
                 $deliveryTime = DeliveryConfigProvider::WEEKDAY_DELIVERY_TIMESLOT;
@@ -120,6 +126,9 @@ class Data extends AbstractHelper
                         <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Time</span>: <span class='text-size-10 text-size-20'>{$deliveryTime}</span></div>
                         <div class='order-time-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Delivery Address</span>: <span class='text-size-10'>{$shippingAddressHtml}</span></div>
                         ";
+                $charge = floatval($order->getShippingAmount());
+                $deliveryFee = "Delivery Charge: {$currencySymbol}{$charge} <br/>";
+                $deliveryClass = "delivery-info";
             } else {
                 $deliveryOrderHtml = "
                     <div class='order-date-title' style='margin-top: 10px'><span class='text-size-10 text-bold'>Date</span>: <span class='text-size-20'>{$orderData['delivery_date']}</span></div>
@@ -133,11 +142,13 @@ class Data extends AbstractHelper
                     $product = $this->productRepository->get($item->getSku());
                     $parentByChild = $this->catalogProductTypeConfigurable->getParentIdsByChild($product->getId());
                     $sku = $item->getSku();
-                    $imageUrl = $this->catalogImageHelper->init($product, 'product_thumbnail_image')->getUrl();
+                    $full_sku = $item->getSku();
+                    $qty = intval($item->getQty_ordered());
+                    $imageUrl = $this->catalogImageHelper->init($product, 'product_thumbnail_image')->keepAspectRatio(true)->resize('400', '400')->getUrl();
                     if (isset($parentByChild[0])) {
                         $parentProduct = $this->productRepository->getById($parentByChild[0]);
                         $sku = $parentProduct->getSku();
-                        $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->getUrl();
+                        $imageUrl = $this->catalogImageHelper->init($parentProduct, 'product_thumbnail_image')->keepAspectRatio(true)->resize('400', '400')->getUrl();
                     }
                     $shape = $item->getProduct()->getAttributeText('shape') ? $item->getProduct()->getAttributeText('shape') : " ";
                     $sponge = $product->getAttributeText('sponge') ? $product->getAttributeText('sponge') : " ";
@@ -168,7 +179,7 @@ class Data extends AbstractHelper
                     if(strpos($size_serving, 'Box of') >= 0) {
                         $size = substr($size_serving, 0, 9); // 10 6
                     } else {
-                        $size = str_replace('"'," ",substr($size_serving, 0, 3));
+                        $size = str_replace('"', " ", substr($size_serving, 0, 3));
                     }
 
                     $colour = $product->getAttributeText('color') ? $product->getAttributeText('color') : "";
@@ -256,6 +267,7 @@ class Data extends AbstractHelper
                     <table class='item-table'>
                         <tr>
                             <td class='grey-border'>Ref</td>
+                            <td class='grey-border'>Qty</td>
                             <td class='grey-border'>Pic</td>
                             <td class='grey-border'>Base</td>
                             <td class='grey-border'>Shape</td>
@@ -264,7 +276,8 @@ class Data extends AbstractHelper
                             <td class='grey-border'>Colour</td>
                         </tr>
                         <tr>
-                            <td class='grey-border'>{$sku}</td>" . ((!empty($orderPath['photo'])) ? '<td class="grey-border">[Custom]</td>' : '<td class="grey-border">[No Custom]</td>') . "
+                            <td class='grey-border'>{$sku}</td>
+                            <td class='grey-border'>{$qty}</td>" . ((!empty($orderPath['photo'])) ? '<td class="grey-border">[Custom]</td>' : '<td class="grey-border">[No Custom]</td>') . "
                             <td class='grey-border'>{$base}</td>
                             <td class='grey-border'>
                                 {$iconShapeHtml}
@@ -328,10 +341,25 @@ class Data extends AbstractHelper
                     <div class='barcode-content'><barcode type='EAN128A' code='{$product->getBarcode()}' text='1' class='' /></div>
                 </div>";
                     $orderItemsDetailHtml .= $itemBarCodeHtml;
+                    $giftMessage = '';
+                    if ($order->getGiftMessageId() != 0) {
+                        if ($giftWrap = $this->getGiftMessages($order->getId())) {
+                            $giftMessage = "Gift Message: " . $giftWrap->getMessage() . "<br>";
+                        }
+                    }
+                    $additionalInfo = "<br>
+                    <div class='order-total-item {$deliveryClass}'>
+                        Additional Information<br/>
+                        <div style='margin-left:20px;'>
+                            SKU: {$full_sku} <br/>
+                            {$deliveryFee}
+                            {$giftMessage}
+                        </div>
+                    </div>";
+                    $orderItemsDetailHtml .= $additionalInfo;
                     if (count($itemsData) > $tmp) {
                         $orderItemsDetailHtml .= '<pagebreak />';
                     }
-
                 }
             }
             $colorHex = $colour ? $this->getColorCss($colour) : '';
@@ -365,6 +393,7 @@ class Data extends AbstractHelper
                 .shape-icon {width: 35px;}
                 .customer-photo {width: 100px;}
                 .barcode-content {margin-top: 2px;}
+                .delivery-info{}
                 {$cssColor}
             </style>
             <div class='content-container'>
@@ -375,11 +404,10 @@ class Data extends AbstractHelper
                 'tempDir' => $this->directory->getPath('var') . '/log/tmp/mpdf',
                 'margin_left' => 10,
                 'margin_right' => 5,
-                'margin_right' => 5,
-                'margin_top' => 25,
-                'margin_bottom' => 25,
+                'margin_top' => 12,
+                'margin_bottom' => 10,
                 'margin_header' => 10,
-                'margin_footer' => 10,
+                'margin_footer' => 8,
                 'showBarcodeNumbers' => FALSE,
                 'default_font' => 'dejavusanscondensed',
                 'format' => 'A5'
@@ -406,7 +434,11 @@ class Data extends AbstractHelper
             return $e;
         }
     }
-
+    public function getGiftMessages($order_id)
+    {
+        $giftMessage = $this->orderGiftRepo->get($order_id);
+        return $giftMessage;
+    }
     protected function getItemOptions($item)
     {
         $options = $item->getProductOptions() ? $item->getProductOptions() : " ";
