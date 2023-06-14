@@ -2,43 +2,53 @@
 
 namespace X247Commerce\ChangeOrderStatus\Cron;
 
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Transaction;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Sales\Model\Convert\Order;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\Service\InvoiceService;
+use X247Commerce\ChangeOrderStatus\Helper\Data;
+
 class ChangeOrderStatus
 {
-	protected $orderCollectionFactory;
-	protected $amsOrderRepository;
-	protected $invoiceService;
-	protected $convertOrder;
-	protected $changeOrderStatusHelper;
-	protected $transaction;
-    protected $resourceConnection;
+	protected CollectionFactory $orderCollectionFactory;
+	protected InvoiceService $invoiceService;
+	protected Order $convertOrder;
+	protected Data $changeOrderStatusHelper;
+	protected Transaction $transaction;
+    protected ResourceConnection $resourceConnection;
+    protected SessionManagerInterface $coreSession;
 
 	public function __construct(
-		\Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-		\Amasty\StorePickupWithLocator\Model\OrderRepository $amsOrderRepository,
-		\Magento\Sales\Model\Service\InvoiceService $invoiceService,
-		\Magento\Sales\Model\Convert\Order $convertOrder,
-		\X247Commerce\ChangeOrderStatus\Helper\Data $changeOrderStatusHelper,
-		\Magento\Framework\DB\Transaction $transaction,
-        \Magento\Framework\App\ResourceConnection $resourceConnection
-	) {
+		CollectionFactory $orderCollectionFactory,
+		InvoiceService $invoiceService,
+		Order $convertOrder,
+		Data $changeOrderStatusHelper,
+		Transaction $transaction,
+        ResourceConnection $resourceConnection,
+        SessionManagerInterface $coreSession
+
+    ) {
 		$this->orderCollectionFactory = $orderCollectionFactory;
-		$this->amsOrderRepository = $amsOrderRepository;
 		$this->invoiceService = $invoiceService;
 		$this->convertOrder = $convertOrder;
 		$this->changeOrderStatusHelper = $changeOrderStatusHelper;
 		$this->transaction = $transaction;
         $this->resourceConnection = $resourceConnection;
+        $this->coreSession = $coreSession;
 	}
 
 
 	public function execute()
 	{
+
 		$statuses = array( 'pending', 'processing' );
         $dayToChangeOrder = (int) $this->changeOrderStatusHelper->getNumberDayChangeStatus();
         $thisdate = date_create(date('Y-m-d'));
         $compareDay = date_sub($thisdate, date_interval_create_from_date_string("$dayToChangeOrder days"));
         $compareDay = date_format($compareDay, 'Y-m-d');;
-        
+
 		$collection = $this->orderCollectionFactory->create()
 			->addFieldToSelect('*')
 			->addFieldToFilter('status', ['in' => $statuses] )
@@ -56,8 +66,13 @@ class ChangeOrderStatus
             ['pickup_date' => 'date']
         );
         $collection->getSelect()->where('aam.date <= ? OR aso.date <= ?', $compareDay);
-        
-        $collection->getSelect()->limit(50);
+        $limit = $this->coreSession->getLimitCompleteOrder();
+        if (empty($limit)) {
+            $limit = 50;
+        }
+        $this->coreSession->unsLimitCompleteOrder();
+        $collection->getSelect()->limit($limit);
+
 		foreach ($collection as $order) {
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/autocomplete-order.log');
             $logger = new \Zend_Log();
@@ -97,31 +112,31 @@ class ChangeOrderStatus
                             }
                             $orderShipment->register();
                             $orderShipment->getOrder()->setIsInProcess(true);
-
                             $orderShipment->getOrder()->save();
+                            $logger->info('Created shipment id: '.$orderShipment->getId());
 
-                            $order->setStatus('complete');
-                            $order->setState('complete');
                         }
-                        $order->setData('auto_complete_flag', 1);
-                        $order->save();
                     }
+                    $logger->info('Complete order with entity_id: '.$order->getId());
                 }   catch (\Exception $e) {
                     $logger->info('Cannot complete order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' - '.$e->getMessage());
-                    $connection = $this->resourceConnection->getConnection();
-                    $tableName = $this->resourceConnection->getTableName('sales_order');
-                    $data = ["auto_complete_flag" => 1];
-                    $where = ['entity_id = ?' => $order->getId()];
-                    $connection->update($tableName, $data, $where);
                 }
 			} else {
                 $logger->info('Cannot complete order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' because this order do not have delivery_date or pickup_date');
-                $connection = $this->resourceConnection->getConnection();
-                $tableName = $this->resourceConnection->getTableName('sales_order');
-                $data = ["auto_complete_flag" => 1];
-                $where = ['entity_id = ?' => $order->getId()];
-                $connection->update($tableName, $data, $where);
             }
+            $this->saveAutoCompleteFlag($order);
 		}
 	}
+
+    /**
+     * @return void
+     */
+    private function saveAutoCompleteFlag($order): void
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $tableName = $this->resourceConnection->getTableName('sales_order');
+        $data = ["auto_complete_flag" => 1];
+        $where = ['entity_id = ?' => $order->getId()];
+        $connection->update($tableName, $data, $where);
+    }
 }
