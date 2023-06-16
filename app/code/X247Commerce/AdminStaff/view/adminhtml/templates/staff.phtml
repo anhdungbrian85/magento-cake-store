@@ -18,6 +18,8 @@ require([ 'jquery', 'jquery/ui'], function($){
         var userrole = '<?php echo $role; ?>';
         if(userrole == 'Staff') {
             $('body').addClass('staff-user');
+            $('#lastSearchGrid_table').parent().parent().css( "display", "none" );
+            $('#topSearchGrid_table').parent().parent().css( "display", "none" );
         }
     });
 });
