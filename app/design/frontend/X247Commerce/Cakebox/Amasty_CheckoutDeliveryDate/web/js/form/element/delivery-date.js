@@ -129,11 +129,16 @@ define([
 
             //@todo: Cutoff time by store
 
-            if (isToday(d)) {
-                var timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
+            var timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
                 cutOffTime = new Date(today.getFullYear(), today.getUTCMonth(), today.getUTCDate(), storeCutoffTime),
                 cutOffTimeToInt = Date.parse(cutOffTime)/1000 - (today.getTimezoneOffset() * 60);
+
+            if (isToday(d)) {
                 dayEnabled = timeToDeliver < cutOffTimeToInt;
+            }
+
+            if (timeToDeliver > Date.parse(d)/1000) {
+                dayEnabled = false;
             }
 
             if ($.inArray(d.getDay(), this.amcheckout_days) == -1) {
