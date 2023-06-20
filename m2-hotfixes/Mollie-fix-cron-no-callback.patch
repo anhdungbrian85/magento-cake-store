@@ -1,0 +1,13 @@
+diff --git a/vendor/mollie/magento2-subscriptions/etc/crontab.xml b/vendor/mollie/magento2-subscriptions/etc/crontab.xml
+index 2d810b5..7cd4bf3 100644
+--- a/vendor/mollie/magento2-subscriptions/etc/crontab.xml
++++ b/vendor/mollie/magento2-subscriptions/etc/crontab.xml
+@@ -10,7 +10,7 @@
+             <schedule>*/4 1 * * *</schedule>
+         </job>
+         <job instance="Mollie\Subscriptions\Cron\SendPrePaymentReminderEmailCron" method="execute" name="mollie_subscriptions_send_prepayment_reminders">
+-            <config_path>crontab/default/jobs/mollie_subscriptions_cron/schedule/cron_expr</config_path>
++            <config_path>crontab/default/jobs/mollie_subscriptions_send_prepayment_reminders/schedule/cron_expr</config_path>
+         </job>
+     </group>
+ </config>

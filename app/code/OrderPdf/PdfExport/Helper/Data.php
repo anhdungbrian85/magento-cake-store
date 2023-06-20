@@ -348,7 +348,7 @@ class Data extends AbstractHelper
                         }
                     }
                     $additionalInfo = "<br>
-                    <div class='order-total-item {$deliveryClass}'>
+                    <div class='order-total-item {$deliveryClass}' style='width:100%'>
                         Additional Information<br/>
                         <div style='margin-left:20px;'>
                             SKU: {$full_sku} <br/>

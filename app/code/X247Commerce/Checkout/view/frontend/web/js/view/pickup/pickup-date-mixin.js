@@ -152,15 +152,18 @@ define([
                 tomorrow.setDate(today.getDate() + 1);
             var isTomorrow = tomorrow.toDateString() === date.toDateString();
 
+            var currentStore = pickupDataResolver.getCurrentStoreData() || {},
+                currentStoreTime = currentStore.current_timezone_time,
+                minPickupTime = currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600,
+                asdaCutOffTimeTmr = new Date(storeDateTime.getFullYear(), storeDateTime.getUTCMonth(), storeDateTime.getUTCDate(), 16),
+                cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60);
+
             if (isTomorrow && locationContext.isAsda()) {
-
-                var currentStore = pickupDataResolver.getCurrentStoreData() || {},
-                    currentStoreTime = currentStore.current_timezone_time,
-                    minPickupTime = currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600,
-                    asdaCutOffTimeTmr = new Date(storeDateTime.getFullYear(), storeDateTime.getUTCMonth(), storeDateTime.getUTCDate(), 16),
-                    cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60);
-
                 return [minPickupTime < cutOffTimeToInt, ''];
+            }
+
+            if (Date.parse(date)/1000 < minPickupTime) {
+                return [false, ''];
             }
 
             return [true, ''];
