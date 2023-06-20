@@ -3,5 +3,8 @@
     <type name="Magento\Reports\Model\ResourceModel\Order\Collection">
         <plugin name="calculate_sales_dashboard" type="X247Commerce\Sales\Plugin\AfterCalculateSalesDashboard" sortOrder="10" />
     </type>
+    <type name="Magento\Sales\Model\ResourceModel\Order\Grid\Collection">
+        <plugin name="before_load_collection" type="X247Commerce\Sales\Plugin\Model\ResourceModel\BeforeLoadCollection" />
+    </type>
     <preference for="Magento\Backend\Block\Dashboard\Totals" type="X247Commerce\Sales\Plugin\Block\Dashboard\Totals"/>
 </config>
