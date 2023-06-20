@@ -46,16 +46,18 @@ class UpdateSoureProductAfterSave implements ObserverInterface
         if (!empty($sourceList)) {
             if($product->getTypeId() === "configurable") {
                 $skus = [];
+                $ids = [];
                 $childProducts = $product->getTypeInstance()->getUsedProducts($product);
                 foreach ($childProducts as $child){
                     $skus[] = $child->getSku();
+                    $ids[] = $child->getId();
                 }
+                $this->saveStockItemData($ids);
                 $this->saveSourceItem($skus, $sourceList);
             } else {
                 $this->saveSourceItem([$product->getSku()], $sourceList);
             }
         }
-
         return;
     }
 
@@ -70,10 +72,31 @@ class UpdateSoureProductAfterSave implements ObserverInterface
                     $sourceList[] = $source->getData('source_code');
                 }
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
         }
         return $sourceList;
+    }
+
+    public function saveStockItemData(array $ids)
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $tableName = $this->resourceConnection->getTableName('cataloginventory_stock_item');
+        foreach ($ids as $id) {
+            try {
+                $connection->update(
+                    $tableName,
+                    [
+                        'is_in_stock' => 1,
+                    ],
+                    [
+                        'product_id = ?' => $id
+                    ]
+                );
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
     }
 
     public function saveSourceItem(array $skus, array $sourceCodes)
