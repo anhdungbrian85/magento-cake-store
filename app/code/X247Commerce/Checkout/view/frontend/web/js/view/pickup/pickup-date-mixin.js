@@ -162,7 +162,16 @@ define([
                 return [minPickupTime < cutOffTimeToInt, ''];
             }
 
-            if (Date.parse(date)/1000 < minPickupTime) {
+            var daySchedule = scheduleArray[currentDayName],
+                lastTimeSlot = parseInt(daySchedule['to']['hours']) - 1,
+                lastTimeSlotMoment = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate(),
+                    lastTimeSlot
+                );
+            
+            if (Date.parse(lastTimeSlotMoment)/1000 < minPickupTime) {
                 return [false, ''];
             }
 

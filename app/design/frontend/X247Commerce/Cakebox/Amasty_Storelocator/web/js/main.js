@@ -457,7 +457,7 @@ define([
 
         gotoPoint: function (myPoint) {
             var self = this,
-                mapId = self.mapIdentifier.attr('id') || self.options.mapId;
+                mapId = self.mapContainer.find('.amlocator-map').attr('id') || self.options.mapId;
 
             self.closeAllInfoWindows(mapId);
 
