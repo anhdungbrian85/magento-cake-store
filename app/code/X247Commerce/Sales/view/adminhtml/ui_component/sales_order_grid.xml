@@ -9,6 +9,11 @@
         </dataProvider>
     </dataSource>
     <columns name="sales_order_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="component" xsi:type="string">X247Commerce_Sales/js/grid/listing</item>
+            </item>
+        </argument>
         <column name="colection_delivery_date" class="X247Commerce\Sales\Ui\Component\Listing\Column\DeliveryDate">
             <settings>
                 <filter>textRange</filter>
@@ -24,3 +29,4 @@
     </columns>
 
 </listing>
+
