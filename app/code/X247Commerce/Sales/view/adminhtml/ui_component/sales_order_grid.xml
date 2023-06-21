@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="sales_order_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="component" xsi:type="string">X247Commerce_Sales/js/grid/listing</item>
+            </item>
+        </argument>
+    </columns>
     <dataSource name="sales_order_grid_data_source" component="Magento_Ui/js/grid/provider">
         <dataProvider class="X247Commerce\Sales\Ui\DataProvider\Order\OrderDataProvider" name="sales_order_grid_data_source">
             <settings>
