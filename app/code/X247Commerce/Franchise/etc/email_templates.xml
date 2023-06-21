@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="franchise_admin_email_template" label="franchise admin email" file="franchise_admin_email.html" type="html" module="X247Commerce_Franchise" area="frontend"/>
+    <template id="franchise_client_email_template" label="franchise user email" file="franchise_client_email.html" type="html" module="X247Commerce_Franchise" area="frontend"/>
+</config>
