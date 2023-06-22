@@ -14,13 +14,12 @@ $deliveryDayTime = $block->getDeliveryDateTime($order);
         <?php else : ?>
             <div>
                 <?= __('Thank you for shopping with us. Your order number is: <span>%1</span>.', $block->escapeHtml($block->getOrderId())) ?>
-
-                <?php if ($storeLocation): ?>
-                    <br/>
-                        <?= __('Your order will be fulfilled by' ) ?>
-                        <strong><a title="<?= $storeLocation->getName() ?>" href="<?= $block->getBaseUrl() . 'storelocator/'. $storeLocation->getUrlKey() ?>" ><?= $storeLocation->getName() ?></a></strong> and you can contact them on <strong><a href="tel:<?= $storeLocation->getPhone() ?>"><?= $storeLocation->getPhone() ?></a></strong>.
-
-                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        <?php if ($storeLocation): ?>
+            <div>
+                <?= __('Your order will be fulfilled by' ) ?>
+                <strong><a title="<?= $storeLocation->getName() ?>" href="<?= $block->getBaseUrl() . 'storelocator/'. $storeLocation->getUrlKey() ?>" ><?= $storeLocation->getName() ?></a></strong> and you can contact them on <strong><a href="tel:<?= $storeLocation->getPhone() ?>"><?= $storeLocation->getPhone() ?></a></strong>.
             </div>
         <?php endif; ?>
         <div><?= /* @escapeNotVerified */ __('You will receive an email confirmation and a text message reminder.') ?></div>
