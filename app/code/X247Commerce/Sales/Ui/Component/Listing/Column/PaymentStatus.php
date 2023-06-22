@@ -58,7 +58,6 @@ class PaymentStatus extends Column
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
-            $this->mollieInit();
             $columnName = $this->getData('name');
             foreach ($dataSource['data']['items'] as $key => $item) {
                 $payment = $this->paymentCollection->addFieldToFilter('parent_id', $item['entity_id'])->getFirstItem()->getData('additional_information');
@@ -67,20 +66,4 @@ class PaymentStatus extends Column
         }
         return $dataSource;
     }
-
-    protected function getPayment($transactionId){
-        $payment = null;
-        try{
-            $payment = $this->mollieApi->payments->get($transactionId);
-        } catch (\Exception $e) {
-            $this->logger->debug($e->getMessage());
-        }
-        return $payment;
-    }
-
-    protected function mollieInit(){
-        $storeId = $this->storeManager->getStore()->getId();
-        $this->mollieApi->load($storeId);
-    }
-
 }
