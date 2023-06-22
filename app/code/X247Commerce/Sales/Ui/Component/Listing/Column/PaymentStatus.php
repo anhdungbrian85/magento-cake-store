@@ -31,6 +31,8 @@ class PaymentStatus extends Column
     protected $storeId;
     protected $storeManager;
     protected $logger;
+    protected $paymentCollection;
+    protected $paymentFactory;
 
     public function __construct(
         ContextInterface $context,
@@ -38,6 +40,8 @@ class PaymentStatus extends Column
         \Mollie\Payment\Model\Api $mollieApi,
         \Magento\Store\Model\StoreManagerInterface $storeManager,        
         \Psr\Log\LoggerInterface $logger,
+        \Magento\Sales\Model\ResourceModel\Order\Payment\Collection $paymentCollection,
+        \Magento\Sales\Model\Order\PaymentFactory $paymentFactory,
         array $components = [],
         array $data = []
     ) {
@@ -45,6 +49,8 @@ class PaymentStatus extends Column
         $this->mollieApi = $mollieApi;
         $this->storeManager = $storeManager;        
         $this->logger = $logger;        
+        $this->paymentCollection = $paymentCollection;        
+        $this->paymentFactory = $paymentFactory;        
 
     }
 
@@ -55,13 +61,8 @@ class PaymentStatus extends Column
             $this->mollieInit();
             $columnName = $this->getData('name');
             foreach ($dataSource['data']['items'] as $key => $item) {
-                if($item['transaction_id']){
-                    $payment = $this->getPayemnt($item['transaction_id']);
-                    if($payment)
-                    {
-                        $dataSource['data']['items'][$key][$columnName] = $payment->status ?? '';
-                    }
-                }
+                $payment = $this->paymentCollection->addFieldToFilter('parent_id', $item['entity_id'])->getFirstItem()->getData('additional_information');
+                    $dataSource['data']['items'][$key][$columnName] = isset( $payment['payment_status']) ?  $payment['payment_status'] : '';
             }
         }
         return $dataSource;
