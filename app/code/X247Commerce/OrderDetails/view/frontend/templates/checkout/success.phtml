@@ -1,165 +1,174 @@
 <?php /** @var $block \X247Commerce\OrderDetails\Block\Onepage\Success */ ?>
-<?php $helper = $this->helper('X247Commerce\OrderDetails\Helper\Data'); ?>
+<?php
+$order = $block->getOrder();
+$helper = $this->helper('X247Commerce\OrderDetails\Helper\Data');
+$storeLocation = $block->getStoreLocation();
+$deliveryDayTime = $block->getDeliveryDateTime($order);
+?>
 <?= $block->getAdditionalInfoHtml() ?>
 <div class="checkout-success-container">
-    <?php if ($block->getOrderId()): ?>
-        <?php $order = $block->getOrder($block->getOrderId());
-              $deliveryDayTime = $block->getDeliveryDateTime($order);
-        ?>
-        <div class="checkout-success">
-            <?php if ($block->getCanViewOrder()) : ?>
-                <div><?= __('Thank you for shopping with us.Your order number is: %1', sprintf('<a href="%s" class="order-number">%s</a>', $block->escapeHtml($block->getViewOrderUrl()), $block->escapeHtml($block->getOrderId()))) ?></div>
-            <?php else : ?>
-                <div><?= __('Thank you for shopping with us. Your order number is: <span>%1</span>.', $block->escapeHtml($block->getOrderId())) ?></div>
-            <?php endif; ?>
-            <div><?= /* @escapeNotVerified */ __('You will receive an email confirmation and a text message reminder.') ?></div>
-        </div>
-        <div class="order-details">
-            <div class="block-delivery">
-                <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') ?> <span><?= array_key_exists('date', $deliveryDayTime) ? $block->getFormatDate($deliveryDayTime['date']) : '--' ?></span></span><br>
-                <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= array_key_exists('time_from', $deliveryDayTime) ? $block->getFormatTime($deliveryDayTime['time_from']) : $block->getDeliveryHours($deliveryDayTime)?></span></span>
+
+    <div class="checkout-success">
+        <?php if ($block->getCanViewOrder()) : ?>
+            <div><?= __('Thank you for shopping with us.Your order number is: %1', sprintf('<a href="%s" class="order-number">%s</a>', $block->escapeHtml($block->getViewOrderUrl()), $block->escapeHtml($block->getOrderId()))) ?></div>
+        <?php else : ?>
+            <div>
+                <?= __('Thank you for shopping with us. Your order number is: <span>%1</span>.', $block->escapeHtml($block->getOrderId())) ?>
             </div>
-            <div class="show-order">
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <thead style="display:none;">
-                        <tr>
-                            <th colspan="2"><?php /* @escapeNotVerified */ echo __('Product Name'); ?></th>
-                            <th class="table-number"><?php /* @escapeNotVerified */ echo __('Price'); ?></th>
-                            <th class="table-number"><?php /* @escapeNotVerified */ echo __('Qty'); ?></th>
-                            <th class="table-number"><?php /* @escapeNotVerified */ echo __('Subtotal'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($order->getAllVisibleItems() as $item) {
-                            $product = $helper->getProductById($item->getProductId());
-                            $options = $item->getProductOptions();
-                            $imageBlock = $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
-                            $productImage = $imageBlock->getImage($product, 'mini_cart_product_thumbnail');
-                            ?>
-                            <tr class="data-item">
-                                <td>
-                                    <div class="product-image">
-                                        <a href="<?php echo $product->getProductUrl(); ?>"><?php echo $productImage->toHtml(); ?></a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="product-name"><span><?php echo $item->getName(); ?></span></div>
-                                    <?php echo __('Availability:') ?>
-                                    <?php
-                                    $usedProduct = $helper->loadUsedProduct($product, $item);
-                                    $quantityAndStockStatus = $helper->getStockItemForUsedProduct($usedProduct);
-                                    ?>
-                                    <?php if (!$quantityAndStockStatus['stock_id']): ?>
-                                        <span class="cart stock-status"><?php echo __('Out of Stock') ?></span>
-                                    <?php else: ?>
-                                        <span class="cart stock-status"><?php echo __('In Stock') ?></span>
-                                    <?php endif; ?>
-                                    <br/>
-                                    <?php echo __('Quantity:') ?><?php echo round($item->getQtyOrdered()); ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    if (!empty($options['attributes_info'])) {
-                                        foreach ($options['attributes_info'] as $option) {
-                                            ?>
-                                            <dl class="product-option">
-                                                <dt class="option-label"><?php echo $option['label']; ?></dt>
-                                                <dd class="option-value"><?php echo $option['value']; ?></dd>
-                                            </dl>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                    <?php echo $helper->getFormatedPrice($item->getRowTotal()+$item->getTaxAmount()+$item->getDiscountTaxCompensationAmount()); ?>
-                                </td>
-                            </tr>
-                            <?php
-                        }
+        <?php endif; ?>
+        <?php if ($storeLocation): ?>
+            <div>
+                <?= __('Your order will be fulfilled by' ) ?>
+                <strong><a title="<?= $storeLocation->getName() ?>" href="<?= $block->getBaseUrl() . 'storelocator/'. $storeLocation->getUrlKey() ?>" ><?= $storeLocation->getName() ?></a></strong> and you can contact them on <strong><a href="tel:<?= $storeLocation->getPhone() ?>"><?= $storeLocation->getPhone() ?></a></strong>.
+            </div>
+        <?php endif; ?>
+        <div><?= /* @escapeNotVerified */ __('You will receive an email confirmation and a text message reminder.') ?></div>
+    </div>
+    <div class="order-details">
+        <div class="block-delivery">
+            <span class="delivery-date"><?php echo __('Delivery Date / Collection Date: ') ?> <span><?= array_key_exists('date', $deliveryDayTime) ? $block->getFormatDate($deliveryDayTime['date']) : '--' ?></span></span><br>
+            <span class="delivery-time"><?php echo __('Delivery Date / Collection Time: ') ?> <span><?= array_key_exists('time_from', $deliveryDayTime) ? $block->getFormatTime($deliveryDayTime['time_from']) : $block->getDeliveryHours($deliveryDayTime)?></span></span>
+        </div>
+        <div class="show-order">
+            <table width="100%" cellpadding="0" cellspacing="0">
+                <thead style="display:none;">
+                    <tr>
+                        <th colspan="2"><?php /* @escapeNotVerified */ echo __('Product Name'); ?></th>
+                        <th class="table-number"><?php /* @escapeNotVerified */ echo __('Price'); ?></th>
+                        <th class="table-number"><?php /* @escapeNotVerified */ echo __('Qty'); ?></th>
+                        <th class="table-number"><?php /* @escapeNotVerified */ echo __('Subtotal'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($order->getAllVisibleItems() as $item) {
+                        $product = $helper->getProductById($item->getProductId());
+                        $options = $item->getProductOptions();
+                        $imageBlock = $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
+                        $productImage = $imageBlock->getImage($product, 'mini_cart_product_thumbnail');
                         ?>
-
-                        <tr class="subtotal">
-                            <th colspan="2" class="table-method" scope="row">
-                                <?php /* @escapeNotVerified */ echo __('Order Subtotal'); ?>
-                            </th>
-                            <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Order Subtotal'); ?>">
-                                <span class="price"><?php echo $helper->getFormatedPrice($order->getSubtotalInclTax()); ?></span>
-                            </td>
-                        </tr>
-                        <tr class="vat">
-                            <th colspan="2" class="table-method" scope="row">
-                                <?php echo __('VAT'); ?>
-                            </th>
-                            <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('VAT'); ?>">
-                                <span class="price"><?php echo $helper->getFormatedPrice($order->getTaxAmount()); ?></span>
-                            </td>
-                        </tr>
-
-                        <?php if($order->getDiscountAmount() && $order->getDiscountAmount() != 0): ?>
-                        <tr class="discount">
-                            <th colspan="2" class="table-method" scope="row">
-                                <?php echo $order->getCouponCode(); ?>
-                            </th>
-                            <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Discount'); ?>">
-                                <span class="price"><?php echo $helper->getFormatedPrice($order->getDiscountAmount()); ?></span>
-                            </td>
-                        </tr>
-                        <?php endif; ?>
-                        <tr class="shipping">
-                            <th colspan="2" class="table-method" scope="row">
-                                <?php /* @escapeNotVerified */ echo __('Delivery Charge: '); ?><br/>
-                                <?php echo $order->getShippingDescription(); ?>
-                            </th>
-                            <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Delivery Charge: '); ?>">
-                                <span class="price"><?php echo $helper->getFormatedPrice($order->getShippingAmount() + $order->getShippingTaxAmount()); ?></span>
-                            </td>
-                        </tr>
-
-                        <!-- EORI coding Start -->
-                        <?php if ($order->getEorinumber()) : ?>
-                            <tr class="eorinumber">
-                                <th colspan="2" class="table-method" scope="row">
-                                    <?php /* @escapeNotVerified */ echo __('EORI Number'); ?><br/>
-                                </th>
-                                <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('EORI Number'); ?>">
-                                    <span class="price"><?php echo $order->getEorinumber(); ?></span>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                        <!-- EORI coding End -->
-
-                        <tr class="grand_total">
-                            <th colspan="2" class="table-method" scope="row">
-                                <strong><?php /* @escapeNotVerified */ echo __('Grand Total'); ?></strong>
-                            </th>
-                            <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Grand Total'); ?>">
-                                <strong><span class="price"><?php echo $helper->getFormatedPrice($order->getGrandTotal()); ?></span></strong>
-                            </td>
-                        </tr>
-                        <tr class="delivery">
-                            <td colspan="3">
-                                <div class="info">
-                                    <div class="shipping-address">
-                                        <div class="box-title">
-                                            <span class="box-des"><?php /* @escapeNotVerified */ echo __('Bill To'); ?></span>
-                                        </div>
-                                        <div class="box-content">
-                                            <address>
-                                                <?php echo $block->getFormatedAddress($order->getBillingAddress()); ?>
-                                            </address>
-                                        </div>
-                                    </div>
+                        <tr class="data-item">
+                            <td>
+                                <div class="product-image">
+                                    <a href="<?php echo $product->getProductUrl(); ?>"><?php echo $productImage->toHtml(); ?></a>
                                 </div>
                             </td>
+                            <td>
+                                <div class="product-name"><span><?php echo $item->getName(); ?></span></div>
+                                <?php echo __('Availability:') ?>
+                                <?php
+                                $usedProduct = $helper->loadUsedProduct($product, $item);
+                                $quantityAndStockStatus = $helper->getStockItemForUsedProduct($usedProduct);
+                                ?>
+                                <?php if (!$quantityAndStockStatus['stock_id']): ?>
+                                    <span class="cart stock-status"><?php echo __('Out of Stock') ?></span>
+                                <?php else: ?>
+                                    <span class="cart stock-status"><?php echo __('In Stock') ?></span>
+                                <?php endif; ?>
+                                <br/>
+                                <?php echo __('Quantity:') ?><?php echo round($item->getQtyOrdered()); ?>
+                            </td>
+                            <td>
+                                <?php
+                                if (!empty($options['attributes_info'])) {
+                                    foreach ($options['attributes_info'] as $option) {
+                                        ?>
+                                        <dl class="product-option">
+                                            <dt class="option-label"><?php echo $option['label']; ?></dt>
+                                            <dd class="option-value"><?php echo $option['value']; ?></dd>
+                                        </dl>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                                <?php echo $helper->getFormatedPrice($item->getRowTotal()+$item->getTaxAmount()+$item->getDiscountTaxCompensationAmount()); ?>
+                            </td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="button-continue">
-                <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>">
-                    <span><?php echo /* @escapeNotVerified */ __('Continue Shopping'); ?></span><span class="icon-arrow-outline-right"></span>
-                </a>
-            </div>
+                        <?php
+                    }
+                    ?>
+
+                    <tr class="subtotal">
+                        <th colspan="2" class="table-method" scope="row">
+                            <?php /* @escapeNotVerified */ echo __('Order Subtotal'); ?>
+                        </th>
+                        <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Order Subtotal'); ?>">
+                            <span class="price"><?php echo $helper->getFormatedPrice($order->getSubtotalInclTax()); ?></span>
+                        </td>
+                    </tr>
+                    <tr class="vat">
+                        <th colspan="2" class="table-method" scope="row">
+                            <?php echo __('VAT'); ?>
+                        </th>
+                        <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('VAT'); ?>">
+                            <span class="price"><?php echo $helper->getFormatedPrice($order->getTaxAmount()); ?></span>
+                        </td>
+                    </tr>
+
+                    <?php if($order->getDiscountAmount() && $order->getDiscountAmount() != 0): ?>
+                    <tr class="discount">
+                        <th colspan="2" class="table-method" scope="row">
+                            <?php echo $order->getCouponCode(); ?>
+                        </th>
+                        <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Discount'); ?>">
+                            <span class="price"><?php echo $helper->getFormatedPrice($order->getDiscountAmount()); ?></span>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                    <tr class="shipping">
+                        <th colspan="2" class="table-method" scope="row">
+                            <?php /* @escapeNotVerified */ echo __('Delivery Charge: '); ?><br/>
+                            <?php echo $order->getShippingDescription(); ?>
+                        </th>
+                        <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Delivery Charge: '); ?>">
+                            <span class="price"><?php echo $helper->getFormatedPrice($order->getShippingAmount() + $order->getShippingTaxAmount()); ?></span>
+                        </td>
+                    </tr>
+
+                    <!-- EORI coding Start -->
+                    <?php if ($order->getEorinumber()) : ?>
+                        <tr class="eorinumber">
+                            <th colspan="2" class="table-method" scope="row">
+                                <?php /* @escapeNotVerified */ echo __('EORI Number'); ?><br/>
+                            </th>
+                            <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('EORI Number'); ?>">
+                                <span class="price"><?php echo $order->getEorinumber(); ?></span>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <!-- EORI coding End -->
+
+                    <tr class="grand_total">
+                        <th colspan="2" class="table-method" scope="row">
+                            <strong><?php /* @escapeNotVerified */ echo __('Grand Total'); ?></strong>
+                        </th>
+                        <td class="number" data-th="<?php /* @escapeNotVerified */ echo __('Grand Total'); ?>">
+                            <strong><span class="price"><?php echo $helper->getFormatedPrice($order->getGrandTotal()); ?></span></strong>
+                        </td>
+                    </tr>
+                    <tr class="delivery">
+                        <td colspan="3">
+                            <div class="info">
+                                <div class="shipping-address">
+                                    <div class="box-title">
+                                        <span class="box-des"><?php /* @escapeNotVerified */ echo __('Bill To'); ?></span>
+                                    </div>
+                                    <div class="box-content">
+                                        <address>
+                                            <?php echo $block->getFormatedAddress($order->getBillingAddress()); ?>
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    <?php endif; ?>
+        <div class="button-continue">
+            <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>">
+                <span><?php echo /* @escapeNotVerified */ __('Continue Shopping'); ?></span><span class="icon-arrow-outline-right"></span>
+            </a>
+        </div>
+    </div>
 </div>

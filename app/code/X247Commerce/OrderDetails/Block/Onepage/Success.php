@@ -2,6 +2,8 @@
 
 namespace X247Commerce\OrderDetails\Block\Onepage;
 
+use Amasty\Storelocator\Model\LocationFactory;
+
 class Success extends \Magento\Checkout\Block\Onepage\Success {
 
     protected $orderRepository;
@@ -12,6 +14,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
     protected $orderInterface;
     protected $configTimeDelivery;
     protected $deliveryAmastyFactory;
+    protected LocationFactory $locationFactory;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -25,6 +28,7 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         \Amasty\CheckoutDeliveryDate\Model\ResourceModel\Delivery\CollectionFactory $deliveryAmastyFactory,
         \Amasty\CheckoutDeliveryDate\Model\ConfigProvider $configTimeDelivery,
         \Magento\Sales\Model\Order\Address\Renderer $renderer,
+        LocationFactory $locationFactory,
         array $data = []
     ) {
         $this->orderInterface = $orderInterface;
@@ -34,14 +38,15 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
         $this->_productRepository = $productRepository;
         $this->renderer = $renderer;
+        $this->locationFactory = $locationFactory;
         parent::__construct(
             $context, $checkoutSession, $orderConfig, $httpContext, $data
         );
     }
 
-    public function getOrder($id)
+    public function getOrder()
     {
-        return $this->orderInterface->loadByIncrementId($id);
+        return $this->orderInterface->loadByIncrementId($this->getOrderId());
     }
 
     public function getDeliveryDateTime($order)
@@ -132,5 +137,20 @@ class Success extends \Magento\Checkout\Block\Onepage\Success {
         }
 
         return $collection;
+    }
+
+    public function getStoreLocation()
+    {
+        $locationId = $this->getOrder()->getStoreLocationId();
+        return $locationId ? $this->locationFactory->create()->load($locationId) : null;
+    }
+
+    public function getStoreLocationUrl()
+    {
+        $storeLocation = $this->getStoreLocation();
+        if ($storeLocation) {
+            return $this->getBaseUrl(). 'storelocator/'. $storeLocation->getUrlKey();
+        }
+        return false;
     }
 }
