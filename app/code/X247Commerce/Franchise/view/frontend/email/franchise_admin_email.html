@@ -1,0 +1,75 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans "Franchise Request"}} @-->
+<!--@vars {
+"var data.comment":"Comment",
+"var data.email":"Sender Email",
+"var data.name":"Sender Name",
+"var data.confirm_email":"Sender confirm email"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<p style="color:#333 ; ">Hello</p>
+<p style="color:#333 ; ">A new franchise request was submitted with the following details:</p>
+
+<table class="message-details">
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "First Name"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.first_name}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #fff;"><strong>{{trans "Last Name"}}</strong></td>
+        <td style="padding:5px;background: #fff;"> : {{var data.last_name}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "Email"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.email}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #fff;"><strong>{{trans "Address"}}</strong></td>
+        <td style="padding:5px;background: #fff;"> : {{var data.address}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "Contact Telephone"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.phone}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #fff;"><strong>{{trans "Details of current employment - Job title, company name and brief job description "}}</strong></td>
+        <td style="padding:5px;background: #fff;"> : {{var data.employment}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "Preferred locations for a Cake Box Franchise"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.location}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #fff;"><strong>{{trans "Please can you explain the reasons why you have chosen these areas"}}</strong></td>
+        <td style="padding:5px;background: #fff;"> : {{var data.why_area}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "Have you experience in running a business or a Franchise? If so, please give full details of this/these operations"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.experience_business}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #fff;"><strong>{{trans "Describe what experiences and knowledge you possess that would make you an ideal Cakebox Franchisee"}}</strong></td>
+        <td style="padding:5px;background: #fff;"> : {{var data.description_experience}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "Where is your nearest branch"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.nearest_branch}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #fff;"><strong>{{trans "Who would be responsible for the day to day running of the business if you were awarded a Franchise"}}</strong></td>
+        <td style="padding:5px;background: #fff;"> : {{var data.manager}}</td>
+    </tr>
+    <tr>
+        <td style="padding:5px;background: #EFEFEF;"><strong>{{trans "Who would be responsible for the day to day running of the business if you were awarded a Franchise"}}</strong></td>
+        <td style="padding:5px;background: #EFEFEF;"> : {{var data.franchise_opportunity_source}}</td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

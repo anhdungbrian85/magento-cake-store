@@ -9,8 +9,7 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
-use Magento\Sales\Model\ResourceModel\Order\Grid\CollectionFactory;
-
+use X247Commerce\StoreLocatorSource\Helper\User as UserHelper;
 /**
  * Class ProductDataProvider
  *
@@ -28,6 +27,8 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
     protected $userRole;
 
     protected $adminSession;
+    
+    protected $userHelper;
 
     public function __construct(
         $name,
@@ -39,14 +40,14 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
         FilterBuilder $filterBuilder,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Sales\Model\ResourceModel\Order\Grid\CollectionFactory $orderCollectionFactory,
-        \Magento\Backend\Model\Auth\Session $adminSession,
+        UserHelper $userHelper,
         array $meta = [],
         array $data = []
     ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $reporting, $searchCriteriaBuilder, $request, $filterBuilder, $meta, $data);
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->objectManager = $objectManager;
-        $this->adminSession = $adminSession;
+        $this->userHelper = $userHelper;
     }
 
     public function getMeta()
@@ -81,13 +82,6 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
         return $this->meta;
     }
 
-    // protected function getColumns()
-    // {
-    //     $orderCollection = $this->orderCollectionFactory->create();
-    //     $fieldNames = $orderCollection->getConnection()->describeTable($orderCollection->getMainTable());
-    //     return array_keys($fieldNames);
-    // }
-
     protected function getColumns()
     {
 
@@ -117,7 +111,9 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
             "pickup_location_code",
             "transaction_source",
             "amasty_sociallogin_code",
-            "print_status"
+            "print_status",
+            "colection_delivery_date",
+            "payment_status"
         ];
     }
 
@@ -134,21 +130,14 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
             "customer_name",
             "payment_method",
             "actions",
+            "colection_delivery_date",
+            "payment_status"
         ];
 
     }
 
-    protected function getUserRole()
-    {
-        return $this->adminSession->getUser()->getRole();
-    }
-
     protected function isStaffUser(){
-        $userRole = $this->getUserRole();
-        if($userRole->getRoleName() == 'Staff'){
-            return true;
-        }
-        return false;
+        return $this->userHelper->isStaffUser();
     }
 
 }
