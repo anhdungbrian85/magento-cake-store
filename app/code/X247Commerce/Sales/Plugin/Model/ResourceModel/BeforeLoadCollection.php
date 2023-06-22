@@ -35,8 +35,8 @@ class BeforeLoadCollection
             ->joinleft(['ap' => $subject->getTable('amasty_storepickup_order')], 
                         'main_table.entity_id=ap.order_id', 
                         ['ap.date as pickup_date', 'ap.time_from as pickup_time_from', 'ap.time_to as pickup_time_to' ])
-            ->joinleft(['sop' => $subject->getTable('sales_order_payment')], 
-                        'main_table.entity_id=sop.parent_id', ['sop.base_amount_paid']);
+            ->joinleft(['mpt' => $subject->getTable('mollie_payment_transaction_to_order')], 
+                        'main_table.entity_id=mpt.order_id', ['mpt.transaction_id']);
         }
 
         return [$printQuery, $logQuery];

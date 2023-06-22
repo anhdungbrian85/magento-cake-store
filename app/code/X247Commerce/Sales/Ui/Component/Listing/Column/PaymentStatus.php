@@ -27,28 +27,59 @@ class PaymentStatus extends Column
      * @param array $components
      * @param array $data
      */
+    protected $mollieApi;
+    protected $storeId;
+    protected $storeManager;
+    protected $logger;
+
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
+        \Mollie\Payment\Model\Api $mollieApi,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,        
+        \Psr\Log\LoggerInterface $logger,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
+        $this->mollieApi = $mollieApi;
+        $this->storeManager = $storeManager;        
+        $this->logger = $logger;        
+
     }
 
 
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
+            $this->mollieInit();
             $columnName = $this->getData('name');
             foreach ($dataSource['data']['items'] as $key => $item) {
-                $dataSource['data']['items'][$key][$columnName] = $this->isPayment($item);
+                if($item['transaction_id']){
+                    $payment = $this->getPayemnt($item['transaction_id']);
+                    if($payment)
+                    {
+                        $dataSource['data']['items'][$key][$columnName] = $payment->status ?? '';
+                    }
+                }
             }
         }
         return $dataSource;
     }
 
-    protected function isPayment($item){
-        return $item['base_amount_paid'] ? __('Paid') : __('Not Paid'); 
+    protected function getPayment($transactionId){
+        $payment = null;
+        try{
+            $payment = $this->mollieApi->payments->get($transactionId);
+        } catch (\Exception $e) {
+            $this->logger->debug($e->getMessage());
+        }
+        return $payment;
     }
+
+    protected function mollieInit(){
+        $storeId = $this->storeManager->getStore()->getId();
+        $this->mollieApi->load($storeId);
+    }
+
 }
