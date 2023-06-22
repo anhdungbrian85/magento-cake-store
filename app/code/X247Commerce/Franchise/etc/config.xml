@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <x247commerce_franchise>
+            <general>
+                <franchise_email>hoangsapa971@gmail.com</franchise_email>
+            </general>
+        </x247commerce_franchise>
+    </default>
+</config>  
