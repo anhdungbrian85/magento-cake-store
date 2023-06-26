@@ -60,8 +60,10 @@ class PaymentStatus extends Column
         if (isset($dataSource['data']['items'])) {
             $columnName = $this->getData('name');
             foreach ($dataSource['data']['items'] as $key => $item) {
-                $payment = $this->paymentCollection->addFieldToFilter('parent_id', $item['entity_id'])->getFirstItem()->getData('additional_information');
-                    $dataSource['data']['items'][$key][$columnName] = isset( $payment['payment_status']) ?  $payment['payment_status'] : '';
+                if($item['additional_information']){
+                    $payment = json_decode($item['additional_information']);
+                    $dataSource['data']['items'][$key][$columnName] = $payment->payment_status ?? '';
+                }
             }
         }
         return $dataSource;
