@@ -7,5 +7,10 @@
                 <success_text>Thank you for your valued feedback. If necessary, we will be in touch as soon as possible</success_text>
             </general>
         </feedback>
+        <recaptcha_frontend>
+            <type_for>
+                <franchise_request/>
+            </type_for>
+        </recaptcha_frontend>
     </default>
 </config>

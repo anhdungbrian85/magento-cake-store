@@ -16,6 +16,8 @@ class Save extends Action
     protected $dataHepler;
     protected $storeManager;
     protected $logger;
+    protected $eventManager;
+    private $countRecursion = 0;
 
     const TEMPLATE_EMAIL_ADMIN = 'franchise_admin_email_template';
     const TEMPLATE_EMAIL_CLIENT = 'franchise_client_email_template';
@@ -69,6 +71,11 @@ class Save extends Action
 
     public function sendMail($sender, $sendto, $emailTemplate, $templateVars, $storeId)
     {
+        if(empty($templateVars))
+        {
+            return ;
+        }
+
         try {
             $this->inlineTranslation->suspend();
 
@@ -100,6 +107,12 @@ class Save extends Action
                 $data[$key] = $this->escaperDataList($field);
             }else{
                 $data[$key] = $this->escaper->escapeHtml($field);
+            }
+            $this->countRecursion ++;
+            
+            if($this->countRecursion >= 200){ // handler recursion if guest fix form request
+                $this->messageManager->addErrorMessage(__('Something Went Wrong.'));
+                return $this->resultRedirectFactory->create()->setPath($this->_redirect->getRefererUrl());
             }
         }
         return $data;

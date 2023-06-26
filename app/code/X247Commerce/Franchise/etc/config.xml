@@ -4,8 +4,13 @@
     <default>
         <x247commerce_franchise>
             <general>
-                <franchise_email>hoangsapa971@gmail.com</franchise_email>
+                <franchise_email>franchiseenquiries@cakebox.com</franchise_email>
             </general>
         </x247commerce_franchise>
+        <recaptcha_frontend>
+            <type_for>
+                <franchise_request/>
+            </type_for>
+        </recaptcha_frontend>
     </default>
 </config>  
