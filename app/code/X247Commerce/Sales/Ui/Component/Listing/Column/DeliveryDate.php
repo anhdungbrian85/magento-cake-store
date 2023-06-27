@@ -45,16 +45,16 @@ class DeliveryDate extends Column
         if (isset($dataSource['data']['items'])) {
             $columnName = $this->getData('name');
             foreach ($dataSource['data']['items'] as $key => $item) {
-                $dataSource['data']['items'][$key][$columnName] = $this->getDelivaryDateTime($item);
+                $dataSource['data']['items'][$key][$columnName] = $this->getDeliveryDateTime($item);
             }
         }
         return $dataSource;
     }
 
-    protected function getDelivaryDateTime($item){
+    protected function getDeliveryDateTime($item){
         $deliveryDateTime = '';
-        if($item['delivary_date'] && $item['delivary_time']){
-            $deliveryDateTime = $this->timezone->date($item['delivary_date'].' '.$item['delivary_time'].':00:00')->format('Y-m-d H:i');
+        if($item['delivery_date'] && $item['delivery_time']){
+            $deliveryDateTime = $this->timezone->date($item['delivery_date'].' '.$item['delivery_time'].':00:00')->format('Y-m-d H:i');
         }else if($item['pickup_date'] && ($item['pickup_time_from'] || $item['pickup_time_to'])){
             $deliveryDateTime = $this->getPickupDate($item);
         }

@@ -18,13 +18,13 @@
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">Collection/Delivery Date</label>
-                <sortable>false</sortable>
             </settings>
         </column>
         <column name="payment_status" class="X247Commerce\Sales\Ui\Component\Listing\Column\PaymentStatus">
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">Payment Status</label>
+                <sortable>false</sortable>
             </settings>
         </column>
     </columns>
