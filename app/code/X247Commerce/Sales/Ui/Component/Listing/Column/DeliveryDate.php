@@ -53,8 +53,8 @@ class DeliveryDate extends Column
 
     protected function getDeliveryDateTime($item){
         $deliveryDateTime = '';
-        if($item['delivery_date'] && $item['delivery_time']){
-            $deliveryDateTime = $this->timezone->date($item['delivery_date'].' '.$item['delivery_time'].':00:00')->format('Y-m-d H:i');
+        if($item['delivery_date']){
+            $deliveryDateTime = $this->timezone->date($item['delivery_date'].' '.($item['delivery_time'] ?? '00').':00:00')->format('Y-m-d H:i');
         }else if($item['pickup_date'] && ($item['pickup_time_from'] || $item['pickup_time_to'])){
             $deliveryDateTime = $this->getPickupDate($item);
         }
