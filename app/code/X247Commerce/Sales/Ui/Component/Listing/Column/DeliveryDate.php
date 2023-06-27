@@ -54,7 +54,8 @@ class DeliveryDate extends Column
     protected function getDeliveryDateTime($item){
         $deliveryDateTime = '';
         if($item['delivery_date']){
-            $deliveryDateTime = $this->timezone->date($item['delivery_date'].' '.($item['delivery_time'] ?? '00').':00:00')->format('Y-m-d H:i');
+            $delivery_time = $item['delivery_time'] ?? '';
+            $deliveryDateTime = $this->timezone->date(strtotime($item['delivery_date']))->format("Y-m-d $delivery_time:i");
         }else if($item['pickup_date'] && ($item['pickup_time_from'] || $item['pickup_time_to'])){
             $deliveryDateTime = $this->getPickupDate($item);
         }
@@ -64,7 +65,7 @@ class DeliveryDate extends Column
     protected function getPickupDate($item){
         $timeFrom =  $this->timezone->date($item['pickup_time_from'])->format('H:i');
         $timeTo =  $this->timezone->date($item['pickup_time_to'])->format('H:i');
-        $date = $this->timezone->date($item['pickup_date'])->format('Y-m-d');
+        $date = $this->timezone->date(strtotime($item['pickup_date']))->format('Y-m-d');
         $pickUpDate = $date.' ('.$timeFrom.' - '.$timeTo.')';
         return $pickUpDate;
     }

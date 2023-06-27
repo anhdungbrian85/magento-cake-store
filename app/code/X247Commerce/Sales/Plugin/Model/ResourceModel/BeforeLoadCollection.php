@@ -28,7 +28,8 @@ class BeforeLoadCollection
     public function beforeLoad(Collection $subject, bool $printQuery = false, bool $logQuery = false): array
     {
         if (!$subject->isLoaded()) {
-
+            $deliveryDateSql = "CONCAT(DATE_FORMAT(`ad`.`date`, '%Y-%m-%d'), ' ', ad.time,':00:00')";
+            $pickupDateSql =  "CONCAT(DATE_FORMAT(ap.date, '%Y-%m-%d'), ' ', FROM_UNIXTIME(ap.time_from, '%H:%i:%s'))";
             $subject->getSelect()->joinleft(['ad' => $subject->getTable('amasty_amcheckout_delivery')], 
                         'main_table.entity_id=ad.order_id', ['ad.date as delivery_date', 
                         'ad.time as delivery_time'])
@@ -39,7 +40,7 @@ class BeforeLoadCollection
                         'main_table.entity_id=mpt.parent_id', ['mpt.additional_information'])
             ->columns(
                 array(
-                    'colection_delivery_date' => new \Zend_Db_Expr('(CASE WHEN ap.date IS NULL THEN ad.date ELSE ap.date END)'
+                    "colection_delivery_date" => new \Zend_Db_Expr("(CASE WHEN `ap`.`date` IS NULL THEN $deliveryDateSql ELSE $pickupDateSql END)"
                 )));
         }
 
