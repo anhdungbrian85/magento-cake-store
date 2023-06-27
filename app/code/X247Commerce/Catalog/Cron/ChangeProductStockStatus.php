@@ -38,56 +38,31 @@ class ChangeProductStockStatus
 
     public function execute()
     {
-        $productCollectionFactory = $this->productCollectionFactory;
-        $inventorySourceTbl = $this->resource->getTableName('inventory_source_item');
-
+        $productCollectionFactory = $this->productCollectionFactory;       
         $productCollection = $productCollectionFactory
             ->create()
             ->addAttributeToSelect('*')
             ->addAttributeToSort('created_at', 'DESC')
             ->addFieldToFilter('type_id', 'configurable')
             ->joinField('stock_item', 'cataloginventory_stock_item', 'is_in_stock', 'product_id=entity_id', 'is_in_stock=0');
+			$this->logger->info('------------------ProductCollection---------------------');      
 
-        $indexLists = ['cataloginventory_stock', 'inventory'];
-
-        if (count($productCollection)) {
-            $skus = [];
-            $productIds = [];
+        if (count($productCollection)) {           
             foreach ($productCollection as $product) {
-
                 try {
+					$this->logger->info('------------------ProductSku---------------------'.$product->getSku());
                     $productId = $product->getId();
-                    $productIds[] = $productId;
-                    $skus[] = $product->getSku();
-                    $stockItem =    $this->stockItem->load($productId, 'product_id');
-                    $stockItem->setData('is_in_stock', 1);
-                    $stockItem->setData('qty', 100);
-                    $stockItem->save();
-                    $product->setData('quantity_and_stock_status' , ['is_in_stock' => 1]);
-                    $product->setData('stock_data', ['is_in_stock' => 1]);
-                    $product->save();
-
-
-                }   catch (\Exception $exception) {
+                    $productSku = $product->getSku();					
+					$stockeTable = $this->connection->getTableName('inventory_stock_3');
+					$this->connection->update($stockeTable, ['is_salable' => '1'], ['sku = ?' => $productSku]);					
+					$inventoryTable = $this->connection->getTableName('cataloginventory_stock_item');
+					$this->connection->update($inventoryTable, ['is_in_stock' => '1'], ['product_id = ?' => $productId]);					
+					$product->save();                   
+                }catch (\Exception $exception) {
                     $this->logger->info("Cannot change stock status: ". $exception->getMessage());
                 }
             }
 
-            foreach ($indexLists as $indexList) {
-                try {
-                    $indexer = $this->indexerRegistry->get($indexList);
-                    $indexer->reindexList(array_unique($productIds));
-                } catch (\Exception $exception) {
-                    $this->logger->info("Cannot reindex: $indexList - ". $exception->getMessage());
-                }
-            }
-
-//            $select = $this->connection->select()
-//                    ->from(['i' => $inventorySourceTbl], 'source_item_id')
-//                    ->where('sku in (?)', $skus);
-//
-//            $sourceItemIds = $this->connection->fetchCol($select);
-//            $this->inventoryIndexer->executeList($sourceItemIds);
         }
     }
 }
