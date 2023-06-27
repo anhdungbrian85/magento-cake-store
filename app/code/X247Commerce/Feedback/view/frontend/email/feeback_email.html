@@ -1,0 +1,51 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans "Feedback"}} @-->
+<!--@vars {
+"var data.comment":"Comment",
+"var data.email":"Sender Email",
+"var data.name":"Sender Name",
+"var data.confirm_email":"Sender confirm email"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+    <table class="message-details">
+        <tr>
+            <td style="background-color:  #EFEFEF;"><strong>{{trans "Name"}}</strong></td>
+            <td style="background-color:  #EFEFEF;"> : {{var data.name}}</td>
+        </tr>
+        <tr>
+            <td ><strong>{{trans "Email"}}</strong></td>
+            <td > : {{var data.email}}</td>
+        </tr>
+        <tr>
+            <td style="background-color:  #EFEFEF;"><strong>{{trans "Phone"}}</strong></td>
+            <td style="background-color:  #EFEFEF;"> : {{var data.phone}}</td>
+        </tr>
+        <tr>
+            <td ><strong>{{trans "Time"}}</strong></td>
+            <td > : {{var data.year}}/{{var data.month}}/{{var data.day}}</td>
+        </tr>
+        <tr>
+            <td style="background-color:  #EFEFEF;"><strong>{{trans "Store"}}</strong></td>
+            <td style="background-color:  #EFEFEF;"> : {{var data.store}}</td>
+        </tr>
+        <tr>
+            <td ><strong>{{trans "Rating"}}</strong></td>
+            <td > : {{var data.rating}}</td>
+        </tr>
+        <tr>
+            <td style="background-color:  #EFEFEF;"><strong>{{trans "Comments"}}</strong></td>
+            <td style="background-color:  #EFEFEF;"> : {{var data.comments}}</td>
+        </tr>
+        <tr>
+            <td rowspan="2">
+                <img src="{{var data.image}}" width="200" style="max-width: 100%; height: auto;" />
+            </td>
+        </tr>
+    </table>
+{{template config_path="design/email/footer_template"}}
