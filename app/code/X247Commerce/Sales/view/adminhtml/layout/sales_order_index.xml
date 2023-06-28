@@ -3,4 +3,11 @@
     <head>
         <css src="X247Commerce_Sales::css/grid.css"/>
     </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="X247Commerce\Sales\Block\Adminhtml\Order\Grid" before="-" name="staff.sorting.columns.enable"
+                   template="X247Commerce_Sales::data.phtml" />
+
+        </referenceContainer>
+    </body>
 </page>

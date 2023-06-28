@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="admin_order_grid" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>Admin order grid</label>
+            <tab>x247commerce</tab>
+            <resource>X247commerce_Sales::config_x247commerce_sales</resource>
+            <group id="sorting" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <label>Enable sorting field</label>
+                <field id="enable_fields" type="textarea" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Enable sorting fields</label>
+                    <comment><![CDATA[
+                        All sorting columns are disabled for staff account by default. <br />
+                        Enter a list of columns are enabled sorting. <br />
+                        Separate by newline. <br />
+                        Eg: Purchase Date
+                        Collection/Delivery Date
+                    ]]> </comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

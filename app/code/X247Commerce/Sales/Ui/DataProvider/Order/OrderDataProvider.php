@@ -9,6 +9,7 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use X247Commerce\StoreLocatorSource\Helper\User as UserHelper;
 /**
  * Class ProductDataProvider
@@ -16,18 +17,14 @@ use X247Commerce\StoreLocatorSource\Helper\User as UserHelper;
  * @api
  * @since 100.0.2
  */
-class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
+class OrderDataProvider extends DataProvider
 {
     protected $meta;
-
-    protected $objectManager;
-
-    protected $orderCollectionFactory;
 
     protected $userRole;
 
     protected $adminSession;
-    
+
     protected $userHelper;
 
     public function __construct(
@@ -38,43 +35,43 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
         SearchCriteriaBuilder $searchCriteriaBuilder,
         RequestInterface $request,
         FilterBuilder $filterBuilder,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Sales\Model\ResourceModel\Order\Grid\CollectionFactory $orderCollectionFactory,
         UserHelper $userHelper,
         array $meta = [],
         array $data = []
     ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $reporting, $searchCriteriaBuilder, $request, $filterBuilder, $meta, $data);
-        $this->orderCollectionFactory = $orderCollectionFactory;
-        $this->objectManager = $objectManager;
         $this->userHelper = $userHelper;
     }
 
     public function getMeta()
-    {   
+    {
         $this->setMeta();
         return $this->meta;
     }
 
-    public function setMeta(){
-        if($this->isStaffUser()){
+    public function setMeta()
+    {
+        if($this->isStaffUser()) {
             $this->disableAllColumns();
             $this->enableStaffCanDisplay();
         }
     }
 
-    protected function enableStaffCanDisplay(){
-        $columsCanView = $this->getStaffDisplayCols();
-        foreach($this->meta['sales_order_columns']['children'] as $name => $config){
-            if(in_array($name, $columsCanView)){
+    protected function enableStaffCanDisplay()
+    {
+        $columnsCanView = $this->getStaffDisplayCols();
+        foreach ($this->meta['sales_order_columns']['children'] as $name => $config){
+            if(in_array($name, $columnsCanView)){
                 unset($this->meta['sales_order_columns']['children'][$name]);
             }
         }
         return $this->meta;
     }
 
-    protected function disableAllColumns(){
+    protected function disableAllColumns()
+    {
         $columns = $this->getColumns();
+
         foreach($columns as $column)
         {
             $this->meta['sales_order_columns']['children'][$column]['arguments']['data']['config']['componentDisabled'] = true;
@@ -84,7 +81,6 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
 
     protected function getColumns()
     {
-
         return [
             "ids",
             "increment_id",
@@ -117,7 +113,8 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
         ];
     }
 
-    protected function getStaffDisplayCols(){
+    protected function getStaffDisplayCols()
+    {
         return [
             "increment_id",
             "print_status",
@@ -136,7 +133,8 @@ class OrderDataProvider extends \Magento\Framework\View\Element\UiComponent\Data
 
     }
 
-    protected function isStaffUser(){
+    protected function isStaffUser()
+    {
         return $this->userHelper->isStaffUser();
     }
 
