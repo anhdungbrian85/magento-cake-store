@@ -8,7 +8,6 @@ define([
             template: 'X247Commerce_Sales/ui/grid/listing'
         },
         getRowClass: function (row) {
-            console.log(row);
             if (row.status == 'canceled') {
                 return 'red-canceled';
             } else {
