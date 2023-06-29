@@ -483,7 +483,6 @@ return [
         'Klevu_Troubleshoot' => 1,
         'Mageplaza_Core' => 1,
         'Mageplaza_ProductFeed' => 1,
-        'Mageplaza_Smtp' => 1,
         'Mollie_Payment' => 1,
         'Mollie_Subscriptions' => 1,
         'OlegKoval_RegenerateUrlRewrites' => 1,
