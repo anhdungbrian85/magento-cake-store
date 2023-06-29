@@ -24,6 +24,7 @@
             <settings>
                 <!--<filter>textRange</filter>-->
                 <label translate="true">Payment Status</label>
+                <sortable>false</sortable>
             </settings>
         </column>
     </columns>
