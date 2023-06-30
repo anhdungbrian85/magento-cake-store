@@ -25,13 +25,9 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
      */
     protected $_categoryHelper;
 
-    protected $categoryCollectionFactory;
-
-    protected $categoryRepository;
 
     protected $_storeManager;
 
-    protected $_currentCategory;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -45,22 +41,18 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
         \Magento\Catalog\Model\Layer\Resolver $layerResolver,
         \Magento\Framework\Registry $registry,
         \X247Commerce\Theme\Helper\CategoryHelper $categoryHelper,
-        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
-        \Magento\Catalog\Model\CategoryRepository $categoryRepository,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $data = []
     ) {
         parent::__construct($context, $layerResolver, $registry, $categoryHelper, $data);
         $this->_categoryHelper = $categoryHelper;
         $this->_catalogLayer = $layerResolver->get();
         $this->_coreRegistry = $registry;
-        $this->categoryRepository = $categoryRepository;
-        $this->_storeManager = $storeManager;
-        $this->categoryCollectionFactory = $categoryCollectionFactory;
     }
 
     protected function _prepareLayout()
     {
+        $idCateIpad = $this->getIpadCate();
+        $this->setCurrentCategory($idCateIpad);
         parent::_prepareLayout();
 
         $category = $this->getCurrentCategory();
@@ -77,23 +69,18 @@ class IpadHomeView extends View implements \Magento\Framework\DataObject\Identit
 
     public function getCurrentCategory()
     {
-        $categoryId = $this->getCateIdAvailable();
-        if(!$this->_currentCategory){
-            $this->_currentCategory = $this->categoryRepository->get($categoryId, $this->_storeManager->getStore()->getId());
-        }
-        return $this->_currentCategory;
+        return $this->_catalogLayer->getCurrentCategory();
     }
 
-    protected function getCateIdAvailable()
+    public function setCurrentCategory($category)
     {
-        $categoryId = $this->_categoryHelper->getCateIDIpadHomeView();
-        if(!$categoryId){
-            $cateCollection = $this->categoryCollectionFactory
-                                ->create()
-                                ->addAttributeToSelect('*')
-                                ->setStore($this->_storeManager->getStore());
-            $categoryId = $cateCollection->getFirstItem()->getId();
-        }
-        return $categoryId;
+       return $this->_catalogLayer->setCurrentCategory($category);
     }
+
+    public function getIpadCate()
+    {
+       return $this->_categoryHelper->getCateIDIpadHomeView();
+    }
+
+
 }

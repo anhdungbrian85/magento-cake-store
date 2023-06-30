@@ -25,7 +25,8 @@
         <referenceContainer name="main">
             <container name="category.view.container" htmlTag="div" htmlClass="category-view container" after="-">
                 <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.description" template="Magento_Catalog::category/description.phtml"/>
-                <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.cms" template="Magento_Catalog::category/cms.phtml"/>
+                <block class="X247Commerce\Catalog\Block\Category\Subcategory\Listing" name="home.ipad.subcategory.listing" 
+                    template="X247Commerce_Catalog::catalog/category/subcategory/listing.phtml"/>
             </container>
         </referenceContainer>
         <move element="breadcrumbs" destination="category.page.header" after="-" />

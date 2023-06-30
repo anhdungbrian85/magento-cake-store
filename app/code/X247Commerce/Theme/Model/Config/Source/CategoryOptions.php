@@ -18,9 +18,7 @@ class CategoryOptions implements \Magento\Framework\Option\ArrayInterface
         $collection = $this->collectionFactory->create()
             ->addAttributeToSelect('name')
             ->addAttributeToFilter('is_active', 1);
-
-        $options = [['label' => __('Please Select a Category'), 'value' => '']];
-
+        $options = [];
         foreach ($collection as $category) {
             $options[] = [
                 'value' => $category->getId(),

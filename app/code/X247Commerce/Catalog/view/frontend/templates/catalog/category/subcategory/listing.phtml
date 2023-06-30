@@ -1,0 +1,29 @@
+<?php 
+
+// X247Commerce\Catalog\Block\Category\Subcategory\Listing $block
+$subcategories = $block->getSubcategories();
+?>
+
+<div class="list-category-celebration-cakes">
+    <div class="row-full-width-inner">
+        <?php foreach($subcategories as $category): ?>
+            <div class="child-category-row">
+                <div class="child-category-row-item">
+                    <figure class="child-category-row-image">
+                        <a href="<?=$block->escapeUrl($category->getUrl())?>">
+                            <img src="<?=$block->escapeUrl($block->getThumbnailUrl($category))?>" alt="<?=$block->escapeHtmlAttr($category->getName())?>" title="<?=$block->escapeHtmlAttr($category->getName())?>">
+                        </a>
+                    </figure>
+                    <h2 class="child-category-row-item-title"><?=$block->escapeHtml($category->getName())?></h2>
+                    <div class="view-now-category-container">
+                        <div class="button-view-now-category">
+                            <a class="button" href="<?=$block->escapeUrl($category->getUrl())?>">
+                                <span >View Now</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        <?php endforeach; ?>
+    </div>
+</div>
