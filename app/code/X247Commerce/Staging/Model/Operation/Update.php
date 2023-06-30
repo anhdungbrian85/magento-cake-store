@@ -169,10 +169,7 @@ class Update implements UpdateInterface
         $update = $this->updateRepository->get($arguments['created_in']);
 
         $needReschedule = false;
-        if(!isset($entityData['updated_in'])){
-            $entityData['updated_in']='';
-        }
-        if (isset($arguments['origin_in'])) {
+        if (isset($arguments['origin_in']) && $update->getRollbackId()) {
             $needReschedule = $arguments['created_in'] != $arguments['origin_in']
                 || $update->getRollbackId() != $entityData['updated_in'];
             if ($needReschedule) {

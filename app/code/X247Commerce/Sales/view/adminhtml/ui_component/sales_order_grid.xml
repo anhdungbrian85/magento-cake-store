@@ -22,7 +22,7 @@
         </column>
         <column name="payment_status" class="X247Commerce\Sales\Ui\Component\Listing\Column\PaymentStatus">
             <settings>
-                <filter>textRange</filter>
+                <!--<filter>textRange</filter>-->
                 <label translate="true">Payment Status</label>
                 <sortable>false</sortable>
             </settings>

@@ -56,7 +56,7 @@
         "magento/magento-cloud-metapackage": "2.4.5",
         "magento/module-layered-navigation": "^100.4",
         "magento/product-enterprise-edition": "2.4.5-p2",
-        "mageplaza/module-smtp": "^4.7",
+        "mageplaza/module-core": "^1.5",
         "mollie/magento2": "^2.17",
         "mollie/magento2-subscriptions": "^1.4",
         "mpdf/mpdf": "^8.1",

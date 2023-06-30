@@ -8,7 +8,6 @@
                     <item name="sortOrder" xsi:type="number">0</item>
                     <item name="component" xsi:type="string">X247Commerce_OrderPrintStatus/js/grid/columns/print-status</item>
                     <item name="bodyTmpl" xsi:type="string">X247Commerce_OrderPrintStatus/grid/columns/print-status</item>
-                    <item name="sortable" xsi:type="boolean">true</item>
                     <item name="filter" xsi:type="string">select</item>
                     <item name="label" xsi:type="string" translate="true">Print Status</item>
                     <item name="dataType" xsi:type="string">select</item>

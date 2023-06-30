@@ -5,62 +5,31 @@
  */
 declare(strict_types=1);
 
-namespace X247Commerce\StoreLocatorSource\Helper;
+namespace X247Commerce\Sales\Helper;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Backend\Model\Auth\Session as AdminSession;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Store\Model\ScopeInterface;
+
 
 /**
  * Sales admin helper.
  */
 class Data extends AbstractHelper
 {
+    CONST XML_PATH_ENABLED_SORTING_COLUMNS = 'admin_order_grid/sorting/enable_fields';
+
     public function __construct(
         Context $context
     ) {
         parent::__construct($context);
-        $this->adminSession = $adminSession;
-    }
-
-    public function getCurrentUser()
-    {
-        return $this->adminSession->getUser();
-    }
-
-    public function getStaffRole() 
-    {
-        return  $this->scopeConfig->getValue(self::XML_CONFIG_PATH_STAFF_ROLE_ID, ScopeInterface::SCOPE_STORE);
     }
 
     /**
-     * Check current admin user is staff of not
-     * @return bool
-     * 
+     * @return mixed
      */
-    public function isStaffUser($user = null) 
+    public function getEnableSortingColumns()
     {
-        if (!$user) {
-            $user = $this->getCurrentUser();
-        }
-        $staffRole = $this->getStaffRole();
-        $user = $this->getCurrentUser();
-        $currentAdminRole = $user->getRole()->getId();
-        return $staffRole == $currentAdminRole;
-    }
-
-    /**
-     * Check an admin user can manage order or not
-     * @return bool
-     * 
-     */
-    public function checkUserCanManageOrder($order, $user = null)
-    {
-        if (!$user) {
-            $user = $this->getCurrentUser();
-        }
-
+        return  $this->scopeConfig->getValue(self::XML_PATH_ENABLED_SORTING_COLUMNS, ScopeInterface::SCOPE_STORE);
     }
 }
