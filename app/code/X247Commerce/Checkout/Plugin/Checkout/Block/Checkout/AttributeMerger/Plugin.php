@@ -7,9 +7,7 @@ class Plugin
   {
     if (array_key_exists('street', $result)) {
       $result['street']['children'][0]['placeholder'] = __('Type first line of address and select from dropdown');
-      $result['street']['children'][1]['placeholder'] = __('Type first line of address and select from dropdown');
     }
-
     return $result;
   }
 }

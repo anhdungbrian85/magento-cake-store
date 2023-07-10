@@ -18,7 +18,7 @@
         <plugin name="Plugin_Frontend_LayoutProcessor_Magento_Checkout_Block_Checkout" type="X247Commerce\Checkout\Plugin\Checkout\LayoutProcessor" sortOrder="10" disabled="false"/>
     </type>
     <type name="Magento\Checkout\Block\Checkout\AttributeMerger">
-        <plugin name="shippingAddress" type="X247Commerce\Checkout\Plugin\Checkout\Block\Checkout\AttributeMerger\Plugin"/>
+        <plugin name="shippingAddress" type="X247Commerce\Checkout\Plugin\Checkout\Block\Checkout\AttributeMerger\Plugin" sortOrder="100" disabled="false"/>
     </type>
     <!-- Remove location data to customer data -->
     <type name="Amasty\StorePickupWithLocator\CustomerData\LocationData">
