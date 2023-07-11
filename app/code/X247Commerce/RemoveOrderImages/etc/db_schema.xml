@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order">
+        <column xsi:type="int" name="remove_images_flag" nullable="true" default="0" comment="remove images flag" />
+        <index referenceId="SALES_ORDER_REMOVE_IMAGES_FLAG" indexType="btree">
+            <column name="remove_images_flag"/>
+        </index>
+    </table>
+</schema>
