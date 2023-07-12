@@ -1,0 +1,10 @@
+{
+    "sales_order": {
+        "column": {
+            "remove_images_flag": true
+        },
+        "index": {
+            "SALES_ORDER_REMOVE_IMAGES_FLAG": true
+        }
+    }
+}

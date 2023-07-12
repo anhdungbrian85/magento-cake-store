@@ -6,18 +6,20 @@
     <type name="Magento\Framework\App\Action\AbstractAction">
         <plugin name="x247_http_context_before_get_vary_string" type="X247Commerce\Checkout\Plugin\HttpContext" sortOrder="1"/>
     </type>
-    
+
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
-       <arguments>
-           <argument name="configProviders" xsi:type="array">
-               <item name="additional_provider" xsi:type="object">X247Commerce\Checkout\Model\CheckoutLocationParams</item>
-           </argument>
-       </arguments>
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="additional_provider" xsi:type="object">X247Commerce\Checkout\Model\CheckoutLocationParams</item>
+            </argument>
+        </arguments>
     </type>
     <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
         <plugin name="Plugin_Frontend_LayoutProcessor_Magento_Checkout_Block_Checkout" type="X247Commerce\Checkout\Plugin\Checkout\LayoutProcessor" sortOrder="10" disabled="false"/>
     </type>
-
+    <type name="Magento\Checkout\Block\Checkout\AttributeMerger">
+        <plugin name="shippingAddress" type="X247Commerce\Checkout\Plugin\Checkout\Block\Checkout\AttributeMerger\Plugin" sortOrder="100" disabled="false"/>
+    </type>
     <!-- Remove location data to customer data -->
     <type name="Amasty\StorePickupWithLocator\CustomerData\LocationData">
         <plugin name="x247checkout_remove_location_to_data_customer" type="X247Commerce\Checkout\Plugin\CustomerData\LocationData" sortOrder="20" disabled="false" />
@@ -27,8 +29,7 @@
     <type name="Amasty\StorePickupWithLocator\Model\LocationProvider">
         <plugin name="x247checkout_add_custom_location_to_data" type="X247Commerce\Checkout\Plugin\Model\LocationProvider" sortOrder="20" disabled="false" />
     </type>
-    
-    <preference for="Magento\Checkout\Controller\Cart\Add" 
-        type="X247Commerce\Checkout\Controller\Cart\Add" />
+
+    <preference for="Magento\Checkout\Controller\Cart\Add" type="X247Commerce\Checkout\Controller\Cart\Add" />
 
 </config>

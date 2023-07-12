@@ -2,7 +2,7 @@
 //  Common
 //  _____________________________________________
 
-& when (@media-common = true) {
+& when (@media-common =true) {
 	.custom-mega-menu {
 		.submenu.show {
 			li:first-child {
@@ -20,14 +20,16 @@
 	.page-wrapper .custom-topmenu-mobile {
 		width: 100%;
 		box-sizing: border-box;
+
 		.category-top {
-			.navigation{
-				&>ul{
+			.navigation {
+				&>ul {
 					display: flex;
 					flex-wrap: nowrap;
 					overflow: scroll;
-					li{
-						a{
+
+					li {
+						a {
 							font-size: 14px;
 							text-transform: capitalize;
 							font-weight: 600;
@@ -38,7 +40,8 @@
 							padding: 6px 12px 6px 6px;
 							border: 1px solid #D9D9D9;
 							border-radius: 6px;
-							span{
+
+							span {
 								white-space: nowrap;
 								overflow: hidden;
 								text-overflow: ellipsis;
@@ -49,15 +52,17 @@
 								font-weight: 400;
 							}
 						}
-						.submenu{
+
+						.submenu {
 							display: none;
 							position: absolute;
 							right: 1000%;
 						}
-					}	
+					}
 				}
 			}
 		}
+
 		.label-menu-mobile {
 			font-size: 18px;
 			color: #282828;
@@ -120,6 +125,7 @@
 							padding-left: 35px;
 							font-size: 14px;
 							font-weight: 400;
+
 							&:after {
 								content: '';
 								width: 29px;
@@ -130,11 +136,14 @@
 								position: absolute;
 							}
 						}
+
 						&:hover {
 							background: #992E80;
-							color: #FFF!important;
+							color: #FFF !important;
+
 							span {
 								color: FFF;
+
 								&:after {
 									background: #FFF;
 								}
@@ -157,16 +166,33 @@
 				}
 			}
 		}
-		
+
 		li {
-		&.level {
-			&.nav-1 {
-				&.category-item {
-					&.first {
+			&.level {
+				&.nav-1 {
+					&.category-item {
+						&.first {
+							&.ui-menu-item {
+								span {
+									&:before {
+										content: url(../images/category-cake.png);
+										left: 6px;
+										position: absolute;
+										z-index: 9;
+										top: 2px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				&.nav-2 {
+					&.category-item {
 						&.ui-menu-item {
 							span {
 								&:before {
-									content: url(../images/category-cake.png);
+									content: url(../images/category-cake-slice.png);
 									left: 6px;
 									position: absolute;
 									z-index: 9;
@@ -176,54 +202,41 @@
 						}
 					}
 				}
-			}
-			&.nav-2 {
-				&.category-item {
-					&.ui-menu-item {
-						span {
-							&:before {
-								content: url(../images/category-cake-slice.png);
-								left: 6px;
-								position: absolute;
-								z-index: 9;
-								top: 2px;
+
+				&.nav-3 {
+					&.category-item {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/category-cake-cheese.png);
+									left: 6px;
+									position: absolute;
+									z-index: 9;
+									top: 2px;
+								}
 							}
 						}
 					}
 				}
-			}
-			&.nav-3 {
-				&.category-item {
-					&.ui-menu-item {
-						span {
-							&:before {
-								content: url(../images/category-cake-cheese.png);
-								left: 6px;
-								position: absolute;
-								z-index: 9;
-								top: 2px;
+
+				&.nav-4 {
+					&.category-item {
+						&.ui-menu-item {
+							span {
+								&:before {
+									content: url(../images/category-cupcake.png);
+									left: 6px;
+									position: absolute;
+									z-index: 9;
+									top: 2px;
+								}
 							}
 						}
 					}
 				}
-			}
-			&.nav-4 {
-				&.category-item {
-					&.ui-menu-item {
-						span {
-							&:before {
-								content: url(../images/category-cupcake.png);
-								left: 6px;
-								position: absolute;
-								z-index: 9;
-								top: 2px;
-							}
-						}
-					}
-				}
-			}
-			&.nav-5 {
-				&.category-item {
+
+				&.nav-5 {
+					&.category-item {
 						&.ui-menu-item {
 							span {
 								&:before {
@@ -236,11 +249,12 @@
 							}
 						}
 
+					}
 				}
-			}
-			&.nav-6 {
-				&.category-item {
-			
+
+				&.nav-6 {
+					&.category-item {
+
 						&.ui-menu-item {
 							span {
 								&:before {
@@ -252,37 +266,40 @@
 								}
 							}
 						}
-					
+
+					}
 				}
-			}
-			&.nav-7 {
-				&.category-item {
-					&.last {
-						&.ui-menu-item {
-							span {
-								&:before {
-									content: url(../images/icon-location.png);
-									left: 7px;
-									position: absolute;
-									z-index: 9;
-									top: 5px;
+
+				&.nav-7 {
+					&.category-item {
+						&.last {
+							&.ui-menu-item {
+								span {
+									&:before {
+										content: url(../images/icon-location.png);
+										left: 7px;
+										position: absolute;
+										z-index: 9;
+										top: 5px;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			&.nav-8 {
-				&.category-item {
-					&.last {
-						&.ui-menu-item {
-							span {
-								&:before {
-									content: url(../images/icon-location.png);
-									left: 7px;
-									position: absolute;
-									z-index: 9;
-									top: 5px;
+
+				&.nav-8 {
+					&.category-item {
+						&.last {
+							&.ui-menu-item {
+								span {
+									&:before {
+										content: url(../images/icon-location.png);
+										left: 7px;
+										position: absolute;
+										z-index: 9;
+										top: 5px;
+									}
 								}
 							}
 						}
@@ -290,7 +307,6 @@
 				}
 			}
 		}
-	}
 	}
 
 
@@ -310,7 +326,8 @@
 		.trustpilot-widget {
 			margin-top: 5px;
 			position: relative;
-			&::before{
+
+			&::before {
 				content: '';
 				left: 0;
 				right: 0;
@@ -383,7 +400,7 @@
 			margin: 0;
 			padding: 0;
 			background: #fff;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 			transition: .3s all;
 
 			li {
@@ -391,6 +408,7 @@
 				display: block;
 				margin-bottom: 0;
 				margin-right: 0;
+
 				a {
 					color: #992e80;
 					font-size: 16px;
@@ -424,7 +442,7 @@
 
 }
 
-.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+.media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__m) {
 	.custom-topmenu-mobile {
 		display: none;
 	}
@@ -453,8 +471,8 @@
 
 			&.-topmenu {
 				.ammenu-items.-root {
-					& > .ammenu-item {
-						& > .ammenu-link {
+					&>.ammenu-item {
+						&>.ammenu-link {
 							color: #fff;
 							font-size: 14px;
 							font-weight: normal !important;
@@ -567,15 +585,15 @@
 			}
 
 			ul {
-				& > li {
-					& > ul {
+				&>li {
+					&>ul {
 						display: none;
 					}
 				}
 			}
 
 			.item-parent {
-				& > a {
+				&>a {
 					display: flex;
 
 					.icon-toggle {
@@ -599,7 +617,7 @@
 
 }
 
-.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__m) {
 	.page-header {
 		border-bottom: none;
 		margin-bottom: 0;
@@ -658,7 +676,7 @@
 			}
 		}
 
-		.ammenu-nav-sections.-mobile.-accordion .ammenu-items.-root > .ammenu-item .ammenu-items .ammenu-link {
+		.ammenu-nav-sections.-mobile.-accordion .ammenu-items.-root>.ammenu-item .ammenu-items .ammenu-link {
 			color: #333333 !important;
 		}
 	}
@@ -694,17 +712,36 @@
 	}
 }
 
-.media-width(@extremum, @break) when (@extremum = 'max') and (@break =  @screen__xl) {
-	.custom-mega-menu{
-		.pagebuilder-column-line{
+.media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__xl) {
+	.custom-mega-menu {
+		.pagebuilder-column-line {
 			justify-content: space-between;
-			.pagebuilder-column{
+
+			.pagebuilder-column {
 				display: none !important;
 			}
-			.pagebuilder-column.category-list{
+
+			.pagebuilder-column.category-list {
 				display: block !important;
 
 			}
 		}
+	}
+}
+
+@media only screen and (min-width: 1023px) and (max-width: 1422px) {
+	.page-header .header.content{
+		height:140px;
+	}
+	.ammenu-header-container .header.content .block-search,	.ammenu-header-container .header.content .ammenu-logo, .ammenu-header-container .header.content .minicart-wrapper, .header-account{
+		margin-top:-25px;
+	}
+	.page-header .block-search{
+		width:360px !important;
+	}
+	.header.content .ammenu-nav-sections.-topmenu:not(.-hamburger) .ammenu-main-container .ammenu-items.-root {
+		position: absolute;
+		top: 95px;
+		left: 38px;
 	}
 }
