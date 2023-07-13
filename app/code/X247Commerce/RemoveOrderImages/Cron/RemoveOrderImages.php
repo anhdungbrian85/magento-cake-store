@@ -53,18 +53,16 @@ class RemoveOrderImages
         if (empty($limit)) {
             $limit = 50;
         }
-        var_dump($limit);
+
         $this->coreSession->unsLimitCompleteOrder();
         $collection->getSelect()->limit($limit);
-        var_dump(count($collection));
+
         foreach ($collection as $order) {
-            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/remove_order_images.log');
-            $logger = new \Zend_Log();
-            $logger->addWriter($writer);
+
             try {
                 foreach ($order->getAllVisibleItems() as $orderItem) {
                         $options = $orderItem->getProductOptions();
-                        
+
                         $optionDetails = [];
                         if(!empty($options["options"])) {
                             foreach($options["options"] as $option) {
@@ -73,27 +71,25 @@ class RemoveOrderImages
                                 }
                             }
                         }
-                        
+
                         if ($optionDetails) {
                             $detail = json_decode($optionDetails, true);
                             $quotePath = !empty($detail["quote_path"]) ? $detail["quote_path"] : '';
                             $orderPath = !empty($detail["order_path"]) ? $detail["order_path"] : '';
 
                             $mediaRootDir = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath();
-                            
+
                             if ($quotePath && $this->file->isExists($mediaRootDir . $quotePath)) {
                                 $this->file->deleteFile($mediaRootDir . $quotePath);
                             }
                             if ($orderPath && $this->file->isExists($mediaRootDir . $orderPath)) {
                                 $this->file->deleteFile($mediaRootDir . $orderPath);
                             }
-                            if ($orderPath || $quotePath) {
-                                $logger->info('Remove images of order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId());
-                            }
+
                         }
                 }
-            } catch (Exception $e) {
-                $logger->info('Cannot remove images of order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' - '.$e->getMessage());
+            } catch (\Exception $e) {
+                $this->logger->info('Cannot remove images of order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' - '.$e->getMessage());
             }
             $this->saveRemoveImagesFlag($order);
         }
