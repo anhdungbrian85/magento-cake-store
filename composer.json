@@ -125,6 +125,9 @@
             },
             "magento/module-elasticsearch": {
                 "Fixed Issue #35899": "_extra/patches/module-elasticsearch/fix-filtering-with-out-of-stock-products.patch"
+            },
+            "magento/module-catalog": {
+                "Product custom options debugger": "_extra/patches/module-catalog/product-debugger.patch"
             }
         },
         "magento-force": true,
