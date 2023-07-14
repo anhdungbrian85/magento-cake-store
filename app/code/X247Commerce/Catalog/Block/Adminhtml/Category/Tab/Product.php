@@ -103,7 +103,7 @@ class Product extends \Magento\Catalog\Block\Adminhtml\Category\Tab\Product
         $products = $this->getRequest()->getPost('selected_products_popup');
         if ($products === null) {
             $products = $this->getCategory()->getProductsPopupPosition();
-            return array_keys($products);
+            return !empty($products) ? array_keys($products) : [];
         }
 
         return $products;
