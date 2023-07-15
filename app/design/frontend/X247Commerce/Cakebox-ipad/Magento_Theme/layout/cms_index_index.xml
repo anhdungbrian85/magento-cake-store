@@ -26,7 +26,11 @@
             <container name="category.view.container" htmlTag="div" htmlClass="category-view container" after="-">
                 <block class="X247Commerce\Theme\Block\Html\IpadHomeView" name="category.description" template="Magento_Catalog::category/description.phtml"/>
                 <block class="X247Commerce\Catalog\Block\Category\Subcategory\Listing" name="home.ipad.subcategory.listing" 
-                    template="X247Commerce_Catalog::catalog/category/subcategory/listing.phtml"/>
+                    template="X247Commerce_Catalog::catalog/category/subcategory/listing.phtml">
+                        <arguments>
+                            <argument name="type_page" xsi:type="string">ipad_home_page</argument>
+                        </arguments>
+                </block>
             </container>
         </referenceContainer>
         <move element="breadcrumbs" destination="category.page.header" after="-" />

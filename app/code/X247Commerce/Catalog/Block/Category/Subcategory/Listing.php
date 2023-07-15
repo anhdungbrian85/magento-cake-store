@@ -19,7 +19,9 @@ class Listing extends \Magento\Framework\View\Element\Template
 
     protected $urlRewritesRegenerator;
 
+    const IPAD_HOME_PAGE = 'is_active_ipad_home_page';
 
+    const CAKE_PAGE = 'is_active_cake_page';
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -51,6 +53,7 @@ class Listing extends \Magento\Framework\View\Element\Template
         unset($arrCategories[0]);
         $collection = $this->categoryCollectionFactory->create()
         ->addAttributeToSelect('*')
+        ->addFieldToFilter($this->getFieldPage(), 1)
         ->addFieldToFilter('entity_id', ['in' => $arrCategories]);
         return $collection;
     }
@@ -84,5 +87,10 @@ class Listing extends \Magento\Framework\View\Element\Template
         return $this->urlRewritesRegenerator->generate($storeId, $category);
     }
 
-
+    protected function getFieldPage(){
+        if($this->getData('type_page') == "ipad_home_page" ){
+            return self::IPAD_HOME_PAGE;
+        }
+        return self::CAKE_PAGE;
+    }
 }
