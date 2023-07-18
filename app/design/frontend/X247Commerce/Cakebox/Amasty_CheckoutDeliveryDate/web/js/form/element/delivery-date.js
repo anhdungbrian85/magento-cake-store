@@ -135,10 +135,10 @@ define([
 
             if (isToday(d)) {
                 dayEnabled = timeToDeliver < cutOffTimeToInt;
-            }
-
-            if (timeToDeliver > Date.parse(d)/1000) {
-                dayEnabled = false;
+            }   else {
+                if (timeToDeliver > Date.parse(d)/1000) {
+                    dayEnabled = false;
+                }
             }
 
             if ($.inArray(d.getDay(), this.amcheckout_days) == -1) {
