@@ -62,7 +62,7 @@ class QuoteSubmitBefore implements ObserverInterface
             $postcode = $shippingAddress->getPostcode();
             $deliveryQuote = $this->deliveryDateProvider->findByQuoteId($quote->getId());
 
-            if (empty($deliveryQuote->getDate()) || empty($deliveryQuote->getTime())) {
+            if (empty($deliveryQuote) || empty($deliveryQuote->getDate()) || empty($deliveryQuote->getTime())) {
                 $this->logger->info('backend validation fired: cakeboxdelivery_cakeboxdelivery' . ' - '. $quote->getId(). ' - '. $deliveryQuote->getDate());
                 throw new LocalizedException(__('Pickup, delivery time/date are required!'));
             }
@@ -96,7 +96,7 @@ class QuoteSubmitBefore implements ObserverInterface
             $locationId = $quote->getData('store_location_id') ?? $this->storeLocationContext->getStoreLocationId();
             $pickupQuote = $this->amQuoteRepository->getByQuoteId($quote->getId());
 
-            if (empty($pickupQuote->getDate()) || empty($pickupQuote->getTimeFrom())) {
+            if (empty($pickupQuote) || empty($pickupQuote->getDate()) || empty($pickupQuote->getTimeFrom())) {
                 $this->logger->info('backend validation fired: amstorepickup' . ' - '. $quote->getId(). ' - '. $pickupQuote->getDate());
                 throw new LocalizedException(__('Pickup, delivery time/date are required!'));
             }
