@@ -23,16 +23,9 @@
         <plugin name="x247checkout_change_delivery_value" type="X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\DeliveryInfo" sortOrder="20" disabled="false" />
     </type>
 
-    <!-- <type name="Amasty\CheckoutDeliveryDate\Model\GuestDeliveryInformationManagement">
-        <plugin name="change_format_date_guest_delivery" type="X247Commerce\Checkout\Plugin\Model\GuestDeliveryInformationManagement" disabled="true"  />
-    </type> -->
-    <!-- <type name="Amasty\StorePickupWithLocator\Model\PickupDate">
-        <plugin name="change_format_date" type="X247Commerce\Checkout\Plugin\Model\PickupDate" disabled="false"  />
-    </type> -->
-
-     <!-- <type name="Amasty\CheckoutDeliveryDate\Model\DeliveryInformationManagement">
-        <plugin name="change_format_date_delivery" type="X247Commerce\Checkout\Plugin\Model\DeliveryInformationManagement" disabled="false"  />
-    </type> -->
+    <type name="Magento\Quote\Model\QuoteAddressValidator">
+        <plugin name="fix_quote_validator_error" type="X247Commerce\Checkout\Plugin\QuoteAddressValidator" disabled="false"  />
+    </type>
 
     <type name="Magento\Checkout\CustomerData\DefaultItem">
         <plugin name="add_lead_delivery_data" type="X247Commerce\Checkout\Plugin\CustomerData\DefaultItem" disabled="false"  />

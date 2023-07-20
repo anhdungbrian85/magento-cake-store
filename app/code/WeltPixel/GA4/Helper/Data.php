@@ -730,85 +730,88 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function checkVariantForProduct($product, $buyRequest = [], $wishlistItem = null, $checkForCustomOptions = false)
     {
-        $variant = [];
+        try {
+            $variant = [];
 
-        /** get the configurable products variants, options */
-        if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-            $options = $product->getTypeInstance(true)->getSelectedAttributesInfo($product);
-            foreach ($options as $option) {
-                $variant[] = $option['label'] . ": " . $option['value'];
-            }
+            /** get the configurable products variants, options */
+            if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                $options = $product->getTypeInstance(true)->getSelectedAttributesInfo($product);
+                foreach ($options as $option) {
+                    $variant[] = $option['label'] . ": " . $option['value'];
+                }
 
-            if (!$variant && isset($buyRequest['super_attribute'])) {
-                $superAttributeLabels = [];
-                $superAttributeOptions = [];
-                $_attributes = $product->getTypeInstance(true)->getConfigurableAttributes($product);
-                foreach ($_attributes as $_attribute) {
-                    $superAttributeLabels[$_attribute['attribute_id']] = $_attribute['label'];
-                    foreach ($_attribute->getOptions() as $option) {
-                        $superAttributeOptions[$_attribute['attribute_id']][$option['value_index']] = $option['store_label'];
+                if (!$variant && isset($buyRequest['super_attribute'])) {
+                    $superAttributeLabels = [];
+                    $superAttributeOptions = [];
+                    $_attributes = $product->getTypeInstance(true)->getConfigurableAttributes($product);
+                    foreach ($_attributes as $_attribute) {
+                        $superAttributeLabels[$_attribute['attribute_id']] = $_attribute['label'];
+                        foreach ($_attribute->getOptions() as $option) {
+                            $superAttributeOptions[$_attribute['attribute_id']][$option['value_index']] = $option['store_label'];
+                        }
                     }
-                }
 
-                foreach ($buyRequest['super_attribute'] as $id => $value) {
-                    $variant[] = $superAttributeLabels[$id] . ": " . $superAttributeOptions[$id][$value];
-                }
-            }
-        }
-
-        $customOptionFound = false;
-        /** This is for the custom options for products */
-        $_customOptions = $product->getTypeInstance(true)->getOrderOptions($product);
-        if (array_key_exists('options', $_customOptions)) {
-            foreach ($_customOptions['options'] as $option) {
-                $customOptionFound = true;
-                $variant[] = $option['label'] . ": " . $option['print_value'];
-            }
-        }
-
-        if ($wishlistItem && !$customOptionFound) {
-            $options = $this->configurationHelper->getOptions($wishlistItem);
-            foreach ($options as $customOption) {
-                if (isset($customOption['print_value'])) {
-                    $variant[] = $customOption['label'] . ": " . $customOption['print_value'];
-                }
-            }
-        }
-
-        /** Wishlist add to cart with not preselected custom options */
-        if ($checkForCustomOptions && isset($buyRequest['options'])) {
-            $productOptions = $this->productOptionRepository->getProductOptions($product);
-            $productCustomOptionsLabel = [];
-            $productCustomOptionsValues = [];
-            foreach ($productOptions as $option) {
-                $productCustomOptionsLabel[$option['option_id']] = $option['title'];
-                if ($option->hasValues()) {
-                    $values = $option->getValues();
-                    foreach ($values as $value) {
-                        $productCustomOptionsValues[$option['option_id']][$value->getOptionTypeId()] = $value->getTitle();
+                    foreach ($buyRequest['super_attribute'] as $id => $value) {
+                        $variant[] = $superAttributeLabels[$id] . ": " . $superAttributeOptions[$id][$value];
                     }
                 }
             }
 
-            foreach ($buyRequest['options'] as $optionId => $optionValues) {
-                if (is_array($optionValues)) {
-                    $optValue = [];
-                    foreach ($optionValues as $value) {
-                        $optValue[] = $productCustomOptionsValues[$optionId][$value];
-                    }
-                    $variant[] = $productCustomOptionsLabel[$optionId] . ": " . implode(',', $optValue);
-                } elseif (isset($productCustomOptionsValues[$optionId])) {
-                    $variant[] = $productCustomOptionsLabel[$optionId] . ": " . $productCustomOptionsValues[$optionId][$optionValues];
-                } else {
-                    $variant[] = $productCustomOptionsLabel[$optionId] . ": " . $optionValues;
+            $customOptionFound = false;
+            /** This is for the custom options for products */
+            $_customOptions = $product->getTypeInstance(true)->getOrderOptions($product);
+            if (array_key_exists('options', $_customOptions)) {
+                foreach ($_customOptions['options'] as $option) {
+                    $customOptionFound = true;
+                    $variant[] = $option['label'] . ": " . $option['print_value'];
                 }
             }
-        }
 
-        if ($variant) {
-            return implode(' | ', $variant);
-        }
+            if ($wishlistItem && !$customOptionFound) {
+                $options = $this->configurationHelper->getOptions($wishlistItem);
+                foreach ($options as $customOption) {
+                    if (isset($customOption['print_value'])) {
+                        $variant[] = $customOption['label'] . ": " . $customOption['print_value'];
+                    }
+                }
+            }
 
+            /** Wishlist add to cart with not preselected custom options */
+            if ($checkForCustomOptions && isset($buyRequest['options'])) {
+                $productOptions = $this->productOptionRepository->getProductOptions($product);
+                $productCustomOptionsLabel = [];
+                $productCustomOptionsValues = [];
+                foreach ($productOptions as $option) {
+                    $productCustomOptionsLabel[$option['option_id']] = $option['title'];
+                    if ($option->hasValues()) {
+                        $values = $option->getValues();
+                        foreach ($values as $value) {
+                            $productCustomOptionsValues[$option['option_id']][$value->getOptionTypeId()] = $value->getTitle();
+                        }
+                    }
+                }
+
+                foreach ($buyRequest['options'] as $optionId => $optionValues) {
+                    if (is_array($optionValues)) {
+                        $optValue = [];
+                        foreach ($optionValues as $value) {
+                            $optValue[] = $productCustomOptionsValues[$optionId][$value];
+                        }
+                        $variant[] = $productCustomOptionsLabel[$optionId] . ": " . implode(',', $optValue);
+                    } elseif (isset($productCustomOptionsValues[$optionId])) {
+                        $variant[] = $productCustomOptionsLabel[$optionId] . ": " . $productCustomOptionsValues[$optionId][$optionValues];
+                    } else {
+                        $variant[] = $productCustomOptionsLabel[$optionId] . ": " . $optionValues;
+                    }
+                }
+            }
+
+            if ($variant) {
+                return implode(' | ', $variant);
+            }
+        } catch (\Exception) {
+            // Do nothing
+        }
         return false;
     }
 

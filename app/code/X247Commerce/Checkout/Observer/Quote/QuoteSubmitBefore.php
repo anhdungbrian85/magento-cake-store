@@ -1,76 +1,73 @@
 <?php
 namespace X247Commerce\Checkout\Observer\Quote;
 
+use Amasty\CheckoutDeliveryDate\Model\DeliveryDateProvider;
+use Amasty\StorePickupWithLocator\Model\QuoteRepository as AmPickupQuoteRepository;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\PaymentException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
-use X247Commerce\Catalog\Model\ProductSourceAvailability;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 use X247Commerce\Checkout\Api\StoreLocationContextInterface;
 use Psr\Log\LoggerInterface;
 use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
 use X247Commerce\Delivery\Helper\DeliveryData;
+use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory as LocationCollectionFactory;
 
 class QuoteSubmitBefore implements ObserverInterface
 {
-    protected $checkoutSession;
-    protected $logger;
-    private $sourceRepository;
-    private $searchCriteriaBuilderFactory;
-    private $productSourceAvailability;
-    protected $locatorSourceResolver;
-    protected $storeLocationContext;
+    protected CheckoutSession $checkoutSession;
+    protected LoggerInterface $logger;
+    protected LocatorSourceResolver $locatorSourceResolver;
+    protected StoreLocationContextInterface $storeLocationContext;
+    protected LocationCollectionFactory $locationCollectionFactory;
+    protected DeliveryAreaHelper $deliveryAreaHelper;
+    protected DeliveryData $deliveryData;
+    protected AmPickupQuoteRepository $amQuoteRepository;
+    protected DeliveryDateProvider $deliveryDateProvider;
 
-    protected $locationCollectionFactory;
-
-    protected $deliveryAreaHelper;
-
-    protected $deliveryData;
 
     public function __construct(
         DeliveryData $deliveryData,
         DeliveryAreaHelper $deliveryAreaHelper,
-        \Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory $locationCollectionFactory,
+        LocationCollectionFactory $locationCollectionFactory,
         CheckoutSession $checkoutSession,
-        SourceRepositoryInterface $sourceRepository,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        ProductSourceAvailability $productSourceAvailability,
         LocatorSourceResolver $locatorSourceResolver,
         StoreLocationContextInterface $storeLocationContext,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AmPickupQuoteRepository $amQuoteRepository,
+        DeliveryDateProvider $deliveryDateProvider
     ) {
         $this->deliveryData = $deliveryData;
         $this->locationCollectionFactory = $locationCollectionFactory;
         $this->deliveryAreaHelper = $deliveryAreaHelper;
         $this->checkoutSession = $checkoutSession;
-        $this->sourceRepository = $sourceRepository;
-        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
-        $this->productSourceAvailability = $productSourceAvailability;
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->storeLocationContext = $storeLocationContext;
+        $this->amQuoteRepository = $amQuoteRepository;
+        $this->deliveryDateProvider = $deliveryDateProvider;
         $this->logger = $logger;
     }
 
-    public function execute(EventObserver $observer)
-    {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info('Start debugging!'); // Print string type data
 
+    public function execute(EventObserver $observer): void
+    {
         $order = $observer->getEvent()->getOrder();
         $quote = $observer->getEvent()->getQuote();
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         $shippingAddress = $quote->getShippingAddress();
-        $logger->info('Shipping Method:' . $shippingMethod);
-        if($shippingMethod == 'cakeboxdelivery_cakeboxdelivery') {
+
+        if ($shippingMethod == 'cakeboxdelivery_cakeboxdelivery') {
+
             $postcode = $shippingAddress->getPostcode();
-            $logger->info('PostCode:' . $postcode);
-            if($postcode && $postcode != '-'){
+            $deliveryQuote = $this->deliveryDateProvider->findByQuoteId($quote->getId());
+
+            if (empty($deliveryQuote) || empty($deliveryQuote->getDate()) || empty($deliveryQuote->getTime())) {
+                $this->logger->info('backend validation fired: cakeboxdelivery_cakeboxdelivery' . ' - '. $quote->getId(). ' - '. $deliveryQuote->getDate());
+                throw new LocalizedException(__('Pickup, delivery time/date are required!'));
+            }
+
+            if ($postcode && $postcode != '-') {
                 $productSkus = [];
                 if (!empty($quote->getAllVisibleItems())) {
                     foreach ($quote->getAllVisibleItems() as $quoteItem) {
@@ -78,8 +75,6 @@ class QuoteSubmitBefore implements ObserverInterface
                     }
                 }
                 $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
-                $logger->info('$customerPostcode' . $postcode);
-                $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
                 if ($locationDataFromPostCode['status']) {
                     $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
                         $postcode,
@@ -99,13 +94,17 @@ class QuoteSubmitBefore implements ObserverInterface
             }
         } else {
             $locationId = $quote->getData('store_location_id') ?? $this->storeLocationContext->getStoreLocationId();
-			$logger->info('Collect in Store Location: '.$locationId);
+            $pickupQuote = $this->amQuoteRepository->getByQuoteId($quote->getId());
+
+            if (empty($pickupQuote) || empty($pickupQuote->getDate()) || empty($pickupQuote->getTimeFrom())) {
+                $this->logger->info('backend validation fired: amstorepickup' . ' - '. $quote->getId(). ' - '. $pickupQuote->getDate());
+                throw new LocalizedException(__('Pickup, delivery time/date are required!'));
+            }
+
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
-					$logger->info('Collect in Store Location SKU: '.$item->getSku());
                     $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);
                     if (!$available) {
-						$logger->info('Collect in Store Location SKU ERROR: '.$item->getSku());
                         throw new LocalizedException(__('Some of the products are out stock!'));
                     }
                 }
