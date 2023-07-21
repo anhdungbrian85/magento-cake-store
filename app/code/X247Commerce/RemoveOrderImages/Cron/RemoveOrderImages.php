@@ -51,7 +51,7 @@ class RemoveOrderImages
             ;
         $limit = $this->coreSession->getLimitCompleteOrder();
         if (empty($limit)) {
-            $limit = 50;
+            $limit = 500;
         }
 
         $this->coreSession->unsLimitCompleteOrder();

@@ -27,7 +27,7 @@ class RemoveOrderImages extends Command
     {
         $this->setName('x247commerce:remove_order_images')
             ->setDescription("Remove Images of Complete or Cancel Order");
-        $this->addArgument('limit', InputArgument::OPTIONAL, __('Default limit is 50 orders/cron run'));
+        $this->addArgument('limit', InputArgument::OPTIONAL, __('Default limit is 500 orders/cron run'));
 
         parent::configure();
     }
