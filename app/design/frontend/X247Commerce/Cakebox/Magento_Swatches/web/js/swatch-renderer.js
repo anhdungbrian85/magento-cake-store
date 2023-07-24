@@ -325,56 +325,55 @@ define([
             if (location.href.includes('click-collect-1-hour/')) {
                 clickCollect = true;
             }
-            if(configurableProductUrl){
-                $.ajax({
-                    url: configurableProductUrl,
-                    type: 'POST',
-                    data: {
-                        productId : $widget.options.parentProductId,
-                        clickCollect : clickCollect,
-                        form_key : this.options.form_key
-                    },
-                    success: function(response) {     
-                        // var newHtmls = $.parseJSON(response);
-                        
-                        if (response.jsonConfig) {
-                            $widget.options.jsonConfig =  $.parseJSON(response.jsonConfig);
-                        }
-                        
-                        window.leadDelivery = JSON.stringify($widget.options.jsonConfig.lead_delivery);
-                        window.indexSwatch = JSON.stringify($widget.options.jsonConfig.index);
-                        localStorage.setItem("lead_delivery", JSON.stringify($widget.options.jsonConfig.lead_delivery));
-                        if ($($widget.element).attr('data-rendered')) {
-                            return;
-                        }
 
-                        $($widget.element).attr('data-rendered', true);
-
-                        if (_.isEmpty($widget.options.jsonConfig.images)) {
-                            $widget.options.useAjax = true;
-                            // creates debounced variant of _LoadProductMedia()
-                            // to use it in events handlers instead of _LoadProductMedia()
-                            $widget._debouncedLoadProductMedia = _.debounce($widget._LoadProductMedia.bind($widget), 500);
-                        }
-
-                        $widget.options.tierPriceTemplate = $($widget.options.tierPriceTemplateSelector).html();
-
-                        if ($widget.options.jsonConfig !== '' && $widget.options.jsonSwatchConfig !== '') {
-                            // store unsorted attributes
-                            $widget.options.jsonConfig.mappedAttributes = _.clone($widget.options.jsonConfig.attributes);
-                            $widget._sortAttributes();
-                            $widget._RenderControls();
-                            $widget._setPreSelectedGallery();
-                            $($widget.element).trigger('swatch.initialized');
-                        } else {
-                            console.log('SwatchRenderer: No input data received');
-                        }
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        console.log('Error happens. Try again.');
+            $.ajax({
+                url: configurableProductUrl,
+                type: 'POST',
+                data: {
+                    productId : $widget.options.parentProductId,
+                    clickCollect : clickCollect,
+                    form_key : this.options.form_key
+                },
+                success: function(response) {     
+                    // var newHtmls = $.parseJSON(response);
+                    
+                    if (response.jsonConfig) {
+                        $widget.options.jsonConfig =  $.parseJSON(response.jsonConfig);
                     }
-                });
-            }
+                    
+                    window.leadDelivery = JSON.stringify($widget.options.jsonConfig.lead_delivery);
+                    window.indexSwatch = JSON.stringify($widget.options.jsonConfig.index);
+                    localStorage.setItem("lead_delivery", JSON.stringify($widget.options.jsonConfig.lead_delivery));
+                    if ($($widget.element).attr('data-rendered')) {
+                        return;
+                    }
+
+                    $($widget.element).attr('data-rendered', true);
+
+                    if (_.isEmpty($widget.options.jsonConfig.images)) {
+                        $widget.options.useAjax = true;
+                        // creates debounced variant of _LoadProductMedia()
+                        // to use it in events handlers instead of _LoadProductMedia()
+                        $widget._debouncedLoadProductMedia = _.debounce($widget._LoadProductMedia.bind($widget), 500);
+                    }
+
+                    $widget.options.tierPriceTemplate = $($widget.options.tierPriceTemplateSelector).html();
+
+                    if ($widget.options.jsonConfig !== '' && $widget.options.jsonSwatchConfig !== '') {
+                        // store unsorted attributes
+                        $widget.options.jsonConfig.mappedAttributes = _.clone($widget.options.jsonConfig.attributes);
+                        $widget._sortAttributes();
+                        $widget._RenderControls();
+                        $widget._setPreSelectedGallery();
+                        $($widget.element).trigger('swatch.initialized');
+                    } else {
+                        console.log('SwatchRenderer: No input data received');
+                    }
+                },
+                error: function (xhr, status, errorThrown) {
+                    console.log('Error happens. Try again.');
+                }
+            });
 
             // Don't render the same set of swatches twice
            
