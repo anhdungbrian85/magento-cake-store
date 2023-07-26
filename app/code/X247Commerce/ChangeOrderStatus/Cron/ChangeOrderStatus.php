@@ -66,6 +66,7 @@ class ChangeOrderStatus
             ['pickup_date' => 'date']
         );
         $collection->getSelect()->where('aam.date <= ? OR aso.date <= ?', $compareDay);
+
         $limit = $this->coreSession->getLimitCompleteOrder();
         if (empty($limit)) {
             $limit = 50;
@@ -88,7 +89,7 @@ class ChangeOrderStatus
                 $converted = strtotime($date);
                 try {
                     if ( ( $today - $converted ) > 0 && ($today- $converted)/86400 >= $dayToChangeOrder ) {
-                        if($order->canInvoice()) {
+                        if($order->canInvoice() && !$order->hasInvoices()) {
                             $invoice = $this->invoiceService->prepareInvoice($order);
                             $invoice->register();
                             $invoice->save();
@@ -98,6 +99,7 @@ class ChangeOrderStatus
                                 $invoice->getOrder()
                             );
                             $transactionSave->save();
+                            $logger->info('Created invoice id: '.$invoice->getId());
                         }
 
                         if ($order->canShip()) {
