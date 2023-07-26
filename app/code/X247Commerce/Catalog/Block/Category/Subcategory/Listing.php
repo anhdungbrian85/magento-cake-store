@@ -50,7 +50,6 @@ class Listing extends \Magento\Framework\View\Element\Template
         $category = $this->getCurrentCategory();
         $strCategories = $category->getAllChildren();
         $arrCategories = explode(',', $strCategories);
-        unset($arrCategories[0]);
         $collection = $this->categoryCollectionFactory->create()
         ->addAttributeToSelect('*')
         ->addFieldToFilter($this->getFieldPage(), 1)
