@@ -213,7 +213,6 @@
         "magento/module-weee-graph-ql": "*",
         "magento/module-wishlist-gift-card-graph-ql": "*",
         "magento/module-wishlist-graph-ql": "*",
-        "paypal/module-braintree-graph-ql":"*",
-        "magento/module-banner-graph-ql":"*"
+        "paypal/module-braintree-graph-ql":"*"
     }
 }
