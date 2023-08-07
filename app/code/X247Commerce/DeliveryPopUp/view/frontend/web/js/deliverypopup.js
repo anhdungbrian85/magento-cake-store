@@ -19,7 +19,6 @@ define([
                     class: '',
                 }],
                 closed: function() {
-                    console.log("urlBuilder_closed", urlBuilder.build('deliverypopup/index/close'))
                     $.ajax({
                         url: urlBuilder.build('deliverypopup/index/close'),
                         method: "POST",
@@ -34,7 +33,7 @@ define([
                 }
             };
             var popup = modal(options, $('#custom-delivery-popup-modal'));
-            console.log('urlBuilder_deliverypopup', urlBuilder.build('deliverypopup'))
+
             var currentUrl = window.location.href;
             $.ajax({
                 url: urlBuilder.build('deliverypopup'),
