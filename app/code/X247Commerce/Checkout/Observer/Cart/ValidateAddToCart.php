@@ -58,28 +58,34 @@ class ValidateAddToCart implements ObserverInterface
 
     public function execute(EventObserver $observer)
     {
-        $deliveryType = $this->storeLocationContext->getDeliveryType();
-        $postValues = $this->request->getPostValue();
-        $addProduct = $observer->getProduct();
+        try {
+            $deliveryType = $this->storeLocationContext->getDeliveryType();
+            $postValues = $this->request->getPostValue();
+            $addProduct = $observer->getProduct();
 
-        if ($deliveryType == 2) {
-            $product = null;
-            if ($addProduct->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE)
-            {
-                $attributes = $postValues['super_attribute'];
+            if ($deliveryType == 2) {
+                $product = null;
+                if ($addProduct->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE)
+                {
+                    $attributes = $postValues['super_attribute'];
 
-                $product = $this->configurableproduct->getProductByAttributes($attributes, $addProduct);
-            } else {
-                $product = $addProduct;
+                    $product = $this->configurableproduct->getProductByAttributes($attributes, $addProduct);
+                } else {
+                    $product = $addProduct;
+                }
+
+                // $this->logger->log('600',  'Selected attributes '.print_r($product->getAttributeSetId(), true));
+
+                if ($product && $product->getLeadDelivery() > 1) {
+                    $this->storeLocationContext->setDeliveryType(0);
+                    $this->checkoutSession->setDeliveryType(0);
+                }
             }
 
-            // $this->logger->log('600', 'Selected attributes '.print_r($product->getAttributeSetId(), true));
-
-            if ($product->getLeadDelivery() > 1) {
-                $this->storeLocationContext->setDeliveryType(0);
-                $this->checkoutSession->setDeliveryType(0);
-            }
+        } catch (\Exception $e) {
+            $this->logger->error('There is an error while add to cart:' . $e->getMessage());
         }
+
         return;
     }
     public function getCategoryByUrlKey($urlKey)
