@@ -122,6 +122,9 @@
             "tinymce/tinymce": "lib/web/tiny_mce_5"
         },
         "patches": {
+            "amasty/module-mega-menu-lite": {
+                "fix-conflict-email-component-checkout": "_extra/patches/module-mega-menu-lite/Amasty-Fix-osc-no-email-field.composer.patch"
+            },
             "magento/module-elasticsearch": {
                 "Fixed Issue #35899": "_extra/patches/module-elasticsearch/fix-filtering-with-out-of-stock-products.patch"
             }
