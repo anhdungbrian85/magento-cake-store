@@ -38,6 +38,4 @@
             </argument>
         </arguments>
     </type>
-    <preference for="Amasty\Storelocator\Model\Location" type="X247Commerce\StoreLocator\Model\Location" />
-    <preference for="Amasty\Storelocator\Model\ResourceModel\Location" type="X247Commerce\StoreLocator\Model\ResourceModel\Location" />
 </config>
