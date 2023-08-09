@@ -62,6 +62,6 @@
     </table>
     
     <table name="mashiro_bundle_contexts_config">
-        <column xsi:type="mediumtext" name="config" comment="Config" />
+        <column xsi:type="mediumtext" name="config" unsigned="true" comment="Config" />
     </table>
 </schema>
