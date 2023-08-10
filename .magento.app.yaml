@@ -50,7 +50,7 @@ web:
                 ^/sitemap(.*)\.xml$:
                     passthru: "/media/sitemap$1.xml"
                 ^/.well-known/(.*)$:
-                    passthru: "/media/.well-known/$1"    
+                    passthru: "/media/.well-known/$1"
         "/media":
             root: "pub/media"
             allow: true
@@ -96,6 +96,9 @@ crons:
     cronrun:
         spec: "* * * * *"
         cmd: "php bin/magento cron:run"
+    cleancache:
+        spec: "0 9 * * *"
+        cmd: "php bin/magento cache:flush"
 
 # Environment variables
 variables:
