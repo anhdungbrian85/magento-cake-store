@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef3616a11dcd08e6c8c20ac280b490e8",
+    "content-hash": "c28e8175056e777b58ae3c8441133fe4",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -21430,16 +21430,16 @@
         },
         {
             "name": "mollie/magento2",
-            "version": "2.29.1",
+            "version": "2.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/magento2.git",
-                "reference": "5636a71c077059e8b4a4d53da133cd5ddc572618"
+                "reference": "f2fd09a876aa0847428f74f1d8b6b6e1243b7e54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/magento2/zipball/5636a71c077059e8b4a4d53da133cd5ddc572618",
-                "reference": "5636a71c077059e8b4a4d53da133cd5ddc572618",
+                "url": "https://api.github.com/repos/mollie/magento2/zipball/f2fd09a876aa0847428f74f1d8b6b6e1243b7e54",
+                "reference": "f2fd09a876aa0847428f74f1d8b6b6e1243b7e54",
                 "shasum": ""
             },
             "require": {
@@ -21511,6 +21511,8 @@
                 "paypal",
                 "paysafecard",
                 "podiumcadeaukaart",
+                "point of sale",
+                "pos",
                 "recurring",
                 "refunds",
                 "sepa",
@@ -21523,9 +21525,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/magento2/issues",
-                "source": "https://github.com/mollie/magento2/tree/v2.29.1"
+                "source": "https://github.com/mollie/magento2/tree/v2.30.0"
             },
-            "time": "2023-07-28T11:44:59+00:00"
+            "time": "2023-08-08T17:52:53+00:00"
         },
         {
             "name": "mollie/magento2-subscriptions",
