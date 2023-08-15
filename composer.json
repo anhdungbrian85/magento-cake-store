@@ -121,6 +121,11 @@
             ],
             "tinymce/tinymce": "lib/web/tiny_mce_5"
         },
+        "patches": {
+            "magento/module-elasticsearch": {
+                "Fixed Issue #35899": "_extra/patches/module-elasticsearch/fix-filtering-with-out-of-stock-products.patch"
+            }
+        },
         "magento-force": true,
         "magento-deploystrategy": "copy",
         "magento-deploy-ignore": {
