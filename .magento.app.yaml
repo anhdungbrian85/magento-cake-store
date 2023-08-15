@@ -97,7 +97,7 @@ crons:
         spec: "* * * * *"
         cmd: "php bin/magento cron:run"
     cleancache:
-        spec: "0 9 * * *"
+        spec: "0 3 * * *"
         cmd: "php bin/magento cache:flush"
 
 # Environment variables
