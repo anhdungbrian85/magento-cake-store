@@ -4,6 +4,7 @@
         <sequence>
             <module name="Amasty_Storelocator"/>
             <module name="Magento_InventoryCatalogAdminUi"/>
+            <module name="PureMashiro_BundleJs"/>
         </sequence>
     </module>
 </config>
