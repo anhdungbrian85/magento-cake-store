@@ -1506,7 +1506,7 @@ class Data extends CoreHelper
      * @param string $response_str
      * @return string
      */
-    public function extractBody($response_str)
+    public static function extractBody($response_str)
     {
         $parts = preg_split('|(?:\r\n){2}|m', $response_str, 2);
         if (isset($parts[1])) {
