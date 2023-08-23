@@ -1,0 +1,22 @@
+diff --git a/vendor/pure_mashiro/magento2-bundlejs/Model/DeferJsReplacer.php b/vendor/pure_mashiro/magento2-bundlejs/Model/DeferJsReplacer.php
+index dda06261..00f4af5e 100644
+--- a/vendor/pure_mashiro/magento2-bundlejs/Model/DeferJsReplacer.php
++++ b/vendor/pure_mashiro/magento2-bundlejs/Model/DeferJsReplacer.php
+@@ -6,7 +6,7 @@ use KubAT\PhpSimple\HtmlDomParser;
+ use PureMashiro\BundleJs\Helper\DeferJsReplacer as HelperDeferJsReplacer;
+ use PureMashiro\BundleJs\Source\Js as SourceJs;
+ 
+-defined('MAX_FILE_SIZE') || define('MAX_FILE_SIZE', 1000000);
++defined('MAX_FILE_SIZE') || define('MAX_FILE_SIZE', 30000000);
+ 
+ class DeferJsReplacer extends \DOMUtilForWebP\ImageUrlReplacer
+ {
+@@ -34,7 +34,7 @@ class DeferJsReplacer extends \DOMUtilForWebP\ImageUrlReplacer
+ 
+         // MAX_FILE_SIZE is defined in simple_html_dom.
+         // For safety sake, we make sure it is defined before using
+-        defined('MAX_FILE_SIZE') || define('MAX_FILE_SIZE', 1000000);
++        defined('MAX_FILE_SIZE') || define('MAX_FILE_SIZE', 30000000);
+ 
+         if ($dom === false) {
+             if (strlen($html) > MAX_FILE_SIZE) {
