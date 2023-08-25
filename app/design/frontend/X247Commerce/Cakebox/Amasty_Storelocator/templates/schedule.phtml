@@ -23,7 +23,7 @@ $workToday = $location->getWorkingTimeToday();
 
     <div class="amlocator-week" data-amlocator-js="collapse-content" id="schedule<?= (int)$location->getId(); ?>">
         <div class="amlocator-schedule-table">
-            <?php foreach ($location->getWeekdays() as $key => $item) {
+            <?php foreach ($location->dayNames as $key => $item) {
                 $workingTime = $location->getWorkingTime($key);
                 ?>
                 <div class="amlocator-row">
