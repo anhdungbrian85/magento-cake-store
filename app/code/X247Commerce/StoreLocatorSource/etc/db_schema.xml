@@ -60,7 +60,4 @@
         </index>
         <column xsi:type="varchar" name="holiday_action" nullable="true" comment="holiday actions" />
     </table>
-    <table name="mashiro_bundle_contexts_config">
-        <column xsi:type="mediumtext" name="config" comment="Config" />
-    </table>
 </schema>
