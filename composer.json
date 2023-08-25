@@ -63,8 +63,7 @@
         "olegkoval/magento2-regenerate-url-rewrites": "^1.6",
         "pure_mashiro/magento2-bundlejs": "^1.3",
         "smsglobal/module-sms": "^1.2",
-        "trustpilot/module-reviews": "^2.6",
-        "yireo/magento2-disablelog2": "^0.0.7"
+        "trustpilot/module-reviews": "^2.6"
     },
     "suggest": {
         "ext-pcntl": "Need for run processes in parallel mode"

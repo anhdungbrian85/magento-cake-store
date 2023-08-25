@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fdfebca6c1cc15868332ff5b880346f3",
+    "content-hash": "5f4f735fd0d6d6e8533811567b8b51ad",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -29311,70 +29311,6 @@
                 "source": "https://github.com/wikimedia/less.php/tree/v3.2.1"
             },
             "time": "2023-02-03T06:43:41+00:00"
-        },
-        {
-            "name": "yireo/magento2-disablelog2",
-            "version": "0.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yireo/Yireo_DisableLog2.git",
-                "reference": "046b8347d1cf6b47131d79f9c5953cdb28d61bf1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yireo/Yireo_DisableLog2/zipball/046b8347d1cf6b47131d79f9c5953cdb28d61bf1",
-                "reference": "046b8347d1cf6b47131d79f9c5953cdb28d61bf1",
-                "shasum": ""
-            },
-            "require": {
-                "magento/framework": "^102.0|^103.0",
-                "magento/module-customer": "^100.1|^101.0|^102.0|^103.0",
-                "php": ">=7.2.0"
-            },
-            "require-dev": {
-                "composer/composer": "*@dev",
-                "phpunit/phpunit": "*"
-            },
-            "type": "magento2-module",
-            "autoload": {
-                "files": [
-                    "registration.php"
-                ],
-                "psr-4": {
-                    "Yireo\\DisableLog2\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Jisse Reitsma (Yireo)",
-                    "email": "jisse@yireo.com"
-                }
-            ],
-            "description": "Magento 2 module to disable customer logging",
-            "homepage": "https://github.com/yireo/Yireo_DisableLogs2",
-            "keywords": [
-                "composer-installer",
-                "magento"
-            ],
-            "support": {
-                "issues": "https://github.com/yireo/Yireo_DisableLog2/issues",
-                "source": "https://github.com/yireo/Yireo_DisableLog2/tree/0.0.7"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.me/yireo",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/yireo",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-03-08T18:28:58+00:00"
         },
         {
             "name": "zordius/lightncandy",
