@@ -66,7 +66,8 @@ define([
                 if (visiblePlaceOrderButtons.length) {
                     visiblePlaceOrderButtons.prop('disabled', state);
                 } else {
-                    $(this.paymentBlockSelector).toggleClass('-am-blocked', state);
+                    console.log('blockPaymentBlock ', state);
+                    // $(this.paymentBlockSelector).toggleClass('-am-blocked', state);
                 }
             },
 
