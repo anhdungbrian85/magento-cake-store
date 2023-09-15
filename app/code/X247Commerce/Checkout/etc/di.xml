@@ -32,4 +32,12 @@
     </type>
 
     <preference for="Amasty\CheckoutCore\Block\Onepage\LayoutProcessor" type="X247Commerce\Checkout\Block\Onepage\LayoutProcessor" />
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="X247CommerceCheckoutCleanInactiveQuote" xsi:type="object">X247Commerce\Checkout\Console\CleanInactiveQuote</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
