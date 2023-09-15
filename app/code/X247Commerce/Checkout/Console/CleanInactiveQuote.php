@@ -41,16 +41,11 @@ class CleanInactiveQuote extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
     	$this->cleanNotExistCustomerQuote();
-
-    	
-
         $output->writeln('Clean inative quote executed');
-
-
     }
 
-    
-    private function cleanNotExistCustomerQuote()
+
+    public function cleanNotExistCustomerQuote()
     {
     	$quoteTbl = $this->resource->getTableName(self::QUOTE_TABLE);
     	$this->connection->delete($quoteTbl, "customer_id not in (SELECT entity_id FROM customer_entity)");

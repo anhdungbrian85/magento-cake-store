@@ -19,7 +19,7 @@ class CleanInactiveQuote
      * */
     public function execute()
     {
-        $this->cleanActiveQuoteCommand->execute();
+        $this->cleanActiveQuoteCommand->cleanNotExistCustomerQuote();
     }
 
 }
