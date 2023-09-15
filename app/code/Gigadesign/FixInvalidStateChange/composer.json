@@ -1,0 +1,19 @@
+{
+    "name": "gigadesign/module-magento2-fix-invalid-state-change",
+    "description": "Updates the Magento quote if it has a invalid state",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mark van der Werf",
+            "email": "info@gigadesign.nl"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Gigadesign\\FixInvalidStateChange\\": ""
+        }
+    }
+}
