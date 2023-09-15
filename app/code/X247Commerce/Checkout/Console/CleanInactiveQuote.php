@@ -54,5 +54,12 @@ class CleanInactiveQuote extends Command
     {
     	$quoteTbl = $this->resource->getTableName(self::QUOTE_TABLE);
     	$this->connection->delete($quoteTbl, "customer_id not in (SELECT entity_id FROM customer_entity)");
+
+        $query = $this->connection->select()
+                                    ->from($quoteTbl, 'MAX(entity_id)')
+                                    ->group('customer_id')
+                                    ->where('is_active = 1');
+        $customerIds = $this->connection->fetchCol($query);
+        $this->connection->delete($quoteTbl, ['is_active = ?' => 1, 'entity_id NOT IN (?)' => $customerIds]);
     }
 }
