@@ -526,8 +526,7 @@ return [
         'X247Commerce_Staging' => 1,
         'X247Commerce_Yext' => 1,
         'X247Commerce_Sales' => 1,
-        'X247Commerce_Theme' => 1,
-        'Gigadesign_FixInvalidStateChange' => 1,
+        'X247Commerce_Theme' => 1,        
         'X247Commerce_HolidayOpeningTime' => 1
     ],
     'system' => [
