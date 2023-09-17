@@ -25,7 +25,7 @@
 
     <!-- Disabled for checkout login issue -->
     <type name="Magento\Quote\Model\QuoteAddressValidator">
-        <plugin name="fix_quote_validator_error" type="X247Commerce\Checkout\Plugin\QuoteAddressValidator" disabled="true"  />
+        <plugin name="fix_quote_validator_error" type="X247Commerce\Checkout\Plugin\QuoteAddressValidator" disabled="false"  />
     </type>
 
     <type name="Amasty\CheckoutCore\Model\Quote\CheckoutInitialization">
