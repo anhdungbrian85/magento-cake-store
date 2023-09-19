@@ -38,7 +38,7 @@ $helper = $this->helper('WeltPixel\GA4\Helper\Data');
         <?php
             $remarketingData = [];
             $remarketingData['ecomm_pagetype'] = \WeltPixel\GA4\Model\Api\Remarketing::ECOMM_PAGETYPE_CATEGORY;
-            $remarketingData['ecomm_category'] = $gtmCategoryLabel;
+            $remarketingData['ecomm_category'] = $helper->getGtmCategory($this->getCurrentCategory());
         ?>
         <?php $this->setDataLayerOption('google_tag_params', $remarketingData); ?>
     <?php endif; ?>

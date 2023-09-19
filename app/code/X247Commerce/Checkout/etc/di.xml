@@ -23,13 +23,19 @@
         <plugin name="x247checkout_change_delivery_value" type="X247Commerce\Checkout\Plugin\Checkout\DeliveryDate\DeliveryInfo" sortOrder="20" disabled="false" />
     </type>
 
+    <!-- Disabled for checkout login issue -->
     <type name="Magento\Quote\Model\QuoteAddressValidator">
         <plugin name="fix_quote_validator_error" type="X247Commerce\Checkout\Plugin\QuoteAddressValidator" disabled="false"  />
     </type>
+
+    <type name="Amasty\CheckoutCore\Model\Quote\CheckoutInitialization">
+		<plugin name="Amasty_Checkout_init_try_catch" type="X247Commerce\Checkout\Plugin\Amasty\CheckoutCore\Model\Quote\CheckoutInitialization" sortOrder="10" disabled="false"/>
+	</type>
 
     <type name="Magento\Checkout\CustomerData\DefaultItem">
         <plugin name="add_lead_delivery_data" type="X247Commerce\Checkout\Plugin\CustomerData\DefaultItem" disabled="false"  />
     </type>
 
     <preference for="Amasty\CheckoutCore\Block\Onepage\LayoutProcessor" type="X247Commerce\Checkout\Block\Onepage\LayoutProcessor" />
+
 </config>
