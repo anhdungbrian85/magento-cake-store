@@ -15,6 +15,7 @@ use Amasty\StorePickupWithLocator\Model\ScheduleProvider;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use X247Commerce\Checkout\Model\TimeHandler;
 
 class CheckoutLocationParams
 {
@@ -35,6 +36,7 @@ class CheckoutLocationParams
     protected $scheduleProvider;
     protected $locationsAvailability;
     protected $_resource;
+    protected $timeHandler;
     protected ScopeConfigInterface $scopeConfig;
 
     public function __construct(
@@ -51,6 +53,7 @@ class CheckoutLocationParams
         LocationsAvailability $locationsAvailability,
         \Psr\Log\LoggerInterface $logger,
         ResourceConnection $resource,
+        TimeHandler $timeHandler,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->checkoutSession = $checkoutSession;
@@ -66,6 +69,7 @@ class CheckoutLocationParams
         $this->locationsAvailability = $locationsAvailability;
         $this->logger = $logger;
         $this->_resource = $resource;
+        $this->timeHandler = $timeHandler;
         $this->scopeConfig = $scopeConfig;
 
     }
@@ -96,7 +100,7 @@ class CheckoutLocationParams
             'asdaLocationIds' => $this->getAsdaLocationId(),
             'deliveryPostcode' => $deliveryType == 1 ? $this->checkoutSession->getCustomerPostcode() : '',
             'deliveryDateTimeSlots' => $this->getDeliveryDateTimeSlots(),
-            'store_location_holiday' => $this->getStoreHoliday($locationId)
+            'store_location_holiday' => $this->getStoreHoliday()
         ];
     }
 
@@ -151,13 +155,21 @@ class CheckoutLocationParams
     }
 
     public function getStoreHoliday() {
-        
+
         $connection = $this->_resource->getConnection();
         $tableName = $connection->getTableName('store_location_holiday');
 
         $query = $connection->select()->from($tableName);
 
         $fetchData = $connection->fetchAll($query);
+
+        foreach ($fetchData as &$holiday)
+        {
+            $holiday['openInUnix'] = strtotime($this->timeHandler->getDate(). ' ' . $holiday['open_time']);
+            $holiday['closeInUnix'] = strtotime($this->timeHandler->getDate(). ' ' . $holiday['closed_time']);
+            $holiday['location_id'] = $holiday['store_location_id'];
+        }
+
         return $fetchData;
     }
 

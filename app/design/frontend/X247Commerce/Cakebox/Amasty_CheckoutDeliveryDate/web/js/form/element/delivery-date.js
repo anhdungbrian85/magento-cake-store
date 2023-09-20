@@ -126,7 +126,17 @@ define([
                 today = new Date(),
                 dayEnabled = true,
                 storeCutoffTime = 16; // Hard fix cutoff time at 16:00
-
+                
+            var convertDate = d.toLocaleDateString('en-CA');
+            var holidays = window.checkoutConfig.store_location_holiday.filter(function (item) {
+                                return item.store_location_id = locationContext.storeLocationId()
+                                    && convertDate == item.date;
+                            });
+            if (!$.isEmptyObject(holidays)) {
+                if(holidays[0].disable_delivery == 1){
+                    return [false, ''];
+                }
+            }
             //@todo: Cutoff time by store
 
             var timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
