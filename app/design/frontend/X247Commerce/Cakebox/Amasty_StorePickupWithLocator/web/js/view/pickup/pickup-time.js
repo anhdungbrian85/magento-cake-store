@@ -15,13 +15,9 @@ define([
 
     function createTimeInterval(unixTime, offset)
     {
-        // var d = new Date();
-        // d.setTime(d.getTime() + offset * 60000);
-
         let dateUnix = new Date();
         dateUnix.setTime(unixTime * 1000 + offset * 60000);
-        // console.log(unixTime, dateUnix)
-        let label = dateUnix.toLocaleTimeString('en-US', {hour: 'numeric',minute: 'numeric',hour12: true });
+        let label = dateUnix.toLocaleTimeString('en-US', {hour: 'numeric',minute: 'numeric',hour12: true, timeZone: 'Europe/London'});
         let UnixTimeTo = unixTime;
 
         return {
@@ -163,23 +159,32 @@ define([
                 filteredIntervals, holidayOpen, holidayClose;
 
             if (intervals.length) {
-                //                  11                          9
-                console.log(intervals[0].fromInUnix , holidayTime.openInUnix)
                 holidayOpen = holidayTime.openInUnix - currentStore.current_timezone_offset * 60;
+                holidayClose = holidayTime.closeInUnix - currentStore.current_timezone_offset * 60;
 
                 if (intervals[0].fromInUnix > holidayOpen) {
                     let firstScheduledTimeUnix = intervals[0].fromInUnix;
-
-                    for (let i = holidayOpen; i < firstScheduledTimeUnix; i+=1800) {
+                    let beforeOpen = [];
+                    for (let i = holidayOpen; i < firstScheduledTimeUnix ; i+=1800) {
                         let today = new Date();
                         let pickupTimeSlot = createTimeInterval(i, currentStore.current_timezone_offset);
 
-                        console.log(i, intervals)
-                        intervals.unshift(pickupTimeSlot);
+                        beforeOpen.unshift(pickupTimeSlot);
+                    }
+                    beforeOpen = beforeOpen.reverse();
+                    intervals = beforeOpen.concat(intervals);   
+
+                }
+                if (intervals[intervals.length - 1].toInUnix < holidayClose) {
+                    let lastScheduledTimeUnix = intervals[intervals.length - 1].toInUnix;
+
+                    for (let i = lastScheduledTimeUnix; i < holidayClose ; i+=1800) {
+                        let today = new Date();
+                        let pickupTimeSlot = createTimeInterval(i, currentStore.current_timezone_offset);
+                        intervals.push(pickupTimeSlot);
                     }
                 }
             }
-            console.log(intervals.length)
 
             filteredIntervals = intervals.filter(function (item) {
 
