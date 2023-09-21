@@ -59,6 +59,18 @@ define([
             if (firstSwatch.length) {
                 $(firstSwatch).trigger('focus');
             }
+            var windowHeight = $(window).height();
+            
+            if (errorList.length) {
+                if (jQuery(window).width() < 768) {
+                    setTimeout(function(){
+                        $('html, body').stop().animate({
+                            scrollTop: $('input.mage-error, select.mage-error, textarea.mage-error').offset().top - windowHeight / 2
+                        }, 200);
+                    }, 300)
+                }
+            }
+            
         }
     });
 
