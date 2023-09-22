@@ -814,7 +814,7 @@ define([
             } else {
                 if ($("textarea.product-custom-option").length !== 0) {         
                     var clone = $("textarea.product-custom-option").clone();
-                    var newValue = '{"required": false, validate-no-utf8mb4-characters": true}';
+                    var newValue = '{"required": false, "validate-no-utf8mb4-characters": true}';
                     clone.attr("data-validate", newValue); 
                     $(".character-limit-note").remove();
                     $("textarea.product-custom-option").replaceWith(clone);
