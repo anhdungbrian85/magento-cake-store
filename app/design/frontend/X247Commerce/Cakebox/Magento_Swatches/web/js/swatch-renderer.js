@@ -59,6 +59,18 @@ define([
             if (firstSwatch.length) {
                 $(firstSwatch).trigger('focus');
             }
+            var windowHeight = $(window).height();
+            
+            if (errorList.length) {
+                if (jQuery(window).width() < 768) {
+                    setTimeout(function(){
+                        $('html, body').stop().animate({
+                            scrollTop: $('input.mage-error, select.mage-error, textarea.mage-error').offset().top - windowHeight / 2
+                        }, 200);
+                    }, 300)
+                }
+            }
+            
         }
     });
 
@@ -802,7 +814,7 @@ define([
             } else {
                 if ($("textarea.product-custom-option").length !== 0) {         
                     var clone = $("textarea.product-custom-option").clone();
-                    var newValue = '{"required": false, validate-no-utf8mb4-characters": true}';
+                    var newValue = '{"required": false, "validate-no-utf8mb4-characters": true}';
                     clone.attr("data-validate", newValue); 
                     $(".character-limit-note").remove();
                     $("textarea.product-custom-option").replaceWith(clone);

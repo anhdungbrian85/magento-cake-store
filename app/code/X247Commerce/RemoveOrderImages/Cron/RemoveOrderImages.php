@@ -57,39 +57,49 @@ class RemoveOrderImages
         $this->coreSession->unsLimitCompleteOrder();
         $collection->getSelect()->limit($limit);
 
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/remove-image.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+
         foreach ($collection as $order) {
 
             try {
                 foreach ($order->getAllVisibleItems() as $orderItem) {
-                        $options = $orderItem->getProductOptions();
+                    $options = $orderItem->getProductOptions();
 
-                        $optionDetails = [];
-                        if(!empty($options["options"])) {
-                            foreach($options["options"] as $option) {
-                                if(!empty($option["option_value"])) {
-                                    $optionDetails = $option["option_value"];
-                                }
+                    $optionDetails = [];
+                    if(!empty($options["options"])) {
+                        foreach($options["options"] as $option) {
+                            if(!empty($option["option_value"])) {
+                                $optionDetails = $option["option_value"];
                             }
                         }
+                    }
 
-                        if ($optionDetails) {
-                            $detail = json_decode($optionDetails, true);
-                            $quotePath = !empty($detail["quote_path"]) ? $detail["quote_path"] : '';
-                            $orderPath = !empty($detail["order_path"]) ? $detail["order_path"] : '';
+                    if ($optionDetails) {
+                        $detail = json_decode($optionDetails, true);
+                        $quotePath = !empty($detail["quote_path"]) ? $detail["quote_path"] : '';
+                        $orderPath = !empty($detail["order_path"]) ? $detail["order_path"] : '';
 
-                            $mediaRootDir = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath();
+                        $mediaRootDir = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath();
 
-                            if ($quotePath && $this->file->isExists($mediaRootDir . $quotePath)) {
-                                $this->file->deleteFile($mediaRootDir . $quotePath);
-                            }
-                            if ($orderPath && $this->file->isExists($mediaRootDir . $orderPath)) {
-                                $this->file->deleteFile($mediaRootDir . $orderPath);
-                            }
-
+                        if ($quotePath && $this->file->isExists($mediaRootDir . $quotePath)) {
+                            $this->file->deleteFile($mediaRootDir . $quotePath);
+                            $logger->info('The quote image has been removed for order entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId());
+                        }   else {
+                            $logger->info('The quote image is not exists. Cannot remove images for order: '.$order->getId(). ', increment_id: '.$order->getIncrementId());
                         }
+                        if ($orderPath && $this->file->isExists($mediaRootDir . $orderPath)) {
+                            $this->file->deleteFile($mediaRootDir . $orderPath);
+                            $logger->info('The order image has been removed for order entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId());
+                        }   else {
+                            $logger->info('The order image is not exists. Cannot remove images for order: '.$order->getId(). ', increment_id: '.$order->getIncrementId());
+                        }
+
+                    }
                 }
             } catch (\Exception $e) {
-                $this->logger->info('Cannot remove images of order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' - '.$e->getMessage());
+                $logger->info('Cannot remove images of order with entity_id: '.$order->getId(). ', increment_id: '.$order->getIncrementId(). ' - '.$e->getMessage());
             }
             $this->saveRemoveImagesFlag($order);
         }

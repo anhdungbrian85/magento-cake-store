@@ -12,6 +12,11 @@ var config = {
                 "X247Commerce_Checkout/js/model/one-step-layout-mixin": true
             },
 
+            // Hide delivery date block when use pickup store 
+            "Magento_Checkout/js/model/quote": {
+                "X247Commerce_Checkout/js/model/quote": true
+            },
+
             // preselect shipping method
             'Magento_Checkout/js/model/checkout-data-resolver': {
                 'Amasty_CheckoutCore/js/model/checkout-data-resolver-mixin': false,
