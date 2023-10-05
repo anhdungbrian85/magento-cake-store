@@ -71,7 +71,7 @@ $sku = $_option->getSku();
                       name="options[<?= $block->escapeHtmlAttr($_option->getId()) ?>]"
                       data-selector="options[<?= $block->escapeHtmlAttr($_option->getId()) ?>]"
                       rows="5"
-                      cols="25"><?= $block->escapeHtml($block->getDefaultValue()) ?></textarea>
+                      cols="25" disabled><?= $block->escapeHtml($block->getDefaultValue()) ?></textarea>
         <?php endif; ?>
         <?php if ($_option->getMaxCharacters()) :?>
             <p class="note note_<?= $block->escapeHtmlAttr($_option->getId()) ?>">

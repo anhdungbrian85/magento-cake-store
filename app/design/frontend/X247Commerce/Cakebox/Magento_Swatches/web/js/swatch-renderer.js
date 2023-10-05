@@ -810,8 +810,10 @@ define([
                         $.validator.validateElement($("textarea.product-custom-option"));
                         $("textarea.product-custom-option").val(e.target.value.slice(0, characterLimit));
                     });
+                    $('textarea.product-custom-option').prop("disabled", false);
                 }
             } else {
+                $('textarea.product-custom-option').prop("disabled", true);
                 if ($("textarea.product-custom-option").length !== 0) {         
                     var clone = $("textarea.product-custom-option").clone();
                     var newValue = '{"required": false, "validate-no-utf8mb4-characters": true}';
