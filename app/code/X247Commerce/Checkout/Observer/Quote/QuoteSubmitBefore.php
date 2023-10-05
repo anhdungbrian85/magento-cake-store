@@ -56,7 +56,6 @@ class QuoteSubmitBefore implements ObserverInterface
         $quote = $observer->getEvent()->getQuote();
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         $shippingAddress = $quote->getShippingAddress();
-
         if ($shippingMethod == 'cakeboxdelivery_cakeboxdelivery') {
 
             $postcode = $shippingAddress->getPostcode();
@@ -76,13 +75,21 @@ class QuoteSubmitBefore implements ObserverInterface
                 }
                 $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
                 if ($locationDataFromPostCode['status']) {
-                    $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
+                    $locations = $this->locatorSourceResolver->getAllClosestStoreLocationsWithPostCodeAndSkus(
                         $postcode,
                         $locationDataFromPostCode['data']['lat'],
                         $locationDataFromPostCode['data']['lng'],
                         $productSkus
                     );
-                    if ($location->getId()) {
+                    $location = null;
+                    foreach ($locations as $loc)
+                    {
+                        if ($this->locatorSourceResolver->checkStoreDeliveryAvaiable($loc->getId(), $deliveryQuote->getDate())) {
+                            $location = $loc;
+                            break;
+                        }
+                    }
+                    if ($location != null && $location->getId()) {
                         $quote->setData('store_location_id', $location->getId());
                         $order->setData('store_location_id', $location->getId());
                     } else {

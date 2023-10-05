@@ -20,6 +20,7 @@ use Magento\Store\Model\ScopeInterface;
 use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory as LocationCollectionFactory;
 use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
 use Magento\Store\Model\StoreManagerInterface;
+use X247Commerce\HolidayOpeningTime\Model\ResourceModel\StoreLocationHoliday\CollectionFactory as StoreLocationHolidayCollection;
 
 class LocatorSourceResolver
 {
@@ -55,6 +56,8 @@ class LocatorSourceResolver
 
     protected $storeManager;
 
+    protected $storeLocationHolidayCollection;
+
     public function __construct(
         StoreManagerInterface $storeManager,
         DeliveryAreaHelper $deliveryAreaHelper,
@@ -66,7 +69,8 @@ class LocatorSourceResolver
         CustomerSession $customerSession,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         ProductSourceAvailability $productSourceAvailability,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        StoreLocationHolidayCollection $storeLocationHolidayCollection
     ) {
         $this->storeManager = $storeManager;
         $this->deliveryAreaHelper = $deliveryAreaHelper;
@@ -80,6 +84,7 @@ class LocatorSourceResolver
         $this->productSourceAvailability = $productSourceAvailability;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->scopeConfig = $scopeConfig;
+        $this->storeLocationHolidayCollection = $storeLocationHolidayCollection;
     }
 
     /**
@@ -552,6 +557,81 @@ class LocatorSourceResolver
             $miles = $dist * 60 * 1.1515;
             return $miles;
         }
+    }
+
+    public function checkStoreDeliveryAvaiable($locationId, $deliveryDay)
+    {
+        $holidayTbl = $this->resource->getTableName('store_location_holiday');
+        $holidayDataQuery = $this->connection->select()
+            ->from($holidayTbl, ['*'])
+            ->where("store_location_id = ?", $locationId)
+            ->where("disable_delivery = 1")
+            ->where("date = ?", $deliveryDay);
+        $holidayData =  $this->connection->fetchOne($holidayDataQuery);
+        return empty($holidayData) ? true : false;
+    }
+
+    public function getAllClosestStoreLocationsWithPostCodeAndSkus($postcode, $lat, $lng, $products, $radius = 50, $sortByDistance = 1)
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/checkout_test.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info('Start locatorSourceResolver::getClosestStoreLocation');
+        if (!$postcode) {
+            return false;
+        }
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::postcode:' . $postcode);
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::lat:' . $lat);
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::lng:' . $lng);
+        $location = $this->locationCollectionFactory->create()->addFieldToFilter('enable_delivery', ['eq' => 1]);
+        $deliverLocations = $this->deliveryAreaHelper->getDeliverLocations($postcode);
+        $deliverLocationsIds = [];
+        $logger->info('locatorSourceResolver::$deliverLocations:' . count($deliverLocations));
+        foreach ($deliverLocations as $deliverLocation) {
+            $logger->info('locatorSourceResolver::$deliverLocationStoreId:' . $deliverLocation->getStoreId());
+            if ($this->validateOutOfStockStatusOfProducts($deliverLocation->getStoreId(), $products)) {
+                $deliverLocationsIds[] = $deliverLocation->getStoreId();
+            }
+            $logger->info('locatorSourceResolver::count $deliverLocationsIds:' . count($deliverLocationsIds));
+        }
+
+        $location->addFieldtoFilter('id', ['in' => $deliverLocationsIds]);
+        $select = $location->getSelect();
+        $store = $this->storeManager->getStore(true)->getId();
+
+        if (!$this->storeManager->isSingleStoreMode()) {
+            $whereStore = [];
+            $storeIds = [Store::DEFAULT_STORE_ID, $store];
+            foreach ($storeIds as $storeId) {
+                $whereStore[] = 'FIND_IN_SET("' . (int)$storeId . '", `main_table`.`stores`)';
+            }
+
+            $whereStore = implode(' OR ', $whereStore);
+            $select->where($whereStore);
+        }
+
+        $select->where('main_table.status = 1');
+        if ($lat && $lng && ($sortByDistance || $radius)) {
+            if ($radius) {
+                $select->having('distance < ' . $radius);
+            }
+
+            if ($sortByDistance) {
+                $select->order("distance");
+            }
+
+            $select->columns(
+                [
+                    'distance' => 'SQRT(POW(69.1 * (main_table.lat - ' . $lat . '), 2) + '
+                        . 'POW(69.1 * (' . $lng . ' - main_table.lng) * COS(main_table.lat / 57.3), 2))'
+                ]
+            );
+        } else {
+            $select->order('main_table.position ASC');
+            $select->order('main_table.id ASC');
+        }
+        $logger->info('locatorSourceResolver::getClosestStoreLocation::location select:' . $location->getSelect());
+        return $location;
     }
 
     public function getClosestStoreLocationWithPostCodeAndSkus($postcode, $lat, $lng, $products, $radius = 50, $sortByDistance = 1)
