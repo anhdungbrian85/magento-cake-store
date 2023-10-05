@@ -132,13 +132,15 @@ define([
                                 return item.store_location_id = locationContext.storeLocationId()
                                     && convertDate == item.date;
                             });
-            if (!$.isEmptyObject(holidays)) {
-                if(holidays[0].disable_delivery == 1){
-                    return [false, ''];
-                }
-            }
+            // if (!$.isEmptyObject(holidays)) {
+            //     if(holidays[0].disable_delivery == 1){
+            //         return [false, ''];
+            //     }
+            // }
             //@todo: Cutoff time by store
-
+            if (deliverStoreData === "undefined") {
+                return [false, ''];
+            }
             var timeToDeliver = deliverStoreData.current_timezone_time + (parseInt(locationContext.leadDeliveryTime()) * 3600),
                 cutOffTime = new Date(today.getFullYear(), today.getUTCMonth(), today.getUTCDate(), storeCutoffTime),
                 cutOffTimeToInt = Date.parse(cutOffTime)/1000 - (today.getTimezoneOffset() * 60);
