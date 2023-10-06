@@ -559,14 +559,16 @@ class LocatorSourceResolver
         }
     }
 
-    public function checkStoreDeliveryAvaiable($locationId, $deliveryDay)
+    public function checkStoreDeliveryAvaiable($locationId, $deliveryDay, $isWeekend = false)
     {
+        $closeHour = $isWeekend ? "11:00" : '16:00';
         $holidayTbl = $this->resource->getTableName('store_location_holiday');
         $holidayDataQuery = $this->connection->select()
             ->from($holidayTbl, ['*'])
             ->where("store_location_id = ?", $locationId)
             ->where("disable_delivery = 1")
-            ->where("date = ?", $deliveryDay);
+            ->where("date = ?", $deliveryDay)
+            ->where("closed_time < ?", $closeHour);
         $holidayData =  $this->connection->fetchOne($holidayDataQuery);
         return empty($holidayData) ? true : false;
     }

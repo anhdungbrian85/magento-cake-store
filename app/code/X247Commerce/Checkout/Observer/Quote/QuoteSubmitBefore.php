@@ -84,7 +84,8 @@ class QuoteSubmitBefore implements ObserverInterface
                     $location = null;
                     foreach ($locations as $loc)
                     {
-                        if ($this->locatorSourceResolver->checkStoreDeliveryAvaiable($loc->getId(), $deliveryQuote->getDate())) {
+                        $isWeekend = (date('N', strtotime($deliveryQuote->getDate())) >= 6);
+                        if ($this->locatorSourceResolver->checkStoreDeliveryAvaiable($loc->getId(), $deliveryQuote->getDate(), $isWeekend)) {
                             $location = $loc;
                             break;
                         }
