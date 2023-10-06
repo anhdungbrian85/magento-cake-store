@@ -519,7 +519,7 @@ return [
         'X247Commerce_OrderPrintStatus' => 1,
         'X247Commerce_PopupAddtoCart' => 1,
         'X247Commerce_Products' => 1,
-        'X247Commerce_ReadMoreDescriptionCategory' => 0,
+        'X247Commerce_ReadMoreDescriptionCategory' => 1,
         'X247Commerce_RemoveOrderImages' => 1,
         'X247Commerce_StoreLocatorSource' => 1,
         'X247Commerce_ShopBy' => 1,
