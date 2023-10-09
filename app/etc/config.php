@@ -463,9 +463,9 @@ return [
         'Amasty_ShopbyBrand' => 1,
         'Amasty_ShopbyPage' => 1,
         'Amasty_ShopbySeo' => 1,
-        'Amasty_SocialLogin' => 1,
-        'Amasty_SocialLoginAppleId' => 1,
-        'Amasty_SocialLoginLite' => 1,
+        'Amasty_SocialLogin' => 0,
+        'Amasty_SocialLoginAppleId' => 0,
+        'Amasty_SocialLoginLite' => 0,
         'Amasty_Storelocator' => 1,
         'Amasty_StorePickupWithLocator' => 1,
         'Amasty_StorePickupWithLocatorMSI' => 0,
@@ -526,7 +526,7 @@ return [
         'X247Commerce_Staging' => 1,
         'X247Commerce_Yext' => 1,
         'X247Commerce_Sales' => 1,
-        'X247Commerce_Theme' => 1,        
+        'X247Commerce_Theme' => 1,
         'X247Commerce_HolidayOpeningTime' => 1
     ],
     'system' => [
