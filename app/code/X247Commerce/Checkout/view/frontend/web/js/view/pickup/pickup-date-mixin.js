@@ -20,7 +20,7 @@ define([
     'use strict';
 
     var mixin = {
-
+        holidays: window.checkoutConfig.store_location_holiday,
         /**
          * Set the first store work day to date field
          *
@@ -95,7 +95,20 @@ define([
                 daySchedule,
                 scheduleArray,
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
-                currentDayName = this.weekDays[date.getDay()];
+                currentDayName = this.weekDays[date.getDay()], convertDate;
+
+            convertDate = date.toLocaleDateString('en-CA');
+
+            var holidays = this.holidays.filter(function (item) {
+                return item.location_id == locationContext.storeLocationId()
+                    && convertDate == item.date;
+            });
+
+            if (!$.isEmptyObject(holidays)) {
+                if(holidays[0].disable_pickup == 1){
+                    return [false, ''];
+                }
+            }
 
             if (!selectedStore) {
                 return [false, ''];
@@ -170,7 +183,7 @@ define([
                     date.getDate(),
                     lastTimeSlot
                 );
-            
+
             if (Date.parse(lastTimeSlotMoment)/1000 < minPickupTime) {
                 return [false, ''];
             }

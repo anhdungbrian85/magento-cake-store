@@ -56,10 +56,10 @@ class QuoteMergeHandler implements ObserverInterface
         $currentQuote = $observer->getData('quote'); // older quote
         $newQuote = $observer->getData('source');
 
-//        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/quote_merged.log');
-//        $logger = new \Zend_Log();
-//        $logger->addWriter($writer);
-//        $logger->info('Start quote_merged log');
+       $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/quote_merged.log');
+       $logger = new \Zend_Log();
+       $logger->addWriter($writer);
+       $logger->info('Start quote_merged log');
 //        $logger->info('quoteIdOld: '. $currentQuote->getId()); // quote cu
 //        $logger->info('quoteIdNew: '. $newQuote->getId()); // quote moi
 //        $logger->info('oldquoteshipping: '. $currentQuote->getShippingAddress()->getShippingMethod());
@@ -68,14 +68,13 @@ class QuoteMergeHandler implements ObserverInterface
 
         if ($currentQuote->getShippingAddress()->getShippingMethod() != $newQuote->getShippingAddress()->getShippingMethod()) {
             $currentQuote->getShippingAddress()->setShippingMethod($newQuote->getShippingAddress()->getShippingMethod())->save();
-
-//            $logger->info('result: QuoteId:'. $currentQuote->getShippingAddress()->getId());
-//            $logger->info('result: shippingAddress'. $currentQuote->getShippingAddress()->getShippingMethod());
         }
 
         $currentQuote->setData('store_location_id', $newQuote->getData('store_location_id'));
         $currentQuote->setData('delivery_type', $newQuote->getData('delivery_type'));
-//        $logger->info('result: '. $currentQuote->getShippingAddress()->getShippingMethod());
+        if ($currentQuote->getCustomerId() && $currentQuote->getCustomerIsGuest()) {
+            $currentQuote->setCustomerIsGuest(0)->save();
+        }
 
     }
 }
