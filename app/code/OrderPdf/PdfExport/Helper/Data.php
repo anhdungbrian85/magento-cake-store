@@ -172,10 +172,13 @@ class Data extends AbstractHelper
                         case 'Mix':
                             $base = 'M';
                             break;
+                        case 'Caramel Crunch':
+                            $base = 'C2';
+                            break;
                         default:
                             $base = '';
                     }
-       
+
                     if(strpos($size_serving, 'Box of') >= 0) {
                         $size = substr($size_serving, 0, 9); // 10 6
                     } else {
