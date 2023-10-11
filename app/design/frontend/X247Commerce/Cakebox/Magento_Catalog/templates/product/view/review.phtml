@@ -6,7 +6,16 @@
 
 $product = $block->getProduct();
 $sku = $product->getSku();
-$productRangeSkus = $product->getRangeSkus();
+// $productRangeSkus = $product->getRangeSkus();
+$productRangeSkus='';
+$productTypeInstance = $product->getTypeInstance();
+if (method_exists($productTypeInstance, 'getUsedProducts')) {
+    $usedProducts = $productTypeInstance->getUsedProducts($product);
+    foreach ($usedProducts  as $child) {
+        $productRangeSkus .= $child->getSku().',';
+    }
+}
+
 $productJointSkus = $productRangeSkus ? $sku . ',' . $productRangeSkus : $sku;
 ?>
 <!-- TrustBox widget - Product Mini -->
