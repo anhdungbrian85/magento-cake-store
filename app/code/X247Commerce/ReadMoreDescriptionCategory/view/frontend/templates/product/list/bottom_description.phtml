@@ -1,36 +1,34 @@
-<?php if ($bottomDescription = $block->getCurrentCategory()->getBottomDescription()): ?>
-    <div class="category-bottom-description">
-        <?= /* @escapeNotVerified */ $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute(
-            $block->getCurrentCategory(), $bottomDescription, 'bottom_description'
-        ) ?>
+<?php
+if ($bottomDescription = $block->getCurrentCategory()->getBottomDescription()): ?>
+    <div id="category-bottom-description" class="category-bottom-description">
+        <div id="bottom-description-inner">
+            <?= /* @escapeNotVerified */ $this->helper('Magento\Catalog\Helper\Output')->categoryAttribute(
+                $block->getCurrentCategory(), $bottomDescription, 'bottom_description'
+            ) ?>
+        </div>
+        <br />
+        <a id="bottom-read-more" href="#" style="display: block;"><?= __('Read More') ?></a>
     </div>
-    <style>
-        .bottom-description-read-more {
-            display: none;
-            margin-top: 20px;
-            margin-left: 20px;
-            margin-right: 20px;
-        }
-    </style>
+
     <script>
-        var bottomDescriptionContentElement = document.getElementById("bottom-description-content");
-        var bottomDescriptionReadMoreLink = document.querySelector(".bottom-description-read-more");
-        var bottomDescriptionLineHeight = parseInt(getComputedStyle(bottomDescriptionContentElement).lineHeight);
+        var BDElem = document.getElementById("bottom-description-inner"); //Bottom description elem
+        var lh = parseInt(getComputedStyle(BDElem).lineHeight); // line height
+        var BRM = document.getElementById('bottom-read-more'); // Bottom read more
 
-        if (bottomDescriptionContentElement.clientHeight > bottomDescriptionLineHeight * 3) {
-            bottomDescriptionReadMoreLink.style.display = "block";
-            bottomDescriptionContentElement.style.overflow = "hidden";
-            bottomDescriptionContentElement.style.maxHeight = bottomDescriptionLineHeight * 3 + "px";
+        if (BDElem.clientHeight > lh * 3) {
+            BRM.style.display = "block";
+            BDElem.style.overflow = "hidden";
+            BDElem.style.maxHeight = lh * 3 + "px";
         }
 
-        bottomDescriptionReadMoreLink.addEventListener("click", function(event) {
+        BRM.addEventListener("click", function(event) {
             event.preventDefault();
-            if (bottomDescriptionReadMoreLink.textContent === "Read More") {
-                bottomDescriptionReadMoreLink.textContent = "Read Less";
-                bottomDescriptionContentElement.style.maxHeight = "none";
+            if (BRM.textContent === '<?= __("Read More") ?>') {
+                BRM.textContent = '<?= __("Read Less") ?>';
+                BDElem.style.maxHeight = "none";
             } else {
-                bottomDescriptionReadMoreLink.textContent = "Read More";
-                bottomDescriptionContentElement.style.maxHeight = bottomDescriptionLineHeight * 3 + "px";
+                BRM.textContent = '<?= __('Read More') ?>';
+                BDElem.style.maxHeight = lh * 3 + "px";
             }
         });
     </script>
