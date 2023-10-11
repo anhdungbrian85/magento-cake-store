@@ -49,7 +49,9 @@ define([
             locationContext.isAsda.subscribe(function (data) {
                 this.cleanDateTimeData();
             }, this)
+
             return this;
+
         },
 
         initObservable: function () {
