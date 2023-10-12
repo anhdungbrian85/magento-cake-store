@@ -172,8 +172,17 @@ class Data extends AbstractHelper
                         case 'Mix':
                             $base = 'M';
                             break;
-                        case 'Caramel Crunch':
+                        case 'Caramel Crunch Cheesecake':
                             $base = 'C2';
+                            break;
+                        case 'Caramel Crunch Base':
+                            $base = 'CB';
+                            break;
+                        case 'Vegan Vanilla':
+                            $base = 'VV';
+                            break;
+                        case 'Vegan Chocolate':
+                            $base = 'CV';
                             break;
                         default:
                             $base = '';
