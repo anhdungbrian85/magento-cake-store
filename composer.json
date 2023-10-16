@@ -122,6 +122,11 @@
             "tinymce/tinymce": "lib/web/tiny_mce_5"
         },
         "magento-force": true,
+        "patches": {
+            "magento/module-customer": {
+                "CVE-2023-38218": "m2-hotfixes/CVE-2023-38218.diff"
+            }
+        },
         "magento-deploystrategy": "copy",
         "magento-deploy-ignore": {
             "*": [
