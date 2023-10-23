@@ -106,7 +106,6 @@ class OrderDataProvider extends DataProvider
             "allocated_sources",
             "pickup_location_code",
             "transaction_source",
-            "amasty_sociallogin_code",
             "print_status",
             "colection_delivery_date",
             "payment_status"
