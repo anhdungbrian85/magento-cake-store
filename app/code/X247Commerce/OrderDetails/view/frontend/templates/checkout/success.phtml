@@ -172,21 +172,3 @@ $deliveryDayTime = $block->getDeliveryDateTime($order);
         </div>
     </div>
 </div>
-<!-- DataLayer variables for enhanced conversionsand new customer data feature SPTCAK-1 Google Ads -->
-<?php
-if ($order) {
-    $email = $order->getCustomerEmail();
-    $phone = $order->getShippingAddress()->getTelephone();
-?>
-    <script>
-        var customerEmail = '<?php echo $email; ?>';
-        var customerNumber = '<?php echo $phone; ?>';
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-         'event': 'form_completion',
-         'email': customerEmail,
-         'phone_number': customerNumber,
-         'new_customer': 'true'
-        });
-    </script>
-<?php } ?>
