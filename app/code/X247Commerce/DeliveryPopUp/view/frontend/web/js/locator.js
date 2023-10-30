@@ -396,7 +396,7 @@ define([
                     return;
                 }
 
-                // self.searchLocations();
+                self.searchLocations();
             });
 
             self.mapContainer.find(this.selectors.attributeFilterTitle).on('click', function () {
