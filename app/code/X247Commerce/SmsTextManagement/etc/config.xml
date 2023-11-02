@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smstextmanagement>
+            <sms>
+                <active>1</active>
+                <api_url>https://www.tmsmsserver.co.uk/api/smscampaign</api_url>
+                <username>247C_Cakebox</username>
+                <password>s^d]CQMCev6#58zd</password>
+
+                <collection_message>Hi [customer_name], Your order number: [order_id] on [order_date]:[order_time]. [store_name] / [store_phone].</collection_message>
+                <delivery_message>Hi [customer_name], Your order number: [order_id] on [order_date]:[order_time]. [store_name] / [store_phone].</delivery_message>
+
+                <from>Cakebox</from>
+            </sms>
+        </smstextmanagement>
+    </default>
+</config>
+
+
