@@ -2,8 +2,12 @@
 
 namespace X247Commerce\SmsTextManagement\Helper;
 
+use Amasty\StorePickupWithLocator\Model\Carrier\Shipping as AmStorePickupShipping;
+
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
+    CONST ALLOWED_SMS_VARIABLES = ['customer_name', 'order_id', 'order_date', 'order_time', 'store_phone', 'store_name', 'order_type'];
+
     protected $_resource;
     protected $_orderCollectionFactory;
     protected $_checkoutSession;
@@ -32,56 +36,54 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }
+
+    /**
+     * @param $config
+     * @return mixed
+     */
     public function getApiConfig($config)
     {
         return $this->getConfig("smstextmanagement/sms/" . $config);
     }
-    public function getCartConfig($config)
-    {
-        return $this->getConfig("smstextmanagement/cart/" . $config);
-    }
-    public function getQuoteData($value)
-    {
-        return $this->getQuote()->getData($value);
-    }
-    public function getCustomerSession()
-    {
-        return $this->_customerSession;
-    }
-    public function getQuote()
-    {
-        return $this->_checkoutSession->getQuote();
-    }
-    public function getIsCustomerLogin()
-    {
-        return $this->_customerSession->isLoggedIn();
-    }
-    public function getOrder()
-    {
-        /** @var \Magento\Sales\Model\Order $order */
-        $order = $this->_orderFactory->create()->load($this->getOrderId());
-        return $order;
-    }
-    public function getOrderId()
-    {
-        return $this->_checkoutSession->getLastOrderId();
-    }
+
+    /**
+     * @param $order
+     * @return false|string
+     * @throws \Zend_Log_Exception
+     */
     public function getSendNotifications($order)
     {
-        if (!$this->getApiConfig("active")) {
-            return;
+        try {
+            $data = $this->getJsonData($order);
+            $response = $this->sendRequest($data);
+            return json_encode($response);
+        } catch (\Exception $exception) {
+            // Do nothing, just do not prevent placing order
         }
-        $data = $this->getJsonData($order);
-$writer = new \Zend_Log_Writer_Stream(BP . '/var/log/InvoicePayObserver.log');
-$logger = new \Zend_Log();
-$logger->addWriter($writer);
-$logger->info('text message');
-$logger->info(print_r($data, true));
-        $response1 = $this->sendRequest($data[0]);
-        $response2 = $this->sendRequest($data[1]);
-        $response[0] = $response1;
-        $response[1] = $response2;
-        return json_encode($response);
+
+        return false;
+    }
+
+    /**
+     * @param $uid
+     * @return bool|string
+     */
+    public function getTmsCampaignData($uid)
+    {
+        $username = $this->getApiConfig('username');
+        $password = $this->getApiConfig('password');
+        $ch = curl_init();
+        $url = $this->getApiConfig('api_url').'/'.$uid;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
     }
     public function sendRequest($data)
     {
@@ -89,7 +91,6 @@ $logger->info(print_r($data, true));
         $password = $this->getApiConfig('password');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->getApiConfig('api_url'));
-        //curl_setopt($ch, CURLOPT_SSLVERSION, 6);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -99,118 +100,83 @@ $logger->info(print_r($data, true));
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $data = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        return $data; //($httpcode >= 200 && $httpcode < 300) ? $data : false;
+        return $data;
     }
-    public function sendCancelRequest($compainId)
+
+    /**
+     * @param string $haystack
+     * @param array $needles
+     * @return array
+     */
+    public function strposa(string $haystack, array $needles)
     {
-        $username = $this->getApiConfig('username');
-        $password = $this->getApiConfig('password');
-        $url = $this->getApiConfig('cancel_api_url') . $compainId;
-        $ch = curl_init();
-        //https://www.tmsmsserver.co.uk/api/smscampaign/CampaignUid
-        curl_setopt($ch, CURLOPT_URL, $url);
-        //curl_setopt($ch, CURLOPT_SSLVERSION, 6);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $data = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        return $data; //($httpcode >= 200 && $httpcode < 300) ? $data : false;
+        $r = [];
+        foreach($needles as $n) {
+            if (strpos($haystack, $n) !== false) {
+                $r[strpos($haystack, $n)] = $n;
+            }
+        }
+        ksort($r);
+        $e = array_values($r);
+        $f = [];
+        foreach ($e as $k => $v) {
+            $f[$k+1] = $v;
+        }
+        return $f;
     }
+
+    /**
+     * @param $orderObj
+     * @return array
+     * @throws \Exception
+     *
+     */
     public function getJsonData($orderObj)
     {
-        $connection = $this->_resource->getConnection();
+        date_default_timezone_set('Europe/London');
+        $data = $variableData = [];
         $orderCollection = $this->_orderCollectionFactory->create();
-
         $orderCollection->getSelect()
                 ->joinLeft(
                     ['aam' => 'amasty_amcheckout_delivery'],
                     'aam.order_id = main_table.entity_id',
-                    ['delivery_order_id' => 'order_id', 'delivery_date' => 'date', 'delivery_time' => 'time']
+                    ['delivery_date' => 'date', 'delivery_time' => 'time']
                 )
                 ->joinLeft(
                     ['aso' => 'amasty_storepickup_order'],
                     'aso.order_id = main_table.entity_id',
-                    ['pickup_order_id' => 'order_id', 'pickup_date' => 'date', 'pickup_store_id' => 'store_id', 'time_from']
+                    ['pickup_date' => 'date', 'pickup_store_id' => 'store_id', 'time_from']
+                )
+                ->joinLeft(
+                    ['ams' => 'amasty_amlocator_location'],
+                    'main_table.store_location_id = ams.id',
+                    ['store_name' => 'ams.name', 'store_phone' => 'ams.phone']
                 )
                 ->where('aam.order_id = ? OR aso.order_id = ?', $orderObj->getId())
                 ->limit(1);
+
         $order = $orderCollection->getFirstItem();
         $orderData = $order->getData();
-        $orderDeliveryTime = '';
-        $orderDate = '';
-        if (!empty($orderData['pickup_date']) && strpos($orderData['pickup_date'], '00:00:00') !== false) {
-            if ($orderData['time_from']) {
-                $orderId = $orderData['pickup_order_id'];
-                $store_id = $orderData['pickup_store_id']; 
-                $orderTime = date('H:i:s',$orderData['time_from']);
-                $orderDeliveryTime = $orderData['time_from'];
-                $orderDate = $orderData['pickup_date'];
-                $selectStore = $connection->select()->from('amasty_amlocator_location')->where('id = ?', $store_id);
-                $resultStore = $connection->fetchAll($selectStore);
-                $storeId = isset($resultStore[0]['id']) ? $resultStore[0]['id'] : '';
-                $storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
-                $storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
-                $storePhone = isset($resultStore[0]['phone']) ? $resultStore[0]['phone'] : '';
-                $billingAddress = $order->getBillingAddress();              
-                $telephone = $billingAddress->getTelephone();           
-                
-                if (substr($telephone, 0, 1) === "0") {
-                    $telephone = substr_replace($telephone, "+44", 0, 1);
-                }else{
-                    $telephone ="+44".$telephone;
-                }
-            }
-        }
-        if (!empty($orderData['delivery_date']) && !empty($orderData['delivery_time']) && $orderData["delivery_date"] && $orderData['delivery_time']) {
-            $orderDeliveryId = $orderData['delivery_order_id']; 
-            $orderDeliveryTime = $orderData['delivery_time']; 
-            $orderDeliveryDate = $orderData['delivery_date'];
+        $orderType = $order->getShippingMethod() == AmStorePickupShipping::SHIPPING_NAME ? 'collection' : 'delivery';
+        $isCollection = $orderType == 'collection';
+        $customerAddress = $isCollection ? $order->getBillingAddress() : $order->getShippingAddress();
+        $telephone =  "+44". ltrim($customerAddress->getTelephone(),0);
 
-            $orderDate = $orderData['delivery_date'];
-            $orderTime = date('H:i:s',$orderData['delivery_time']);
-            $billingDeliveryAddress = $order->getBillingAddress();              
-            $telephone = $billingDeliveryAddress->getTelephone();
-
-            $selectStore = $connection->select()
-                ->from('amasty_amlocator_location')
-                ->where('id = ?', $orderData['store_location_id']);
-            $resultStore = $connection->fetchAll($selectStore); 
-            $storeId = isset($resultStore[0]['id']) ? $resultStore[0]['id'] : '';
-            $storeName = isset($resultStore[0]['name']) ? $resultStore[0]['name'] : '';
-            $storeAddress = isset($resultStore[0]['address']) ? $resultStore[0]['address'] : '';
-            $storePhone = isset($resultStore[0]['phone']) ? $resultStore[0]['phone'] : '';
-            
-            
-            if (substr($telephone, 0, 1) === "0") {
-                $telephone = substr_replace($delierytelephone, "+44", 0, 1);
-            }else{
-                $telephone ="+44".$delierytelephone;
-            }
-        }
-        
-        $orderType = 'collection';
-        if (strpos($order->getIncrementId(), 'DEL') !== false) {
-            $orderType = 'delivery';
-        }
-
-        date_default_timezone_set('Europe/London');
-        $dateParts = explode("-", $orderDate);
-        $collection = date('Y-m-d', strtotime("$dateParts[2]-$dateParts[1]-$dateParts[0]"));
-        $time = explode(":", $orderDeliveryTime);
-        $collectionDate = new \DateTime($collection);
-
+        $customerName = $customerAddress->getFirstname() . " " . $customerAddress->getLastname();
+        $orderDate = $isCollection ? $orderData['pickup_date'] : $orderData['delivery_date'];
+        $orderDate = (new \DateTime($orderDate))->format("Y-m-d");
+        $orderTime = $isCollection ? date('H:i:s', $orderData['time_from']) : $orderData['delivery_time'];
+        $storeName = $orderData['store_name'];
+        $storePhone = $orderData['store_phone'];
+        $storeId = $orderData['store_location_id'];
         $current = date('Y-m-d', time());
         $currentDate = new \DateTime($current);
+        $collectionDate = new \DateTime($orderDate);
+
         $diff = date_diff($currentDate, $collectionDate);
         $dif = $diff->format("%R%a");
-        $schedule = "";
+
         if ($dif > 0) {
             $date = $collectionDate;
             $date->setTime(8, 00);
@@ -219,48 +185,48 @@ $logger->info(print_r($data, true));
             $currentDate->setTime((int)date('H', time()), (int)date('i', time()) + 1);
             $schedule = $currentDate->format('Y/m/d\TH:i:s');
         }
-        $data[0]['recipients'][0]['mobilenumber'] = $telephone;
-        $data[0]['recipients'][0]['p1'] = $order->getBillingAddress()->getFirstname() . " " . $order->getBillingAddress()->getLastname();
-        $data[0]['recipients'][0]['p2'] = $order->getIncrementId();
-        $data[0]['recipients'][0]['p3'] = $orderType;
-        $data[0]['recipients'][0]['p4'] = $orderDate;
-        $data[0]['recipients'][0]['p5'] = $orderTime;
-        $data[0]['recipients'][0]['p6'] = $storeName;
-        $data[0]['recipients'][0]['p7'] = $storePhone;
-        // if ($order->getStorepickupMethod() != 1) {
-        //     $data[0]['messagetext'] = $this->getApiConfig('message');
-        // } else {
-        //     $data[0]['messagetext'] = $this->getApiConfig('delivery_message');
-        // }
 
-        $data[0]['from'] = $this->getApiConfig('from');
+        $variableData['customer_name'] = $customerName;
+        $variableData['order_id'] = $order->getIncrementId();
+        $variableData['order_type'] = $orderType;
+        $variableData['order_date'] = $orderDate;
+        $variableData['order_time'] = $orderTime;
+        $variableData['store_name'] = $storeName;
+        $variableData['store_phone'] = $storePhone;
 
-        $data[0]['scheduleddate'] = $schedule; //2015-02-12T14:00:00.5190555+00:00
+        // Confirmation Message
+        $smsMessage = $isCollection ? $this->getApiConfig('collection_message') : $this->getApiConfig('delivery_message');
 
-        $data[0]['route'] = 1;
-        $data[0]['usertag'] = $storeId;
-        $data[0]['usercampaignid'] = $order->getIncrementId();
-        /////////////////////
-        $date = $collectionDate; //new \DateTime($startdate);
-        $date->add(new \DateInterval('P1D'));
+        $variablesPos = $this->strposa($smsMessage, self::ALLOWED_SMS_VARIABLES);
+        $tmsMessage = $this->convertMessage($smsMessage);
 
-        $date->setTime(19, 00); //$date->setTime((int)$time[0],(int)$time[1]);
-        $schedule = $date->format('Y/m/d\TH:i:s');
-        $data[1]['recipients'][0]['mobilenumber'] = $telephone;
-        $data[1]['recipients'][0]['p1'] = $order->getBillingAddress()->getFirstname() . " " . $order->getBillingAddress()->getLastname();
-        $data[1]['recipients'][0]['p2'] = $order->getIncrementId();
-        $data[1]['recipients'][0]['p3'] = $orderType;
-        $data[1]['recipients'][0]['p4'] = $orderDate;
-        $data[1]['recipients'][0]['p5'] = $orderTime;
-        $data[1]['recipients'][0]['p6'] = $storeName;
-        $data[1]['recipients'][0]['p7'] = $storePhone;
-        $data[1]['messagetext'] = $this->getApiConfig('courtesy');
-        $data[1]['from'] = $this->getApiConfig('from');
-        $data[1]['scheduleddate'] = $schedule; //2015-02-12T14:00:00.5190555+00:00
-        $data[1]['route'] = 1;
-        $data[1]['usertag'] = $order->getStoreList();
-        $data[1]['usercampaignid'] = $order->getIncrementId();
+        if (!empty($variablesPos)) {
+            foreach ($variablesPos as $pos => $variableKey) {
+                $data['recipients'][0]['p'.$pos] = $variableData[$variableKey];
+            }
+        }
+
+        $data['recipients'][0]['mobilenumber'] = $telephone;
+        $data['recipients'][0]['messageparts'] = 1;
+        $data['messagetext'] = $tmsMessage;
+        $data['from'] = $this->getApiConfig('from');
+        $data['scheduleddate'] = $schedule;
+        $data['route'] = 1;
+        $data['usertag'] = $storeId;
+        $data['usercampaignid'] = $order->getIncrementId();
+        $data['messageparts'] = 1;
+
         return $data;
+    }
+
+    protected function convertMessage($origMessage)
+    {
+        $variablesPos = $this->strposa($origMessage, self::ALLOWED_SMS_VARIABLES);
+        $tmsMessage = $origMessage;
+        foreach ($variablesPos as $pos => $variable) {
+            $tmsMessage = str_replace('['.$variable.']', '[p'.$pos.']', $tmsMessage);
+        }
+        return $tmsMessage;
     }
     public function getCurrentDateTime()
     {

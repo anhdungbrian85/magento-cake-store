@@ -18,14 +18,16 @@ class InvoicePayObserver implements ObserverInterface
      * @var \Psr\Log\LoggerInterface
      */
     protected $_logger;
+
     /**
      * @param \Magento\Framework\ObjectManagerInterface $objectmanager
      */
     public function __construct(
-        \Magento\Framework\ObjectManagerInterface $objectmanager,
+        \Magento\Framework\ObjectManagerInterface   $objectmanager,
         \X247Commerce\SmsTextManagement\Helper\Data $helper,
-        LoggerInterface $logger
-    ) {
+        LoggerInterface                             $logger
+    )
+    {
         $this->helper = $helper;
         $this->_objectManager = $objectmanager;
         $this->_logger = $logger;
@@ -34,20 +36,18 @@ class InvoicePayObserver implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/InvoicePayObserver.log');
-$logger = new \Zend_Log();
-$logger->addWriter($writer);
-$logger->info('text message');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
         $order = $observer->getInvoice()->getOrder();
-        $orderSaved = true;
-        // if ($this->helper->getApiConfig("active")) {
-        //     try {
-                    $response = $this->helper->getSendNotifications($order);
-                    
-$logger->info(print_r($response, true));
-            // } catch (\Exception $e) {
-                // $this->_logger->error($e->getMessage() . ' to ' . $mobile);
-            // }
-        // }
+        $logger->info('SEND SMS ORDER' . $order->getId());
+        if ($this->helper->getApiConfig("active")) {
+            try {
+                $response = $this->helper->getSendNotifications($order);
+                $logger->info(print_r($response, true));
+            } catch (\Exception $e) {
+                 $this->_logger->error('Cannot send the message for:'.$order->getId().'|'.$e->getMessage());
+            }
+        }
         return $this;
     }
 }
