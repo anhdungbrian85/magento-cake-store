@@ -96,13 +96,10 @@ $sku = $_option->getSku();
 	<script>
 		require(['jquery'], function($) {
 		$(document).ready(function() {
-			// Target the custom options and hide them
 			let productType = window.currentProductType;
-			//console.log(productType);
 			if(productType == "simple"){
 				$('textarea.product-custom-option').prop("disabled", false);
 			}
-			//$('.product-custom-option').hide();
 		});
 	});
 	</script>
