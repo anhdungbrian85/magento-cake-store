@@ -6,8 +6,8 @@ if ($_helper->isDevMoveJsBottomEnabled()) {
     $scriptAdditionalTag = ' exclude-this-tag="text/x-magento-template"';
 }
 ?>
-<?php if ($this->isEnabled()) : ?>
-    <?php $dataLayerObject = $this->getDataLayerAsJson(); ?>
+<?php if ($block->isEnabled()) : ?>
+    <?php $dataLayerObject = $block->getDataLayerAsJson(); ?>
     <script<?=$scriptAdditionalTag?>>
         window.getWpGA4Cookie = function(name) {
             match = document.cookie.match(new RegExp(name + '=([^;]+)'));
@@ -22,7 +22,7 @@ if ($_helper->isDevMoveJsBottomEnabled()) {
             window.dataLayer.push(dl4Objects[i]);
         }
         <?php endif; ?>
-        var wpGA4Cookies = [<?php echo $this->getWpGA4CookiesForJs(); ?>];
+        var wpGA4Cookies = [<?php echo $block->getWpGA4CookiesForJs(); ?>];
         wpGA4Cookies.map(function(cookieName) {
             var cookieValue = window.getWpGA4Cookie(cookieName);
             if (cookieValue) {
