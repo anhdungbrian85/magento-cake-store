@@ -1,6 +1,7 @@
 <?php
 // @codingStandardsIgnoreFile
 $_helper = $this->helper('WeltPixel\GA4\Helper\Data');
+
 $scriptAdditionalTag = '';
 if ($_helper->isDevMoveJsBottomEnabled()) {
     $scriptAdditionalTag = ' exclude-this-tag="text/x-magento-template"';
@@ -35,9 +36,9 @@ if ($_helper->isDevMoveJsBottomEnabled()) {
 <?php endif; ?>
 <?php //SPTCAK-1
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $action = $objectManager->get(\Magento\Framework\App\Action\Action::class);
+    $action = $objectManager->get(\Magento\Framework\App\Request\Http::class);
 
-    if($action->getRequest()->getFullActionName() == 'checkout_onepage_success') { 
+    if($action->getFullActionName() == 'checkout_onepage_success') {
         $checkoutSession = $objectManager->get(\Magento\Checkout\Model\Session::class);
         $order = $checkoutSession->getLastRealOrder();
 
@@ -52,6 +53,6 @@ if ($_helper->isDevMoveJsBottomEnabled()) {
               'transaction_id': '<?php echo $orderId;?>'
             });
             </script>
-    <?php 
+    <?php
         }
     }
