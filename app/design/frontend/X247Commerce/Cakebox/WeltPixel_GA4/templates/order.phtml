@@ -13,10 +13,18 @@
         $products = $block->getProducts();
     //[SPTCAK-30 adding customer info]
         $customerEmail = $order->getCustomerEmail();
-        $customerPhone = $order->getShippingAddress()->getTelephone();
+
+    // checking shipping method and get phone number
+        if($order->getShippingMethod() == 'amstorepickup_amstorepickup') {
+            $customerPhone = $order->getBillingAddress()->getTelephone();
+        } else {
+            $customerPhone = $order->getShippingAddress()->getTelephone(); 
+        }
+
         $customerId = $order->getCustomerId();
         $totalOrders = 0;
         $isNewUser = true;
+
         if($customerId) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $orderObject = $objectManager->create('Magento\Sales\Model\Order')
@@ -24,9 +32,11 @@
             ->addAttributeToFilter('customer_id', $customerId);
             $totalOrders = count($orderObject->getData())?count($orderObject->getData()):0;
         }
+
         if($totalOrders){
             $isNewUser = false;
         }
+
     //SPTCAK-30 END
         $purchaseData = [
             'transaction_id' => $order->getIncrementId(),
