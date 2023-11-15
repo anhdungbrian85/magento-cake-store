@@ -5,7 +5,6 @@
 define([
 	'jquery',
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
-    // 'Amasty_StorePickupWithLocator/js/view/pickup/pickup-time',
     'locationContext',
     'uiRegistry',
 	'mage/translate'
@@ -13,7 +12,6 @@ define([
 ], function (
 	$,
 	pickupDataResolver,
-    // pickupTime,
     locationContext,
     registry
 ) {
