@@ -70,5 +70,25 @@
                 </multiselect>
             </formElements>
         </field>
+
+        <field name="asda_lead_delivery" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">asda_lead_delivery</item>
+                    <item name="default" xsi:type="string">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>int</dataType>
+                <label translate="true">Lead Delivery for ASDA store</label>
+                <dataScope>asda_lead_delivery</dataScope>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">false</rule>
+                </validation>
+                <notice>
+                    This value only effects to ASDA store
+                </notice>
+            </settings>
+        </field>
     </fieldset>
 </form>
