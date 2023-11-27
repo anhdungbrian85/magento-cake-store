@@ -185,20 +185,29 @@ define([
                     }
                 }
             }
-
+            firstScheduledTimeUnix = intervals[0].fromInUnix;
+            
             filteredIntervals = intervals.filter(function (item) {
 
                 if (!$.isEmptyObject(holidayTime)) {
                     let compare = (holidayTime.openInUnix < item.fromInUnix && holidayTime.closeInUnix > item.fromInUnix);
                     if (this.isTodaySelected) {
-                        return compare && (item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600));
+                        if (currentStoreTime > firstScheduledTimeUnix) {
+                            return compare && (item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600));
+                        } else {
+                            return compare && (item.fromInUnix >= (firstScheduledTimeUnix + parseInt(locationContext.leadDeliveryTime())*3600));
+                        }
                     } else {
                         return compare;
                     }
                 }
                 if (this.isTodaySelected) {
-                    return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
+                    if (currentStoreTime > firstScheduledTimeUnix) {
+                        return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600);
+                    } else {
+                        return item.fromInUnix >= (firstScheduledTimeUnix + parseInt(locationContext.leadDeliveryTime())*3600);
                     // && item.toInUnix <= this.sameDayCutoffTime;
+                    }
                 }
             }.bind(this));
 
