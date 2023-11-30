@@ -35,7 +35,11 @@ class DispatchAddToCartRouter implements RouterInterface
 
     public function match(RequestInterface $request)
     {
+        $enable = $this->helper->isEnable();
         $coupon = $this->helper->getSpecialCoupon();
+        if (!$enable || !$coupon) {
+            return null;
+        }
         $path = $request->getOriginalPathInfo();
         $path = trim($path, '/');
         if (strtolower($coupon) == strtolower($path)) {
