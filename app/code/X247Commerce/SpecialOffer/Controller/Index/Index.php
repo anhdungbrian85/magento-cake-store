@@ -110,19 +110,26 @@ class Index extends Action implements HttpGetActionInterface
                 $child = $product;
                 $product = $this->productRepository->getById($parentProducts[0]);
                 $superAttribute = $this->getChildSuperAttribute($product, $child);
-                $params = [
-                    'product' => $product->getId(),
-                    'super_attribute' => $superAttribute,
-                    'qty' => 1
-                ];
+                $params['product'] = $product->getId();
+                $params['super_attribute'] = $superAttribute;
             }
 
             $this->setLocationContext($origProduct); // Set any location
             $this->cart->addProduct($product, $params);
+            $this->cart->save();
+
+            /**
+             * @todo remove wishlist observer \Magento\Wishlist\Observer\AddToCart
+             */
+            $this->_eventManager->dispatch(
+                'checkout_cart_add_product_complete',
+                ['product' => $product, 'request' => $this->getRequest(), 'response' => $this->getResponse()]
+            );
             $quote->setCouponCode($coupon)->collectTotals();
             $this->messageManager->addSuccessMessage(__('Your free cupcake has been added to your basket!'));
             $this->messageManager->addSuccessMessage(__('The coupon code '.$coupon.' has been applied!'));
             $this->cartRepository->save($quote);
+            $this->checkoutSession->setHasUseCakeboxOffer(true);
 
         }  catch (\Magento\Framework\Exception\LocalizedException $e) {
            $this->messageManager->addErrorMessage(__($e->getMessage()));

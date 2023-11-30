@@ -1,10 +1,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
-    <action name="specialcupcakeofficer/index/index">
+    <action name="cakeboxoffer/index/index">
         <section name="cart"/>
         <section name="directory-data"/>
     </action>
-    <action name="specialcupcakeofficer">
+    <action name="cakeboxoffer/index/post">
         <section name="cart"/>
         <section name="directory-data"/>
     </action>

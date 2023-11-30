@@ -18,9 +18,16 @@ class Index extends \Magento\Framework\View\Element\Template
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
+        \X247Commerce\SpecialOffer\Helper\Data $helper,
         array $data = []
     ) {
+        $this->helper = $helper;
         parent::__construct($context, $data);
+    }
+
+    public function getSuccessCartMessage()
+    {
+        return $this->helper->getSuccessCartMessage();
     }
 }
 
