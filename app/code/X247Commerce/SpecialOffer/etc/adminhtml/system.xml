@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<section id="special_offer" sortOrder="1200" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+			<label>Special offer</label>
+			<tab>x247commerce</tab>
+			<resource>X247Commerce_SpecialOffer::config_x247commerce_specialoffer</resource>
+			<group id="general" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <label>General Configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable special offer</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+				<field id="product_sku" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Product sku</label>
+					<comment>The product which should be added to cart automatically, this product must be simple product.</comment>
+				</field>
+                <field id="coupon_code" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Special coupon code</label>
+                    <comment>No blank space. Make sure you created a Sales rule with this coupon code.</comment>
+                </field>
+			</group>
+            <group id="popup" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <label>Popup Configuration</label>
+                <field id="message" type="textarea" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Success message</label>
+                    <comment>Success message if the product is added successfully.</comment>
+                </field>
+            </group>
+		</section>
+	</system>
+</config>
