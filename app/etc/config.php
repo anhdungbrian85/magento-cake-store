@@ -465,6 +465,7 @@ return [
         'X247Commerce_StoreLocatorSource' => 1,
         'X247Commerce_ShopBy' => 1,
         'X247Commerce_SmsTextManagement' => 1,
+        'X247Commerce_SpecialOffer' => 1,
         'X247Commerce_Staging' => 1,
         'X247Commerce_Yext' => 1,
         'X247Commerce_Sales' => 1,
