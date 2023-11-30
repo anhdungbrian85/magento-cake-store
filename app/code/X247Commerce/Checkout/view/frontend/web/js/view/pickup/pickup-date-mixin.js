@@ -154,14 +154,12 @@ define([
                 return [false, ''];
             }
 
-            if (isToday && locationContext.isAsda()) {
-                return [false, ''];
-            }
-
             let today = storeDateTime,
-                tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
-            var isTomorrow = tomorrow.toDateString() === date.toDateString();
+                collectionDate = new Date();
+                collectionDate.setDate(today.getDate() + parseInt(selectedStore.asda_lead_delivery));
+            var collectionDateWithoutTime = new Date(collectionDate.getFullYear(), collectionDate.getUTCMonth(), collectionDate.getUTCDate()),
+                isNotReachCollectionDate = Date.parse(dateWithoutTime) < Date.parse(collectionDateWithoutTime),
+                isCollectionDate = Date.parse(dateWithoutTime) === Date.parse(collectionDateWithoutTime);
 
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
@@ -169,12 +167,16 @@ define([
                 asdaCutOffTimeTmr = new Date(storeDateTime.getFullYear(), storeDateTime.getUTCMonth(), storeDateTime.getUTCDate(), 16),
                 cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60);
 
-            if (isTomorrow && locationContext.isAsda()) {
-                return [minPickupTime < cutOffTimeToInt, ''];
+            if (locationContext.isAsda()) {
+                if (isToday || isNotReachCollectionDate) {
+                    return [false, ''];
+                }
+                if (isCollectionDate) {
+                    return [minPickupTime < cutOffTimeToInt, ''];
+                }
             }
 
-            var daySchedule = scheduleArray[currentDayName],
-                lastTimeSlot = parseInt(daySchedule['to']['hours']) - 1,
+            var lastTimeSlot = parseInt(daySchedule['to']['hours']) - 1,
                 lastTimeSlotMoment = new Date(
                     date.getFullYear(),
                     date.getMonth(),
