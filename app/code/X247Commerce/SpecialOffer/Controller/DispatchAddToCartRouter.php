@@ -104,9 +104,8 @@ class DispatchAddToCartRouter implements RouterInterface
         $path = $request->getOriginalPathInfo();
         $path = trim($path, '/');
         if (strtolower($coupon) == strtolower($path)) {
-            $redirectUrl = '/';
-            $this->response->setRedirect($redirectUrl);
             $redirectUrl = $this->addToCart($coupon);
+            $this->response->setRedirect($redirectUrl);
             return $this->actionFactory->create(Redirect::class);
 
         }
