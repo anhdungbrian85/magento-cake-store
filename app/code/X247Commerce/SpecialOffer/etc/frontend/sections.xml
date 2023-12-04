@@ -1,11 +1,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
-    <action name="cakeboxoffer/index/index">
+    <action name="deliverypopup/index/index">
         <section name="cart"/>
-        <section name="directory-data"/>
     </action>
-    <action name="cakeboxoffer/index/post">
+    <action name="deliverypopup">
         <section name="cart"/>
-        <section name="directory-data"/>
     </action>
 </config>

@@ -76,11 +76,9 @@ class Index extends Action implements HttpGetActionInterface
     */
     public function execute()
     {
-
         try {
             $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
             $resultRedirect->setUrl('/');
-
             $isEnable = $this->helper->isEnable();
             $sku = $this->helper->getOfferProductSku();
             $coupon = $this->getRequest()->getParam('c');
@@ -90,10 +88,10 @@ class Index extends Action implements HttpGetActionInterface
                 return $resultRedirect;
             }
 
-//            if ($quote->getCouponCode()) {
-//                $this->messageManager->addErrorMessage(__('Please remove current coupon code to claim this url!'));
-//                return $resultRedirect;
-//            }
+            if ($quote->getCouponCode() && strtolower($quote->getCouponCode()) == strtolower($coupon)) {
+                $this->messageManager->addErrorMessage(__('Please remove current coupon code to claim this url!'));
+                return $resultRedirect;
+            }
 
             $product = $this->productRepository->get($sku);
             $origProduct = $product;
@@ -128,8 +126,10 @@ class Index extends Action implements HttpGetActionInterface
             $quote->setCouponCode($coupon)->collectTotals();
             $this->messageManager->addSuccessMessage(__('Your free cupcake has been added to your basket!'));
             $this->messageManager->addSuccessMessage(__('The coupon code '.$coupon.' has been applied!'));
+
             $this->cartRepository->save($quote);
-            $this->checkoutSession->setHasUseCakeboxOffer(true);
+            $resultRedirect->setUrl('/?applied='. base64_encode($coupon));
+            return $resultRedirect;
 
         }  catch (\Magento\Framework\Exception\LocalizedException $e) {
            $this->messageManager->addErrorMessage(__($e->getMessage()));
