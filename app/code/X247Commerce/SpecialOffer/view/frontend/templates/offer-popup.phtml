@@ -22,7 +22,7 @@
 
         $(document).on( "ajaxComplete", function(event, xhr, settings) {
             if (location.origin + '/' + 'deliverypopup' == settings.url) {
-                // customerData.reload(['cart']);
+                customerData.reload(['cart']);
             }
         });
 
