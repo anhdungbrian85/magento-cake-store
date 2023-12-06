@@ -40,7 +40,6 @@ define([
                 storeAddressAsShipping;
 
             if (address && address.getType() !== 'store-pickup-address') {
-                console.log('selectStoreAddress::address', address);
                 this.nonStoreAddress = address;
             }
 
@@ -49,10 +48,8 @@ define([
             }
 
             storeAddressAsShipping = new storeAddress(store);
-            console.log('selectStoreAddress::storeAddressAsShipping', storeAddressAsShipping);
             //are store address should be set to provider?
             if (!this._isAddressCanBeSelected(this.nonStoreAddress)) {
-                console.log('selectStoreAddress::_isAddressCanBeSelected -> storeAddressAsShipping', storeAddressAsShipping);
                 this.setAddressToProvider(storeAddressAsShipping);
             }
 
@@ -61,12 +58,10 @@ define([
                 shippingService.isLoading.subscribe(function (isLoading) {
                     if (!isLoading) {
                         this.dispose();
-                        console.log('selectStoreAddress::Not isLoading', storeAddressAsShipping);
                         selectShippingAddress(storeAddressAsShipping);
                     }
                 });
             } else {
-                console.log('selectStoreAddress::isLoading', storeAddressAsShipping);
                 selectShippingAddress(storeAddressAsShipping);
             }
         },
@@ -76,13 +71,10 @@ define([
          * Remove store address
          */
         resetAddress: function () {
-            console.log('resetAddress::nonStoreAddress', this.nonStoreAddress);
             if (this.nonStoreAddress) {
                 if (this._isAddressCanBeSelected(this.nonStoreAddress)) {
-                    console.log('resetAddress::isAddressCanBeSelected');
                     checkoutData.setSelectedShippingAddress(this.nonStoreAddress.getKey());
                 } else {
-                    console.log('resetAddress::Not isAddressCanBeSelected');
                     this.nonStoreAddress.city = '';
                     this.nonStoreAddress.countryId = '';
                     this.nonStoreAddress.postcode = '';
@@ -134,12 +126,9 @@ define([
          */
         _silentAddressReset: function () {
             var notifySubscribers;
-            console.log('_silentAddressReset');
             if (!_.isUndefined(quote.shippingAddress._latestValue)) {
-                console.log('_silentAddressReset::Not isUndefined');
                 quote.shippingAddress._latestValue = null;
             } else {
-                console.log('_silentAddressReset::isUndefined');
                 notifySubscribers = quote.shippingAddress.notifySubscribers;
                 quote.shippingAddress.notifySubscribers = function () {};
                 quote.shippingAddress(null);
