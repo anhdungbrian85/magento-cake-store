@@ -8,6 +8,17 @@
     $ga4ServerSideHelper = $this->helper('WeltPixel\GA4\Helper\ServerSideTracking');
     $order = $block->getOrder();
 
+    $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/cake-301613.log');
+    $logger = new \Zend_Log();
+    $logger->addWriter($writer);
+    $logger->info(__CLASS__. "-------Class---------");
+    $logger->info($this->isFreeOrderTrackingAllowedForGoogleAnalytics(). "-------free---------");
+    $logger->info($ga4ServerSideHelper->isServerSideTrakingEnabled(). "-------server side---------");
+    $logger->info($ga4ServerSideHelper->shouldEventBeTracked(\WeltPixel\GA4\Model\Config\Source\ServerSide\TrackingEvents::EVENT_PURCHASE). "-------c EVENT_PURCHASE---------");
+    $logger->info($ga4ServerSideHelper->isDataLayerEventDisabled(). "-------c isDataLayerEventDisabled---------");
+    $logger->info($order->getCustomerId(). "-------customer id---------");
+
+
     if ($block->isFreeOrderTrackingAllowedForGoogleAnalytics() && !($ga4ServerSideHelper->isServerSideTrakingEnabled() && $ga4ServerSideHelper->shouldEventBeTracked(\WeltPixel\GA4\Model\Config\Source\ServerSide\TrackingEvents::EVENT_PURCHASE)
         && $ga4ServerSideHelper->isDataLayerEventDisabled())) :
         $products = $block->getProducts();
@@ -32,7 +43,7 @@
             ->addAttributeToFilter('customer_id', $customerId);
             $totalOrders = count($orderObject->getData())?count($orderObject->getData()):0;
         }
-
+$logger->info(json_encode($totalOrders). "---------total-------");
         if($totalOrders){
             $isNewUser = false;
         }
@@ -55,7 +66,7 @@
         $purchaseData['new_customer'] = $isNewUser;
     //SPTCAK-30 END
         $purchaseData['items'] = $products;
-
+$logger->info(json_encode($purchaseData). "---------purchaseData-------");
         $block->setEcommerceData('purchase', $purchaseData);
         $block->setDataLayerOption('event', 'purchase');
     endif;
@@ -72,6 +83,7 @@
         $remarketingData['ecomm_totalvalue'] = number_format($block->getOrderTotal(), 2, '.', '');
         $block->setDataLayerOption('google_tag_params', $remarketingData);
     endif;
-
+$logger->info( "---------End-------");
+$logger->info( "");
     ?>
 <?php endif; ?>
