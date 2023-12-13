@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace X247Commerce\HolidayOpeningTime\Observer;
 
+use Amasty\Storelocator\Model\Location;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Psr\Log\LoggerInterface;
@@ -15,8 +16,8 @@ use Magento\Framework\App\ResourceConnection;
 use X247Commerce\HolidayOpeningTime\Model\Source\HolidayHour\Type;
 
 class SyncHoliday implements ObserverInterface
-{   
-    
+{
+
     public const STORE_LOCATION_HOLIDAY_TABLE = 'store_location_holiday';
 
     protected LoggerInterface $logger;
@@ -26,7 +27,7 @@ class SyncHoliday implements ObserverInterface
 
     public function __construct(
         LoggerInterface $logger,
-        YextHelper $yextHelper, 
+        YextHelper $yextHelper,
         ResourceConnection $resource
     ) {
         $this->logger = $logger;
@@ -43,12 +44,12 @@ class SyncHoliday implements ObserverInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(Observer $observer)
-    {   
+    {
         try {
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/sync_holiday.log');
             $logger = new \Zend_Log();
             $logger->addWriter($writer);
-            
+
             $location = $observer->getLocation();
             $data = $observer->getYextData();
             // $logger->info(print_r($data, true));
@@ -62,17 +63,17 @@ class SyncHoliday implements ObserverInterface
             }
             $this->saveHolidayAction($location, $holidayAction);
 
-            if (!empty($primaryData['hours']) && 
+            if (!empty($primaryData['hours']) &&
                 !empty($primaryData['hours']['holidayHours'])) {
                 $this->editLocationHolidayHours($location, $primaryData['hours'], $holidayAction);
             }
-            
-            
+
+
         } catch (\Exception $e) {
             $logger->info('There is an error when save holiday: '.$e->getMessage());
         }
-        
-    
+
+
 
     }
 
@@ -85,7 +86,7 @@ class SyncHoliday implements ObserverInterface
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function saveHolidayAction($location, $holidayAction) 
+    public function saveHolidayAction($location, $holidayAction)
     {
         try {
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/sync_holiday.log');
@@ -100,23 +101,23 @@ class SyncHoliday implements ObserverInterface
                 if (in_array('DO_NOT_OFFER_PICKUP', $holidayAction)) {
                     array_push($noOfferDeliveryPickup, 2);
                 }
-            } 
+            }
             $location->setData('holiday_action', implode(',', $noOfferDeliveryPickup))->save();
         } catch (\Exception $e) {
             $logger->info('There is an error when save location holiday action: '.$e->getMessage());
-            
+
         }
     }
 
     /**
      * Edit or Add new AmLocator Holiday Hours
-     * 
+     *
      * @param $location Location, $holidayHoursfromYext Location's Open Time from Yext
-     * 
+     *
      * @return LocationHolidayHours
      */
     public function editLocationHolidayHours($location, $hoursData)
-    {        
+    {
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/sync_holiday.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
@@ -125,7 +126,7 @@ class SyncHoliday implements ObserverInterface
 
         $tableName = $this->resource->getTableName(self::STORE_LOCATION_HOLIDAY_TABLE);
         $holidayAction = $location->getData('holiday_action');
-// 
+//
         // $logger->info(print_r($hoursData,true));
         // $logger->info(print_r($holidayAction,true));
         $holidayAction = explode(',', $holidayAction);
@@ -146,11 +147,11 @@ class SyncHoliday implements ObserverInterface
                         $openTime = $hoursData[$dateInWeek]['openIntervals'][0]['start'];
                         $closedTime = $hoursData[$dateInWeek]['openIntervals'][0]['end'];
                     }
-                    
-                    $insertData = [    
+
+                    $insertData = [
                         'title' => 'Holiday',
-                        'date' => $holidayDate, 
-                        'open_time' => $openTime, 
+                        'date' => $holidayDate,
+                        'open_time' => $openTime,
                         'closed_time' => $endTime,
                         'disable_delivery' => $disableDelivery,
                         'disable_pickup' => $disablePickup,
@@ -162,12 +163,12 @@ class SyncHoliday implements ObserverInterface
                 if (isset($holidayHoursfromYext['isClosed'])) {
                    $insertData = [
                         'title' => 'Holiday',
-                        'date' => $holidayHoursfromYext['date'], 
-                        'open_time' => $openTime, 
+                        'date' => $holidayHoursfromYext['date'],
+                        'open_time' => $openTime,
                         'closed_time' => $endTime,
                         'disable_delivery' => $disableDelivery,
                         'disable_pickup' => $disablePickup,
-                        'store_location_id' => $location->getId(), 
+                        'store_location_id' => $location->getId(),
                         'type' => Type::CLOSED_VALUE
                     ];
 
@@ -178,16 +179,21 @@ class SyncHoliday implements ObserverInterface
                     $endTime  = $holidayHoursfromYext['openIntervals'][0]['end']  ?: '00:00';
                     $insertData = [
                         'title' => 'Holiday',
-                        'date' => $holidayHoursfromYext['date'], 
-                        'open_time' => $openTime, 
+                        'date' => $holidayHoursfromYext['date'],
+                        'open_time' => $openTime,
                         'closed_time' => $endTime,
                         'disable_delivery' => $disableDelivery,
                         'disable_pickup' => $disablePickup,
-                        'store_location_id' => $location->getId(), 
-                        'type' => Type::OPEN_VALUE, 
+                        'store_location_id' => $location->getId(),
+                        'type' => Type::OPEN_VALUE,
                     ];
                 }
                 try {
+                    // Before insert disable col/del if start/close time is 00:00
+                    if ($openTime == '00:00' && $endTime == '00:00') {
+                        $insertData['disable_delivery'] = 1;
+                        $insertData['disable_pickup'] = 1;
+                    }
                     $this->connection->insertOnDuplicate($tableName, [$insertData]);
                 } catch (\Exception $e) {
                     $logger->info('Cannot insert holiday data: ' . print_r($insertData, true));
