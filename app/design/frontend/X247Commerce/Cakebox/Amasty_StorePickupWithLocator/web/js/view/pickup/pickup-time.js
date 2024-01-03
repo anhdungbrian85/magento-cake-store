@@ -190,7 +190,7 @@ define([
             filteredIntervals = intervals.filter(function (item) {
 
                 if (!$.isEmptyObject(holidayTime)) {
-                    let compare = (holidayTime.openInUnix < item.fromInUnix && holidayTime.closeInUnix > item.fromInUnix);
+                    let compare = (holidayTime.openInUnix + 3600 <= item.fromInUnix && holidayTime.closeInUnix > item.fromInUnix);
                     if (this.isTodaySelected) {
                         if (currentStoreTime > firstScheduledTimeUnix) {
                             return compare && (item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600));
