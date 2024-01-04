@@ -1,0 +1,35 @@
+<div id="cakebox-offer-popup" style="display: none">
+    <div class="static_content">
+        <p class="content"><?= $block->getSuccessCartMessage() ?></p>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magento_Customer/js/customer-data',
+        'Magento_Ui/js/modal/modal'
+    ],function($, customerData, modal) {
+        var couponClaimed =  '<?= base64_encode(strtolower($block->getCouponCode())) ?>';
+        var options = {
+            type: 'popup',
+            responsive: true,
+            modalClass: 'offer-popup',
+            modalAction: [],
+            buttons: []
+        };
+        var popup = modal(options, $('#cakebox-offer-popup'));
+
+        $(document).on( "ajaxComplete", function(event, xhr, settings) {
+            if (location.origin + '/' + 'deliverypopup' == settings.url) {
+                customerData.reload(['cart']);
+            }
+        });
+
+        if (couponClaimed && "?applied="+couponClaimed == location.search ) {
+            $('#cakebox-offer-popup').modal('openModal');
+            window.history.replaceState('', '', '/');
+        }
+    });
+</script>
+

@@ -13,4 +13,12 @@
 			</argument>
 		</arguments>
 	</type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="x247_correct_holiday_disable_status" xsi:type="object">X247Commerce\HolidayOpeningTime\Console\AutoDisableDeliveryCollection</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

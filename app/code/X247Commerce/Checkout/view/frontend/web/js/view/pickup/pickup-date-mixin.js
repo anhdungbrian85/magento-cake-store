@@ -207,6 +207,12 @@ define([
 
             return filteredIntervals;
         },
+
+        pickupStateObserver: function (isActive) {
+            if (isActive) {
+                this.value('');
+            }
+        },
     };
 
     return function (target) {

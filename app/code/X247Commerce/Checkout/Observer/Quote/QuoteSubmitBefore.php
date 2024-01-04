@@ -99,7 +99,7 @@ class QuoteSubmitBefore implements ObserverInterface
                     } else {
                         $quote->setTotalsCollectedFlag(false);
                         $quote->collectTotals();
-                        throw new LocalizedException(__('We do not yet deliver to that area. Please arrange to collect in-store or use another delivery address!'));
+                        throw new LocalizedException(__('We do not yet deliver to that area, or this store won\'t open this day. Please arrange to collect in-store or use another delivery address!'));
                     }
                 }
             }
