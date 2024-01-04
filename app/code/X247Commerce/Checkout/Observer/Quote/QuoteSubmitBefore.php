@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
 use X247Commerce\Delivery\Helper\DeliveryData;
 use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory as LocationCollectionFactory;
+use Magento\Framework\Filesystem\Driver\File;
 
 class QuoteSubmitBefore implements ObserverInterface
 {
@@ -25,7 +26,7 @@ class QuoteSubmitBefore implements ObserverInterface
     protected DeliveryData $deliveryData;
     protected AmPickupQuoteRepository $amQuoteRepository;
     protected DeliveryDateProvider $deliveryDateProvider;
-
+    protected File $file;
 
     public function __construct(
         DeliveryData $deliveryData,
@@ -36,7 +37,8 @@ class QuoteSubmitBefore implements ObserverInterface
         StoreLocationContextInterface $storeLocationContext,
         LoggerInterface $logger,
         AmPickupQuoteRepository $amQuoteRepository,
-        DeliveryDateProvider $deliveryDateProvider
+        DeliveryDateProvider $deliveryDateProvider,
+        File $file
     ) {
         $this->deliveryData = $deliveryData;
         $this->locationCollectionFactory = $locationCollectionFactory;
@@ -46,6 +48,7 @@ class QuoteSubmitBefore implements ObserverInterface
         $this->storeLocationContext = $storeLocationContext;
         $this->amQuoteRepository = $amQuoteRepository;
         $this->deliveryDateProvider = $deliveryDateProvider;
+        $this->file = $file;
         $this->logger = $logger;
     }
 
@@ -56,7 +59,6 @@ class QuoteSubmitBefore implements ObserverInterface
         $quote = $observer->getEvent()->getQuote();
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         $shippingAddress = $quote->getShippingAddress();
-
         if ($shippingMethod == 'cakeboxdelivery_cakeboxdelivery') {
 
             $postcode = $shippingAddress->getPostcode();
@@ -76,13 +78,22 @@ class QuoteSubmitBefore implements ObserverInterface
                 }
                 $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
                 if ($locationDataFromPostCode['status']) {
-                    $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
+                    $locations = $this->locatorSourceResolver->getAllClosestStoreLocationsWithPostCodeAndSkus(
                         $postcode,
                         $locationDataFromPostCode['data']['lat'],
                         $locationDataFromPostCode['data']['lng'],
                         $productSkus
                     );
-                    if ($location->getId()) {
+                    $location = null;
+                    foreach ($locations as $loc)
+                    {
+                        $isWeekend = (date('N', strtotime($deliveryQuote->getDate())) >= 6);
+                        if ($this->locatorSourceResolver->checkStoreDeliveryAvaiable($loc->getId(), $deliveryQuote->getDate())) {
+                            $location = $loc;
+                            break;
+                        }
+                    }
+                    if ($location != null && $location->getId()) {
                         $quote->setData('store_location_id', $location->getId());
                         $order->setData('store_location_id', $location->getId());
                     } else {
@@ -113,6 +124,33 @@ class QuoteSubmitBefore implements ObserverInterface
                 }
             } else {
                 throw new LocalizedException(__('Please choose a store!'));
+            }
+        }
+        $this->validateProductImageUploaded($observer);
+
+    }
+
+    /**
+     * @return void
+     */
+    private function validateProductImageUploaded($observer)
+    {
+        $quote = $observer->getEvent()->getQuote();
+        $items = $quote->getAllVisibleItems();
+        foreach ($items as $item) {
+            $options = $item->getOptions();
+            foreach ($options as $option) {
+                $option = json_decode($option->getValue(), true);
+                if (!empty($option['options'])) {
+                    $customOptions = $option['options'];
+                    foreach ($customOptions as $customOption) {
+                        if (is_array($customOption) && !empty($customOption['type']) && strpos($customOption['type'], 'image') != -1) {
+                            if (empty($customOption['fullpath']) || !$this->file->isExists($customOption['fullpath'])) {
+                                throw new LocalizedException(__('Seems your uploaded photo is missing, please check and re-upload!'));
+                            }
+                        }
+                    }
+                }
             }
         }
     }

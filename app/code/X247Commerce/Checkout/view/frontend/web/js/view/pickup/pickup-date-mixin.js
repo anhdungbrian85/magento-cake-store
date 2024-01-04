@@ -5,7 +5,6 @@
 define([
 	'jquery',
 	'Amasty_StorePickupWithLocator/js/model/pickup/pickup-data-resolver',
-    // 'Amasty_StorePickupWithLocator/js/view/pickup/pickup-time',
     'locationContext',
     'uiRegistry',
 	'mage/translate'
@@ -13,14 +12,13 @@ define([
 ], function (
 	$,
 	pickupDataResolver,
-    // pickupTime,
     locationContext,
     registry
 ) {
     'use strict';
 
     var mixin = {
-
+        holidays: window.checkoutConfig.store_location_holiday,
         /**
          * Set the first store work day to date field
          *
@@ -95,7 +93,20 @@ define([
                 daySchedule,
                 scheduleArray,
                 timeIntervals = pickupDataResolver.getTimeIntervalsByScheduleId(selectedStoreData.schedule_id),
-                currentDayName = this.weekDays[date.getDay()];
+                currentDayName = this.weekDays[date.getDay()], convertDate;
+
+            convertDate = date.toLocaleDateString('en-CA');
+
+            var holidays = this.holidays.filter(function (item) {
+                return item.location_id == locationContext.storeLocationId()
+                    && convertDate == item.date;
+            });
+
+            if (!$.isEmptyObject(holidays)) {
+                if(holidays[0].disable_pickup == 1){
+                    return [false, ''];
+                }
+            }
 
             if (!selectedStore) {
                 return [false, ''];
@@ -143,14 +154,12 @@ define([
                 return [false, ''];
             }
 
-            if (isToday && locationContext.isAsda()) {
-                return [false, ''];
-            }
-
             let today = storeDateTime,
-                tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
-            var isTomorrow = tomorrow.toDateString() === date.toDateString();
+                collectionDate = new Date();
+                collectionDate.setDate(today.getDate() + parseInt(selectedStore.asda_lead_delivery));
+            var collectionDateWithoutTime = new Date(collectionDate.getFullYear(), collectionDate.getUTCMonth(), collectionDate.getUTCDate()),
+                isNotReachCollectionDate = Date.parse(dateWithoutTime) < Date.parse(collectionDateWithoutTime),
+                isCollectionDate = Date.parse(dateWithoutTime) === Date.parse(collectionDateWithoutTime);
 
             var currentStore = pickupDataResolver.getCurrentStoreData() || {},
                 currentStoreTime = currentStore.current_timezone_time,
@@ -158,19 +167,23 @@ define([
                 asdaCutOffTimeTmr = new Date(storeDateTime.getFullYear(), storeDateTime.getUTCMonth(), storeDateTime.getUTCDate(), 16),
                 cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60);
 
-            if (isTomorrow && locationContext.isAsda()) {
-                return [minPickupTime < cutOffTimeToInt, ''];
+            if (locationContext.isAsda()) {
+                if (isToday || isNotReachCollectionDate) {
+                    return [false, ''];
+                }
+                if (isCollectionDate) {
+                    return [minPickupTime < cutOffTimeToInt, ''];
+                }
             }
 
-            var daySchedule = scheduleArray[currentDayName],
-                lastTimeSlot = parseInt(daySchedule['to']['hours']) - 1,
+            var lastTimeSlot = parseInt(daySchedule['to']['hours']) - 1,
                 lastTimeSlotMoment = new Date(
                     date.getFullYear(),
                     date.getMonth(),
                     date.getDate(),
                     lastTimeSlot
                 );
-            
+
             if (Date.parse(lastTimeSlotMoment)/1000 < minPickupTime) {
                 return [false, ''];
             }

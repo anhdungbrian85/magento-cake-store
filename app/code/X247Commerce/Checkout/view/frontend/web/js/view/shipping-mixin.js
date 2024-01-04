@@ -477,7 +477,7 @@ define(
                     var isShippingValid;
 
                     if (!this.allowedDynamicalSave
-                        // || this.isBillingAddressFormVisible() // As we always show billing address
+                        // || this.isBillingAddressFormVisible() // always show billing address
                         || !shippingRegistry.isHaveUnsavedShipping()
                     ) {
                         paymentLoader(false);

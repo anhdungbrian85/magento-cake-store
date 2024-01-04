@@ -6,13 +6,15 @@ var config = {
     },
     config: {
         mixins: {
-
-            // Hide delivery date block when use pickup store 
+            'mage/validation': {
+                'X247Commerce_Checkout/js/validation-mixin': true
+            },
+            // Hide delivery date block when use pickup store
             "Amasty_CheckoutCore/js/model/one-step-layout": {
                 "X247Commerce_Checkout/js/model/one-step-layout-mixin": true
             },
 
-            // Hide delivery date block when use pickup store 
+            // Hide delivery date block when use pickup store
             "Magento_Checkout/js/model/quote": {
                 "X247Commerce_Checkout/js/model/quote": true
             },
@@ -33,7 +35,7 @@ var config = {
             'Amasty_StorePickupWithLocator/js/view/pickup/pickup-date': {
                 "X247Commerce_Checkout/js/view/pickup/pickup-date-mixin": true
             },
-            
+
         }
     }
 };

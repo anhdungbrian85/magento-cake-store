@@ -55,9 +55,13 @@
 
     <table name="amasty_amlocator_location">
         <column xsi:type="int" name="enable_delivery" unsigned="true" nullable="true" default="0" comment="amlocator store active" />
+        <column xsi:type="int" name="asda_lead_delivery" unsigned="true" nullable="true" default="1" comment="lead delivery time for ASDA store" />
+        <column xsi:type="varchar" name="holiday_action" nullable="true" comment="holiday actions" />
         <index referenceId="DELIVERY_SOURCE_AMLOCATOR_STORE" indexType="btree">
             <column name="enable_delivery"/>
         </index>
-        <column xsi:type="varchar" name="holiday_action" nullable="true" comment="holiday actions" />
+    </table>
+    <table name="mashiro_bundle_contexts_config">
+        <column xsi:type="mediumtext" name="config" comment="Config" />
     </table>
 </schema>

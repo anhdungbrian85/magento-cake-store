@@ -5,12 +5,11 @@
 
 define([
     'jquery',
-    'owl',
     'mage/smart-keyboard-handler',
     'mage/mage',
     'mage/ie-class-fixer',
     'domReady!'
-], function ($, owlCarousel, keyboardHandler) {
+], function ($, keyboardHandler) {
     'use strict';
 
     $('.cart-summary').mage('sticky', {
@@ -27,34 +26,6 @@ define([
     });
 
     keyboardHandler.apply();
-
-    $('.shop-now-block').addClass('owl-carousel').owlCarousel({
-        stagePadding: 30,
-        loop: true,
-        margin: 15,
-        responsiveClass:true,
-        responsive:{
-            0:{
-                items: 2,
-                nav: false,
-                dots: false,
-                margin: 10
-            },
-            768:{
-                items: 3,
-                nav: false
-            },
-            993:{
-                items: 5,
-                nav: false,
-            },
-            1024: {
-                items:6,
-                nav: false,
-                margin: 35,
-            }
-        }
-    });
 
     $(function() {
         setTimeout(function(){

@@ -9,7 +9,16 @@
 $product = $block->getProduct();
 if ($product):
 $sku = $product->getSku();
-$rangeSkus = $product->getRangeSkus();
+// $rangeSkus = $product->getRangeSkus();
+$rangeSkus='';
+$productTypeInstance = $product->getTypeInstance();
+if (method_exists($productTypeInstance, 'getUsedProducts')) {
+    $usedProducts = $productTypeInstance->getUsedProducts($product);
+    foreach ($usedProducts  as $child) {
+        $rangeSkus .= $child->getSku().',';
+    }
+}
+
 $skuTruspilot = $rangeSkus ? $rangeSkus . ',' . $sku : $sku;
 ?>
 <div id="product-review-container" data-role="product-review"></div>

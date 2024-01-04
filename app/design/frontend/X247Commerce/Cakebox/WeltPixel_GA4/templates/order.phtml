@@ -1,0 +1,89 @@
+<?php
+// @codingStandardsIgnoreFile
+?>
+<?php if($block->isEnabled()) : ?>
+    <?php
+
+    $helper = $this->helper('WeltPixel\GA4\Helper\Data');
+    $ga4ServerSideHelper = $this->helper('WeltPixel\GA4\Helper\ServerSideTracking');
+    $order = $block->getOrder();
+
+    $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/cake-301613.log');
+    $logger = new \Zend_Log();
+    $logger->addWriter($writer);
+    $logger->info(__CLASS__. "-------Class---------");
+    $logger->info($this->isFreeOrderTrackingAllowedForGoogleAnalytics(). "-------free---------");
+    $logger->info($ga4ServerSideHelper->isServerSideTrakingEnabled(). "-------server side---------");
+    $logger->info($ga4ServerSideHelper->shouldEventBeTracked(\WeltPixel\GA4\Model\Config\Source\ServerSide\TrackingEvents::EVENT_PURCHASE). "-------c EVENT_PURCHASE---------");
+    $logger->info($ga4ServerSideHelper->isDataLayerEventDisabled(). "-------c isDataLayerEventDisabled---------");
+    $logger->info($order->getCustomerId(). "-------customer id---------");
+
+
+    if ($block->isFreeOrderTrackingAllowedForGoogleAnalytics() && !($ga4ServerSideHelper->isServerSideTrakingEnabled() && $ga4ServerSideHelper->shouldEventBeTracked(\WeltPixel\GA4\Model\Config\Source\ServerSide\TrackingEvents::EVENT_PURCHASE)
+        && $ga4ServerSideHelper->isDataLayerEventDisabled())) :
+        $products = $block->getProducts();
+    //[SPTCAK-30 adding customer info]
+        $customerEmail = $order->getCustomerEmail();
+
+    // checking shipping method and get phone number
+        if($order->getShippingMethod() == 'amstorepickup_amstorepickup') {
+            $customerPhone = $order->getBillingAddress()->getTelephone();
+        } else {
+            $customerPhone = $order->getShippingAddress()->getTelephone(); 
+        }
+
+        $customerId = $order->getCustomerId();
+        $totalOrders = 0;
+        $isNewUser = true;
+
+        if($customerId) {
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $orderObject = $objectManager->create('Magento\Sales\Model\Order')
+            ->getCollection()
+            ->addAttributeToFilter('customer_id', $customerId);
+            $totalOrders = count($orderObject->getData())?count($orderObject->getData()):0;
+        }
+$logger->info(json_encode($totalOrders). "---------total-------");
+        if($totalOrders){
+            $isNewUser = false;
+        }
+
+    //SPTCAK-30 END
+        $purchaseData = [
+            'transaction_id' => $order->getIncrementId(),
+            'affiliation' => $helper->getAffiliationName(),
+            'value' => number_format($block->getOrderTotal(), 2, '.', ''),
+            'coupon' => (string)$order->getCouponCode(),
+            'tax' => number_format($order->getTaxAmount(), 2, '.', ''),
+            'shipping' => number_format($order->getShippingAmount(), 2, '.', ''),
+            'currency' => $block->getCurrencyCode(),
+            'total_order_count' => $block->getTotalOrderCount(),
+            'total_lifetime_value' => number_format($block->getTotalLifetimeValue(), 2, '.', '')
+        ];
+    //SPTCAK-30
+        $purchaseData['email'] = $customerEmail;
+        $purchaseData['phone_number'] = $customerPhone;
+        $purchaseData['new_customer'] = $isNewUser;
+    //SPTCAK-30 END
+        $purchaseData['items'] = $products;
+$logger->info(json_encode($purchaseData). "---------purchaseData-------");
+        $block->setEcommerceData('purchase', $purchaseData);
+        $block->setDataLayerOption('event', 'purchase');
+    endif;
+
+    if ($helper->isAdWordConversionTrackingEnabled() && $block->isFreeOrderAllowedForAdwordsConversionTracking()) :
+        $block->setDataLayerOption(\WeltPixel\GA4\Model\Api\ConversionTracking::FIELD_CONVERSION_TRACKING_CONVERSION_VALUE, $block->getOrderTotal());
+        $block->setDataLayerOption(\WeltPixel\GA4\Model\Api\ConversionTracking::FIELD_CONVERSION_TRACKING_ORDER_ID, $order->getIncrementId());
+    endif;
+
+    if ($helper->isAdWordsRemarketingEnabled() && $block->isFreeOrderAllowedForAdwordsRemarketing()):
+        $remarketingData = [];
+        $remarketingData['ecomm_pagetype'] = \WeltPixel\GA4\Model\Api\Remarketing::ECOMM_PAGETYPE_PURCHASE;
+        $remarketingData['ecomm_prodid'] = $block->getProductIds();
+        $remarketingData['ecomm_totalvalue'] = number_format($block->getOrderTotal(), 2, '.', '');
+        $block->setDataLayerOption('google_tag_params', $remarketingData);
+    endif;
+$logger->info( "---------End-------");
+$logger->info( "");
+    ?>
+<?php endif; ?>

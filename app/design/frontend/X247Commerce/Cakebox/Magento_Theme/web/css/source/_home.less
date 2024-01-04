@@ -162,8 +162,8 @@
 								width: 20px;								
 							}
 							li.slick-active button {
-								background-color: #992E80;
-								border-color: #992E80;
+								background-color: #5A285A;
+								border-color: #5A285A;
 							}
 						}
 						.slick-list {
@@ -215,6 +215,17 @@
 		}
 	}
 
+	a.pagebuilder-button-primary,
+	button.pagebuilder-button-primary,
+	div.pagebuilder-button-primary {
+		background: #5a285a;
+		border-color: #5a285a;
+		&:hover,
+		&:focus {
+			border-color: #992e80;
+			background: #992e80;
+		}
+	}
 }
 
 
@@ -411,8 +422,8 @@
 					a.pagebuilder-button-primary, 
 					button.pagebuilder-button-primary, 
 					div.pagebuilder-button-primary{
-						background: #992E80;
-						border: 1px solid #992e80;
+						background: #5A285A;
+						border: 1px solid #5A285A;
 						font-weight: 300;
 						letter-spacing: -0.76pt;
 						font-size: 19px;
@@ -496,7 +507,7 @@
 								height: 13px;
 
 								button {
-									background: #992E80;
+									background: #5A285A;
 								}
 							}
 						}
@@ -560,12 +571,31 @@
 	}
 
 	.shop-now-block {
+		&.mobile-looking-for {
+	    	display: flex !important;
+	    	&::-webkit-scrollbar {
+			    display: none;
+			}
+	    	.category-item {	    		
+				width: 25%;
+			    box-sizing: border-box;
+			    margin-left: 0 !important;
+			    min-width: 45%;
+			    margin-bottom: 20px;
+			    padding-right: 15px;
+	    	}
+		}
+	    flex-direction: row !important;
+	    flex-wrap: nowrap;
+		overflow: scroll;
+	    margin-bottom: 0;
+	    padding-left: 15px;
+	    padding-right: 15px;
+
 		img{
 			border-radius: 8px;
 		}
 		.category-title {
-			margin-top: 10px;
-			font-size: 16px;
 
 			a {
 				color: #333333;
