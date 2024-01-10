@@ -5,6 +5,8 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Api\Data\ProductInterfaceFactory;
 
 class ValidateOutOfStockStatus implements ObserverInterface
 {
@@ -16,16 +18,30 @@ class ValidateOutOfStockStatus implements ObserverInterface
 
     protected $_productloader;
 
+        /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductInterfaceFactory
+     */
+    private $productFactory;
+
     public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
         \X247Commerce\Checkout\Api\StoreLocationContextInterface $locationContext,
         LocatorSourceResolver $locatorSourceResolver,
-        \Magento\Catalog\Model\ProductFactory $_productloader
+        \Magento\Catalog\Model\ProductFactory $_productloader,
+        ProductRepositoryInterface $productRepository,
+        ProductInterfaceFactory $productFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->locationContext = $locationContext;
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->_productloader = $_productloader;
+        $this->productRepository = $productRepository;
+        $this->productFactory = $productFactory;
     }
 
     /**
@@ -54,7 +70,7 @@ class ValidateOutOfStockStatus implements ObserverInterface
            // $logger->info('Bundle Item Id: ' . json_encode($currentProduct->getData(), true) );
             foreach($quote->getAllVisibleItems() as $bundleitem) {
                 //$logger->info('All Item data: ' . json_encode($bundleitem->getData(), true) );
-                //$logger->info('inside foreach');
+                $logger->info('inside foreach');
                 $logger->info('Entity Id:'. $currentProduct->getData('entity_id'));
                 $logger->info('Product Id:'. $bundleitem->getData('product_id'));
                 if($currentProduct->getData('entity_id') == $bundleitem->getData('product_id')){
@@ -66,10 +82,11 @@ class ValidateOutOfStockStatus implements ObserverInterface
                     //$logger->info('Parent Item Id: ' . print_r($productIds, true) );
                 }
             }
-            //$logger->info('Parent item id before foreach: ' . print_r($productIds, true) );
-             foreach($productIds as $childId){
-                $logger->info('child item id: ' . print_r($childId, true) );
-                $childData = $this->getLoadProduct($childId);
+            $logger->info('Parent item id before foreach: ' . print_r($productIds, true) );
+            $newChildData = $this->loadProductsByIds($productIds);
+             foreach($newChildData as $childData){
+                $logger->info('child item : ' .$childData->getSku() );
+                //$childData = $this->getLoadProduct($childId);
                     if (!$this->locatorSourceResolver->validateOutOfStockStatusOfProduct($selectedLocationId, $childData->getSku())) {
                         $logger->info('Error current product: ' . $childData->getSku() );
                         throw new \Magento\Framework\Exception\LocalizedException(__('The current product is out of stock on this location.'));
@@ -81,9 +98,9 @@ class ValidateOutOfStockStatus implements ObserverInterface
                     }
              }
          }else{
-            //$logger->info('Starting Non-bundle');
-            //$logger->info('store location id:'. $selectedLocationId);
-            //$logger->info('Current product id: '. $currentProduct->getSku());
+            $logger->info('Starting Non-bundle');
+            $logger->info('store location id:'. $selectedLocationId);
+            $logger->info('Current product id: '. $currentProduct->getSku());
             if (!$this->locatorSourceResolver->validateOutOfStockStatusOfProduct($selectedLocationId, $currentProduct->getSku())) {
                 $logger->info('Error current product: ' . $currentProduct->getSku() );
                 throw new \Magento\Framework\Exception\LocalizedException(__('The current product is out of stock on this location.'));
@@ -103,5 +120,21 @@ class ValidateOutOfStockStatus implements ObserverInterface
     public function getLoadProduct($id)
     {
         return $this->_productloader->create()->load($id);
+    }
+
+    public function loadProductsByIds(array $productIds)
+    {
+        $products = [];
+
+        foreach ($productIds as $productId) {
+            try {
+                $product = $this->productRepository->getById($productId);
+                $products[] = $product;
+            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                // Handle the case when a product with the given ID is not found.
+            }
+        }
+
+        return $products;
     }
 }
