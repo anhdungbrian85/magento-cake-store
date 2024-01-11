@@ -25,6 +25,14 @@
         </referenceContainer>
 
         <move element="navigation.sections" destination="header-wrapper" after="ammenu.logo" />
+        <!-- Logo -->
+        <referenceBlock name="logo">            
+            <arguments>                
+                <argument name="logo_file" xsi:type="string">images/logo.svg</argument>                
+                <argument name="logo_img_width" xsi:type="number">190</argument>                
+                <argument name="logo_img_height" xsi:type="number">87</argument>            
+            </arguments>        
+        </referenceBlock>
 
         <referenceContainer name="header-wrapper">
             <block class="Magento\Customer\Block\Account\Link" name="header.account" template="Magento_Theme::html/account.phtml" after="top.search" />
