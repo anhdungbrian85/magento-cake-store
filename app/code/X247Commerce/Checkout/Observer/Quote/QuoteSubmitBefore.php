@@ -14,6 +14,8 @@ use X247Commerce\StoreLocator\Helper\DeliveryArea as DeliveryAreaHelper;
 use X247Commerce\Delivery\Helper\DeliveryData;
 use Amasty\Storelocator\Model\ResourceModel\Location\CollectionFactory as LocationCollectionFactory;
 use Magento\Framework\Filesystem\Driver\File;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 class QuoteSubmitBefore implements ObserverInterface
 {
@@ -27,6 +29,8 @@ class QuoteSubmitBefore implements ObserverInterface
     protected AmPickupQuoteRepository $amQuoteRepository;
     protected DeliveryDateProvider $deliveryDateProvider;
     protected File $file;
+    protected $productRepository;
+    protected $searchCriteriaBuilder;
 
     public function __construct(
         DeliveryData $deliveryData,
@@ -38,7 +42,9 @@ class QuoteSubmitBefore implements ObserverInterface
         LoggerInterface $logger,
         AmPickupQuoteRepository $amQuoteRepository,
         DeliveryDateProvider $deliveryDateProvider,
-        File $file
+        File $file,
+        ProductRepositoryInterface $productRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->deliveryData = $deliveryData;
         $this->locationCollectionFactory = $locationCollectionFactory;
@@ -50,6 +56,8 @@ class QuoteSubmitBefore implements ObserverInterface
         $this->deliveryDateProvider = $deliveryDateProvider;
         $this->file = $file;
         $this->logger = $logger;
+        $this->productRepository = $productRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
 
@@ -114,9 +122,37 @@ class QuoteSubmitBefore implements ObserverInterface
 
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
-                    $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);
-                    if (!$available) {
-                        throw new LocalizedException(__('Some of the products are out stock!'));
+                    //$this->logger->info('Item at checkout:'.$item->getSku());
+                    $this->logger->info('Item type :'.$item->getProductType());
+                    if($item->getProductType() == 'bundle'){
+                        $productIds = [];
+                        $productId = $item->getData('product_id');
+                        foreach($quote->getAllItems() as $quoteItem){
+                            if($quoteItem->getData('product_id') == $productId){
+                                $quoteData = $quoteItem->getChildren();
+                            }
+                        }
+                        $children = $quoteData;
+                        foreach ($children as $child) {
+                            $childProduct = $child->getProduct();
+                            /** Access information about each child product  */
+                            $productIds[] = $childProduct->getId();
+                        }
+                        //$this->logger->info('Item  :'.print_r($productIds, true));
+                        $newChildData = $this->loadProductsByIds($productIds);
+                        foreach($newChildData as $childData){
+                                if (!$this->locatorSourceResolver->checkProductAvailableInStore($locationId, $childData)) {
+                                    $logger->info('Error current product: ' . $childData->getSku() );
+                                    throw new LocalizedException(__('Some of the products are out stock!'));
+                                }
+                         }
+                                                
+                    }else{
+                        $available = $this->locatorSourceResolver->checkProductAvailableInStore($locationId, $item);
+                    
+                        if (!$available) {
+                            throw new LocalizedException(__('Some of the products are out stock!'));
+                        }
                     }
                 }
                 if ($quote->getData('store_location_id')) {
@@ -153,5 +189,20 @@ class QuoteSubmitBefore implements ObserverInterface
                 }
             }
         }
+    }
+
+    public function loadProductsByIds(array $productIds)
+    {
+        // Build search criteria
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('entity_id', $productIds, 'in')
+            ->create();
+
+        // Load products
+        $products = $this->productRepository->getList($searchCriteria)->getItems();
+
+        /** $products now contains the loaded products */
+
+        return $products;
     }
 }
