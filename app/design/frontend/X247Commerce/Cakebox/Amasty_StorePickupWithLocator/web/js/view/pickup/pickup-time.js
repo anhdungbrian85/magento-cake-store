@@ -188,13 +188,14 @@ define([
             firstScheduledTimeUnix = intervals[0].fromInUnix;
             
             filteredIntervals = intervals.filter(function (item) {
+
                 if (!$.isEmptyObject(holidayTime)) {
                     let compare = (holidayTime.openInUnix + 3600 <= item.fromInUnix && holidayTime.closeInUnix > item.fromInUnix);
                     if (this.isTodaySelected) {
                         if (currentStoreTime > firstScheduledTimeUnix) {
                             return compare && (item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600));
                         } else {
-                            return compare && (item.fromInUnix >= (holidayTime.openInUnix + parseInt(locationContext.leadDeliveryTime())*3600));
+                            return compare && (item.fromInUnix >= (firstScheduledTimeUnix + parseInt(locationContext.leadDeliveryTime())*3600));
                         }
                     } else {
                         return compare;
