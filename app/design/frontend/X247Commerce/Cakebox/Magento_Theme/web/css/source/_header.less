@@ -709,6 +709,13 @@
 			display: none;
 		}
 	}
+
+	.minicart-wrapper {
+		.action.showcart {
+			top: -3px;
+			position: relative;
+		}
+	}
 }
 
 .media-width(@extremum, @break) when (@extremum ='max') and (@break =@screen__xl) {
@@ -728,23 +735,80 @@
 	}
 }
 
-@media only screen and (min-width: 1023px) and (max-width: 1422px) {
-	.page-header .header.content{
-		height:140px;
+// @media only screen and (min-width: 1023px) and (max-width: 1422px) {
+// 	.page-header .header.content{
+// 		height:140px;
+// 	}
+// 	.ammenu-header-container .header.content .block-search,	.ammenu-header-container .header.content .ammenu-logo, .ammenu-header-container .header.content .minicart-wrapper, .header-account{
+// 		margin-top:-25px;
+// 	}
+// 	.page-header .block-search{
+// 		width:360px !important;
+// 	}
+// 	.header.content .ammenu-nav-sections.-topmenu:not(.-hamburger) .ammenu-main-container .ammenu-items.-root {
+// 		position: absolute;
+// 		top: 95px;
+// 		left: 38px;
+// 	}
+// }
+
+@media only screen and (min-width: 1023px) and (max-width: 1299px) {
+	.page-header {
+		.block-search {
+			width: 170px;
+		}
+		.header.content .ammenu-logo {
+			max-width: 120px;
+		}
 	}
-	.ammenu-header-container .header.content .block-search,	.ammenu-header-container .header.content .ammenu-logo, .ammenu-header-container .header.content .minicart-wrapper, .header-account{
-		margin-top:-25px;
+
+	.header.content .ammenu-logo,
+	.page-header .block-search {
+		margin-right: 10px !important;
 	}
-	.page-header .block-search{
-		width:360px !important;
+
+	.header-account {
+		margin-right: 0;
 	}
-	.header.content .ammenu-nav-sections.-topmenu:not(.-hamburger) .ammenu-main-container .ammenu-items.-root {
-		position: absolute;
-		top: 95px;
-		left: 38px;
+
+	.page-header .block-search input {
+		height: 45px;
+	}
+
+	.block-search {
+		input {
+			padding-left: 40px;
+			font-size: 16px;
+		}
+		.action.search:before {
+			line-height: 54px;
+		}
 	}
 }
 
+@media only screen and (min-width: 1023px) and (max-width: 1150px) {
+	.ammenu-nav-sections.-topmenu .ammenu-items.-root>.ammenu-item>.ammenu-link {
+		padding: 14.5px 7px;
+	}
+	.page-header {
+		.header.content {
+			padding-left: 40px;
+			padding-right: 40px;
+			.ammenu-logo {
+				max-width: 100px;
+			}
+		}
+		.block-search {
+			width: 140px;
+			input {
+				padding-left: 30px;
+			}
+			.action.search {
+				left: 20px;
+			}
+		}
+	}
+}
 
 @media (max-width: 1024px) {
 	.ammenu-nav-sections,
