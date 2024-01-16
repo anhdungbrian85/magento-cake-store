@@ -6,7 +6,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Catalog\Api\Data\ProductInterfaceFactory;
 
 class ValidateOutOfStockStatus implements ObserverInterface
 {
@@ -18,8 +18,15 @@ class ValidateOutOfStockStatus implements ObserverInterface
 
     protected $_productloader;
 
-    protected $productRepository;
-    protected $searchCriteriaBuilder;
+        /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductInterfaceFactory
+     */
+    private $productFactory;
 
     public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -27,14 +34,14 @@ class ValidateOutOfStockStatus implements ObserverInterface
         LocatorSourceResolver $locatorSourceResolver,
         \Magento\Catalog\Model\ProductFactory $_productloader,
         ProductRepositoryInterface $productRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        ProductInterfaceFactory $productFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->locationContext = $locationContext;
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->_productloader = $_productloader;
         $this->productRepository = $productRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->productFactory = $productFactory;
     }
 
     /**
@@ -117,15 +124,16 @@ class ValidateOutOfStockStatus implements ObserverInterface
 
     public function loadProductsByIds(array $productIds)
     {
-        // Build search criteria
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('entity_id', $productIds, 'in')
-            ->create();
+        $products = [];
 
-        // Load products
-        $products = $this->productRepository->getList($searchCriteria)->getItems();
-
-        // $products now contains the loaded products
+        foreach ($productIds as $productId) {
+            try {
+                $product = $this->productRepository->getById($productId);
+                $products[] = $product;
+            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                // Handle the case when a product with the given ID is not found.
+            }
+        }
 
         return $products;
     }
