@@ -184,9 +184,6 @@ class Data extends AbstractHelper
                         case 'Vegan Chocolate':
                             $base = 'CV';
                             break;
-                        case 'Vegan Caramel Crunch':
-                            $base = 'VCC';
-                            break;
                         default:
                             $base = '';
                     }
