@@ -93,4 +93,14 @@ $sku = $_option->getSku();
         }
     </script>
     <?php endif; ?>
+		<script>
+		require(['jquery'], function($) {
+		$(document).ready(function() {
+			let productType = window.currentProductType;
+			if(productType == "bundle"){
+				$('textarea.product-custom-option').prop("disabled", false);
+			}
+		});
+	});
+	</script>
 </div>
