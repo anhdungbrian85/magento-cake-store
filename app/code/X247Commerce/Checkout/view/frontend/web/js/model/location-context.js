@@ -15,19 +15,20 @@ define([
 	var leadDeliveryTime = ko.observable(window.checkoutConfig.initLeadDeliveryValue);
 
 	var cartData = customerData.get('cart');
+
     cartData.subscribe(function (updatedCart) {
      	var items = updatedCart.items;
      	var leadDelivery = 0;
      	if (updatedCart && updatedCart.items.length) {
      		updatedCart.items.forEach(function(item){
-     			leadDelivery = leadDelivery < parseInt(item.lead_delivery) ? item.lead_delivery : leadDelivery;
+     			leadDelivery = leadDelivery > parseInt(item.lead_delivery) ? item.lead_delivery : leadDelivery;
      		})
      		if (leadDelivery) {
      			leadDeliveryTime(leadDelivery);
      		}
      	}
     });
-
+    
     var deliveryPostcode = ko.observable(window.checkoutConfig.deliveryPostcode);
 
     return {
