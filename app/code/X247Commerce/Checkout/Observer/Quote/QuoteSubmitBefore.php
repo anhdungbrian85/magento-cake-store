@@ -81,7 +81,25 @@ class QuoteSubmitBefore implements ObserverInterface
                 $productSkus = [];
                 if (!empty($quote->getAllVisibleItems())) {
                     foreach ($quote->getAllVisibleItems() as $quoteItem) {
-                        $productSkus[] = $quoteItem->getSku();
+                        if($quoteItem->getProductType() == 'bundle'){
+                            $productIds = [];
+                            $childrenQuoteData = $quoteItem->getChildren();
+                            foreach ($childrenQuoteData as $child) {
+                                $childProduct = $child->getProduct();
+                                // Access information about each child product
+                                $productIds[] = $childProduct->getId();
+                            }
+                            $childrenData = $this->loadProductsByIds($productIds);
+                            foreach($childrenData as $childData){
+                                $productSkus[] = $childData->getSku();
+                            }
+                            $this->logger->info('Item  observer:'.print_r($productIds, true));
+
+                        }else{
+                            $productSkus[] = $quoteItem->getSku();
+                        }
+                        $this->logger->info('observer sku: '. print_r($quoteItem->getSku(), true));
+                        $this->logger->info('observer getProductType: '. print_r($quoteItem->getProductType(), true));
                     }
                 }
                 $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($postcode);
@@ -122,7 +140,7 @@ class QuoteSubmitBefore implements ObserverInterface
 
             if ($locationId) {
                 foreach ($order->getAllItems() as $item) {
-                    //$this->logger->info('Item at checkout:'.$item->getSku());
+                    $this->logger->info('Item at checkout:'.$item->getSku());
                     $this->logger->info('Item type :'.$item->getProductType());
                     if($item->getProductType() == 'bundle'){
                         $productIds = [];
@@ -133,12 +151,17 @@ class QuoteSubmitBefore implements ObserverInterface
                             }
                         }
                         $children = $quoteData;
+                
+                        // Do something with the child items
                         foreach ($children as $child) {
                             $childProduct = $child->getProduct();
-                            /** Access information about each child product  */
+                            // Access information about each child product
                             $productIds[] = $childProduct->getId();
+                            //$childProductName = $childProduct->getName();
+                            // Add your logic here based on child product information
+                            //$this->logger->info('Item  :'.print_r($childProductName, true));
                         }
-                        //$this->logger->info('Item  :'.print_r($productIds, true));
+                        $this->logger->info('Item  :'.print_r($productIds, true));
                         $newChildData = $this->loadProductsByIds($productIds);
                         foreach($newChildData as $childData){
                                 if (!$this->locatorSourceResolver->checkProductAvailableInStore($locationId, $childData)) {
@@ -201,7 +224,7 @@ class QuoteSubmitBefore implements ObserverInterface
         // Load products
         $products = $this->productRepository->getList($searchCriteria)->getItems();
 
-        /** $products now contains the loaded products */
+        // $products now contains the loaded products
 
         return $products;
     }

@@ -10,6 +10,9 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use X247Commerce\Delivery\Helper\DeliveryData;
 use X247Commerce\StoreLocator\Helper\DeliveryArea;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
+use Psr\Log\LoggerInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 class ValidateDeliveryPostcode extends Action
 {
@@ -26,6 +29,11 @@ class ValidateDeliveryPostcode extends Action
 
     protected $checkoutSession;
 
+    protected $logger;
+
+    protected $productRepository;
+    protected $searchCriteriaBuilder;
+
     public function __construct(
         Context $context,
         LocationFactory $locationFactory,
@@ -33,7 +41,10 @@ class ValidateDeliveryPostcode extends Action
         JsonFactory $resultJsonFactory,
         DeliveryData $deliveryData,
         LocatorSourceResolver $locatorSourceResolver,
-        Session $checkoutSession
+        Session $checkoutSession,
+        LoggerInterface $logger,
+        ProductRepositoryInterface $productRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         parent::__construct($context);
         $this->deliveryData = $deliveryData;
@@ -42,6 +53,9 @@ class ValidateDeliveryPostcode extends Action
         $this->resultJsonFactory = $resultJsonFactory;
         $this->locatorSourceResolver = $locatorSourceResolver;
         $this->checkoutSession = $checkoutSession;
+        $this->logger = $logger;
+        $this->productRepository = $productRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     public function execute()
@@ -66,11 +80,27 @@ class ValidateDeliveryPostcode extends Action
 
             if ($locationDataFromPostCode['status']) {
                 $productSkus = [];
+                $productIds = [];
                 $quote = $this->checkoutSession->getQuote();
                 if (!empty($quote->getAllVisibleItems())) {
                     foreach ($quote->getAllVisibleItems() as $quoteItem) {
-                        $productSkus[] = $quoteItem->getSku();
+                        if($quoteItem->getProductType() == 'bundle'){
+                            $itemOptions = $quoteItem->getdata('qty_options');
+                            foreach ($itemOptions as $key => $value) {
+                                $productIds[] = $key;
+                            }
+                            $newChildData = $this->loadProductsByIds($productIds);
+                            foreach($newChildData as $childData){
+                                $productSkus[] = $childData->getSku();
+                            }
+                        }else{
+                            $productSkus[] = $quoteItem->getSku();
+                        }
+                        $this->logger->info('Item Data :'. json_encode($quoteItem->getData(), true));
+                        $this->logger->info('Item Data :'. print_r($quoteItem->getProductType(), true));
                     }
+                    $this->logger->info('children Data :'. print_r($productIds, true));
+                    $this->logger->info('Product SKU :'. print_r($productSkus, true));
                 }
                 $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
                     $postcode,
@@ -94,5 +124,20 @@ class ValidateDeliveryPostcode extends Action
                 'status' => true
             ]
         );
+    }
+
+    public function loadProductsByIds(array $productIds)
+    {
+        // Build search criteria
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('entity_id', $productIds, 'in')
+            ->create();
+
+        // Load products
+        $products = $this->productRepository->getList($searchCriteria)->getItems();
+
+        // $products now contains the loaded products
+
+        return $products;
     }
 }

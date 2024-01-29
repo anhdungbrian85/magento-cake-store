@@ -17,6 +17,8 @@ use Amasty\Storelocator\Model\LocationFactory;
 use X247Commerce\Delivery\Helper\DeliveryData;
 use X247Commerce\DeliveryPopUp\Helper\Data as DeliveryPopUpHelperData;
 use X247Commerce\StoreLocatorSource\Model\ResourceModel\LocatorSourceResolver;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
@@ -41,6 +43,9 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
 
     protected $locatorSourceResolver;
 
+    protected $productRepository;
+    protected $searchCriteriaBuilder;
+
     public function __construct(
         LocatorSourceResolver $locatorSourceResolver,
         DeliveryPopUpHelperData $deliveryPopUpHelperData,
@@ -53,6 +58,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         StoreLocationContextInterface $storeLocationContext,
         LocationFactory $locationFactory,
         DeliveryData $deliveryData,
+        ProductRepositoryInterface $productRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         array $data = []
     ) {
         $this->locatorSourceResolver = $locatorSourceResolver;
@@ -63,6 +70,8 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
         $this->locationFactory = $locationFactory;
         $this->deliveryData = $deliveryData;
         $this->deliveryPopUpHelperData = $deliveryPopUpHelperData;
+        $this->productRepository = $productRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -94,15 +103,29 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
             $quote = $this->checkoutSession->getQuote();
             $logger->info('$quoteId' . $quote->getId());
             $productSkus = [];
+            $productIds = [];
+            $productSkus = [];
             if (!empty($quote->getAllVisibleItems())) {
                 foreach ($quote->getAllVisibleItems() as $quoteItem) {
-                    $productSkus[] = $quoteItem->getSku();
+                    if($quoteItem->getProductType() == 'bundle'){
+                        $itemOptions = $quoteItem->getdata('qty_options');
+                        foreach ($itemOptions as $key => $value) {
+                            $productIds[] = $key;
+                        }
+                        $newChildData = $this->loadProductsByIds($productIds);
+                        foreach($newChildData as $childData){
+                            $productSkus[] = $childData->getSku();
+                        }
+                    }else{
+                        $productSkus[] = $quoteItem->getSku();
+                    }
+                    $logger->info('Item Data :'. print_r($quoteItem->getProductType(), true));
                 }
             }
             $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
 
-            $logger->info('$customerPostcode' . $customerPostcode);
-            $logger->info('$locationDataFromPostCode'.print_r($locationDataFromPostCode, true));
+            $logger->info('$customerPostcode CakeboxDelivery ' . $customerPostcode);
+            $logger->info('$locationDataFromPostCode CakeboxDelivery '.print_r($locationDataFromPostCode, true));
             if ($locationDataFromPostCode['status']) {
 
                 $location = $this->locatorSourceResolver->getClosestStoreLocationWithPostCodeAndSkus(
@@ -240,5 +263,20 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
     public function getAllowedMethods()
     {
         return [$this->_code => $this->getConfigData('name')];
+    }
+
+    public function loadProductsByIds(array $productIds)
+    {
+        // Build search criteria
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('entity_id', $productIds, 'in')
+            ->create();
+
+        // Load products
+        $products = $this->productRepository->getList($searchCriteria)->getItems();
+
+        // $products now contains the loaded products
+
+        return $products;
     }
 }
