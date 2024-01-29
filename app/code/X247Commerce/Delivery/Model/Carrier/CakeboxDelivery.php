@@ -119,7 +119,7 @@ class CakeboxDelivery extends \Magento\Shipping\Model\Carrier\AbstractCarrier im
                     }else{
                         $productSkus[] = $quoteItem->getSku();
                     }
-                    $logger->info('Item Data :'. print_r($quoteItem->getProductType(), true));
+                    $logger->info('Item Data Type :'. print_r($quoteItem->getProductType(), true));
                 }
             }
             $locationDataFromPostCode = $this->deliveryData->getLongAndLatFromPostCode($customerPostcode);
