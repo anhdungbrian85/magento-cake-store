@@ -33,27 +33,28 @@ define([
                 }
             };
             var popup = modal(options, $('#custom-delivery-popup-modal'));
-
             var currentUrl = window.location.href;
-            $.ajax({
-                url: urlBuilder.build('deliverypopup'),
-                method: "POST",
-                dataType: "json",
-                success: function(res) {
-                    if (res.showPopup && $('#custom-delivery-popup-modal').length && !currentUrl.includes("checkout/onepage/success")) {
-                        $('#custom-delivery-popup-modal').modal('openModal');
-                    }
-                    if ($('body').hasClass('catalog-product-view') && !res.enableAddToCart) {
-                        window.preventAddToCartAction = true;
-                        $("#product-addtocart-button").on('click', function(e){
-                            e.preventDefault();
+
+            if(urlBuilder.build('/') != currentUrl) { //SPTCAK-64
+                $.ajax({
+                    url: urlBuilder.build('deliverypopup'),
+                    method: "POST",
+                    dataType: "json",
+                    success: function(res) {
+                        if (res.showPopup && $('#custom-delivery-popup-modal').length && !currentUrl.includes("checkout/onepage/success")) {
                             $('#custom-delivery-popup-modal').modal('openModal');
-                        })
+                        }
+                        if ($('body').hasClass('catalog-product-view') && !res.enableAddToCart) {
+                            window.preventAddToCartAction = true;
+                            $("#product-addtocart-button").on('click', function(e){
+                                e.preventDefault();
+                                $('#custom-delivery-popup-modal').modal('openModal');
+                            })
+                        }
+
                     }
-
-                }
-            })
-
+                });
+            }
             
 
 
