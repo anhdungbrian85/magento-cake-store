@@ -8,7 +8,7 @@ class DefaultItem
         $result, \Magento\Quote\Model\Quote\Item $item)
     {
         if ($item->getProductType() == 'simple') {
-            $result['lead_delivery'] = $item->getProduct()->getData('lead_delivery');
+            $maxLeadDelivery = $item->getProduct()->getData('lead_delivery');
         } else {
             $quote = $item->getQuote();
             $childItem = null;
