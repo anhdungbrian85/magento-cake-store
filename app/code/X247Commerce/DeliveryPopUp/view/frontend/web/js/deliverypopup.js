@@ -34,7 +34,7 @@ define([
             };
             var popup = modal(options, $('#custom-delivery-popup-modal'));
             var currentUrl = window.location.href;
-            var baseUrl = urlBuilder.build();
+            var baseUrl = urlBuilder.build('');
 
             if(baseUrl != currentUrl) { //SPTCAK-64
                 $.ajax({
