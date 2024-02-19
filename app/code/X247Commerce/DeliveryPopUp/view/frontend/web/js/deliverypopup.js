@@ -36,7 +36,7 @@ define([
             var currentUrl = window.location.href;
             var baseUrl = urlBuilder.build('');
 
-            if(baseUrl != currentUrl) { //SPTCAK-64
+            if(baseUrl != currentUrl && $('body').hasClass('catalog-product-view') == true) { //SPTCAK-64
                 $.ajax({
                     url: urlBuilder.build('deliverypopup'),
                     method: "POST",
@@ -55,7 +55,7 @@ define([
 
                     }
                 });
-            } else { console.log('pop-up home'); }
+            }
             
 
 
