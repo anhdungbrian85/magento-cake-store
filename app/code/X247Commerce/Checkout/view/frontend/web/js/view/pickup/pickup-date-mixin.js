@@ -165,14 +165,17 @@ define([
                 currentStoreTime = currentStore.current_timezone_time,
                 minPickupTime = currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600,
                 asdaCutOffTimeTmr = new Date(storeDateTime.getFullYear(), storeDateTime.getUTCMonth(), storeDateTime.getUTCDate(), 16),
-                cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60);
+                cutOffTimeToInt = Date.parse(asdaCutOffTimeTmr)/1000 - (today.getTimezoneOffset() * 60),
+                clientTime = new Date(),
+                clientPickupTime = Date.parse(clientTime)/1000 + parseInt(locationContext.leadDeliveryTime())*3600;
 
             if (locationContext.isAsda()) {
                 if (isToday || isNotReachCollectionDate) {
                     return [false, ''];
                 }
                 if (isCollectionDate) {
-                    return [minPickupTime < cutOffTimeToInt, ''];
+                    var ablePickup = (minPickupTime < cutOffTimeToInt) && (clientPickupTime < cutOffTimeToInt);
+                    return [ablePickup, ''];
                 }
             }
 
