@@ -24,4 +24,7 @@
         <observer name="x247_validate_order_date_time_before_placing"
                   instance="X247Commerce\Checkout\Observer\Order\ValidateOrderDateTime" disabled="false"/>
     </event>
+	<event name="sales_order_place_before">
+        <observer name="custom_checkout_submit_all_after" instance="X247Commerce\Checkout\Observer\GetOrderDetails" disabled="false"/>
+    </event>
 </config>
