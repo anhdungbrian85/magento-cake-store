@@ -55,7 +55,7 @@
         "magento/composer-root-update-plugin": "^2.0.2",
         "magento/magento-cloud-metapackage": "2.4.5",
         "magento/module-layered-navigation": "^100.4",
-        "magento/product-enterprise-edition": "2.4.5-p2",
+        "magento/product-enterprise-edition": "^2.4.5-p2",
         "mageplaza/module-core": "^1.5",
         "mollie/magento2": "^2.3",
         "mollie/magento2-subscriptions": "^1.4",
@@ -122,11 +122,6 @@
             "tinymce/tinymce": "lib/web/tiny_mce_5"
         },
         "magento-force": true,
-        "patches": {
-            "magento/module-customer": {
-                "CVE-2023-38218": "m2-hotfixes/CVE-2023-38218.diff"
-            }
-        },
         "magento-deploystrategy": "copy",
         "magento-deploy-ignore": {
             "*": [
