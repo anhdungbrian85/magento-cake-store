@@ -40,6 +40,13 @@
                 <field id="from" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>From</label>
                 </field>
+				<field id="timezone_switch" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Select Time Zone Option</label>
+					<source_model>X247Commerce\SmsTextManagement\Model\Config\Source\TimeOptions</source_model>
+					<comment><![CDATA[
+                        <strong>Select the current running time option.</strong>
+                    ]]></comment>
+				</field>			
             </group>
         </section>
     </system>
