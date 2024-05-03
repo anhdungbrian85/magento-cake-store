@@ -21,7 +21,6 @@
     </event>
 
     <event name="sales_order_place_before">
-        <observer name="x247_validate_order_date_time_before_placing"
-                  instance="X247Commerce\Checkout\Observer\Order\ValidateOrderDateTime" disabled="false"/>
+        <observer name="x247_handle_after_quote_merged" instance="X247Commerce\Checkout\Observer\Order\ValidateAsdaOrder" disabled="false"/>
     </event>
 </config>

@@ -15,19 +15,7 @@ define([
 ], function (ko, $, _, Component, pickup, pickupDataResolver, registry, locationContext) {
     'use strict';
 
-    String.prototype.ukFormatTimeToIso = function () {
-
-        if (typeof this === 'string' || this instanceof String) {
-            let dateArr = this.split('/');
-            if (dateArr.length === 3) {
-                return new Date(dateArr[2] +'-'+ dateArr[1] +'-'+ dateArr[0]);
-            }
-        }
-        return this;
-    }
-
     return Component.extend({
-        holidays: window.checkoutConfig.store_location_holiday,
         defaults: {
             elementTmpl: 'Amasty_StorePickupWithLocator/pickup/date',
             options: {
@@ -146,22 +134,10 @@ define([
         },
         onChangeStore: function () {
             this.selectedStore = pickupDataResolver.getCurrentStoreData();
-            var self = this;
+
             if (this.selectedStore) {
-                let thisValueToIsoTime = this.value().ukFormatTimeToIso();
-                if (!_.isEmpty(this.holidays) && thisValueToIsoTime instanceof Date) {
-
-                    let shouldClearDateTime = this.holidays.find(function (holiday) {
-                        return thisValueToIsoTime.toString() === new Date(holiday.date).toString()
-                            && self.selectedStore.id == holiday.location_id;
-                    })
-                    if (shouldClearDateTime !== undefined) {
-                        this.value('');
-                    }
-                    return;
-                }
-
                 this.initStoreDateTimeOptions(this.selectedStore);
+                // this.setDateToFirstPickupDate(this.selectedStore);
             } else {
                 this.value('');
             }
