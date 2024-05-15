@@ -75,6 +75,16 @@ define([
 
             return minPickupDate;
         },
+        _getDefaultFirstPickupDate: function () {
+            var minPickupDate = this.minPickupDateTime.asDateTimeObject;
+
+            if (this.sameDayPickupAllow && this.restrictDates(minPickupDate)[0]) {
+                return minPickupDate;
+            }
+
+            return new Date(minPickupDate.setDate(minPickupDate.getUTCDate() + 1));
+        },
+
         /**
          * Check if date is valid
          * Method returns [false, ''] if date is restricted
@@ -203,10 +213,6 @@ define([
                     filteredIntervals.push(intervals[i]);
                 }
             }
-            // filteredIntervals = intervals.filter(function (item) {
-            //     return item.fromInUnix > (currentStoreTime + parseInt(locationContext.leadDeliveryTime())*3600)
-            //         // && item.toInUnix <= this.sameDayCutoffTime;
-            // }.bind(this));
 
             return filteredIntervals;
         },

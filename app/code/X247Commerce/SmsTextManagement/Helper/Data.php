@@ -3,6 +3,7 @@
 namespace X247Commerce\SmsTextManagement\Helper;
 
 use Amasty\StorePickupWithLocator\Model\Carrier\Shipping as AmStorePickupShipping;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -13,19 +14,23 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_checkoutSession;
     protected $_customerSession;
     protected $_orderFactory;
+    protected $scopeConfig;
+
     public function __construct(
         \Magento\Framework\App\ResourceConnection $resource,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Sales\Model\OrderFactory $orderFactory,
-        \Magento\Framework\App\Helper\Context $context
+        \Magento\Framework\App\Helper\Context $context,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->_resource = $resource;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_checkoutSession = $checkoutSession;
         $this->_customerSession = $customerSession;
         $this->_orderFactory = $orderFactory;
+        $this->scopeConfig = $scopeConfig;
         parent::__construct($context);
     }
 
@@ -134,7 +139,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getJsonData($orderObj)
     {
-        date_default_timezone_set('Europe/London');
+        $configValue = $this->getTimeConfigValue();
+        if($configValue == 1){
+            date_default_timezone_set('Europe/London');
+        }
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/InvoicePayDataHelper.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
         $data = $variableData = [];
         $orderCollection = $this->_orderCollectionFactory->create();
         $orderCollection->getSelect()
@@ -193,6 +204,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $variableData['order_time'] = $orderTime;
         $variableData['store_name'] = $storeName;
         $variableData['store_phone'] = $storePhone;
+        $logger->info(print_r($orderTime, true));
 
         // Confirmation Message
         $smsMessage = $isCollection ? $this->getApiConfig('collection_message') : $this->getApiConfig('delivery_message');
@@ -243,5 +255,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $startTime = $this->getCurrentDateTime();
         }
         return date('Y-m-d\TH:i:s', strtotime('+15 minutes', strtotime($startTime)));
+    }
+
+    public function getTimeConfigValue()
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/InvoicePayDataHelper.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $value = $this->scopeConfig->getValue('smstextmanagement/sms/timezone_switch', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $logger->info(print_r($value, true));
+        return $value;
     }
 }

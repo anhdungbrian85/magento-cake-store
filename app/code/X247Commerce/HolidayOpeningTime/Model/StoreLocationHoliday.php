@@ -20,6 +20,7 @@ class StoreLocationHoliday extends AbstractModel
     const DISABLE_PICKUP = 'disable_pickup';
     const STORE_LOCATION_ID = 'store_location_id';
     const TYPE = 'type';
+    const DATE = 'date';
 
 
     /**
