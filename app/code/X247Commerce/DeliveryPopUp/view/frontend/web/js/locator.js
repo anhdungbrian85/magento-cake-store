@@ -63,25 +63,26 @@ define([
                 let addToCartFormData = '';
                 if ($('#product_addtocart_form').length) {
                     isProductPage = true;
-                    addToCartFormData = $('#product_addtocart_form').serialize();
-                    console.log(addToCartFormData);
+                    var formBase = document.getElementById('product_addtocart_form');
+                    addToCartFormData = new FormData(formBase);
                 }
                 const location_id = $(this).data('location-id');
                 const delivery_type = $('[name="delivery-type"]:checked').val();
-                
+                addToCartFormData.append('location_id', location_id);
+                addToCartFormData.append('delivery_type', delivery_type);
+                addToCartFormData.append('is_product_page', isProductPage);
+
                 setTimeout(() => {
                     window.scroll({ top: -1, left: 0, behavior: "smooth" });
                 }, 1);
                 $.ajax({
-                url: self.ajaxSelectUrl,
+                    url: self.ajaxSelectUrl,
                     type: 'POST',
-                    data: {
-                        'location_id': location_id,
-                        'delivery_type': delivery_type,
-                        'is_product_page': isProductPage,
-                        'add_to_cart_form_data': addToCartFormData
-                    },
-                    showLoader: true
+                    data: addToCartFormData,
+                    showLoader: true,
+                    processData: false,
+                    contentType: false
+
                 }).done($.proxy(function (response) {
                     const sections = ['cart'];
                     customerData.invalidate(sections);

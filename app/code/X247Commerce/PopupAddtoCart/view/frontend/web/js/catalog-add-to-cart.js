@@ -50,7 +50,7 @@ define([
 
             this.element.data('catalog-addtocart-initialized', 1);
             this.element.on('submit', function (e) {
-                e.preventDefault();     
+                e.preventDefault();
 
                 self.submitForm($(this));
             });
@@ -106,8 +106,8 @@ define([
             $.each(index, function (key, value) {
                 var v = Object.values(value).sort();
                 if (JSON.stringify(optionValues.sort()) == JSON.stringify(v)) {
-                    productId = key;     
-                }       
+                    productId = key;
+                }
             });
 
             if (cart && cart.length > 0) {
@@ -116,16 +116,16 @@ define([
                   if (item.product_type == "configurable") {
                       let op = [];
                       let option = item.options;
-                      
+
                       for (var j=0; j<option.length; j++){
                           op.push(option[j].option_value);
                       }
-                      
+
                       if (item.product_id == idsResolver(form)[0] && JSON.stringify(optionValues.sort()) == JSON.stringify(op.sort())) {
                           alreadyInCart = true;
                           break;
-                      } 
-                  } 
+                      }
+                  }
                   if (item.product_type == "simple") {
                       if (item.product_id == productId) {
                           alreadyInCart = true;
@@ -386,6 +386,6 @@ define([
 
         },
     });
-    
+
     return $.mage.catalogAddToCart;
 });
