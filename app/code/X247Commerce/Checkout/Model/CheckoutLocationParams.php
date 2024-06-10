@@ -82,9 +82,11 @@ class CheckoutLocationParams
     public function getConfig()
     {
         $quote = $this->checkoutSession->getQuote();
-
-        $locationId =  $this->storeLocationContext->getStoreLocationId() ?? $quote->getStoreLocationId();
-        $deliveryType = $this->storeLocationContext->getDeliveryType() ??  $quote->getDeliveryType();
+        if ($this->storeLocationContext->getStoreLocationId() === 0 && $quote->getData('store_location_id') > 0) {
+            $this->storeLocationContext->setStoreLocationId($quote->getData('store_location_id'));
+        }
+        $locationId =  $this->storeLocationContext->getStoreLocationId() ?? $quote->getData('store_location_id');
+        $deliveryType = $this->storeLocationContext->getDeliveryType() ??  $quote->getData('delivery_type');
 
         return [
             'storeLocationId' => $locationId,
