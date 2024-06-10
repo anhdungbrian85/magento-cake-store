@@ -115,7 +115,10 @@ class ValidateOrderDateTime implements ObserverInterface
             }
         }   else {
             // normal store
-            if ((strtotime("now") + $leadDelivery*3600) > $pickTime) {
+            $hsInPickupTime = date("h:i", $pickTime);
+            $dateTimePickupTime = trim(str_replace('00:00:00', $hsInPickupTime, $pickDate));
+
+            if ((time() + $leadDelivery*3600) > $dateTimePickupTime) {
                 throw new \Magento\Framework\Exception\LocalizedException(
                     __("We cannot offer your cake at that time. Please choose another date!")
                 );
