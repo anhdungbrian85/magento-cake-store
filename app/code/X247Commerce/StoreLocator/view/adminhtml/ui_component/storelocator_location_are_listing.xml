@@ -17,7 +17,7 @@
     </argument>
     <dataSource name="storelocator_location_are_listing_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">X247Commerce\StoreLocator\Model\DataProvider\DeliveryAreaProvider</argument>
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
             <argument name="name" xsi:type="string">storelocator_location_are_listing_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
@@ -69,6 +69,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="selectProvider" xsi:type="string">storelocator_location_are_listing.storelocator_location_are_listing.storelocator_location_are_columns.ids</item>
+                    <item name="indexField" xsi:type="string">id</item>
                 </item>
             </argument>
         </exportButton>
