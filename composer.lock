@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89937c432ad1537ec201e18db5acc092",
+    "content-hash": "aa3513795db324fbd418c1640aaa56aa",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -21605,6 +21605,45 @@
             "time": "2024-01-19T09:41:41+00:00"
         },
         {
+            "name": "magmodules/magento2-channable",
+            "version": "1.18.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/magmodules/magento2-channable.git",
+                "reference": "49e84cbde6576fc36675f0e3743e3cd9c476b4e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/magmodules/magento2-channable/zipball/49e84cbde6576fc36675f0e3743e3cd9c476b4e4",
+                "reference": "49e84cbde6576fc36675f0e3743e3cd9c476b4e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "magento/framework": ">=102.0.3"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magmodules\\Channable\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "Channable integration for Magento 2",
+            "homepage": "https://github.com/magmodules/magento2-channable",
+            "support": {
+                "issues": "https://github.com/magmodules/magento2-channable/issues",
+                "source": "https://github.com/magmodules/magento2-channable/tree/1.18.3"
+            },
+            "time": "2024-06-07T09:58:12+00:00"
+        },
+        {
             "name": "mollie/magento2",
             "version": "2.36.0",
             "source": {
@@ -27732,5 +27771,5 @@
         "composer-plugin-api": "^2.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
