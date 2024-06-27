@@ -30,18 +30,16 @@ class BeforeLoadCollection
         if (!$subject->isLoaded()) {
             $deliveryDateSql = "CONCAT(DATE_FORMAT(`ad`.`date`, '%Y-%m-%d'), ' ', ad.time,':00:00')";
             $pickupDateSql =  "CONCAT(DATE_FORMAT(ap.date, '%Y-%m-%d'), ' ', FROM_UNIXTIME(ap.time_from, '%H:%i:%s'))";
-            $subject->getSelect()->joinleft(['ad' => $subject->getTable('amasty_amcheckout_delivery')], 
-                        'main_table.entity_id=ad.order_id', ['ad.date as delivery_date', 
-                        'ad.time as delivery_time'])
-            ->joinleft(['ap' => $subject->getTable('amasty_storepickup_order')], 
-                        'main_table.entity_id=ap.order_id', 
+            $subject->getSelect()
+                ->joinLeft(['ad' => $subject->getTable('amasty_amcheckout_delivery')],
+                        'main_table.entity_id=ad.order_id AND ad.date is not null AND ad.time is not null',
+                        ['ad.date as delivery_date', 'ad.time as delivery_time'])
+                ->joinLeft(['ap' => $subject->getTable('amasty_storepickup_order')],
+                        'main_table.entity_id=ap.order_id AND ap.date is not null AND ap.time_from is not null',
                         ['ap.date as pickup_date', 'ap.time_from as pickup_time_from', 'ap.time_to as pickup_time_to' ])
-            ->joinleft(['mpt' => $subject->getTable('sales_order_payment')], 
+                ->joinLeft(['mpt' => $subject->getTable('sales_order_payment')],
                         'main_table.entity_id=mpt.parent_id', ['mpt.additional_information'])
-            ->columns(
-                array(
-                    "colection_delivery_date" => new \Zend_Db_Expr("(CASE WHEN `ap`.`date` IS NULL THEN $deliveryDateSql ELSE $pickupDateSql END)"
-                )));
+                ->columns(["colection_delivery_date" => new \Zend_Db_Expr("(CASE WHEN `ap`.`date` IS NULL THEN $deliveryDateSql ELSE $pickupDateSql END)")]);
         }
 
         return [$printQuery, $logQuery];
