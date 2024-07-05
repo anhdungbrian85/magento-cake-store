@@ -41,4 +41,7 @@
     <preference for="Amasty\Storelocator\Model\Location" type="X247Commerce\StoreLocator\Model\Location" />
     <preference for="Amasty\Storelocator\Model\ResourceModel\Location" type="X247Commerce\StoreLocator\Model\ResourceModel\Location" />
 	<preference for="Magento\Ui\Model\Export\MetadataProvider" type="X247Commerce\StoreLocator\Model\Export\MetadataProvider" />
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <plugin name="data_provider_plugin" type="X247Commerce\StoreLocator\Plugin\DataProviderPlugin" />
+    </type>
 </config>
